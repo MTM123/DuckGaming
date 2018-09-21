@@ -17,15 +17,16 @@ settings:
         protocolsupport:
             versions:
                 PC:
-                  1m12: true
-                  1m11: true
-                  1m10: true
-                  1m9: true
-                  1m8: true
-                  1m7: true
-                  1m6: false
-                  1m5: false
-                  1m4: false
+                    1m13: true
+                    1m12: true
+                    1m11: true
+                    1m10: true
+                    1m9: true
+                    1m8: true
+                    1m7: true
+                    1m6: false
+                    1m5: false
+                    1m4: false
                 PE: true
     ranking:
         enable: true

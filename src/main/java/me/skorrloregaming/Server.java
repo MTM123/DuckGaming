@@ -892,59 +892,64 @@ public class Server extends JavaPlugin implements Listener {
 		}
 		if (nf)
 			notifyWorker.start();
-		boolean a = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m12"));
-		boolean b = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m11"));
-		boolean c = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m10"));
-		boolean d = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m9"));
-		boolean e = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m8"));
-		boolean f = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m7"));
-		boolean g = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m6"));
-		boolean h = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m5"));
-		boolean i = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m4"));
-		boolean j = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PE"));
+		boolean _1m13 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m12"));
+		boolean _1m12 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m12"));
+		boolean _1m11 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m11"));
+		boolean _1m10 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m10"));
+		boolean _1m9 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m9"));
+		boolean _1m8 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m8"));
+		boolean _1m7 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m7"));
+		boolean _1m6 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m6"));
+		boolean _1m5 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m5"));
+		boolean _1m4 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m4"));
+		boolean _1m3 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PE"));
 		if (!epiB && epiA)
 			pingInjector.register();
 		if (epiB && !epiA)
 			pingInjector.unregister();
 		allowedVersions.clear();
-		if (a) {
+		if (_1m13) {
+			allowedVersions.add("1.13.1");
+			allowedVersions.add("1.13");
+		}
+		if (_1m12) {
 			allowedVersions.add("1.12.2");
 			allowedVersions.add("1.12.1");
 			allowedVersions.add("1.12");
 		}
-		if (b) {
+		if (_1m11) {
 			allowedVersions.add("1.11.2");
 			allowedVersions.add("1.11");
 		}
-		if (c) {
+		if (_1m10) {
 			allowedVersions.add("1.10");
 		}
-		if (d) {
+		if (_1m9) {
 			allowedVersions.add("1.9.4");
 			allowedVersions.add("1.9.2");
 			allowedVersions.add("1.9.1");
 			allowedVersions.add("1.9");
 		}
-		if (e) {
+		if (_1m8) {
 			allowedVersions.add("1.8");
 		}
-		if (f) {
+		if (_1m7) {
 			allowedVersions.add("1.7.10");
 			allowedVersions.add("1.7.5");
 		}
-		if (g) {
+		if (_1m6) {
 			allowedVersions.add("1.6.4");
 			allowedVersions.add("1.6.2");
 			allowedVersions.add("1.6.1");
 		}
-		if (h) {
+		if (_1m5) {
 			allowedVersions.add("1.5.2");
 			allowedVersions.add("1.5.1");
 		}
-		if (i) {
+		if (_1m4) {
 			allowedVersions.add("1.4.7");
 		}
-		if (j) {
+		if (_1m3) {
 			allowedVersions.add("pe");
 		}
 	}
