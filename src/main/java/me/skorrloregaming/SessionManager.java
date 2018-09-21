@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -14,7 +15,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import me.skorrloregaming.impl.IpLocationQuery;
-import mkremins.fanciful.ChatColor;
 
 public class SessionManager {
 	public ConfigurationManager sessionConfig;

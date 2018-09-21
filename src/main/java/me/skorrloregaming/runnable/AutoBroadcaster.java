@@ -1,12 +1,16 @@
 package me.skorrloregaming.runnable;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Logger;
-import mkremins.fanciful.FancyMessage;
 import net.md_5.bungee.api.ChatColor;
 
 public class AutoBroadcaster implements Runnable {
@@ -21,7 +25,11 @@ public class AutoBroadcaster implements Runnable {
 	public void run() {
 		currentMsg %= messages.length;
 		String message = ChatColor.stripColor($.modernMsgPrefix) + messages[currentMsg];
-		String igMessage = new FancyMessage(message).style(mkremins.fanciful.ChatColor.BOLD).suggest("/vote").tooltip("/vote").exportToJson();
+		TextComponent textComponent = new TextComponent(message);
+		textComponent.setColor(ChatColor.ITALIC);
+		textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vote"));
+		textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("/vote").create()));
+		String igMessage = ComponentSerializer.toString(textComponent);
 		currentMsg++;
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			CraftGo.Player.sendJson(player, igMessage);

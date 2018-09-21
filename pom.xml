@@ -13,6 +13,33 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<minimizeJar>true</minimizeJar>
+							<artifactSet>
+								<includes>
+									<include>org.json:json</include>
+									<include>com.github.Steveice10:OpenNBT</include>
+								</includes>
+							</artifactSet>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 	<repositories>
 		<repository>
 			<id>spigot-repo</id>
@@ -40,36 +67,57 @@
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
 			<version>1.13-R0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+			<type>jar</type>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.ProtocolSupport</groupId>
 			<artifactId>ProtocolSupport</artifactId>
 			<version>ddbcb5f964</version>
+			<scope>compile</scope>
+			<type>jar</type>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.Speentie8081</groupId>
 			<artifactId>ProtocolSupportPocketStuff</artifactId>
 			<version>3ebfe03503</version>
+			<scope>compile</scope>
+			<type>jar</type>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>
+			<scope>compile</scope>
+			<type>jar</type>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.AuthMe</groupId>
 			<artifactId>AuthMeReloaded</artifactId>
 			<version>033b214ca6</version>
+			<scope>compile</scope>
+			<type>jar</type>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.MilkBowl</groupId>
 			<artifactId>VaultAPI</artifactId>
 			<version>da407c0059</version>
+			<scope>compile</scope>
+			<type>jar</type>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
 			<artifactId>Factions</artifactId>
 			<version>1.6.9.5-U0.2.2</version>
+			<scope>compile</scope>
+			<type>jar</type>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q.worldedit</groupId>
@@ -80,26 +128,51 @@
 			<groupId>com.sk89q.worldguard</groupId>
 			<artifactId>worldguard-legacy</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
+			<scope>compile</scope>
+			<type>jar</type>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.aadnk</groupId>
 			<artifactId>ProtocolLib</artifactId>
 			<version>6ff6976e85</version>
+			<scope>compile</scope>
+			<type>jar</type>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-all</artifactId>
 			<version>4.1.29.Final</version>
+			<scope>compile</scope>
+			<type>jar</type>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.mcMMO-Dev</groupId>
 			<artifactId>mcMMO</artifactId>
 			<version>2b576568a7</version>
+			<scope>compile</scope>
+			<type>jar</type>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.Speentie8081</groupId>
 			<artifactId>uSkyBlock-API</artifactId>
 			<version>3e0adef633</version>
+			<scope>compile</scope>
+			<type>jar</type>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20180813</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.Steveice10</groupId>
+			<artifactId>OpenNBT</artifactId>
+			<version>a86b513901</version>
 		</dependency>
 	</dependencies>
 </project>

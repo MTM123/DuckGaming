@@ -3,6 +3,7 @@ package me.skorrloregaming.hooks;
 import java.util.Calendar;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.event.Listener;
@@ -15,7 +16,6 @@ import me.skorrloregaming.Server;
 import me.skorrloregaming.VotifierSession;
 import me.skorrloregaming.impl.ServerMinigame;
 import me.skorrloregaming.impl.Vote;
-import mkremins.fanciful.ChatColor;
 
 public class Votifier_Listener implements Listener {
 

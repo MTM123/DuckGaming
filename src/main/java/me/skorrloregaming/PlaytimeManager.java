@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
@@ -17,8 +18,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import mkremins.fanciful.ChatColor;
 
 public class PlaytimeManager implements Listener {
 	public ConcurrentMap<UUID, Long> playtimeTracker = new ConcurrentHashMap<>();

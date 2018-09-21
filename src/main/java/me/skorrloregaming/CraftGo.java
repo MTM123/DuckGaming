@@ -1,5 +1,6 @@
 package me.skorrloregaming;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
@@ -16,6 +17,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import io.netty.buffer.ByteBuf;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -42,7 +45,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.skorrloregaming.impl.IpLocationQuery;
 import me.skorrloregaming.impl.TitleSubtitle;
-import mkremins.fanciful.FancyMessage;
 
 public class CraftGo {
 
@@ -1949,8 +1951,8 @@ public class CraftGo {
 					if (titleSubtitle.getSubtitle().length() > 0)
 						player.sendMessage(titleSubtitle.getSubtitle());
 				}
-				Object chatTitle = ChatSerializer.serializeJson(new FancyMessage(titleSubtitle.getTitle()).exportToJson());
-				Object chatSubTitle = ChatSerializer.serializeJson(new FancyMessage(titleSubtitle.getSubtitle()).exportToJson());
+				Object chatTitle = ChatSerializer.serializeJson(ComponentSerializer.toString(new TextComponent(titleSubtitle.getTitle())));
+				Object chatSubTitle = ChatSerializer.serializeJson(ComponentSerializer.toString(new TextComponent(titleSubtitle.getSubtitle())));
 				Object title = Packet.Title.newInstance(Packet.Title.TITLE, chatTitle);
 				Object subTitle = Packet.Title.newInstance(Packet.Title.SUBTITLE, chatSubTitle);
 				Object length = Packet.TitleLength.newInstance(titleSubtitle.getFadeIn(), titleSubtitle.getStay(), titleSubtitle.getFadeOut());

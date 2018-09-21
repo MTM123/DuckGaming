@@ -5,8 +5,13 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,7 +35,6 @@ import org.bukkit.util.Vector;
 
 import me.skorrloregaming.impl.LastLocation;
 import me.skorrloregaming.impl.ServerMinigame;
-import mkremins.fanciful.FancyMessage;
 
 public class AntiCheat implements Listener {
 
@@ -202,7 +206,11 @@ public class AntiCheat implements Listener {
 			String tag = "SimpleAC: ";
 			Logger.info(tag + msg, true);
 			if (!consoleOnly && Server.getIngameAnticheatDebug()) {
-				String igMessage = new FancyMessage(tag + msg).style(mkremins.fanciful.ChatColor.ITALIC).suggest("/who " + detected.getName()).tooltip("/who " + detected.getName()).exportToJson();
+				TextComponent message = new TextComponent(tag + msg);
+				message.setColor(ChatColor.ITALIC);
+				message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/who " + detected.getName()));
+				message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("/who " + detected.getName()).create()));
+				String igMessage = ComponentSerializer.toString(message);
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					int rankID = -1;
 					if (!permissionOnly)
