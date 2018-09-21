@@ -38,7 +38,7 @@ public class ProtocolSupport_Listener implements Listener {
 		}, ProtocolVersionsHelper.BEFORE_1_13);
 		return true;
 	}
-	
+
 	protected static BlockData createBlockData(Material material) {
 		if (!material.isBlock()) {
 			throw new IllegalArgumentException(material + " is not a block");
@@ -75,8 +75,8 @@ public class ProtocolSupport_Listener implements Listener {
 	}
 
 	public void disableProtocolVersions() {
-		for (ProtocolVersion version : ProtocolVersion.getAllBeforeE(ProtocolVersion.MINECRAFT_1_7_5))
-			ProtocolSupportAPI.disableProtocolVersion(version);
+		for (String version : Server.getDisabledVersions())
+			ProtocolSupportAPI.disableProtocolVersion(ProtocolVersion.valueOf("MINECRAFT_" + version.replace(".", "_")));
 	}
 
 	public boolean isOnlineMode(Player player) {

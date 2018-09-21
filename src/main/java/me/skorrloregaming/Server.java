@@ -111,7 +111,7 @@ public class Server extends JavaPlugin implements Listener {
 	private static ArrayList<UUID> confirmRepairShop = new ArrayList<>();
 	private static ArrayList<UUID> confirmUnregisterNpc = new ArrayList<>();
 	private static ArrayList<UUID> currentFellers = new ArrayList<>();
-	private static ArrayList<String> allowedVersions = new ArrayList<String>();
+	private static ArrayList<String> disabledVersions = new ArrayList<String>();
 
 	private static ConcurrentMap<UUID, Integer> potionsKitCooldownKitpvp = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, Integer> starterKitCooldownKitpvp = new ConcurrentHashMap<>();
@@ -417,8 +417,8 @@ public class Server extends JavaPlugin implements Listener {
 		return currentFellers;
 	}
 
-	public static ArrayList<String> getAllowedVersions() {
-		return allowedVersions;
+	public static ArrayList<String> getDisabledVersions() {
+		return disabledVersions;
 	}
 
 	public static ArrayList<UUID> getHub() {
@@ -907,50 +907,50 @@ public class Server extends JavaPlugin implements Listener {
 			pingInjector.register();
 		if (epiB && !epiA)
 			pingInjector.unregister();
-		allowedVersions.clear();
-		if (_1m13) {
-			allowedVersions.add("1.13.1");
-			allowedVersions.add("1.13");
+		disabledVersions.clear();
+		if (!_1m13) {
+			disabledVersions.add("1.13.1");
+			disabledVersions.add("1.13");
 		}
-		if (_1m12) {
-			allowedVersions.add("1.12.2");
-			allowedVersions.add("1.12.1");
-			allowedVersions.add("1.12");
+		if (!_1m12) {
+			disabledVersions.add("1.12.2");
+			disabledVersions.add("1.12.1");
+			disabledVersions.add("1.12");
 		}
-		if (_1m11) {
-			allowedVersions.add("1.11.2");
-			allowedVersions.add("1.11");
+		if (!_1m11) {
+			disabledVersions.add("1.11.2");
+			disabledVersions.add("1.11");
 		}
-		if (_1m10) {
-			allowedVersions.add("1.10");
+		if (!_1m10) {
+			disabledVersions.add("1.10");
 		}
-		if (_1m9) {
-			allowedVersions.add("1.9.4");
-			allowedVersions.add("1.9.2");
-			allowedVersions.add("1.9.1");
-			allowedVersions.add("1.9");
+		if (!_1m9) {
+			disabledVersions.add("1.9.4");
+			disabledVersions.add("1.9.2");
+			disabledVersions.add("1.9.1");
+			disabledVersions.add("1.9");
 		}
-		if (_1m8) {
-			allowedVersions.add("1.8");
+		if (!_1m8) {
+			disabledVersions.add("1.8");
 		}
-		if (_1m7) {
-			allowedVersions.add("1.7.10");
-			allowedVersions.add("1.7.5");
+		if (!_1m7) {
+			disabledVersions.add("1.7.10");
+			disabledVersions.add("1.7.5");
 		}
-		if (_1m6) {
-			allowedVersions.add("1.6.4");
-			allowedVersions.add("1.6.2");
-			allowedVersions.add("1.6.1");
+		if (!_1m6) {
+			disabledVersions.add("1.6.4");
+			disabledVersions.add("1.6.2");
+			disabledVersions.add("1.6.1");
 		}
-		if (_1m5) {
-			allowedVersions.add("1.5.2");
-			allowedVersions.add("1.5.1");
+		if (!_1m5) {
+			disabledVersions.add("1.5.2");
+			disabledVersions.add("1.5.1");
 		}
-		if (_1m4) {
-			allowedVersions.add("1.4.7");
+		if (!_1m4) {
+			disabledVersions.add("1.4.7");
 		}
-		if (_1m3) {
-			allowedVersions.add("pe");
+		if (!_1m3) {
+			disabledVersions.add("pe");
 		}
 	}
 
