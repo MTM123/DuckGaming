@@ -1,0 +1,6 @@
+host: %ip%
+port: 8192
+debug: false
+disable-v1-protocol: false
+tokens:
+  default: %default_token%

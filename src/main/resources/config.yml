@@ -1,0 +1,36 @@
+settings:
+    enable:
+        factions: true
+        survival: true
+        kitpvp: true
+        skyfight: true
+        creative: true
+        skyblock: false
+        prison: false
+        welcomeMessage: true
+        notificationWorker: false
+        pingInjector: true
+        preloadChunks: false
+        authme:
+            dailyAuth: true
+            autoLoginCmd: true
+        protocolsupport:
+            versions:
+                PC:
+                  1m12: true
+                  1m11: true
+                  1m10: true
+                  1m9: true
+                  1m8: true
+                  1m7: true
+                  1m6: false
+                  1m5: false
+                  1m4: false
+                PE: true
+    ranking:
+        enable: true
+        prefix: true
+    customJoinMessage: true
+    customQuitMessage: true
+    topVotersHttpServerPort: 2096
+config:
