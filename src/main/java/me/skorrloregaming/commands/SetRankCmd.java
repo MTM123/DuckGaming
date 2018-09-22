@@ -19,7 +19,7 @@ public class SetRankCmd implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (sender instanceof Player && $.getRankId((Player) sender) > 2) {
+		if (sender instanceof Player && $.getRankId((Player) sender) < 3) {
 			$.playLackPermissionMessage(sender);
 			return true;
 		}

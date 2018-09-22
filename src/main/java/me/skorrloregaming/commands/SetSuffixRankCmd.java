@@ -13,12 +13,17 @@ import org.bukkit.command.CommandSender;
 import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Server;
+import org.bukkit.entity.Player;
 
 public class SetSuffixRankCmd implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!sender.isOp()) {
+		if (sender instanceof Player && $.getRankId((Player) sender) < 3) {
+			$.playLackPermissionMessage(sender);
+			return true;
+		}
+		if (!(sender instanceof Player) && !sender.isOp()) {
 			$.playLackPermissionMessage(sender);
 			return true;
 		}
@@ -46,6 +51,7 @@ public class SetSuffixRankCmd implements CommandExecutor {
 					}
 					String message = Server.getPluginLabel() + ChatColor.RED + targetPlayer.getName() + ChatColor.GRAY + " has been given suffix " + ChatColor.RED + WordUtils.capitalize(args[1].toLowerCase());
 					Bukkit.broadcastMessage(message);
+					message = message.substring(message.indexOf(ChatColor.RED + ""));
 					Server.getDiscordBot().broadcast(
 							ChatColor.stripColor(message.replace(targetPlayer.getName(), "**" + targetPlayer.getName() + "**"))
 							, Channel.SERVER_CHAT, Channel.SERVER_LOG
