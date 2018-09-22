@@ -2,6 +2,7 @@ package me.skorrloregaming.hooks;
 
 import java.util.Calendar;
 
+import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -52,14 +53,16 @@ public class Votifier_Listener implements Listener {
 			if (doJackpots) {
 				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted and earned a jackpot.";
 				Bukkit.broadcastMessage(message);
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+						, Channel.SERVER_CHAT
 				);
 			} else {
 				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted for the server.";
 				Bukkit.broadcastMessage(message);
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+						, Channel.SERVER_CHAT
 				);
 			}
 			int balance2 = EconManager.retrieveCash(player.getUniqueId(), "kitpvp");

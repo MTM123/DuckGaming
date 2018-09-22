@@ -1,5 +1,6 @@
 package me.skorrloregaming.discord.listeners;
 
+import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.ReadyEvent;
@@ -16,6 +17,6 @@ public class ReadyListener implements EventListener {
 	@Override
 	public void onEvent(Event event) {
 		if (event instanceof ReadyEvent)
-			discordBot.broadcast(DiscordBot.CHAT_CHANNEL, ":white_check_mark: **Server has started**");
+			discordBot.broadcast(":white_check_mark: **Server has started**", Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 	}
 }

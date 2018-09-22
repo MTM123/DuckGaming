@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.apache.commons.lang.WordUtils;
@@ -996,13 +997,13 @@ public class PlayerEventHandler implements Listener {
 				if (rankName.equals("Youtube"))
 					rankName = "YouTube";
 				if ($.isPrefixedRankingEnabled()) {
-					Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+					Server.getDiscordBot().broadcast(
 							"**" + rankName + "** " + player.getName() + " " + '\u00BB' + " " + Server.getAntiCheat().processAntiSwear(player, event.getMessage())
-					);
+							, Channel.SERVER_CHAT);
 				} else {
-					Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+					Server.getDiscordBot().broadcast(
 							"**" + player.getName() + "** " + '\u00BB' + " " + Server.getAntiCheat().processAntiSwear(player, event.getMessage())
-					);
+							, Channel.SERVER_CHAT);
 				}
 			}
 			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
@@ -1252,9 +1253,9 @@ public class PlayerEventHandler implements Listener {
 		if (CraftGo.Player.getUUID(player.getName(), false) == null) {
 			String message = $.italicGray + "Player " + player.getName() + " is using an offline/cracked account";
 			Logger.info(message);
-			Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+			Server.getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-			);
+					, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 		}
 		if (!$.isPluginEnabled("AuthMe")) {
 			String joinMessage = Server.getDefaultJoinMessage().replace("{player}", player.getName());
@@ -1298,9 +1299,9 @@ public class PlayerEventHandler implements Listener {
 								int day = cal.get(Calendar.DAY_OF_MONTH);
 								String message = $.italicGray + "Player " + player.getName() + " previously logged in on " + $.formatMonthIdAbbrev(month) + " " + day + $.formatDayOfMonthSuffix(day) + " " + year;
 								Bukkit.broadcastMessage(message);
-								Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+								Server.getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-								);
+										, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 								if (Server.getSessionManager().verifySession(player) && dailyAuth) {
 									if (session.isDiscarded()) {
 										player.sendMessage($.italicGray + "Your session was invalidated, please login to your account again.");
@@ -1321,16 +1322,16 @@ public class PlayerEventHandler implements Listener {
 							if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString())) {
 								String message = $.italicGray + "Player " + player.getName() + " has yet to register for the server";
 								Bukkit.broadcastMessage(message);
-								Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+								Server.getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-								);
+										, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 							}
 							if (Server.getSessionManager().getStoredSession(player, hostAddr) == null) {
 								String message = $.italicGray + "Player " + player.getName() + " has yet to register new session";
 								Bukkit.broadcastMessage(message);
-								Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+								Server.getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-								);
+										, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 							}
 							if (!dailyAuth && autoLoginCmd) {
 								String ip = player.getAddress().getAddress().getHostAddress().replace(".", "x");
@@ -1412,9 +1413,9 @@ public class PlayerEventHandler implements Listener {
 			Server.getPlugin().getConfig().set("warning." + ipAddress + ".count", "0");
 			String message = ChatColor.RESET + "Welcome to the server, " + ChatColor.BOLD + player.getName() + ChatColor.RESET + ".";
 			Bukkit.broadcastMessage(message);
-			Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+			Server.getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-			);
+					, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 		}
 		Server.getPlugin().getConfig().set(path + ".ip", ipAddress);
 		Server.getPlugin().getConfig().set("address." + ipAddress + "." + player.getUniqueId().toString(), "0");
@@ -1575,10 +1576,11 @@ public class PlayerEventHandler implements Listener {
 			}
 		});
 		Server.getPlaytimeManager().handle_JoinEvent(player);
-		Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+		Server.getDiscordBot().broadcast(
 				":heavy_plus_sign:" + ChatColor.stripColor(
 						event.getJoinMessage().replace(player.getName(), "**" + player.getName() + "**")
 				)
+				, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
 		);
 	}
 
@@ -1613,8 +1615,9 @@ public class PlayerEventHandler implements Listener {
 			String message = Server.getPluginLabel() + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged out during combat.";
 			Bukkit.broadcastMessage(message);
 			message = message.substring(message.indexOf(ChatColor.RED + ""));
-			Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+			Server.getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+					, Channel.SERVER_CHAT
 			);
 			Server.getPlayersInCombat().remove(player.getUniqueId());
 		}
@@ -1664,19 +1667,23 @@ public class PlayerEventHandler implements Listener {
 			if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString()) || !$.isAuthenticated(player)) {
 				String message = $.italicGray + "Player " + player.getName() + " has left without registering for this server";
 				Bukkit.broadcastMessage(message);
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-				);
+						, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 			}
 		}
 		if (Server.getHubScoreboardTitleIndex().containsKey(player.getUniqueId()))
 			Server.getHubScoreboardTitleIndex().remove(player.getUniqueId());
 		if (Server.getBarApiTitleIndex().containsKey(player.getUniqueId()))
 			Server.getBarApiTitleIndex().remove(player.getUniqueId());
-		Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+		for (Player op : Bukkit.getOnlinePlayers())
+			if (Server.getSkyfight().containsKey(op.getUniqueId()))
+				$.skyfightScoreboard.schedule(op, true);
+		Server.getDiscordBot().broadcast(
 				":heavy_minus_sign:" + ChatColor.stripColor(
 						event.getQuitMessage().replace(player.getName(), "**" + player.getName() + "**")
 				)
+				, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
 		);
 	}
 
@@ -1748,6 +1755,7 @@ public class PlayerEventHandler implements Listener {
 			if (Server.getSkyfight().containsKey(player.getUniqueId())) {
 				event.setDeathMessage("");
 				event.getDrops().clear();
+				return;
 			} else if (subDomain.equals("factions") || subDomain.equals("kitpvp")) {
 				Player k;
 				if (event.getEntity().getKiller() instanceof Arrow) {
@@ -1757,7 +1765,7 @@ public class PlayerEventHandler implements Listener {
 					} else {
 						String discordMsg = event.getDeathMessage().substring(tag.length()).replace(ChatColor.RED + "", "**")
 								.replace(ChatColor.GRAY + "", "**").replace(ChatColor.DARK_RED + "", "");
-						Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL, discordMsg);
+						Server.getDiscordBot().broadcast(discordMsg, Channel.SERVER_CHAT);
 						return;
 					}
 				} else if (event.getEntity().getKiller() instanceof Player) {
@@ -1765,7 +1773,7 @@ public class PlayerEventHandler implements Listener {
 				} else {
 					String discordMsg = event.getDeathMessage().substring(tag.length()).replace(ChatColor.RED + "", "**")
 							.replace(ChatColor.GRAY + "", "**").replace(ChatColor.DARK_RED + "", "");
-					Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL, discordMsg);
+					Server.getDiscordBot().broadcast(discordMsg, Channel.SERVER_CHAT);
 					return;
 				}
 				double baseHealth = $.roundDouble(k.getHealth() / 2, 1);
@@ -1814,7 +1822,7 @@ public class PlayerEventHandler implements Listener {
 		}
 		String discordMsg = event.getDeathMessage().substring(tag.length()).replace(ChatColor.RED + "", "**")
 				.replace(ChatColor.GRAY + "", "**").replace(ChatColor.DARK_RED + "", "");
-		Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL, discordMsg);
+		Server.getDiscordBot().broadcast(discordMsg, Channel.SERVER_CHAT);
 	}
 
 	@EventHandler

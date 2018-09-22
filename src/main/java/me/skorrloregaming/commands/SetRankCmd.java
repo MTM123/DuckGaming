@@ -1,6 +1,7 @@
 package me.skorrloregaming.commands;
 
 import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
@@ -53,9 +54,9 @@ public class SetRankCmd implements CommandExecutor {
 					String message = Server.getPluginLabel() + ChatColor.RED + targetPlayer.getName() + ChatColor.GRAY + " has been given rank " + ChatColor.RED + WordUtils.capitalize(args[1].toLowerCase());
 					Bukkit.broadcastMessage(message);
 					message = message.substring(message.indexOf(ChatColor.RED + ""));
-					Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+					Server.getDiscordBot().broadcast(
 							ChatColor.stripColor(message.replace(targetPlayer.getName(), "**" + targetPlayer.getName() + "**"))
-					);
+							, Channel.SERVER_CHAT, Channel.SERVER_LOG);
 				} else {
 					sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified rank could not be found.");
 					String s = "";

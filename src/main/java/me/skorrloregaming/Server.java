@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import me.skorrloregaming.commands.*;
+import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
@@ -795,7 +796,7 @@ public class Server extends JavaPlugin implements Listener {
 		plugin.saveConfig();
 		barApi.onDisable();
 		nuVotifier.onDisable();
-		discordBot.broadcast(DiscordBot.CHAT_CHANNEL, ":octagonal_sign: **Server has stopped**");
+		discordBot.broadcast(":octagonal_sign: **Server has stopped**", Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 		discordBot.unregister();
 		if (!(lockette == null))
 			lockette.onDisable();
@@ -1049,9 +1050,9 @@ public class Server extends JavaPlugin implements Listener {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "KitPvP";
 				Bukkit.broadcastMessage(message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-				);
+						, Channel.SERVER_CHAT);
 			}
 			player.setAllowFlight(false);
 			$.kitpvpStatisticsScoreboard.schedule(player, DisplayType.Ten_Second_Period, Kitpvp_StatisticsScoreboard.class, Kitpvp_LeaderboardScoreboard.class);
@@ -1077,9 +1078,9 @@ public class Server extends JavaPlugin implements Listener {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "KitPvP";
 				Bukkit.broadcastMessage(message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-				);
+						, Channel.SERVER_CHAT);
 			}
 			kitpvp.remove(player.getUniqueId());
 			player.setAllowFlight(true);
@@ -1143,9 +1144,9 @@ public class Server extends JavaPlugin implements Listener {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Factions";
 				Bukkit.broadcastMessage(message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-				);
+						, Channel.SERVER_CHAT);
 			}
 			player.setAllowFlight(false);
 			$.factionsScoreboard.schedule(player);
@@ -1173,9 +1174,9 @@ public class Server extends JavaPlugin implements Listener {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Factions";
 				Bukkit.broadcastMessage(message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-				);
+						, Channel.SERVER_CHAT);
 			}
 			factions.remove(player.getUniqueId());
 			player.setAllowFlight(true);
@@ -1237,9 +1238,9 @@ public class Server extends JavaPlugin implements Listener {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Survival";
 				Bukkit.broadcastMessage(message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-				);
+						, Channel.SERVER_CHAT);
 			}
 			player.setAllowFlight(false);
 		}
@@ -1264,9 +1265,9 @@ public class Server extends JavaPlugin implements Listener {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Survival";
 				Bukkit.broadcastMessage(message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-				);
+						, Channel.SERVER_CHAT);
 			}
 			survival.remove(player.getUniqueId());
 			player.setAllowFlight(true);
@@ -1303,9 +1304,9 @@ public class Server extends JavaPlugin implements Listener {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Skyfight";
 				Bukkit.broadcastMessage(message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-				);
+						, Channel.SERVER_CHAT);
 			}
 		}
 		$.Skyfight.Player sfPlayer = skyfight.get(player.getUniqueId());
@@ -1383,9 +1384,10 @@ public class Server extends JavaPlugin implements Listener {
 				}
 			}
 		}
-		$.skyfightScoreboard.schedule(player, true);
 		CraftGo.Player.clearArrowsInBody(player);
 		for (Player op : Bukkit.getOnlinePlayers()) {
+			if (skyfight.containsKey(op.getUniqueId()))
+				$.skyfightScoreboard.schedule(op, true);
 			$.Scoreboard.configureHealth(op);
 		}
 	}
@@ -1402,9 +1404,9 @@ public class Server extends JavaPlugin implements Listener {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Skyfight";
 				Bukkit.broadcastMessage(message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-				);
+						, Channel.SERVER_CHAT);
 			}
 			skyfight.remove(player.getUniqueId());
 			player.getActivePotionEffects().clear();
@@ -1478,9 +1480,9 @@ public class Server extends JavaPlugin implements Listener {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Creative";
 				Bukkit.broadcastMessage(message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-				);
+						, Channel.SERVER_CHAT);
 			}
 			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 				@Override
@@ -1522,9 +1524,9 @@ public class Server extends JavaPlugin implements Listener {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Creative";
 				Bukkit.broadcastMessage(message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-				);
+						, Channel.SERVER_CHAT);
 			}
 			creative.remove(player.getUniqueId());
 			player.setGameMode(GameMode.SURVIVAL);
@@ -1595,9 +1597,9 @@ public class Server extends JavaPlugin implements Listener {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Skyblock";
 				Bukkit.broadcastMessage(message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-				);
+						, Channel.SERVER_CHAT);
 			}
 			player.setAllowFlight(false);
 			$.skyblockScoreboard.schedule(player);
@@ -1623,9 +1625,9 @@ public class Server extends JavaPlugin implements Listener {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Skyblock";
 				Bukkit.broadcastMessage(message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-				);
+						, Channel.SERVER_CHAT);
 			}
 			skyblock.remove(player.getUniqueId());
 			$.clearPlayer(player);

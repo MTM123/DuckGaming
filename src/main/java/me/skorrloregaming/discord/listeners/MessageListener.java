@@ -3,6 +3,7 @@ package me.skorrloregaming.discord.listeners;
 import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Logger;
+import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -25,7 +26,7 @@ public class MessageListener extends ListenerAdapter {
 	public void onMessageReceived(MessageReceivedEvent event) {
 		if (event.isFromType(ChannelType.TEXT)) {
 			if (!event.getAuthor().isBot())
-				if (event.getTextChannel().getName().equals(DiscordBot.CHAT_CHANNEL)) {
+				if (event.getTextChannel().getName().equals(Channel.SERVER_CHAT.toString().toLowerCase())) {
 					String rawMessage = event.getMessage().getContentDisplay();
 					String memberName = event.getMember().getEffectiveName();
 					String displayName = $.getFlashPlayerDisplayName(memberName);

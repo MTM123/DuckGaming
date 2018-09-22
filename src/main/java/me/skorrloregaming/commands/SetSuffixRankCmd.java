@@ -1,5 +1,6 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
@@ -45,8 +46,9 @@ public class SetSuffixRankCmd implements CommandExecutor {
 					}
 					String message = Server.getPluginLabel() + ChatColor.RED + targetPlayer.getName() + ChatColor.GRAY + " has been given suffix " + ChatColor.RED + WordUtils.capitalize(args[1].toLowerCase());
 					Bukkit.broadcastMessage(message);
-					Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+					Server.getDiscordBot().broadcast(
 							ChatColor.stripColor(message.replace(targetPlayer.getName(), "**" + targetPlayer.getName() + "**"))
+							, Channel.SERVER_CHAT, Channel.SERVER_LOG
 					);
 				} else {
 					sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified rank could not be found.");
