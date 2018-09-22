@@ -1,6 +1,7 @@
 package me.skorrloregaming.discord;
 
 import me.skorrloregaming.discord.listeners.MessageListener;
+import me.skorrloregaming.discord.listeners.ReadyListener;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.*;
@@ -12,6 +13,7 @@ public class DiscordBot {
 
 	private JDA bot;
 
+	private ReadyListener readyListener;
 	private MessageListener messageListener;
 
 	public DiscordBot(String name, String token) {
@@ -20,7 +22,10 @@ public class DiscordBot {
 
 	public void register() {
 		try {
-			bot = new JDABuilder(token).build();
+			readyListener = new ReadyListener(this);
+			bot = new JDABuilder(token)
+					.addEventListener(readyListener)
+					.build();
 			messageListener = new MessageListener(this);
 			bot.addEventListener(messageListener);
 		} catch (Exception ex) {
@@ -30,7 +35,8 @@ public class DiscordBot {
 
 	public void unregister() {
 		bot.removeEventListener(messageListener);
-		bot.shutdownNow();
+		bot.removeEventListener(readyListener);
+		bot.shutdown();
 	}
 
 	public JDA getBot() {

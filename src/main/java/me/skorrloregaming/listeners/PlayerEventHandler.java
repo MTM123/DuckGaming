@@ -1247,8 +1247,16 @@ public class PlayerEventHandler implements Listener {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		if (CraftGo.Player.getUUID(player.getName(), false) == null)
-			Logger.info($.italicGray + "Player " + player.getName() + " is using an offline/cracked account");
+		if (CraftGo.Player.getUUID(player.getName(), false) == null) {
+			String message = $.italicGray + "Player " + player.getName() + " is using an offline/cracked account";
+			Logger.info(message);
+			try {
+				message = ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"));
+				Server.getInstance().getDiscordBot().getTextChannel("minecraft-chat").sendMessage(message).queue();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		if (!$.isPluginEnabled("AuthMe")) {
 			String joinMessage = Server.getDefaultJoinMessage().replace("{player}", player.getName());
 			PlayerAuthenticateEvent authEvent = new PlayerAuthenticateEvent(player, joinMessage);
@@ -1266,7 +1274,7 @@ public class PlayerEventHandler implements Listener {
 							if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
 								((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
 							} else {
-								((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceRegister(player, UUID.nameUUIDFromBytes(player.getName().getBytes()).toString(), true);
+								((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceRegister(player, UUID.nameUUIDFromBytes(player.getName().getBytes()).toString().substring(0, 30), true);
 							}
 							return;
 						}
@@ -1307,10 +1315,26 @@ public class PlayerEventHandler implements Listener {
 									}
 								}
 							}
-							if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString()))
-								Bukkit.broadcastMessage($.italicGray + "Player " + player.getName() + " has yet to register for the server");
-							if (Server.getSessionManager().getStoredSession(player, hostAddr) == null)
-								Bukkit.broadcastMessage($.italicGray + "Player " + player.getName() + " has yet to register new session");
+							if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString())) {
+								String message = $.italicGray + "Player " + player.getName() + " has yet to register for the server";
+								Bukkit.broadcastMessage(message);
+								try {
+									message = ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"));
+									Server.getInstance().getDiscordBot().getTextChannel("minecraft-chat").sendMessage(message).queue();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+							if (Server.getSessionManager().getStoredSession(player, hostAddr) == null) {
+								String message = $.italicGray + "Player " + player.getName() + " has yet to register new session";
+								Bukkit.broadcastMessage(message);
+								try {
+									message = ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"));
+									Server.getInstance().getDiscordBot().getTextChannel("minecraft-chat").sendMessage(message).queue();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
 							if (!dailyAuth && autoLoginCmd) {
 								String ip = player.getAddress().getAddress().getHostAddress().replace(".", "x");
 								if (Server.getPlugin().getConfig().contains("autologin." + ip + "." + player.getUniqueId().toString())) {
@@ -1550,6 +1574,14 @@ public class PlayerEventHandler implements Listener {
 			}
 		});
 		Server.getPlaytimeManager().handle_JoinEvent(player);
+		try {
+			String message = ChatColor.stripColor(
+					event.getJoinMessage().replace(player.getName(), "**" + player.getName() + "**")
+			);
+			Server.getInstance().getDiscordBot().getTextChannel("minecraft-chat").sendMessage(message).queue();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@EventHandler
@@ -1628,13 +1660,28 @@ public class PlayerEventHandler implements Listener {
 			player.leaveVehicle();
 		if ($.isPluginEnabled("AuthMe")) {
 			if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString()) || !$.isAuthenticated(player)) {
-				Bukkit.broadcastMessage($.italicGray + "Player " + player.getName() + " has left without registering for this server");
+				String message = $.italicGray + "Player " + player.getName() + " has left without registering for this server";
+				Bukkit.broadcastMessage(message);
+				try {
+					message = ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"));
+					Server.getInstance().getDiscordBot().getTextChannel("minecraft-chat").sendMessage(message).queue();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		if (Server.getHubScoreboardTitleIndex().containsKey(player.getUniqueId()))
 			Server.getHubScoreboardTitleIndex().remove(player.getUniqueId());
 		if (Server.getBarApiTitleIndex().containsKey(player.getUniqueId()))
 			Server.getBarApiTitleIndex().remove(player.getUniqueId());
+		try {
+			String message = ChatColor.stripColor(
+					event.getQuitMessage().replace(player.getName(), "**" + player.getName() + "**")
+			);
+			Server.getInstance().getDiscordBot().getTextChannel("minecraft-chat").sendMessage(message).queue();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@EventHandler

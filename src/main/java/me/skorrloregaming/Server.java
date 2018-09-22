@@ -606,6 +606,8 @@ public class Server extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
+		discordBot = new DiscordBot(getPluginName(), getConfig().getString("settings.discordBot.token", "TOKEN"));
+		discordBot.register();
 		lockette = new Lockette();
 		lockette.onEnable();
 		nuVotifier = new Votifier();
@@ -699,8 +701,6 @@ public class Server extends JavaPlugin implements Listener {
 		sessionManager.setup();
 		topVotersHttpServer = new TopVotersHttpServer(getConfig().getInt("settings.topVotersHttpServerPort", 2096));
 		CustomRecipes.loadRecipes();
-		discordBot = new DiscordBot(getPluginName(), getConfig().getString("settings.discordBot.token", "TOKEN"));
-		discordBot.register();
 		getCommand("printblockstate").setExecutor(new PrintBlockStateCmd());
 		getCommand("ignore").setExecutor(new IgnoreCmd());
 		getCommand("logger").setExecutor(new LoggerCmd());
@@ -801,6 +801,11 @@ public class Server extends JavaPlugin implements Listener {
 		plugin.saveConfig();
 		barApi.onDisable();
 		nuVotifier.onDisable();
+		try {
+			discordBot.getTextChannel("minecraft-chat").sendMessage(":red_circle: Server stopped.").queue();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		discordBot.unregister();
 		if (!(lockette == null))
 			lockette.onDisable();
