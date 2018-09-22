@@ -70,33 +70,33 @@ public class $ {
 	public static String modernMsgPrefix = ChatColor.BOLD + "\u00BB" + " ";
 	public static String consoleTag = ChatColor.RED + "[" + ChatColor.GRAY + "Console" + ChatColor.RED + "] " + ChatColor.RED;
 	public static String pricePrefix = ChatColor.RESET + "Purchase Price: " + ChatColor.RED + "$";
-	public static List<String> validRanks = Arrays.asList(new String[] { "default", "default-plus", "founder", "manager", "admin", "moderator", "helper", "developer", "builder", "senior", "youtube", "donator", "redstone", "obsidian", "bedrock" });
-	public static List<String> validRanksNotifyWorkerExecuteCommand = Arrays.asList(new String[] { "founder" });
-	public static List<String> validMinigames = Arrays.asList(new String[] { "kitpvp", "factions", "survival", "skyfight", "creative", "skyblock" });
-	public static List<String> validStorageMinigames = Arrays.asList(new String[] { "kitpvp", "factions", "survival", "creative", "skyblock" });
-	public static List<String> validLocketteMinigames = Arrays.asList(new String[] { "skyblock", "factions" });
-	public static List<String> validStairSeatMinigames = Arrays.asList(new String[] { "creative", "skyblock", "factions" });
-	public static List<String> scoreboardAutoUpdateMinigames = Arrays.asList(new String[] { "skyblock", "factions", "kitpvp" });
-	public static List<String> betaMinigames = Arrays.asList(new String[] {});
+	public static List<String> validRanks = Arrays.asList(new String[]{"default", "default-plus", "founder", "manager", "admin", "moderator", "helper", "developer", "builder", "senior", "youtube", "donator", "redstone", "obsidian", "bedrock"});
+	public static List<String> validRanksNotifyWorkerExecuteCommand = Arrays.asList(new String[]{"founder"});
+	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock"});
+	public static List<String> validStorageMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "creative", "skyblock"});
+	public static List<String> validLocketteMinigames = Arrays.asList(new String[]{"skyblock", "factions"});
+	public static List<String> validStairSeatMinigames = Arrays.asList(new String[]{"creative", "skyblock", "factions"});
+	public static List<String> scoreboardAutoUpdateMinigames = Arrays.asList(new String[]{"skyblock", "factions", "kitpvp"});
+	public static List<String> betaMinigames = Arrays.asList(new String[]{});
 	public static Kitpvp_LeaderboardScoreboard kitpvpLeaderboardScoreboard = new Kitpvp_LeaderboardScoreboard();
 	public static Kitpvp_StatisticsScoreboard kitpvpStatisticsScoreboard = new Kitpvp_StatisticsScoreboard();
 	public static Skyblock_StatisticsScoreboard skyblockScoreboard = new Skyblock_StatisticsScoreboard();
 	public static Skyfight_LeaderboardScoreboard skyfightScoreboard = new Skyfight_LeaderboardScoreboard();
 	public static Factions_StatisticsScoreboard factionsScoreboard = new Factions_StatisticsScoreboard();
-	public static List<SwitchStringMinigame> playersNotAllowedToJoinSpecificMinigames = Arrays.asList(new SwitchStringMinigame[] { new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.KITPVP), new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.SKYFIGHT) });
+	public static List<SwitchStringMinigame> playersNotAllowedToJoinSpecificMinigames = Arrays.asList(new SwitchStringMinigame[]{new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.KITPVP), new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.SKYFIGHT)});
 
 	public static DisposableScoreboard getPrimaryScoreboard(ServerMinigame minigame) {
 		switch (minigame) {
-		case KITPVP:
-			return kitpvpStatisticsScoreboard;
-		case SKYBLOCK:
-			return skyblockScoreboard;
-		case SKYFIGHT:
-			return skyfightScoreboard;
-		case FACTIONS:
-			return factionsScoreboard;
-		default:
-			return null;
+			case KITPVP:
+				return kitpvpStatisticsScoreboard;
+			case SKYBLOCK:
+				return skyblockScoreboard;
+			case SKYFIGHT:
+				return skyfightScoreboard;
+			case FACTIONS:
+				return factionsScoreboard;
+			default:
+				return null;
 		}
 	}
 
@@ -139,14 +139,14 @@ public class $ {
 
 	public static String toSuffixRankTag(Player player, String str) {
 		switch (str.toString()) {
-		case "default-plus":
-			if (getRank(player.getUniqueId()).equals("builder")) {
-				return ChatColor.GRAY + "[" + ChatColor.WHITE + "Member+" + ChatColor.GRAY + "]" + ChatColor.RESET;
-			} else {
+			case "default-plus":
+				if (getRank(player.getUniqueId()).equals("builder")) {
+					return ChatColor.GRAY + "[" + ChatColor.WHITE + "Member+" + ChatColor.GRAY + "]" + ChatColor.RESET;
+				} else {
+					return toRankTag(str).substring(0, toRankTag(str).lastIndexOf(" ")) + ChatColor.RESET;
+				}
+			default:
 				return toRankTag(str).substring(0, toRankTag(str).lastIndexOf(" ")) + ChatColor.RESET;
-			}
-		default:
-			return toRankTag(str).substring(0, toRankTag(str).lastIndexOf(" ")) + ChatColor.RESET;
 		}
 	}
 
@@ -181,6 +181,40 @@ public class $ {
 			return ChatColor.DARK_GREEN + "[" + ChatColor.GREEN + "Obsidian" + ChatColor.DARK_GREEN + "] " + ChatColor.GRAY;
 		if (str.equals("bedrock"))
 			return ChatColor.DARK_GREEN + "[" + ChatColor.GREEN + "Bedrock" + ChatColor.DARK_GREEN + "] " + ChatColor.GRAY;
+		return "";
+	}
+
+	public static String toRankDisplayName(String str) {
+		if (str.equals("default"))
+			return "member";
+		if (str.equals("default-plus"))
+			return "member+";
+		if (str.equals("helper"))
+			return "helper";
+		if (str.equals("developer"))
+			return "developer";
+		if (str.equals("builder"))
+			return "builder";
+		if (str.equals("moderator"))
+			return "moderator";
+		if (str.equals("admin"))
+			return "admin";
+		if (str.equals("manager"))
+			return "manager";
+		if (str.equals("founder"))
+			return "founder";
+		if (str.equals("donator"))
+			return "donator";
+		if (str.equals("senior"))
+			return "senior";
+		if (str.equals("youtube"))
+			return "youtube";
+		if (str.equals("redstone"))
+			return "redstone";
+		if (str.equals("obsidian"))
+			return "obsidian";
+		if (str.equals("bedrock"))
+			return "bedrock";
 		return "";
 	}
 
@@ -237,63 +271,63 @@ public class $ {
 
 	public static String formatMonthId(int month) {
 		switch (month % 12) {
-		case 0:
-			return "January";
-		case 1:
-			return "February";
-		case 2:
-			return "March";
-		case 3:
-			return "April";
-		case 4:
-			return "May";
-		case 5:
-			return "June";
-		case 6:
-			return "July";
-		case 7:
-			return "August";
-		case 8:
-			return "September";
-		case 9:
-			return "October";
-		case 10:
-			return "November";
-		case 11:
-			return "December";
-		default:
-			return null;
+			case 0:
+				return "January";
+			case 1:
+				return "February";
+			case 2:
+				return "March";
+			case 3:
+				return "April";
+			case 4:
+				return "May";
+			case 5:
+				return "June";
+			case 6:
+				return "July";
+			case 7:
+				return "August";
+			case 8:
+				return "September";
+			case 9:
+				return "October";
+			case 10:
+				return "November";
+			case 11:
+				return "December";
+			default:
+				return null;
 		}
 	}
 
 	public static String formatMonthIdAbbrev(int month) {
 		switch (month % 12) {
-		case 0:
-			return "Jan.";
-		case 1:
-			return "Feb.";
-		case 2:
-			return "Mar.";
-		case 3:
-			return "Apr.";
-		case 4:
-			return "May";
-		case 5:
-			return "June";
-		case 6:
-			return "July";
-		case 7:
-			return "Aug.";
-		case 8:
-			return "Sept.";
-		case 9:
-			return "Oct.";
-		case 10:
-			return "Nov.";
-		case 11:
-			return "Dec.";
-		default:
-			return null;
+			case 0:
+				return "Jan.";
+			case 1:
+				return "Feb.";
+			case 2:
+				return "Mar.";
+			case 3:
+				return "Apr.";
+			case 4:
+				return "May";
+			case 5:
+				return "June";
+			case 6:
+				return "July";
+			case 7:
+				return "Aug.";
+			case 8:
+				return "Sept.";
+			case 9:
+				return "Oct.";
+			case 10:
+				return "Nov.";
+			case 11:
+				return "Dec.";
+			default:
+				return null;
 		}
 	}
 
@@ -311,32 +345,32 @@ public class $ {
 
 	public static int retrieveMonthId(String month) {
 		switch (month) {
-		case "January":
-			return 0;
-		case "February":
-			return 1;
-		case "March":
-			return 2;
-		case "April":
-			return 3;
-		case "May":
-			return 4;
-		case "June":
-			return 5;
-		case "July":
-			return 6;
-		case "August":
-			return 7;
-		case "September":
-			return 8;
-		case "October":
-			return 9;
-		case "November":
-			return 10;
-		case "December":
-			return 11;
-		default:
-			return -1;
+			case "January":
+				return 0;
+			case "February":
+				return 1;
+			case "March":
+				return 2;
+			case "April":
+				return 3;
+			case "May":
+				return 4;
+			case "June":
+				return 5;
+			case "July":
+				return 6;
+			case "August":
+				return 7;
+			case "September":
+				return 8;
+			case "October":
+				return 9;
+			case "November":
+				return 10;
+			case "December":
+				return 11;
+			default:
+				return -1;
 		}
 	}
 
@@ -393,6 +427,16 @@ public class $ {
 			return toRankTag(getRank(player.getUniqueId())) + player.getName() + " " + toRankTag(suffixRank) + ChatColor.RESET;
 		} else {
 			return toRankTag(getRank(player.getUniqueId())) + player.getName() + ChatColor.RESET;
+		}
+	}
+
+	public static String getFlashPlayerDisplayName(String playerName) {
+		UUID id = UUID.fromString(CraftGo.Player.getUUID(playerName, true));
+		String suffixRank = getSuffixRank(id);
+		if (!(suffixRank.equals("default"))) {
+			return toRankTag(getRank(id)) + playerName + " " + toRankTag(suffixRank) + ChatColor.RESET;
+		} else {
+			return toRankTag(getRank(id)) + playerName + ChatColor.RESET;
 		}
 	}
 
@@ -488,7 +532,7 @@ public class $ {
 		String strLineTwoSpaces = sbLineTwoSpaces.toString();
 		if (centered[0]) {
 			final int middle = strLineOneSpaces.length() / 2;
-			String[] parts = { strLineOneSpaces.substring(0, middle), strLineOneSpaces.substring(middle) };
+			String[] parts = {strLineOneSpaces.substring(0, middle), strLineOneSpaces.substring(middle)};
 			sb.append(parts[0] + parts[0]);
 			sb.append(lineOne);
 			sb.append('\n');
@@ -497,7 +541,7 @@ public class $ {
 		}
 		if (centered[1]) {
 			final int middle = strLineTwoSpaces.length() / 2;
-			String[] parts = { strLineTwoSpaces.substring(0, middle), strLineTwoSpaces.substring(middle) };
+			String[] parts = {strLineTwoSpaces.substring(0, middle), strLineTwoSpaces.substring(middle)};
 			sb.append(parts[0] + parts[0]);
 			sb.append(lineTwo);
 		} else {
@@ -802,7 +846,7 @@ public class $ {
 	}
 
 	public static ItemStack appendLore(ItemStack stack, String lore) {
-		return $.appendLore(stack, new String[] { lore });
+		return $.appendLore(stack, new String[]{lore});
 	}
 
 	public static ItemStack addEnchant(ItemStack stack, EnchantInfo enchantment) {
@@ -886,16 +930,16 @@ public class $ {
 
 	public static BlockFace getBlockFaceFromId(byte id) {
 		switch (id) {
-		case 2:
-			return BlockFace.NORTH;
-		case 5:
-			return BlockFace.SOUTH;
-		case 3:
-			return BlockFace.WEST;
-		case 4:
-			return BlockFace.EAST;
-		default:
-			return null;
+			case 2:
+				return BlockFace.NORTH;
+			case 5:
+				return BlockFace.SOUTH;
+			case 3:
+				return BlockFace.WEST;
+			case 4:
+				return BlockFace.EAST;
+			default:
+				return null;
 		}
 	}
 
@@ -903,26 +947,26 @@ public class $ {
 		Random random = new Random(UUID.randomUUID().hashCode());
 		int id = random.nextInt(10);
 		switch (id) {
-		case 0:
-			return ChatColor.WHITE;
-		case 1:
-			return ChatColor.GOLD;
-		case 3:
-			return ChatColor.AQUA;
-		case 4:
-			return ChatColor.YELLOW;
-		case 5:
-			return ChatColor.GREEN;
-		case 6:
-			return ChatColor.LIGHT_PURPLE;
-		case 7:
-			return ChatColor.GRAY;
-		case 8:
-			return ChatColor.BLUE;
-		case 9:
-			return ChatColor.RED;
-		default:
-			return ChatColor.RESET;
+			case 0:
+				return ChatColor.WHITE;
+			case 1:
+				return ChatColor.GOLD;
+			case 3:
+				return ChatColor.AQUA;
+			case 4:
+				return ChatColor.YELLOW;
+			case 5:
+				return ChatColor.GREEN;
+			case 6:
+				return ChatColor.LIGHT_PURPLE;
+			case 7:
+				return ChatColor.GRAY;
+			case 8:
+				return ChatColor.BLUE;
+			case 9:
+				return ChatColor.RED;
+			default:
+				return ChatColor.RESET;
 		}
 	}
 
@@ -971,32 +1015,32 @@ public class $ {
 
 	public static boolean isMaterialLog(Material material) {
 		switch (material) {
-		case ACACIA_LOG:
-			return true;
-		case BIRCH_LOG:
-			return true;
-		case DARK_OAK_LOG:
-			return true;
-		case JUNGLE_LOG:
-			return true;
-		case OAK_LOG:
-			return true;
-		case SPRUCE_LOG:
-			return true;
-		case STRIPPED_ACACIA_LOG:
-			return true;
-		case STRIPPED_BIRCH_LOG:
-			return true;
-		case STRIPPED_DARK_OAK_LOG:
-			return true;
-		case STRIPPED_JUNGLE_LOG:
-			return true;
-		case STRIPPED_OAK_LOG:
-			return true;
-		case STRIPPED_SPRUCE_LOG:
-			return true;
-		default:
-			return false;
+			case ACACIA_LOG:
+				return true;
+			case BIRCH_LOG:
+				return true;
+			case DARK_OAK_LOG:
+				return true;
+			case JUNGLE_LOG:
+				return true;
+			case OAK_LOG:
+				return true;
+			case SPRUCE_LOG:
+				return true;
+			case STRIPPED_ACACIA_LOG:
+				return true;
+			case STRIPPED_BIRCH_LOG:
+				return true;
+			case STRIPPED_DARK_OAK_LOG:
+				return true;
+			case STRIPPED_JUNGLE_LOG:
+				return true;
+			case STRIPPED_OAK_LOG:
+				return true;
+			case STRIPPED_SPRUCE_LOG:
+				return true;
+			default:
+				return false;
 		}
 	}
 
@@ -1010,20 +1054,20 @@ public class $ {
 
 	public static boolean isMaterialLeaves(Material material) {
 		switch (material) {
-		case ACACIA_LEAVES:
-			return true;
-		case BIRCH_LEAVES:
-			return true;
-		case DARK_OAK_LEAVES:
-			return true;
-		case JUNGLE_LEAVES:
-			return true;
-		case OAK_LEAVES:
-			return true;
-		case SPRUCE_LEAVES:
-			return true;
-		default:
-			return false;
+			case ACACIA_LEAVES:
+				return true;
+			case BIRCH_LEAVES:
+				return true;
+			case DARK_OAK_LEAVES:
+				return true;
+			case JUNGLE_LEAVES:
+				return true;
+			case OAK_LEAVES:
+				return true;
+			case SPRUCE_LEAVES:
+				return true;
+			default:
+				return false;
 		}
 	}
 
@@ -1033,40 +1077,40 @@ public class $ {
 
 	public static boolean isMaterialStainedGlass(Material material) {
 		switch (material) {
-		case BLACK_STAINED_GLASS:
-			return true;
-		case BLUE_STAINED_GLASS:
-			return true;
-		case BROWN_STAINED_GLASS:
-			return true;
-		case CYAN_STAINED_GLASS:
-			return true;
-		case GRAY_STAINED_GLASS:
-			return true;
-		case GREEN_STAINED_GLASS:
-			return true;
-		case LIGHT_BLUE_STAINED_GLASS:
-			return true;
-		case LIGHT_GRAY_STAINED_GLASS:
-			return true;
-		case LIME_STAINED_GLASS:
-			return true;
-		case MAGENTA_STAINED_GLASS:
-			return true;
-		case ORANGE_STAINED_GLASS:
-			return true;
-		case PINK_STAINED_GLASS:
-			return true;
-		case PURPLE_STAINED_GLASS:
-			return true;
-		case RED_STAINED_GLASS:
-			return true;
-		case WHITE_STAINED_GLASS:
-			return true;
-		case YELLOW_STAINED_GLASS:
-			return true;
-		default:
-			return false;
+			case BLACK_STAINED_GLASS:
+				return true;
+			case BLUE_STAINED_GLASS:
+				return true;
+			case BROWN_STAINED_GLASS:
+				return true;
+			case CYAN_STAINED_GLASS:
+				return true;
+			case GRAY_STAINED_GLASS:
+				return true;
+			case GREEN_STAINED_GLASS:
+				return true;
+			case LIGHT_BLUE_STAINED_GLASS:
+				return true;
+			case LIGHT_GRAY_STAINED_GLASS:
+				return true;
+			case LIME_STAINED_GLASS:
+				return true;
+			case MAGENTA_STAINED_GLASS:
+				return true;
+			case ORANGE_STAINED_GLASS:
+				return true;
+			case PINK_STAINED_GLASS:
+				return true;
+			case PURPLE_STAINED_GLASS:
+				return true;
+			case RED_STAINED_GLASS:
+				return true;
+			case WHITE_STAINED_GLASS:
+				return true;
+			case YELLOW_STAINED_GLASS:
+				return true;
+			default:
+				return false;
 		}
 	}
 
@@ -1076,40 +1120,40 @@ public class $ {
 
 	public static boolean isMaterialStainedGlassPane(Material material) {
 		switch (material) {
-		case BLACK_STAINED_GLASS:
-			return true;
-		case BLUE_STAINED_GLASS:
-			return true;
-		case BROWN_STAINED_GLASS:
-			return true;
-		case CYAN_STAINED_GLASS:
-			return true;
-		case GRAY_STAINED_GLASS:
-			return true;
-		case GREEN_STAINED_GLASS:
-			return true;
-		case LIGHT_BLUE_STAINED_GLASS:
-			return true;
-		case LIGHT_GRAY_STAINED_GLASS:
-			return true;
-		case LIME_STAINED_GLASS:
-			return true;
-		case MAGENTA_STAINED_GLASS:
-			return true;
-		case ORANGE_STAINED_GLASS:
-			return true;
-		case PINK_STAINED_GLASS:
-			return true;
-		case PURPLE_STAINED_GLASS:
-			return true;
-		case RED_STAINED_GLASS:
-			return true;
-		case WHITE_STAINED_GLASS:
-			return true;
-		case YELLOW_STAINED_GLASS:
-			return true;
-		default:
-			return false;
+			case BLACK_STAINED_GLASS:
+				return true;
+			case BLUE_STAINED_GLASS:
+				return true;
+			case BROWN_STAINED_GLASS:
+				return true;
+			case CYAN_STAINED_GLASS:
+				return true;
+			case GRAY_STAINED_GLASS:
+				return true;
+			case GREEN_STAINED_GLASS:
+				return true;
+			case LIGHT_BLUE_STAINED_GLASS:
+				return true;
+			case LIGHT_GRAY_STAINED_GLASS:
+				return true;
+			case LIME_STAINED_GLASS:
+				return true;
+			case MAGENTA_STAINED_GLASS:
+				return true;
+			case ORANGE_STAINED_GLASS:
+				return true;
+			case PINK_STAINED_GLASS:
+				return true;
+			case PURPLE_STAINED_GLASS:
+				return true;
+			case RED_STAINED_GLASS:
+				return true;
+			case WHITE_STAINED_GLASS:
+				return true;
+			case YELLOW_STAINED_GLASS:
+				return true;
+			default:
+				return false;
 		}
 	}
 
@@ -1428,58 +1472,58 @@ public class $ {
 
 	public static boolean isNoteSharp(byte magicValue) {
 		switch (magicValue % 25) {
-		case 0:
-			return true;
-		case 1:
-			return false;
-		case 2:
-			return true;
-		case 3:
-			return false;
-		case 4:
-			return true;
-		case 5:
-			return false;
-		case 6:
-			return false;
-		case 7:
-			return true;
-		case 8:
-			return false;
-		case 9:
-			return true;
-		case 10:
-			return false;
-		case 11:
-			return false;
-		case 12:
-			return true;
-		case 13:
-			return false;
-		case 14:
-			return true;
-		case 15:
-			return false;
-		case 16:
-			return true;
-		case 17:
-			return false;
-		case 18:
-			return false;
-		case 19:
-			return true;
-		case 20:
-			return false;
-		case 21:
-			return true;
-		case 22:
-			return false;
-		case 23:
-			return false;
-		case 24:
-			return true;
-		default:
-			return false;
+			case 0:
+				return true;
+			case 1:
+				return false;
+			case 2:
+				return true;
+			case 3:
+				return false;
+			case 4:
+				return true;
+			case 5:
+				return false;
+			case 6:
+				return false;
+			case 7:
+				return true;
+			case 8:
+				return false;
+			case 9:
+				return true;
+			case 10:
+				return false;
+			case 11:
+				return false;
+			case 12:
+				return true;
+			case 13:
+				return false;
+			case 14:
+				return true;
+			case 15:
+				return false;
+			case 16:
+				return true;
+			case 17:
+				return false;
+			case 18:
+				return false;
+			case 19:
+				return true;
+			case 20:
+				return false;
+			case 21:
+				return true;
+			case 22:
+				return false;
+			case 23:
+				return false;
+			case 24:
+				return true;
+			default:
+				return false;
 		}
 	}
 
@@ -1509,7 +1553,7 @@ public class $ {
 
 	public static boolean isWithinUnclaimedLand(Location location, Player player, boolean worldGuardOnly) {
 		int size = 0;
-		boolean[] hits = new boolean[] { false, false };
+		boolean[] hits = new boolean[]{false, false};
 		if (getWorldGuard() != null) {
 			size = me.skorrloregaming.WorldGuardAPI.getApplicableRegionsSetSize(location);
 			hits[0] = me.skorrloregaming.WorldGuardAPI.testPassthroughRegionFlag(player, location);
@@ -1774,8 +1818,8 @@ public class $ {
 
 	public static class Factions {
 		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "factions" + ChatColor.GRAY + "] " + ChatColor.RESET;
-		public static String[] validKits = new String[] { "recruit" };
-		public static ItemStack[] kitRecruit = new ItemStack[] { $.createMaterial(Material.STONE_SWORD), $.createMaterial(Material.STONE_PICKAXE), $.createMaterial(Material.STONE_AXE), $.createMaterial(Material.STONE_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 16), $.createMaterial(Material.LEATHER_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.LEATHER_BOOTS) };
+		public static String[] validKits = new String[]{"recruit"};
+		public static ItemStack[] kitRecruit = new ItemStack[]{$.createMaterial(Material.STONE_SWORD), $.createMaterial(Material.STONE_PICKAXE), $.createMaterial(Material.STONE_AXE), $.createMaterial(Material.STONE_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 16), $.createMaterial(Material.LEATHER_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.LEATHER_BOOTS)};
 
 		public static int getPlayerKills(Player player) {
 			String path = "config." + player.getUniqueId().toString() + ".factions";
@@ -1808,25 +1852,25 @@ public class $ {
 
 	public static class Survival {
 		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "survival" + ChatColor.GRAY + "] " + ChatColor.RESET;
-		public static String[] validKits = new String[] { "recruit" };
-		public static ItemStack[] kitRecruit = new ItemStack[] { $.createMaterial(Material.STONE_SWORD), $.createMaterial(Material.STONE_PICKAXE), $.createMaterial(Material.STONE_AXE), $.createMaterial(Material.STONE_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 16), $.createMaterial(Material.LEATHER_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.LEATHER_BOOTS), $.createMaterial(Material.GOLDEN_SHOVEL) };
+		public static String[] validKits = new String[]{"recruit"};
+		public static ItemStack[] kitRecruit = new ItemStack[]{$.createMaterial(Material.STONE_SWORD), $.createMaterial(Material.STONE_PICKAXE), $.createMaterial(Material.STONE_AXE), $.createMaterial(Material.STONE_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 16), $.createMaterial(Material.LEATHER_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.LEATHER_BOOTS), $.createMaterial(Material.GOLDEN_SHOVEL)};
 	}
 
 	public static class Kitpvp {
 		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "kitpvp" + ChatColor.GRAY + "] " + ChatColor.RESET;
-		public static String[] validKits = new String[] { "starter", "potions" };
+		public static String[] validKits = new String[]{"starter", "potions"};
 		public static ItemStack kitStarter1_Weapon = $.createMaterial(Material.STONE_AXE);
 		public static ItemStack kitStarter2_Weapon = $.createMaterial(Material.IRON_AXE);
 		public static ItemStack kitStarter3_Weapon = $.createMaterial(Material.IRON_AXE);
 		public static ItemStack kitStarter4_Weapon = $.createMaterial(Material.IRON_AXE);
-		public static ItemStack[] kitStarter1_Items = new ItemStack[] { $.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.LEATHER_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.LEATHER_BOOTS) };
-		public static ItemStack[] kitStarter2_Items = new ItemStack[] { $.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.IRON_BOOTS) };
-		public static ItemStack[] kitStarter3_Items = new ItemStack[] { $.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.CHAINMAIL_CHESTPLATE), $.createMaterial(Material.CHAINMAIL_LEGGINGS), $.createMaterial(Material.IRON_BOOTS) };
-		public static ItemStack[] kitStarter4_Items = new ItemStack[] { $.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS) };
-		public static ItemStack[] kitStarter5_Items = new ItemStack[] { $.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS), $.createMaterial(Material.GOLDEN_APPLE) };
-		public static ItemStack[] kitStarter6_Items = new ItemStack[] { $.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS), $.createMaterial(Material.GOLDEN_APPLE, 2) };
-		public static ItemStack[] kitStarter7_Items = new ItemStack[] { $.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS), $.createMaterial(Material.GOLDEN_APPLE, 3) };
-		public static ItemStack[] kitPotions = new ItemStack[] { $.addLore($.createMaterial(Material.BLAZE_ROD, 1, ChatColor.LIGHT_PURPLE + "Enchanted Wand"), new String[] { "Using this wand, you will gain defined potion effects." }) };
+		public static ItemStack[] kitStarter1_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.LEATHER_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.LEATHER_BOOTS)};
+		public static ItemStack[] kitStarter2_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
+		public static ItemStack[] kitStarter3_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.CHAINMAIL_CHESTPLATE), $.createMaterial(Material.CHAINMAIL_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
+		public static ItemStack[] kitStarter4_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
+		public static ItemStack[] kitStarter5_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS), $.createMaterial(Material.GOLDEN_APPLE)};
+		public static ItemStack[] kitStarter6_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS), $.createMaterial(Material.GOLDEN_APPLE, 2)};
+		public static ItemStack[] kitStarter7_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS), $.createMaterial(Material.GOLDEN_APPLE, 3)};
+		public static ItemStack[] kitPotions = new ItemStack[]{$.addLore($.createMaterial(Material.BLAZE_ROD, 1, ChatColor.LIGHT_PURPLE + "Enchanted Wand"), new String[]{"Using this wand, you will gain defined potion effects."})};
 		public static final int MAX_UPGRADE_VALUE = 6;
 		public static final int WEAPON_AXE = 0;
 		public static final int WEAPON_SWORD = 1;

@@ -13,6 +13,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import net.dv8tion.jda.core.entities.TextChannel;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -156,7 +158,7 @@ public class PlayerEventHandler implements Listener {
 				rainbowIndex++;
 				rainbowIndex %= 10;
 				for (Player player : Bukkit.getOnlinePlayers()) {
-					ServerMinigame minigame = $.getMinigameFromWorld(player.getWorld());
+					ServerMinigame minigame = $.getCurrentMinigame(player);
 					DisposableScoreboard scoreboard = $.getPrimaryScoreboard(minigame);
 					if (!(scoreboard == null)) {
 						if ($.scoreboardAutoUpdateMinigames.contains(minigame.toString().toLowerCase())) {
@@ -989,6 +991,17 @@ public class PlayerEventHandler implements Listener {
 		event.setCancelled(true);
 		if (!isCancelled) {
 			boolean muted = Server.getMutedPlayers().contains(player.getUniqueId());
+			if (!muted) {
+				try {
+					TextChannel minecraftChat = Server.getInstance().getDiscordBot().getTextChannel("minecraft-chat");
+					String rankName = WordUtils.capitalize($.toRankDisplayName($.getRank(player)));
+					if (rankName.equals("Youtube"))
+						rankName = "YouTube";
+					minecraftChat.sendMessage("**" + rankName + "** " + player.getName() + " " + '\u00BB' + " " + Server.getAntiCheat().processAntiSwear(player, event.getMessage())).queue();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 				if (muted) {
 					int rankID = $.getRankId(onlinePlayer);

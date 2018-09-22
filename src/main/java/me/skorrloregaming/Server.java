@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import me.skorrloregaming.commands.*;
+import me.skorrloregaming.discord.DiscordBot;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -168,6 +169,8 @@ public class Server extends JavaPlugin implements Listener {
 	private static ProtocolSupportPocketStuff_Listener protoSupportPocketApi = null;
 	private static Votifier_Listener voteListener = null;
 	private static mcMMO_Listener mcmmoListener = null;
+
+	private static DiscordBot discordBot;
 	
 	public static ProtocolLib_Listener getProtoListener() {
 		return protoListener;
@@ -533,6 +536,10 @@ public class Server extends JavaPlugin implements Listener {
 		return BASIC_TELEPORT_TIME;
 	}
 
+	public static DiscordBot getDiscordBot() {
+		return discordBot;
+	}
+
 	@Override
 	public void onLoad() {
 		serverStartTime = System.currentTimeMillis();
@@ -591,7 +598,7 @@ public class Server extends JavaPlugin implements Listener {
 		spawnerPrices.put(6, 4500);
 		spawnerPrices.put(7, 3000);
 		spawnerPrices.put(8, 3000);
-		if (!$.isPluginLoaded("ploader") && !CraftGo.Minecraft.getPackageVersion().equals("v1_13_R1")) {
+		if (!$.isPluginLoaded("ploader") && !CraftGo.Minecraft.getPackageVersion().startsWith("v1_13")) {
 			perWorldPlugins = new PerWorldPlugin();
 			perWorldPlugins.onLoad();
 		}
@@ -604,6 +611,8 @@ public class Server extends JavaPlugin implements Listener {
 		nuVotifier = new Votifier();
 		nuVotifier.onEnable();
 		garbageCollector = new GCandAutoDemotion();
+		getConfig().options().copyDefaults(true);
+		saveConfig();
 		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(new BlockEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new PlayerEventHandler(), this);
@@ -690,6 +699,8 @@ public class Server extends JavaPlugin implements Listener {
 		sessionManager.setup();
 		topVotersHttpServer = new TopVotersHttpServer(getConfig().getInt("settings.topVotersHttpServerPort", 2096));
 		CustomRecipes.loadRecipes();
+		discordBot = new DiscordBot(getPluginName(), getConfig().getString("settings.discordBot.token", "TOKEN"));
+		discordBot.register();
 		getCommand("printblockstate").setExecutor(new PrintBlockStateCmd());
 		getCommand("ignore").setExecutor(new IgnoreCmd());
 		getCommand("logger").setExecutor(new LoggerCmd());
@@ -790,6 +801,7 @@ public class Server extends JavaPlugin implements Listener {
 		plugin.saveConfig();
 		barApi.onDisable();
 		nuVotifier.onDisable();
+		discordBot.unregister();
 		if (!(lockette == null))
 			lockette.onDisable();
 		if (!(chatitem == null))

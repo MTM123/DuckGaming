@@ -1,4 +1,6 @@
 settings:
+    discordBot:
+        token: TOKEN
     enable:
         factions: true
         survival: true
