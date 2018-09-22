@@ -1,5 +1,6 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.discord.DiscordBot;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
@@ -10,14 +11,18 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Server;
+import org.bukkit.entity.Player;
 
 public class SetRankCmd implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!sender.isOp()) {
+		if (sender instanceof Player && $.getRankId((Player) sender) > 2) {
+			$.playLackPermissionMessage(sender);
+			return true;
+		}
+		if (!(sender instanceof Player) && !sender.isOp()) {
 			$.playLackPermissionMessage(sender);
 			return true;
 		}
@@ -36,6 +41,8 @@ public class SetRankCmd implements CommandExecutor {
 			OfflinePlayer targetPlayer = CraftGo.Player.getOfflinePlayer(args[0]);
 			if (targetPlayer == null) {
 				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
+			} else if (sender instanceof Player && $.getRankId((Player) sender) == $.getRankId(targetPlayer.getUniqueId())) {
+				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry. " + ChatColor.GRAY + "You are not allowed to modify his/her rank.");
 			} else {
 				if ($.validRanks.contains(args[1].toLowerCase())) {
 					String path = "config." + targetPlayer.getUniqueId().toString();

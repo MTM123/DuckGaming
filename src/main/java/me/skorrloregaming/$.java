@@ -70,7 +70,7 @@ public class $ {
 	public static String modernMsgPrefix = ChatColor.BOLD + "\u00BB" + " ";
 	public static String consoleTag = ChatColor.RED + "[" + ChatColor.GRAY + "Console" + ChatColor.RED + "] " + ChatColor.RED;
 	public static String pricePrefix = ChatColor.RESET + "Purchase Price: " + ChatColor.RED + "$";
-	public static List<String> validRanks = Arrays.asList(new String[]{"default", "default-plus", "founder", "manager", "admin", "moderator", "helper", "developer", "builder", "senior", "youtube", "donator", "redstone", "obsidian", "bedrock"});
+	public static List<String> validRanks = Arrays.asList(new String[]{"default", "default-plus", "founder", "owner", "manager", "admin", "moderator", "helper", "developer", "builder", "senior", "youtube", "donator", "redstone", "obsidian", "bedrock"});
 	public static List<String> validRanksNotifyWorkerExecuteCommand = Arrays.asList(new String[]{"founder"});
 	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock"});
 	public static List<String> validStorageMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "creative", "skyblock"});
@@ -167,6 +167,8 @@ public class $ {
 			return ChatColor.RED + "[" + ChatColor.GRAY + "Admin" + ChatColor.RED + "] ";
 		if (str.equals("manager"))
 			return ChatColor.RED + "[" + ChatColor.GRAY + "Manager" + ChatColor.RED + "] ";
+		if (str.equals("owner"))
+			return ChatColor.RED + "[" + ChatColor.GRAY + "Owner" + ChatColor.RED + "] ";
 		if (str.equals("founder"))
 			return ChatColor.RED + "[" + ChatColor.GRAY + "Founder" + ChatColor.RED + "] ";
 		if (str.equals("donator"))
@@ -201,6 +203,8 @@ public class $ {
 			return "admin";
 		if (str.equals("manager"))
 			return "manager";
+		if (str.equals("owner"))
+			return "owner";
 		if (str.equals("founder"))
 			return "founder";
 		if (str.equals("donator"))
@@ -260,7 +264,7 @@ public class $ {
 			return 1;
 		if (rank.equals("admin") || rank.equals("manager"))
 			return 2;
-		if (rank.equals("founder"))
+		if (rank.equals("founder") || rank.equals("owner"))
 			return 3;
 		return -100;
 	}
@@ -403,7 +407,7 @@ public class $ {
 			return 1;
 		if (rank.equals("admin") || rank.equals("manager"))
 			return 2;
-		if (rank.equals("founder"))
+		if (rank.equals("founder") || rank.equals("owner"))
 			return 3;
 		return -100;
 	}
