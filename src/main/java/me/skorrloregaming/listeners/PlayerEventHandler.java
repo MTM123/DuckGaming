@@ -1699,7 +1699,7 @@ public class PlayerEventHandler implements Listener {
 			Server.getPlayersInCombat().remove(player.getUniqueId());
 		}
 		{
-			String format = event.getDeathMessage().replace(player.getName(), ChatColor.RED + player.getName() + ChatColor.GRAY);
+			String message = event.getDeathMessage().replace(player.getName(), ChatColor.RED + player.getName() + ChatColor.GRAY);
 			boolean playerKiller = true;
 			Player k = null;
 			if (event.getEntity().getKiller() instanceof Arrow) {
@@ -1720,20 +1720,20 @@ public class PlayerEventHandler implements Listener {
 			String entityName = "unspecified";
 			for (EntityType ty : EntityType.values()) {
 				entityName = $.capitalizeAll(ty.toString().toLowerCase(), "_");
-				if (format.contains(entityName)) {
+				if (message.contains(entityName)) {
 					processedName = entityName;
 					break;
 				}
 			}
 			if (playerKiller) {
 				processedName = ChatColor.RED + k.getName() + ChatColor.GRAY;
-				format = format.replace(k.getName(), processedName);
+				message = message.replace(k.getName(), processedName);
 			} else {
 				processedName = ChatColor.RED + processedName + ChatColor.GRAY;
-				format = format.replace(entityName, processedName);
+				message = message.replace(entityName, processedName);
 			}
-			format = format.replace("died", "was killed by magic");
-			event.setDeathMessage(tag + ChatColor.GRAY + format);
+			message = message.replace("died", "was killed by magic");
+			event.setDeathMessage(tag + message);
 			if (playerKiller) {
 				player.setVelocity(new Vector(0, 0, 0));
 				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
@@ -1748,7 +1748,6 @@ public class PlayerEventHandler implements Listener {
 			if (Server.getSkyfight().containsKey(player.getUniqueId())) {
 				event.setDeathMessage("");
 				event.getDrops().clear();
-				return;
 			} else if (subDomain.equals("factions") || subDomain.equals("kitpvp")) {
 				Player k;
 				if (event.getEntity().getKiller() instanceof Arrow) {
@@ -1756,11 +1755,17 @@ public class PlayerEventHandler implements Listener {
 					if (source instanceof Player) {
 						k = (Player) source;
 					} else {
+						String discordMsg = event.getDeathMessage().substring(tag.length()).replace(ChatColor.RED + "", "**")
+								.replace(ChatColor.GRAY + "", "**");
+						Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL, discordMsg);
 						return;
 					}
 				} else if (event.getEntity().getKiller() instanceof Player) {
 					k = (Player) event.getEntity().getKiller();
 				} else {
+					String discordMsg = event.getDeathMessage().substring(tag.length()).replace(ChatColor.RED + "", "**")
+							.replace(ChatColor.GRAY + "", "**");
+					Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL, discordMsg);
 					return;
 				}
 				double baseHealth = $.roundDouble(k.getHealth() / 2, 1);
@@ -1807,6 +1812,9 @@ public class PlayerEventHandler implements Listener {
 			}
 		} catch (Exception ig) {
 		}
+		String discordMsg = event.getDeathMessage().substring(tag.length()).replace(ChatColor.RED + "", "**")
+				.replace(ChatColor.GRAY + "", "**");
+		Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL, discordMsg);
 	}
 
 	@EventHandler

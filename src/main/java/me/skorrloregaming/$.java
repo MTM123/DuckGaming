@@ -2174,10 +2174,7 @@ public class $ {
 			}
 		}
 
-		// TODO: Add back support for health display for pc clients
 		public static void configureHealth(Player player) {
-			if (!CraftGo.Player.isPocketPlayer(player))
-				return;
 			ScoreboardManager manager = Bukkit.getScoreboardManager();
 			org.bukkit.scoreboard.Scoreboard board;
 			if (player.getScoreboard().getObjective("placeholder") == null) {
