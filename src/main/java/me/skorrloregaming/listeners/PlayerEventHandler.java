@@ -1665,11 +1665,13 @@ public class PlayerEventHandler implements Listener {
 			player.leaveVehicle();
 		if ($.isPluginEnabled("AuthMe")) {
 			if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString()) || !$.isAuthenticated(player)) {
-				String message = $.italicGray + "Player " + player.getName() + " has left without registering for this server";
-				Bukkit.broadcastMessage(message);
-				Server.getDiscordBot().broadcast(
-						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-						, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+				if (!CraftGo.Player.getOnlineMode(player)) {
+					String message = $.italicGray + "Player " + player.getName() + " has left without registering for this server";
+					Bukkit.broadcastMessage(message);
+					Server.getDiscordBot().broadcast(
+							ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+							, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+				}
 			}
 		}
 		if (Server.getHubScoreboardTitleIndex().containsKey(player.getUniqueId()))

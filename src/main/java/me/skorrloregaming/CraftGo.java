@@ -1690,6 +1690,14 @@ public class CraftGo {
 			}
 		}
 
+		public static boolean getOnlineMode(org.bukkit.entity.Player player) {
+			if (!$.isPluginEnabled("ProtocolSupport")) {
+				return Bukkit.getOnlineMode();
+			} else {
+				return protocolsupport.api.ProtocolSupportAPI.getConnection(player).getProfile().isOnlineMode();
+			}
+		}
+
 		public static void sendJson(final org.bukkit.entity.Player player, String json) {
 			try {
 				Packet.sendPacket(getPlayerConnection(player), Packet.Chat.newInstance(ChatSerializer.serializeJson(json)));
