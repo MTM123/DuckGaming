@@ -25,7 +25,7 @@ public class MessageListener extends ListenerAdapter {
 	public void onMessageReceived(MessageReceivedEvent event) {
 		if (event.isFromType(ChannelType.TEXT)) {
 			if (!event.getAuthor().isBot())
-				if (event.getTextChannel().getName().equals("minecraft-chat")) {
+				if (event.getTextChannel().getName().equals(DiscordBot.CHAT_CHANNEL)) {
 					String rawMessage = event.getMessage().getContentDisplay();
 					String memberName = event.getMember().getEffectiveName();
 					String displayName = $.getFlashPlayerDisplayName(memberName);

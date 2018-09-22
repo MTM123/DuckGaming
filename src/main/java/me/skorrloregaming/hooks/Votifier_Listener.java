@@ -2,6 +2,7 @@ package me.skorrloregaming.hooks;
 
 import java.util.Calendar;
 
+import me.skorrloregaming.discord.DiscordBot;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -49,9 +50,17 @@ public class Votifier_Listener implements Listener {
 			calendar.setTimeInMillis(System.currentTimeMillis());
 			addMonthlyVotes(vote.getUsername(), calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
 			if (doJackpots) {
-				Bukkit.broadcastMessage("► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted and earned a jackpot.");
+				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted and earned a jackpot.";
+				Bukkit.broadcastMessage(message);
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			} else {
-				Bukkit.broadcastMessage("► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted for the server.");
+				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted for the server.";
+				Bukkit.broadcastMessage(message);
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			}
 			int balance2 = EconManager.retrieveCash(player.getUniqueId(), "kitpvp");
 			int ceil2 = (int) Math.ceil(balance2 / 25);

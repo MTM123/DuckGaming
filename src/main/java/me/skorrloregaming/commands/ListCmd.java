@@ -9,12 +9,10 @@ import org.bukkit.entity.Player;
 
 import me.skorrloregaming.$;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.notify.AlternateClient;
-import me.skorrloregaming.notify.Client;
 
 public class ListCmd implements CommandExecutor {
 
-	public static void listOnlinePlayers(AlternateClient sender) {
+	public static void listOnlinePlayers(CommandSender sender) {
 		StringBuilder kitpvpArray = new StringBuilder();
 		StringBuilder factionsArray = new StringBuilder();
 		StringBuilder survivalArray = new StringBuilder();
@@ -43,11 +41,6 @@ public class ListCmd implements CommandExecutor {
 				hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
 			}
 		}
-		Client[] clientsArr = Server.getNotifyWorker().clients.toArray(new Client[0]).clone();
-		for (int i = 0; i < clientsArr.length; i++) {
-			Client client = clientsArr[i];
-			notifyWorkerArray.append(ChatColor.RED + client.getUsername() + ChatColor.GRAY + ", " + ChatColor.RED);
-		}
 		String kitpvpMsg = kitpvpArray.toString();
 		String factionsMsg = factionsArray.toString();
 		String survivalMsg = survivalArray.toString();
@@ -57,7 +50,6 @@ public class ListCmd implements CommandExecutor {
 		String hubMsg = hubArray.toString();
 		String notifyWorkerMsg = notifyWorkerArray.toString();
 		sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "There are currently " + ChatColor.RED + length + "/" + Bukkit.getMaxPlayers() + ChatColor.GRAY + " players online.");
-		sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "There are " + ChatColor.RED + clientsArr.length + "/" + Bukkit.getMaxPlayers() + ChatColor.GRAY + " notify clients online.");
 		if (kitpvpMsg.length() > 0) {
 			sender.sendMessage($.Kitpvp.tag + ChatColor.RED + kitpvpMsg.substring(0, kitpvpMsg.lastIndexOf(", " + ChatColor.RED)));
 		}
@@ -86,7 +78,7 @@ public class ListCmd implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		listOnlinePlayers(new AlternateClient(sender));
+		listOnlinePlayers(sender);
 		return true;
 	}
 

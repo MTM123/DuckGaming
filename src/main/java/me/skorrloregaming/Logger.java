@@ -23,7 +23,6 @@ public class Logger {
 	public static void info(String msg, boolean consoleOnly, int minRankId) {
 		Bukkit.getLogger().info(ChatColor.stripColor(msg));
 		if (!consoleOnly) {
-			Server.getNotifyWorker().broadcast(msg, minRankId);
 			broadcast(msg);
 		}
 	}
@@ -34,14 +33,12 @@ public class Logger {
 
 	public static void warning(String msg, boolean consoleOnly) {
 		Bukkit.getLogger().warning(ChatColor.stripColor(msg));
-		Server.getNotifyWorker().broadcast(msg);
 		if (!consoleOnly)
 			broadcast(msg);
 	}
 
 	public static void severe(String msg, boolean consoleOnly) {
 		Bukkit.getLogger().severe(ChatColor.stripColor(msg));
-		Server.getNotifyWorker().broadcast(msg);
 		if (!consoleOnly)
 			broadcast(msg);
 	}

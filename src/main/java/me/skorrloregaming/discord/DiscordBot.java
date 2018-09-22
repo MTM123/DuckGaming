@@ -16,6 +16,8 @@ public class DiscordBot {
 	private ReadyListener readyListener;
 	private MessageListener messageListener;
 
+	public static final String CHAT_CHANNEL = "server-chat";
+
 	public DiscordBot(String name, String token) {
 		this.token = token;
 	}
@@ -41,6 +43,14 @@ public class DiscordBot {
 
 	public JDA getBot() {
 		return bot;
+	}
+
+	public void broadcast(String channel, String message) {
+		try {
+			getTextChannel(channel).sendMessage(message).queue();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public TextChannel getTextChannel(String channelName) throws Exception {

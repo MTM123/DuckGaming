@@ -20,11 +20,11 @@ You can easily contribute to the project if you so desire by forking the project
 * Custom npc manager lets staff create npc's at their current location that execute a specified task.
 * Custom bot and proxy protection stops dangerous players from joining the server on the spot.
 * Several custom mods designed by the community for the community makes playing on the server more fun.
-* Custom notification worker lets staff communicate with other people on the server from their desktop.
 * Custom scoreboard manager solves the dreaded problem of flickering whenever the scoreboard updates.
 * Custom ping injector lets staff change everything that is displayed about the server on the server list. 
 * Custom reflection class with a great deal of abstraction makes it easy for developers to mess with nms.
 * Custom explosion makes it possible to use explosions such as creeper eggs to easily blow up an ally's base.
+* Custom discord link lets players and staff communicate with people on the server from discord with ease.
 
 # Configuration
 ```Yaml

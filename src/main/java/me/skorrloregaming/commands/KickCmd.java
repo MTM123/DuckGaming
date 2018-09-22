@@ -26,9 +26,8 @@ public class KickCmd implements CommandExecutor {
 			}
 			sb.append(ChatColor.RESET + $.italicGray + "'");
 			String msg = ChatColor.translateAlternateColorCodes('&', sb.toString().trim());
-			int kicked = Server.getNotifyWorker().kickPlayer(args[0], msg);
 			Player player = Bukkit.getPlayerExact(args[0]);
-			if (player == null && kicked == 0) {
+			if (player == null) {
 				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 			} else {
 				if (!(player == null)) {

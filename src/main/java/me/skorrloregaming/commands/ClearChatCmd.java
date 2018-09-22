@@ -1,5 +1,7 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.discord.DiscordBot;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -16,7 +18,12 @@ public class ClearChatCmd implements CommandExecutor {
 		for (int i = 0; i < 300; i++) {
 			Bukkit.broadcastMessage("");
 		}
-		Bukkit.broadcastMessage(Server.getPluginLabel() + ChatColor.GRAY + "Chat has been cleared by " + ChatColor.RED + playerName);
+		String message = Server.getPluginLabel() + ChatColor.GRAY + "Chat has been cleared by " + ChatColor.RED + playerName;
+		Bukkit.broadcastMessage(message);
+		message = message.substring(message.indexOf(ChatColor.GRAY + ""));
+		Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+				ChatColor.stripColor(message)
+		);
 	}
 	
 	@Override

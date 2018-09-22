@@ -10,7 +10,6 @@ settings:
         skyblock: false
         prison: false
         welcomeMessage: true
-        notificationWorker: false
         pingInjector: true
         preloadChunks: false
         authme:

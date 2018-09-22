@@ -15,12 +15,7 @@ public class ReadyListener implements EventListener {
 
 	@Override
 	public void onEvent(Event event) {
-		if (event instanceof ReadyEvent) {
-			try {
-				discordBot.getTextChannel("minecraft-chat").sendMessage(":large_blue_circle: Server started.").queue();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		if (event instanceof ReadyEvent)
+			discordBot.broadcast(DiscordBot.CHAT_CHANNEL, ":white_check_mark: **Server has started**");
 	}
 }

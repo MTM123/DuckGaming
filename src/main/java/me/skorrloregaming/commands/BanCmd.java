@@ -44,7 +44,6 @@ public class BanCmd implements CommandExecutor {
 						String msg = ChatColor.translateAlternateColorCodes('&', sb.toString().trim());
 						if (bannedPlayer.isOnline())
 							bannedPlayer.getPlayer().kickPlayer(msg);
-						Server.getNotifyWorker().kickPlayer(bannedPlayer.getName(), msg);
 						String message0 = $.italicGray + "Server: Banned <unknown> '" + sb.toString().trim() + "'";
 						String message1 = $.italicGray + "Server: Banned " + bannedPlayer.getName() + " '" + sb.toString().trim() + "'";
 						if (!bannedPlayer.hasPlayedBefore() && !bannedPlayer.isOnline()) {

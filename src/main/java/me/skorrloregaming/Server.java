@@ -53,7 +53,6 @@ import me.skorrloregaming.listeners.BlockEventHandler;
 import me.skorrloregaming.listeners.EntityEventHandler;
 import me.skorrloregaming.listeners.PlayerEventHandler;
 import me.skorrloregaming.lockette.Lockette;
-import me.skorrloregaming.notify.NotificationWorker;
 import me.skorrloregaming.ping.PingInjector;
 import me.skorrloregaming.runnable.AutoBroadcaster;
 import me.skorrloregaming.runnable.DelayedTeleport;
@@ -64,7 +63,7 @@ import me.skorrloregaming.scoreboard.boards.Kitpvp_StatisticsScoreboard;
 import me.skorrloregaming.skins.SkinStorage;
 
 public class Server extends JavaPlugin implements Listener {
-	
+
 	public PerWorldPlugin perWorldPlugins;
 	public Votifier nuVotifier;
 	public TopVotersHttpServer topVotersHttpServer = null;
@@ -96,7 +95,6 @@ public class Server extends JavaPlugin implements Listener {
 	private static BarApi barApi = null;
 	private static SessionManager sessionManager = null;
 	private static final int BASIC_TELEPORT_TIME = 3;
-	private static NotificationWorker notifyWorker = new NotificationWorker(3806);
 
 	private static ArrayList<UUID> hub = new ArrayList<>();
 	private static ArrayList<UUID> kitpvp = new ArrayList<>();
@@ -157,11 +155,11 @@ public class Server extends JavaPlugin implements Listener {
 
 	private static final long BASIC_INVENTORY_UPDATE_DELAY = 5L;
 	private static final boolean USE_FACTIONS_AS_HUB = false;
-	
+
 	private static ConcurrentMap<UUID, Integer> hubScoreboardTitleIndex = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, Integer> barApiTitleIndex = new ConcurrentHashMap<>();
 	private static ConcurrentMap<Integer, Long> hideLoginMessage = new ConcurrentHashMap<>();
-	
+
 	private static ProtocolLib_Listener protoListener = null;
 	private static AuthMe_Listener authListener = null;
 	private static Factions_Listener factionsListener = null;
@@ -171,43 +169,43 @@ public class Server extends JavaPlugin implements Listener {
 	private static mcMMO_Listener mcmmoListener = null;
 
 	private static DiscordBot discordBot;
-	
+
 	public static ProtocolLib_Listener getProtoListener() {
 		return protoListener;
 	}
-	
+
 	public static AuthMe_Listener getAuthListener() {
 		return authListener;
 	}
-	
+
 	public static Factions_Listener getFactionsListener() {
 		return factionsListener;
 	}
-	
+
 	public static ProtocolSupport_Listener getProtoSupportListener() {
 		return protoSupportListener;
 	}
-	
+
 	public static ProtocolSupportPocketStuff_Listener getProtoSupportPocketApi() {
 		return protoSupportPocketApi;
 	}
-	
+
 	public static Votifier_Listener getVoteListener() {
 		return voteListener;
 	}
-	
+
 	public static mcMMO_Listener getMcmmoListener() {
 		return mcmmoListener;
 	}
-	
+
 	public static ConcurrentMap<UUID, Integer> getHubScoreboardTitleIndex() {
 		return hubScoreboardTitleIndex;
 	}
-	
+
 	public static ConcurrentMap<UUID, Integer> getBarApiTitleIndex() {
 		return barApiTitleIndex;
 	}
-	
+
 	public static ConcurrentMap<Integer, Long> getHideLoginMessage() {
 		return hideLoginMessage;
 	}
@@ -247,7 +245,7 @@ public class Server extends JavaPlugin implements Listener {
 	public static String getDefaultJoinMessage() {
 		return defaultJoinMessage;
 	}
-	
+
 	public static void setDefaultJoinMessage(String defaultJoinMessage) {
 		Server.defaultJoinMessage = defaultJoinMessage;
 	}
@@ -255,7 +253,7 @@ public class Server extends JavaPlugin implements Listener {
 	public static String setDefaultQuitMessage() {
 		return defaultQuitMessage;
 	}
-	
+
 	public static void setDefaultQuitMessage(String defaultQuitMessage) {
 		Server.defaultQuitMessage = defaultQuitMessage;
 	}
@@ -275,7 +273,7 @@ public class Server extends JavaPlugin implements Listener {
 	public static String getLastKnownHubWorld() {
 		return lastKnownHubWorld;
 	}
-	
+
 	public static void setLastKnownHubWorld(String lastKnownHubWorld) {
 		Server.lastKnownHubWorld = lastKnownHubWorld;
 	}
@@ -526,10 +524,6 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static SessionManager getSessionManager() {
 		return sessionManager;
-	}
-
-	public static NotificationWorker getNotifyWorker() {
-		return notifyWorker;
 	}
 
 	public static int getTeleportationDelay() {
@@ -801,11 +795,7 @@ public class Server extends JavaPlugin implements Listener {
 		plugin.saveConfig();
 		barApi.onDisable();
 		nuVotifier.onDisable();
-		try {
-			discordBot.getTextChannel("minecraft-chat").sendMessage(":red_circle: Server stopped.").queue();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		discordBot.broadcast(DiscordBot.CHAT_CHANNEL, ":octagonal_sign: **Server has stopped**");
 		discordBot.unregister();
 		if (!(lockette == null))
 			lockette.onDisable();
@@ -818,11 +808,6 @@ public class Server extends JavaPlugin implements Listener {
 			getLogger().info("Top voters web server disabled.");
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		try {
-			notifyWorker.stop();
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
 		topVotersHttpServer.stop();
 		for (Player player : Bukkit.getOnlinePlayers())
@@ -840,7 +825,7 @@ public class Server extends JavaPlugin implements Listener {
 			}
 		}
 	}
-	
+
 	public void fetchLobby(Player player) {
 		if (hub.contains(player.getUniqueId())) {
 			if (USE_FACTIONS_AS_HUB) {
@@ -901,14 +886,6 @@ public class Server extends JavaPlugin implements Listener {
 		boolean epiB = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PE"));
 		reloadConfig();
 		boolean epiA = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PE"));
-		boolean nf = Boolean.parseBoolean(getConfig().getString("settings.enable.notificationWorker"));
-		try {
-			notifyWorker.stop();
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-		if (nf)
-			notifyWorker.start();
 		boolean _1m13 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m12"));
 		boolean _1m12 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m12"));
 		boolean _1m11 = Boolean.parseBoolean(getConfig().getString("settings.enable.protocolsupport.versions.PC.1m11"));
@@ -1070,8 +1047,11 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "KitPvP";
-				notifyWorker.broadcast(message);
 				Bukkit.broadcastMessage(message);
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			}
 			player.setAllowFlight(false);
 			$.kitpvpStatisticsScoreboard.schedule(player, DisplayType.Ten_Second_Period, Kitpvp_StatisticsScoreboard.class, Kitpvp_LeaderboardScoreboard.class);
@@ -1095,8 +1075,11 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "KitPvP";
-				notifyWorker.broadcast(message);
 				Bukkit.broadcastMessage(message);
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			}
 			kitpvp.remove(player.getUniqueId());
 			player.setAllowFlight(true);
@@ -1158,8 +1141,11 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Factions";
-				notifyWorker.broadcast(message);
 				Bukkit.broadcastMessage(message);
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			}
 			player.setAllowFlight(false);
 			$.factionsScoreboard.schedule(player);
@@ -1185,8 +1171,11 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Factions";
-				notifyWorker.broadcast(message);
 				Bukkit.broadcastMessage(message);
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			}
 			factions.remove(player.getUniqueId());
 			player.setAllowFlight(true);
@@ -1246,8 +1235,11 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Survival";
-				notifyWorker.broadcast(message);
 				Bukkit.broadcastMessage(message);
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			}
 			player.setAllowFlight(false);
 		}
@@ -1270,8 +1262,11 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Survival";
-				notifyWorker.broadcast(message);
 				Bukkit.broadcastMessage(message);
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			}
 			survival.remove(player.getUniqueId());
 			player.setAllowFlight(true);
@@ -1306,8 +1301,11 @@ public class Server extends JavaPlugin implements Listener {
 			initialConnect = true;
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Skyfight";
-				notifyWorker.broadcast(message);
 				Bukkit.broadcastMessage(message);
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			}
 		}
 		$.Skyfight.Player sfPlayer = skyfight.get(player.getUniqueId());
@@ -1402,8 +1400,11 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Skyfight";
-				notifyWorker.broadcast(message);
 				Bukkit.broadcastMessage(message);
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			}
 			skyfight.remove(player.getUniqueId());
 			player.getActivePotionEffects().clear();
@@ -1475,12 +1476,11 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Creative";
-				notifyWorker.broadcast(message);
 				Bukkit.broadcastMessage(message);
-			}
-			if (player.getName().equals("GemStone166")) {
-				player.sendMessage(ChatColor.GREEN + "Dear Jaiden " + ChatColor.AQUA + "I know you are creative in a lot of ways.");
-				player.sendMessage(ChatColor.AQUA + "Please try making something amazing for the people to see!");
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			}
 			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 				@Override
@@ -1520,8 +1520,11 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Creative";
-				notifyWorker.broadcast(message);
 				Bukkit.broadcastMessage(message);
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			}
 			creative.remove(player.getUniqueId());
 			player.setGameMode(GameMode.SURVIVAL);
@@ -1590,8 +1593,11 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Skyblock";
-				notifyWorker.broadcast(message);
 				Bukkit.broadcastMessage(message);
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			}
 			player.setAllowFlight(false);
 			$.skyblockScoreboard.schedule(player);
@@ -1615,8 +1621,11 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Skyblock";
-				notifyWorker.broadcast(message);
 				Bukkit.broadcastMessage(message);
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL,
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+				);
 			}
 			skyblock.remove(player.getUniqueId());
 			$.clearPlayer(player);

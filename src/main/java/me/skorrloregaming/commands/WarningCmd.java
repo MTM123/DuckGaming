@@ -75,7 +75,6 @@ public class WarningCmd implements CommandExecutor {
 				String msg = "You have been warned for disrespecting the server rules." + '\n' + "\"" + sb.toString() + "\"" + '\n' + "You are now at warning value " + newWarningCount + " out of 5." + '\n' + '\n' + "Issued by " + sender.getName() + " at " + new Date().toString();
 				if (op.isOnline() && id > 0)
 					op.getPlayer().kickPlayer(msg);
-				Server.getNotifyWorker().kickPlayer(op.getName(), msg);
 				sender.sendMessage($.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5) '" + sb.toString().trim() + "'");
 				for (Player pl : Server.getPlugin().getServer().getOnlinePlayers()) {
 					if (pl.getName().equals(sender.getName()))
@@ -95,7 +94,6 @@ public class WarningCmd implements CommandExecutor {
 				String msg = "You have been warned for disrespecting the server rules." + '\n' + "You are now at warning value " + newWarningCount + " out of 5." + '\n' + '\n' + "Issued by " + sender.getName() + " at " + new Date().toString();
 				if (op.isOnline() && id > 0)
 					op.getPlayer().kickPlayer(msg);
-				Server.getNotifyWorker().kickPlayer(op.getName(), msg);
 				sender.sendMessage($.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5)");
 				for (Player pl : Server.getPlugin().getServer().getOnlinePlayers()) {
 					if (pl.getName().equals(sender.getName()))
