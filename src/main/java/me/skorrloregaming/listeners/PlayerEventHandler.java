@@ -1756,7 +1756,7 @@ public class PlayerEventHandler implements Listener {
 						k = (Player) source;
 					} else {
 						String discordMsg = event.getDeathMessage().substring(tag.length()).replace(ChatColor.RED + "", "**")
-								.replace(ChatColor.GRAY + "", "**");
+								.replace(ChatColor.GRAY + "", "**").replace(ChatColor.DARK_RED + "", "");
 						Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL, discordMsg);
 						return;
 					}
@@ -1764,7 +1764,7 @@ public class PlayerEventHandler implements Listener {
 					k = (Player) event.getEntity().getKiller();
 				} else {
 					String discordMsg = event.getDeathMessage().substring(tag.length()).replace(ChatColor.RED + "", "**")
-							.replace(ChatColor.GRAY + "", "**");
+							.replace(ChatColor.GRAY + "", "**").replace(ChatColor.DARK_RED + "", "");
 					Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL, discordMsg);
 					return;
 				}
@@ -1813,7 +1813,7 @@ public class PlayerEventHandler implements Listener {
 		} catch (Exception ig) {
 		}
 		String discordMsg = event.getDeathMessage().substring(tag.length()).replace(ChatColor.RED + "", "**")
-				.replace(ChatColor.GRAY + "", "**");
+				.replace(ChatColor.GRAY + "", "**").replace(ChatColor.DARK_RED + "", "");
 		Server.getDiscordBot().broadcast(DiscordBot.CHAT_CHANNEL, discordMsg);
 	}
 
