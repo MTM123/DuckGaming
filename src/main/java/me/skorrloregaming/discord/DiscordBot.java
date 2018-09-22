@@ -46,7 +46,7 @@ public class DiscordBot {
 	public void broadcast(String message, Channel... channels) {
 		for (Channel channel : channels)
 			try {
-				getTextChannel(channel.toString().toLowerCase()).sendMessage(message).queue();
+				getTextChannel(channel.toString().toLowerCase().replace("_", "-")).sendMessage(message).queue();
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

@@ -26,7 +26,7 @@ public class MessageListener extends ListenerAdapter {
 	public void onMessageReceived(MessageReceivedEvent event) {
 		if (event.isFromType(ChannelType.TEXT)) {
 			if (!event.getAuthor().isBot())
-				if (event.getTextChannel().getName().equals(Channel.SERVER_CHAT.toString().toLowerCase())) {
+				if (event.getTextChannel().getName().equals(Channel.SERVER_CHAT.toString().toLowerCase().replace("_", "-"))) {
 					String rawMessage = event.getMessage().getContentDisplay();
 					String memberName = event.getMember().getEffectiveName();
 					String displayName = $.getFlashPlayerDisplayName(memberName);
