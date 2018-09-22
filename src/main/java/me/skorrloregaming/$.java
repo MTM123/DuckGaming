@@ -431,7 +431,9 @@ public class $ {
 	}
 
 	public static String getFlashPlayerDisplayName(String playerName) {
-		UUID id = UUID.fromString(CraftGo.Player.getUUID(playerName, true));
+		UUID id = UUID.nameUUIDFromBytes(("OfflinePlayer:" + playerName).getBytes());
+		if (Bukkit.getOnlineMode())
+			id = UUID.fromString(CraftGo.Player.getUUID(playerName, true));
 		String suffixRank = getSuffixRank(id);
 		if (!(suffixRank.equals("default"))) {
 			return toRankTag(getRank(id)) + playerName + " " + toRankTag(suffixRank) + ChatColor.RESET;
