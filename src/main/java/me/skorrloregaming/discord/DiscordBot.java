@@ -43,10 +43,14 @@ public class DiscordBot {
 		return bot;
 	}
 
+	public String getChannelName(Channel channel) {
+		return channel.toString().toLowerCase().replace("_", "-");
+	}
+
 	public void broadcast(String message, Channel... channels) {
 		for (Channel channel : channels)
 			try {
-				getTextChannel(channel.toString().toLowerCase().replace("_", "-")).sendMessage(message).queue();
+				getTextChannel(getChannelName(channel)).sendMessage(message).queue();
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
