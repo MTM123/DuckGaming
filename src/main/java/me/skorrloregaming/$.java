@@ -446,6 +446,10 @@ public class $ {
 		}
 	}
 
+	public static int getSpoofPlayerCount() {
+		return 15;
+	}
+
 	public static String formatTime(long seconds) {
 		if (seconds < 60) {
 			return seconds + "s";

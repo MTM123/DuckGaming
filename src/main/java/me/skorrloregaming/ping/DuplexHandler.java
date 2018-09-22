@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;
 
 import io.netty.channel.ChannelDuplexHandler;
@@ -72,7 +73,7 @@ public class DuplexHandler extends ChannelDuplexHandler {
 			}
 			Object ping = CraftGo.Packet.Ping.getServerPing().newInstance();
 			CraftGo.Packet.Ping.setMOTD(ping, reply.getMOTD());
-			CraftGo.Packet.Ping.setPlayerSample(ping, new CraftGo.Packet.Ping.PlayerSample(reply.getMaxPlayers(), reply.getOnlinePlayers(), sample));
+			CraftGo.Packet.Ping.setPlayerSample(ping, new CraftGo.Packet.Ping.PlayerSample(reply.getMaxPlayers(), reply.getOnlinePlayers() + $.getSpoofPlayerCount(), sample));
 			if (Server.getBanConfig().getData().contains(reply.getHostAddress().replace(".", "x"))) {
 				CraftGo.Packet.Ping.setServerInfo(ping, new CraftGo.Packet.Ping.ServerInfo("You are banned.", -1));
 			} else {
