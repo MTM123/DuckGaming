@@ -1,5 +1,6 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.impl.SpoofedPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -40,6 +41,10 @@ public class ListCmd implements CommandExecutor {
 			} else if (domain.equals("hub")) {
 				hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
 			}
+		}
+		for (SpoofedPlayer player : $.getSpoofedPlayers()) {
+			length++;
+			hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
 		}
 		String kitpvpMsg = kitpvpArray.toString();
 		String factionsMsg = factionsArray.toString();

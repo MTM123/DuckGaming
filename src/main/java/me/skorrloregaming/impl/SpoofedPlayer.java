@@ -7,23 +7,23 @@ import java.util.UUID;
 
 public class SpoofedPlayer {
 
-	private String playerName;
+	private String name;
 	private ServerMinigame minigame;
 
 	private UUID offlineId;
 
-	public SpoofedPlayer(String playerName, ServerMinigame minigame) {
+	public SpoofedPlayer(String name, ServerMinigame minigame) {
 		try {
-			this.playerName = playerName;
+			this.name = name;
 			this.minigame = minigame;
-			this.offlineId = UUID.nameUUIDFromBytes(("OfflinePlayer:" + playerName).getBytes());
+			this.offlineId = UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
-	public String getPlayerName() {
-		return playerName;
+	public String getName() {
+		return name;
 	}
 
 	public ServerMinigame getMinigame() {
@@ -32,12 +32,12 @@ public class SpoofedPlayer {
 
 	public UUID getId() {
 		if (Bukkit.getOnlineMode())
-			return UUID.fromString(CraftGo.Player.getUUID(playerName, true));
+			return UUID.fromString(CraftGo.Player.getUUID(name, true));
 		return offlineId;
 	}
 
 	public UUID getOnlineId() {
-		return UUID.fromString(CraftGo.Player.getUUID(playerName, true));
+		return UUID.fromString(CraftGo.Player.getUUID(name, true));
 	}
 
 	public UUID getOfflineId() {

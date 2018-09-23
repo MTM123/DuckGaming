@@ -78,10 +78,10 @@ public class DuplexHandler extends ChannelDuplexHandler {
 			}
 			for (int i = 0; i < $.getSpoofedPlayers().length; i++) {
 				SpoofedPlayer profile = $.getSpoofedPlayers()[i];
-				UUID id = UUID.fromString(CraftGo.Player.getUUID(profile.getPlayerName(), true));
+				UUID id = UUID.fromString(CraftGo.Player.getUUID(profile.getName(), true));
 				if (id == null)
-					throw new Exception("Failed to retrieve online-mode uuid for player \"" + profile.getPlayerName() + "\".");
-				Array.set(sample, reply.getPlayerSample().size() + i, CraftGo.GameProfile.newInstance(id, profile.getPlayerName()).get());
+					throw new Exception("Failed to retrieve online-mode uuid for player \"" + profile.getName() + "\".");
+				Array.set(sample, reply.getPlayerSample().size() + i, CraftGo.GameProfile.newInstance(id, profile.getName()).get());
 			}
 			Object ping = CraftGo.Packet.Ping.getServerPing().newInstance();
 			CraftGo.Packet.Ping.setMOTD(ping, reply.getMOTD());

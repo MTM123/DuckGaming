@@ -14,9 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import me.skorrloregaming.discord.Channel;
-import me.skorrloregaming.discord.DiscordBot;
 import me.skorrloregaming.impl.*;
-import net.dv8tion.jda.core.entities.TextChannel;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -1152,10 +1150,9 @@ public class PlayerEventHandler implements Listener {
 		try {
 			for (SpoofedPlayer spoofedPlayer : $.getSpoofedPlayers()) {
 				String domain = spoofedPlayer.getMinigame().toString().toLowerCase();
-				$.getMinigamePlayerList(domain).add(spoofedPlayer.getId());
 				Location location = $.getZoneLocation("hub");
 				location.setY(0.0);
-				CraftGo.Packet.PlayerInfo.spawnNpc(player, location.getWorld(), location, spoofedPlayer.getPlayerName());
+				CraftGo.Packet.PlayerInfo.spawnNpc(player, location.getWorld(), location, spoofedPlayer.getName());
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -1430,7 +1427,7 @@ public class PlayerEventHandler implements Listener {
 		if ($.isWelcomeMessageEnabled()) {
 			player.sendMessage(ChatColor.GRAY + "/ Welcome to the server " + ChatColor.RED + player.getName());
 			player.sendMessage(ChatColor.GRAY + "/ Type " + ChatColor.RED + "/help" + ChatColor.GRAY + " for a list of authentic commands.");
-			int connectedPlayers = Server.getPlugin().getServer().getOnlinePlayers().size();
+			int connectedPlayers = Server.getPlugin().getServer().getOnlinePlayers().size() + $.getSpoofedPlayers().length;
 			player.sendMessage(ChatColor.GRAY + "/ Type " + ChatColor.RED + "/vote" + ChatColor.GRAY + " for a list of server voting links.");
 			player.sendMessage(ChatColor.GRAY + "/ Type " + ChatColor.RED + "/discord" + ChatColor.GRAY + " for a direct link to our discord.");
 			player.sendMessage(ChatColor.GRAY + "/ Players online: " + ChatColor.RED + (connectedPlayers - 1) + ChatColor.GRAY + " - Staff online: " + ChatColor.RED + $.getStaffOnline(Server.getPlugin(), player).length);
