@@ -18,6 +18,7 @@ import java.util.UUID;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
+import me.skorrloregaming.impl.SpoofedPlayer;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -70,6 +71,13 @@ public class $ {
 	public static String modernMsgPrefix = ChatColor.BOLD + "\u00BB" + " ";
 	public static String consoleTag = ChatColor.RED + "[" + ChatColor.GRAY + "Console" + ChatColor.RED + "] " + ChatColor.RED;
 	public static String pricePrefix = ChatColor.RESET + "Purchase Price: " + ChatColor.RED + "$";
+	public static SpoofedPlayer[] spoofedPlayers = new SpoofedPlayer[]{
+			new SpoofedPlayer("WorthyReown", ServerMinigame.FACTIONS),
+			new SpoofedPlayer("HellerYT", ServerMinigame.SKYBLOCK),
+			new SpoofedPlayer("GalaxyKoala_", ServerMinigame.SKYBLOCK),
+			new SpoofedPlayer("Wundertoll", ServerMinigame.FACTIONS),
+			new SpoofedPlayer("MrSkittlesss", ServerMinigame.FACTIONS),
+	};
 	public static List<String> validRanks = Arrays.asList(new String[]{"default", "default-plus", "founder", "owner", "manager", "admin", "moderator", "helper", "developer", "builder", "senior", "youtube", "donator", "redstone", "obsidian", "bedrock"});
 	public static List<String> validRanksNotifyWorkerExecuteCommand = Arrays.asList(new String[]{"founder"});
 	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock"});
@@ -446,8 +454,8 @@ public class $ {
 		}
 	}
 
-	public static int getSpoofPlayerCount() {
-		return 15;
+	public static SpoofedPlayer[] getSpoofedPlayers() {
+		return spoofedPlayers;
 	}
 
 	public static String formatTime(long seconds) {
@@ -1438,6 +1446,24 @@ public class $ {
 		if ($.getZoneLocation("hub").getWorld().getName().equals(world.getName()))
 			return ServerMinigame.HUB;
 		return ServerMinigame.UNKNOWN;
+	}
+
+	public static ArrayList<UUID> getMinigamePlayerList(String domain) {
+		if (domain.equals("factions"))
+			return Server.getFactions();
+		if (domain.equals("kitpvp"))
+			return Server.getKitpvp();
+		if (domain.equals("skyfight"))
+			return new ArrayList(Server.getSkyfight().keySet());
+		if (domain.equals("creative"))
+			return Server.getCreative();
+		if (domain.equals("survival"))
+			return Server.getSurvival();
+		if (domain.equals("skyblock"))
+			return Server.getSkyblock();
+		if (domain.equals("hub"))
+			return Server.getHub();
+		return null;
 	}
 
 	public static String getMinigameDomain(Player player) {

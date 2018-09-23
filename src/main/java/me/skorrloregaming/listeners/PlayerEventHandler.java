@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
+import me.skorrloregaming.impl.*;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
@@ -107,15 +108,8 @@ import me.skorrloregaming.SolidStorage;
 import me.skorrloregaming.commands.TrailsCmd;
 import me.skorrloregaming.commands.UpgradeKitCmd;
 import me.skorrloregaming.events.PlayerAuthenticateEvent;
-import me.skorrloregaming.impl.CustomNpc;
-import me.skorrloregaming.impl.EnchantInfo;
-import me.skorrloregaming.impl.IpLocationQuery;
-import me.skorrloregaming.impl.ServerMinigame;
-import me.skorrloregaming.impl.SignInfo;
 import me.skorrloregaming.impl.Switches.SwitchIntDouble;
 import me.skorrloregaming.impl.Switches.SwitchUUIDString;
-import me.skorrloregaming.impl.TitleSubtitle;
-import me.skorrloregaming.impl.VanishedInfo;
 import me.skorrloregaming.runnable.CombatTimer;
 import me.skorrloregaming.scoreboard.DisplayType;
 import me.skorrloregaming.scoreboard.DisposableScoreboard;
@@ -1155,6 +1149,17 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler
 	public void onPlayerPreJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
+		try {
+			for (SpoofedPlayer spoofedPlayer : $.getSpoofedPlayers()) {
+				String domain = spoofedPlayer.getMinigame().toString().toLowerCase();
+				$.getMinigamePlayerList(domain).add(spoofedPlayer.getId());
+				Location location = $.getZoneLocation("hub");
+				location.setY(0.0);
+				CraftGo.Packet.PlayerInfo.spawnNpc(player, location.getWorld(), location, spoofedPlayer.getPlayerName());
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {

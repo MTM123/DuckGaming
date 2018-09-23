@@ -14,6 +14,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import me.skorrloregaming.Reflection;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.SpoofedPlayer;
 
 public class DuplexHandler extends ChannelDuplexHandler {
 
@@ -56,7 +57,7 @@ public class DuplexHandler extends ChannelDuplexHandler {
 
 	private Object constructPacket(PingReply reply) {
 		try {
-			List<String> profileList = new ArrayList<>();
+			/*List<String> profileList = new ArrayList<>();
 			profileList.add("Welcome to SkorrloreGaming Network");
 			profileList.add("We support any client running 1.7 or newer.");
 			int size = reply.getPlayerSample().size();
@@ -64,16 +65,27 @@ public class DuplexHandler extends ChannelDuplexHandler {
 				profileList.add("> There is currently " + size + " player online.");
 			} else {
 				profileList.add("> There are currently " + size + " players online.");
+			}*/
+			int playerCount = reply.getOnlinePlayers() + $.getSpoofedPlayers().length;
+			Object sample = Array.newInstance(CraftGo.GameProfile.getComponentType(), playerCount);
+			for (int i = 0; i < reply.getPlayerSample().size(); i++) {
+				String profile = reply.getPlayerSample().get(i);
+				//UUID id = UUID.nameUUIDFromBytes(("OfflinePlayer:" + profile).getBytes());
+				UUID id = UUID.fromString(CraftGo.Player.getUUID(profile, true));
+				if (id == null)
+					throw new Exception("Failed to retrieve online-mode uuid for player \"" + profile + "\".");
+				Array.set(sample, i, CraftGo.GameProfile.newInstance(id, profile).get());
 			}
-			Object sample = Array.newInstance(CraftGo.GameProfile.getComponentType(), profileList.size());
-			for (int i = 0; i < profileList.size(); i++) {
-				String profile = profileList.get(i);
-				UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + profile).getBytes());
-				Array.set(sample, i, CraftGo.GameProfile.newInstance(offlineUUID, profile).get());
+			for (int i = 0; i < $.getSpoofedPlayers().length; i++) {
+				SpoofedPlayer profile = $.getSpoofedPlayers()[i];
+				UUID id = UUID.fromString(CraftGo.Player.getUUID(profile.getPlayerName(), true));
+				if (id == null)
+					throw new Exception("Failed to retrieve online-mode uuid for player \"" + profile.getPlayerName() + "\".");
+				Array.set(sample, reply.getPlayerSample().size() + i, CraftGo.GameProfile.newInstance(id, profile.getPlayerName()).get());
 			}
 			Object ping = CraftGo.Packet.Ping.getServerPing().newInstance();
 			CraftGo.Packet.Ping.setMOTD(ping, reply.getMOTD());
-			CraftGo.Packet.Ping.setPlayerSample(ping, new CraftGo.Packet.Ping.PlayerSample(reply.getMaxPlayers(), reply.getOnlinePlayers() + $.getSpoofPlayerCount(), sample));
+			CraftGo.Packet.Ping.setPlayerSample(ping, new CraftGo.Packet.Ping.PlayerSample(reply.getMaxPlayers(), playerCount, sample));
 			if (Server.getBanConfig().getData().contains(reply.getHostAddress().replace(".", "x"))) {
 				CraftGo.Packet.Ping.setServerInfo(ping, new CraftGo.Packet.Ping.ServerInfo("You are banned.", -1));
 			} else {

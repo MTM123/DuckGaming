@@ -28,6 +28,7 @@ public class DiscordBot {
 					.build();
 			messageListener = new MessageListener(this);
 			bot.addEventListener(messageListener);
+			bot.getPresence().setGame(Game.of(Game.GameType.DEFAULT,"Minecraft"));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

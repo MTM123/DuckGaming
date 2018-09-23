@@ -3,6 +3,7 @@ package me.skorrloregaming;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -97,9 +98,9 @@ public class CraftGo {
 		public static Object getServerConnection() {
 			try {
 				Object craftServerObject = craftServer.cast(Bukkit.getServer());
-				Field console = craftServerObject.getClass().getDeclaredField("console");
+				Field console = getCraftServer().getDeclaredField("console");
 				console.setAccessible(true);
-				Object minecraftServerObject = minecraftServer.cast(console.get(craftServerObject));
+				Object minecraftServerObject = minecraftServer.cast(console.get(Bukkit.getServer()));
 				return getServerConnection.invoke(minecraftServerObject);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -789,6 +790,109 @@ public class CraftGo {
 					return null;
 				}
 			}
+		}
+
+		public static class PlayerInfo {
+
+			private static Class<?> playerInteractManager;
+			private static Class<?> craftWorld;
+			private static Class<?> world;
+			private static Class<?> worldServer;
+			private static Class<?> packetPlayOutPlayerInfo;
+			private static Class<?> packetPlayOutNamedEntitySpawn;
+			private static Class<?> enumPlayerInfoAction;
+			private static Class<?> entityHuman;
+			private static Method getHandle;
+			private static Method teleportTo;
+			private static Method setInvisible;
+			private static Constructor<?> playerInteractManagerConstructor;
+			private static Constructor<?> packetPlayOutPlayerInfoConstructor;
+			private static Constructor<?> packetPlayOutNamedEntitySpawnConstructor;
+			private static Constructor<?> entityPlayerConstructor;
+
+			public static Object ADD_PLAYER;
+
+			static {
+				try {
+					packetPlayOutPlayerInfo = Class.forName("net.minecraft.server." + getBukkitVersion() + ".PacketPlayOutPlayerInfo");
+					packetPlayOutNamedEntitySpawn = Class.forName("net.minecraft.server." + getBukkitVersion() + ".PacketPlayOutNamedEntitySpawn");
+					enumPlayerInfoAction = Class.forName("net.minecraft.server." + getBukkitVersion() + ".PacketPlayOutPlayerInfo$EnumPlayerInfoAction");
+					ADD_PLAYER = enumPlayerInfoAction.getField("ADD_PLAYER").get(null);
+					craftWorld = Class.forName("org.bukkit.craftbukkit." + getBukkitVersion() + ".CraftWorld");
+					world = Class.forName("net.minecraft.server." + getBukkitVersion() + ".World");
+					worldServer = Class.forName("net.minecraft.server." + getBukkitVersion() + ".WorldServer");
+					playerInteractManager = Class.forName("net.minecraft.server." + getBukkitVersion() + ".PlayerInteractManager");
+					getHandle = craftWorld.getDeclaredMethod("getHandle");
+					teleportTo = CraftEntity.get().getDeclaredMethod("teleportTo", org.bukkit.Location.class, boolean.class);
+					setInvisible = CraftEntity.get().getDeclaredMethod("setInvisible", boolean.class);
+					Class<?> entityPlayerArray = Class.forName("[Lnet.minecraft.server." + getBukkitVersion() + ".EntityPlayer;");
+					entityHuman = Class.forName("net.minecraft.server." + getBukkitVersion() + ".EntityHuman");
+					playerInteractManagerConstructor = playerInteractManager.getDeclaredConstructor(world);
+					packetPlayOutPlayerInfoConstructor = packetPlayOutPlayerInfo.getDeclaredConstructor(enumPlayerInfoAction, entityPlayerArray);
+					packetPlayOutNamedEntitySpawnConstructor = packetPlayOutNamedEntitySpawn.getDeclaredConstructor(entityHuman);
+					entityPlayerConstructor = Player.getEntityPlayer().getConstructor(CraftServer.getMinecraftServer(), getWorldServer(), GameProfile.getComponentType(), getInteractManager());
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+
+			public static Class<?> getCraftWorld() {
+				return craftWorld;
+			}
+
+			public static Class<?> getWorldServer() {
+				return worldServer;
+			}
+
+			public static Object getWorldServer(org.bukkit.World world) {
+				try {
+					return getHandle.invoke(craftWorld.cast(world));
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				return null;
+			}
+
+			public static Class<?> getInteractManager() {
+				return playerInteractManager;
+			}
+
+			public static Object getInteractManager(Object worldServer) {
+				try {
+					return playerInteractManagerConstructor.newInstance(worldServer);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				return null;
+			}
+
+			public static void spawnNpc(org.bukkit.entity.Player player, org.bukkit.World npcWorld, Location npcLocation, String playerName) {
+				try {
+					Object craftServerObject = CraftServer.getCraftServer().cast(Bukkit.getServer());
+					Field console = CraftServer.getCraftServer().getDeclaredField("console");
+					console.setAccessible(true);
+					Object server = CraftServer.getMinecraftServer().cast(console.get(Bukkit.getServer()));
+					UUID id = UUID.nameUUIDFromBytes(("OfflinePlayer:" + playerName).getBytes());
+					if (Player.getOnlineMode(player))
+						id = UUID.fromString(Player.getUUID(playerName, true));
+					GameProfile profile = new GameProfile(id, playerName);
+					Object worldServer = getWorldServer(npcWorld);
+					Object manager = getInteractManager(worldServer);
+					Object npc = entityPlayerConstructor.newInstance(server, worldServer, profile.get(), manager);
+					Object entityPlayers = Array.newInstance(Player.getEntityPlayer(), 1);
+					teleportTo.invoke(npc, npcLocation, false);
+					setInvisible.invoke(npc, true);
+					Array.set(entityPlayers, 0, npc);
+					Object infoPacket = packetPlayOutPlayerInfoConstructor.newInstance(ADD_PLAYER, entityPlayers);
+					Object spawnPacket = packetPlayOutNamedEntitySpawnConstructor.newInstance(npc);
+					Object connection = Player.getPlayerConnection(player);
+					Packet.sendPacket(connection, infoPacket);
+					Packet.sendPacket(connection, spawnPacket);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+
 		}
 
 		public static class Ping {
