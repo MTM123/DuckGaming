@@ -1368,6 +1368,7 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler
 	public void onPlayerAuthenticate(PlayerAuthenticateEvent event) {
 		Player player = event.getPlayer();
+		Server.getOnlineMode().put(player.getUniqueId(), CraftGo.Player.getOnlineMode(player));
 		player.setWalkSpeed(0.2F);
 		player.setFlySpeed(0.1F);
 		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
@@ -1665,7 +1666,7 @@ public class PlayerEventHandler implements Listener {
 			player.leaveVehicle();
 		if ($.isPluginEnabled("AuthMe")) {
 			if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString()) || !$.isAuthenticated(player)) {
-				if (!CraftGo.Player.getOnlineMode(player)) {
+				if (!Server.getOnlineMode().getOrDefault(player.getUniqueId(), false)) {
 					String message = $.italicGray + "Player " + player.getName() + " has left without registering for this server";
 					Bukkit.broadcastMessage(message);
 					Server.getDiscordBot().broadcast(
@@ -1687,6 +1688,8 @@ public class PlayerEventHandler implements Listener {
 				)
 				, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
 		);
+		if (Server.getOnlineMode().containsKey(player.getUniqueId()))
+			Server.getOnlineMode().remove(player.getUniqueId());
 	}
 
 	@EventHandler

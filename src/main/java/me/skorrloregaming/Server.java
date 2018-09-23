@@ -127,6 +127,8 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConcurrentMap<Player, SignInfo> signEditParam = new ConcurrentHashMap<>();
 	private static ConcurrentMap<Integer, Integer> spawnerPrices = new ConcurrentHashMap<>();
 
+	private static ConcurrentMap<UUID, Boolean> onlineMode = new ConcurrentHashMap<>();
+
 	private static ArrayList<UUID> doubleJumpCandidates = new ArrayList<>();
 	private static ArrayList<UUID> staffChatPlayers = new ArrayList<>();
 	private static ArrayList<UUID> marriageChatPlayers = new ArrayList<>();
@@ -357,6 +359,10 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static ConcurrentMap<Integer, Integer> getSpawnerPrices() {
 		return spawnerPrices;
+	}
+
+	public static ConcurrentMap<UUID, Boolean> getOnlineMode() {
+		return onlineMode;
 	}
 
 	public static class Kitpvp {
