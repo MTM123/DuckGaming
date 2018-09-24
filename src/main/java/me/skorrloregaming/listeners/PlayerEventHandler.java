@@ -1146,11 +1146,11 @@ public class PlayerEventHandler implements Listener {
 	public void onPlayerPreJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		try {
-			for (SpoofedPlayer spoofedPlayer : $.getSpoofedPlayers()) {
-				String domain = spoofedPlayer.getMinigame().toString().toLowerCase();
+			for (NpcPlayer npcPlayer : Server.getNpcPlayers()) {
+				String domain = npcPlayer.getMinigame().toString().toLowerCase();
 				Location location = $.getZoneLocation("hub");
 				location.setY(0.0);
-				CraftGo.Packet.PlayerInfo.spawnNpc(player, location.getWorld(), location, spoofedPlayer.getName());
+				CraftGo.Packet.PlayerInfo.spawnNpc(player, location.getWorld(), location, npcPlayer.getName());
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -1425,7 +1425,7 @@ public class PlayerEventHandler implements Listener {
 		if ($.isWelcomeMessageEnabled()) {
 			player.sendMessage(ChatColor.GRAY + "/ Welcome to the server " + ChatColor.RED + player.getName());
 			player.sendMessage(ChatColor.GRAY + "/ Type " + ChatColor.RED + "/help" + ChatColor.GRAY + " for a list of authentic commands.");
-			int connectedPlayers = Server.getPlugin().getServer().getOnlinePlayers().size() + $.getSpoofedPlayers().length;
+			int connectedPlayers = Server.getPlugin().getServer().getOnlinePlayers().size() + Server.getNpcPlayers().size();
 			player.sendMessage(ChatColor.GRAY + "/ Type " + ChatColor.RED + "/vote" + ChatColor.GRAY + " for a list of server voting links.");
 			player.sendMessage(ChatColor.GRAY + "/ Type " + ChatColor.RED + "/discord" + ChatColor.GRAY + " for a direct link to our discord.");
 			player.sendMessage(ChatColor.GRAY + "/ Players online: " + ChatColor.RED + (connectedPlayers - 1) + ChatColor.GRAY + " - Staff online: " + ChatColor.RED + $.getStaffOnline(Server.getPlugin(), player).length);

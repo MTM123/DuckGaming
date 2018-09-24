@@ -5,14 +5,14 @@ import org.bukkit.Bukkit;
 
 import java.util.UUID;
 
-public class SpoofedPlayer {
+public class NpcPlayer {
 
 	private String name;
 	private ServerMinigame minigame;
 
 	private UUID offlineId;
 
-	public SpoofedPlayer(String name, ServerMinigame minigame) {
+	public NpcPlayer(String name, ServerMinigame minigame) {
 		try {
 			this.name = name;
 			this.minigame = minigame;

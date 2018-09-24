@@ -14,7 +14,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import me.skorrloregaming.Reflection;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.impl.SpoofedPlayer;
+import me.skorrloregaming.impl.NpcPlayer;
 
 public class DuplexHandler extends ChannelDuplexHandler {
 
@@ -57,31 +57,19 @@ public class DuplexHandler extends ChannelDuplexHandler {
 
 	private Object constructPacket(PingReply reply) {
 		try {
-			/*List<String> profileList = new ArrayList<>();
-			profileList.add("Welcome to SkorrloreGaming Network");
-			profileList.add("We support any client running 1.7 or newer.");
-			int size = reply.getPlayerSample().size();
-			if (size == 1) {
-				profileList.add("> There is currently " + size + " player online.");
-			} else {
-				profileList.add("> There are currently " + size + " players online.");
-			}*/
-			int playerCount = reply.getOnlinePlayers() + $.getSpoofedPlayers().length;
+			int playerCount = reply.getOnlinePlayers() + Server.getNpcPlayers().size();
 			Object sample = Array.newInstance(CraftGo.GameProfile.getComponentType(), playerCount);
 			for (int i = 0; i < reply.getPlayerSample().size(); i++) {
 				String profile = reply.getPlayerSample().get(i);
-				//UUID id = UUID.nameUUIDFromBytes(("OfflinePlayer:" + profile).getBytes());
 				UUID id = UUID.fromString(CraftGo.Player.getUUID(profile, true));
 				if (id == null)
 					throw new Exception("Failed to retrieve online-mode uuid for player \"" + profile + "\".");
 				Array.set(sample, i, CraftGo.GameProfile.newInstance(id, profile).get());
 			}
-			for (int i = 0; i < $.getSpoofedPlayers().length; i++) {
-				SpoofedPlayer profile = $.getSpoofedPlayers()[i];
-				UUID id = UUID.fromString(CraftGo.Player.getUUID(profile.getName(), true));
-				if (id == null)
-					throw new Exception("Failed to retrieve online-mode uuid for player \"" + profile.getName() + "\".");
-				Array.set(sample, reply.getPlayerSample().size() + i, CraftGo.GameProfile.newInstance(id, profile.getName()).get());
+			for (int i = 0; i < Server.getNpcPlayers().size(); i++) {
+				NpcPlayer profile = Server.getNpcPlayers().get(i);
+				Object gameProfile = CraftGo.GameProfile.newInstance(profile.getOnlineId(), profile.getName()).get();
+				Array.set(sample, reply.getPlayerSample().size() + i, gameProfile);
 			}
 			Object ping = CraftGo.Packet.Ping.getServerPing().newInstance();
 			CraftGo.Packet.Ping.setMOTD(ping, reply.getMOTD());

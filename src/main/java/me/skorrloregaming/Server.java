@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentMap;
 import me.skorrloregaming.commands.*;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
+import me.skorrloregaming.impl.*;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,12 +45,8 @@ import me.skorrloregaming.hooks.ProtocolSupportPocketStuff_Listener;
 import me.skorrloregaming.hooks.ProtocolSupport_Listener;
 import me.skorrloregaming.hooks.Votifier_Listener;
 import me.skorrloregaming.hooks.mcMMO_Listener;
-import me.skorrloregaming.impl.EnchantInfo;
-import me.skorrloregaming.impl.ServerMinigame;
-import me.skorrloregaming.impl.SignInfo;
 import me.skorrloregaming.impl.Switches.SwitchIntDouble;
 import me.skorrloregaming.impl.Switches.SwitchUUIDString;
-import me.skorrloregaming.impl.VanishedInfo;
 import me.skorrloregaming.listeners.BlockEventHandler;
 import me.skorrloregaming.listeners.EntityEventHandler;
 import me.skorrloregaming.listeners.PlayerEventHandler;
@@ -112,6 +109,7 @@ public class Server extends JavaPlugin implements Listener {
 	private static ArrayList<UUID> confirmUnregisterNpc = new ArrayList<>();
 	private static ArrayList<UUID> currentFellers = new ArrayList<>();
 	private static ArrayList<String> disabledVersions = new ArrayList<String>();
+	private static ArrayList<NpcPlayer> npcPlayers = new ArrayList<>();
 
 	private static ConcurrentMap<UUID, Integer> potionsKitCooldownKitpvp = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, Integer> starterKitCooldownKitpvp = new ConcurrentHashMap<>();
@@ -427,6 +425,10 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static ArrayList<String> getDisabledVersions() {
 		return disabledVersions;
+	}
+
+	public static ArrayList<NpcPlayer> getNpcPlayers() {
+		return npcPlayers;
 	}
 
 	public static ArrayList<UUID> getHub() {

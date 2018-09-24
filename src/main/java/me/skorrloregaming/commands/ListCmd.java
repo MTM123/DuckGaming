@@ -1,6 +1,7 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.impl.SpoofedPlayer;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.NpcPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -9,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
 
 public class ListCmd implements CommandExecutor {
 
@@ -42,7 +42,7 @@ public class ListCmd implements CommandExecutor {
 				hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
 			}
 		}
-		for (SpoofedPlayer player : $.getSpoofedPlayers()) {
+		for (NpcPlayer player : Server.getNpcPlayers()) {
 			length++;
 			hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
 		}

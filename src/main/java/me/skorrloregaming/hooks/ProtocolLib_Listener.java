@@ -21,12 +21,12 @@ public class ProtocolLib_Listener {
 
 	public void register() {
 		protocolManager = ProtocolLibrary.getProtocolManager();
-		zeroLatencyAdapter = new ZeroLatency(Server.getPlugin(), ListenerPriority.HIGHEST, new PacketType[] { PacketType.Status.Server.SERVER_INFO });
-		protocolManager.addPacketListener(zeroLatencyAdapter);
+		//zeroLatencyAdapter = new ZeroLatency(Server.getPlugin(), ListenerPriority.HIGHEST, new PacketType[] { PacketType.Status.Server.SERVER_INFO });
+		//protocolManager.addPacketListener(zeroLatencyAdapter);
 	}
 
 	public void unregister() {
-		protocolManager.removePacketListener(zeroLatencyAdapter);
+		//protocolManager.removePacketListener(zeroLatencyAdapter);
 	}
 
 	public class ZeroLatency extends PacketAdapter {
