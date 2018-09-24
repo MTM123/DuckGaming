@@ -92,15 +92,11 @@ public class PingInjector implements Listener {
 	public void serverListPing(ServerListPingEvent event) {
 		if (!running)
 			return;
+		injectOpenConnections();
 		String motd = Server.getServerMotd();
 		if (!(Server.getTempMotd().equals("/unspecified"))) {
 			motd = Server.getTempMotd();
 		}
-		if ($.isPluginPirated()) {
-			event.setMotd("SkorrloreGaming | " + motd);
-		} else {
-			event.setMotd(motd);
-		}
-		injectOpenConnections();
+		event.setMotd(motd);
 	}
 }

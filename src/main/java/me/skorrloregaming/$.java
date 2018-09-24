@@ -625,14 +625,11 @@ public class $ {
 	}
 
 	public static boolean isRankingEnabled() {
-		if (!isPluginPirated()) {
-			if (Server.getPlugin().getConfig().contains("settings.ranking.enable")) {
-				return Server.getPlugin().getConfig().getBoolean("settings.ranking.enable");
-			} else {
-				return true;
-			}
-		} else
-			return false;
+		if (Server.getPlugin().getConfig().contains("settings.ranking.enable")) {
+			return Server.getPlugin().getConfig().getBoolean("settings.ranking.enable");
+		} else {
+			return true;
+		}
 	}
 
 	public static boolean preloadChunk(Location loc) {
@@ -658,40 +655,27 @@ public class $ {
 	}
 
 	public static boolean isWelcomeMessageEnabled() {
-		if (!isPluginPirated()) {
-			if (Server.getPlugin().getConfig().contains("settings.enable.welcomeMessage")) {
-				return Server.getPlugin().getConfig().getBoolean("settings.enable.welcomeMessage");
-			} else {
-				return true;
-			}
-		} else
-			return false;
+		if (Server.getPlugin().getConfig().contains("settings.enable.welcomeMessage")) {
+			return Server.getPlugin().getConfig().getBoolean("settings.enable.welcomeMessage");
+		} else {
+			return true;
+		}
 	}
 
 	public static boolean isCustomJoinMessageEnabled() {
-		if (!isPluginPirated()) {
-			if (Server.getPlugin().getConfig().contains("settings.customJoinMessage")) {
-				return Server.getPlugin().getConfig().getBoolean("settings.customQuitMessage");
-			} else {
-				return true;
-			}
-		} else
-			return false;
+		if (Server.getPlugin().getConfig().contains("settings.customJoinMessage")) {
+			return Server.getPlugin().getConfig().getBoolean("settings.customQuitMessage");
+		} else {
+			return true;
+		}
 	}
 
 	public static boolean isCustomQuitMessageEnabled() {
-		if (!isPluginPirated()) {
-			if (Server.getPlugin().getConfig().contains("settings.customJoinMessage")) {
-				return Server.getPlugin().getConfig().getBoolean("settings.customQuitMessage");
-			} else {
-				return true;
-			}
-		} else
-			return false;
-	}
-
-	public static boolean isPluginPirated() {
-		return false;
+		if (Server.getPlugin().getConfig().contains("settings.customJoinMessage")) {
+			return Server.getPlugin().getConfig().getBoolean("settings.customQuitMessage");
+		} else {
+			return true;
+		}
 	}
 
 	public static String replaceCommandLabelInCommand(String command, String replaceLabel) {

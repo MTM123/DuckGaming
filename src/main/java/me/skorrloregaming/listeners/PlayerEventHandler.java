@@ -1089,9 +1089,7 @@ public class PlayerEventHandler implements Listener {
 	public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {
 		String address = event.getAddress().getHostAddress();
 		String altAddress = null;
-		if (Bukkit.getOnlinePlayers().size() >= 10 && $.isPluginPirated()) {
-			event.disallow(Result.KICK_FULL, ChatColor.RESET + "The capacity of this server has been hard limited to 10 players.");
-		} else if (event.getLoginResult() == Result.KICK_FULL) {
+		if (event.getLoginResult() == Result.KICK_FULL) {
 			event.setLoginResult(Result.ALLOWED);
 		}
 		OfflinePlayer op = CraftGo.Player.getOfflinePlayer(event.getName());
@@ -1439,10 +1437,6 @@ public class PlayerEventHandler implements Listener {
 				player.sendMessage("► Your skin cache will naturally expire in " + $.formatTime((int) (timeTillExpire / 1000)) + ".");
 				player.sendMessage("If you want to update your skin now, simply use /updateskin.");
 			}
-		}
-		if ($.isPluginPirated()) {
-			player.sendMessage("This server is running a pirated copy of SkorrloreGaming.");
-			player.sendMessage("Because of this, some of the major features have been disabled.");
 		}
 		if (Server.getModeratingPlayers().containsKey(player.getUniqueId())) {
 			int rankID = $.getRankId(player);
