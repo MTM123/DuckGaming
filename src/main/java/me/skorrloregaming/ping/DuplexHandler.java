@@ -84,11 +84,7 @@ public class DuplexHandler extends ChannelDuplexHandler {
 				Array.set(sample, reply.getPlayerSample().size() + i, CraftGo.GameProfile.newInstance(id, profile.getName()).get());
 			}
 			Object ping = CraftGo.Packet.Ping.getServerPing().newInstance();
-			String motd = Server.getServerMotd();
-			if (!(Server.getTempMotd().equals("/unspecified"))) {
-				motd = Server.getTempMotd();
-			}
-			CraftGo.Packet.Ping.setMOTD(ping, motd);
+			CraftGo.Packet.Ping.setMOTD(ping, reply.getMOTD());
 			CraftGo.Packet.Ping.setPlayerSample(ping, new CraftGo.Packet.Ping.PlayerSample(reply.getMaxPlayers(), playerCount, sample));
 			if (Server.getBanConfig().getData().contains(reply.getHostAddress().replace(".", "x"))) {
 				CraftGo.Packet.Ping.setServerInfo(ping, new CraftGo.Packet.Ping.ServerInfo("You are banned.", -1));

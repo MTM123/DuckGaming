@@ -92,11 +92,11 @@ public class PingInjector implements Listener {
 	public void serverListPing(ServerListPingEvent event) {
 		if (!running)
 			return;
-		injectOpenConnections();
 		String motd = Server.getServerMotd();
 		if (!(Server.getTempMotd().equals("/unspecified"))) {
 			motd = Server.getTempMotd();
 		}
 		event.setMotd(motd);
+		injectOpenConnections();
 	}
 }
