@@ -25,9 +25,10 @@ public class TopVotersHttpServer implements Runnable {
 			String trustStore = new File(System.getProperty("user.dir"), "server.truststore").getPath();
 			Server.getPlugin().getLogger().info("Using keyStore located at " + keyStore);
 			System.setProperty("javax.net.ssl.keyStore", keyStore);
+			System.setProperty("javax.net.ssl.keyStorePassword", "cloudflare");
 			Server.getPlugin().getLogger().info("Using trustStore located at " + trustStore);
 			System.setProperty("javax.net.ssl.trustStrore", trustStore);
-			System.setProperty("javax.net.ssl.keyStorePassword", "cloudflare");
+			System.setProperty("javax.net.ssl.trustStorePassword", "cloudflare");
 			SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
 			server = (SSLServerSocket) ssf.createServerSocket(port);
 			Server.getPlugin().getLogger().info("Top voters web server enabled on port " + port + ".");
