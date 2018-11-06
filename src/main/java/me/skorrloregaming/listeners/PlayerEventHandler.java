@@ -1072,9 +1072,9 @@ public class PlayerEventHandler implements Listener {
 	public void onPlayerPostLogin(PlayerLoginEvent event) {
 		if (event.getHostname().toLowerCase().split(":")[0].endsWith(".com")) {
 			LocalDate ld = LocalDate.of(2018, Month.NOVEMBER, 25);
-			StringBuilder disallowMessage = new StringBuilder("tl;dr" + '\n');
-			disallowMessage.append("This domain name has expired, please connect using the following address." + '\n');
-			disallowMessage.append("> play.skorrloregaming.ml <" + '\n');
+			StringBuilder disallowMessage = new StringBuilder("TL;DR GENERAL INFORMATION" + '\n');
+			disallowMessage.append("This address is deprecated, please use the following address." + '\n');
+			disallowMessage.append("play.skorrloregaming.ml" + '\n');
 			disallowMessage.append("For more information you can contact the server administrators." + '\n' + '\n');
 			disallowMessage.append("TECHNICAL INFORMATION" + '\n');
 			disallowMessage.append("Domain Name: SKORRLOREGAMING.COM" + '\n');
