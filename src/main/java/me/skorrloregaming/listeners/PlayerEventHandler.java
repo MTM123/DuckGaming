@@ -1070,20 +1070,23 @@ public class PlayerEventHandler implements Listener {
 
 	@EventHandler
 	public void onPlayerPostLogin(PlayerLoginEvent event) {
-		if (event.getHostname().toLowerCase().endsWith(".com")) {
+		if (event.getHostname().toLowerCase().split(":")[0].endsWith(".com")) {
 			LocalDate ld = LocalDate.of(2018, Month.NOVEMBER, 25);
-			StringBuilder disallowMessage = new StringBuilder("tl;dr" + '\r');
+			StringBuilder disallowMessage = new StringBuilder("tl;dr" + '\n');
 			disallowMessage.append("This domain name has expired, please connect using the following address." + '\n');
 			disallowMessage.append("> play.skorrloregaming.ml <" + '\n');
 			disallowMessage.append("For more information you can contact the server administrators." + '\n' + '\n');
-			disallowMessage.append("TECHNICAL INFORMATION" + '\r');
-			disallowMessage.append("Domain Name: SKORRLOREGAMING.COM" + '\r');
-			disallowMessage.append("Registry Domain ID: 2191741739_DOMAIN_COM-VRSN" + '\r');
-			disallowMessage.append("Creation Date: 2017-11-25T14:23:15" + '\r');
-			disallowMessage.append("Registrar Registration Expiration Date: 2018-11-25T14:23:15" + '\r');
-			disallowMessage.append("Registrant Email: skorrloregaming.dev@gmail.com" + '\r');
-			if (ld.isAfter(LocalDate.now()))
-				event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "");
+			disallowMessage.append("TECHNICAL INFORMATION" + '\n');
+			disallowMessage.append("Domain Name: SKORRLOREGAMING.COM" + '\n');
+			disallowMessage.append("Registry Domain ID: 2191741739_DOMAIN_COM-VRSN" + '\n');
+			disallowMessage.append("Creation Date: 2017-11-25T14:23:15" + '\n');
+			disallowMessage.append("Registrar Registration Expiration Date: 2018-11-25T14:23:15" + '\n');
+			disallowMessage.append("Registrant Email: skorrloregaming.dev@gmail.com");
+			if (ld.isAfter(LocalDate.now())) {
+				String disallowMsg = disallowMessage.toString();
+				event.disallow(PlayerLoginEvent.Result.KICK_OTHER, disallowMsg);
+				Logger.info($.italicGray + "Server: Disallow " + event.getPlayer().getName() + " '" + disallowMsg + "'", false);
+			}
 		}
 	}
 
