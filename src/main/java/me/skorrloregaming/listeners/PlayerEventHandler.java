@@ -1,15 +1,12 @@
 package me.skorrloregaming.listeners;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -60,23 +57,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -1086,6 +1069,25 @@ public class PlayerEventHandler implements Listener {
 	}
 
 	@EventHandler
+	public void onPlayerPostLogin(PlayerLoginEvent event) {
+		if (event.getHostname().toLowerCase().endsWith(".com")) {
+			LocalDate ld = LocalDate.of(2018, Month.NOVEMBER, 25);
+			StringBuilder disallowMessage = new StringBuilder("tl;dr" + '\r');
+			disallowMessage.append("This domain name has expired, please connect using the following address." + '\n');
+			disallowMessage.append("> play.skorrloregaming.ml <" + '\n');
+			disallowMessage.append("For more information you can contact the server administrators." + '\n' + '\n');
+			disallowMessage.append("TECHNICAL INFORMATION" + '\r');
+			disallowMessage.append("Domain Name: SKORRLOREGAMING.COM" + '\r');
+			disallowMessage.append("Registry Domain ID: 2191741739_DOMAIN_COM-VRSN" + '\r');
+			disallowMessage.append("Creation Date: 2017-11-25T14:23:15" + '\r');
+			disallowMessage.append("Registrar Registration Expiration Date: 2018-11-25T14:23:15" + '\r');
+			disallowMessage.append("Registrant Email: skorrloregaming.dev@gmail.com" + '\r');
+			if (ld.isAfter(LocalDate.now()))
+				event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "");
+		}
+	}
+
+	@EventHandler
 	public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {
 		String address = event.getAddress().getHostAddress();
 		String altAddress = null;
@@ -1145,16 +1147,8 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler
 	public void onPlayerPreJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		try {
-			for (NpcPlayer npcPlayer : Server.getNpcPlayers()) {
-				String domain = npcPlayer.getMinigame().toString().toLowerCase();
-				Location location = $.getZoneLocation("hub");
-				location.setY(0.0);
-				CraftGo.Packet.PlayerInfo.spawnNpc(player, location.getWorld(), location, npcPlayer.getName());
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		for (NpcPlayer npc : Server.getNpcPlayers())
+			CraftGo.Packet.PlayerInfo.spawnNpc(player, npc.getWorld(), npc.getLocation(), npc.getName());
 		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {

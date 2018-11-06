@@ -866,21 +866,21 @@ public class CraftGo {
 				return null;
 			}
 
-			public static void spawnNpc(org.bukkit.entity.Player player, org.bukkit.World npcWorld, Location npcLocation, String playerName) {
+			public static void spawnNpc(org.bukkit.entity.Player player, org.bukkit.World world, Location location, String name) {
 				try {
 					Object craftServerObject = CraftServer.getCraftServer().cast(Bukkit.getServer());
 					Field console = CraftServer.getCraftServer().getDeclaredField("console");
 					console.setAccessible(true);
 					Object server = CraftServer.getMinecraftServer().cast(console.get(Bukkit.getServer()));
-					UUID id = UUID.nameUUIDFromBytes(("OfflinePlayer:" + playerName).getBytes());
+					UUID id = UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes());
 					if (Player.getOnlineMode(player))
-						id = UUID.fromString(Player.getUUID(playerName, true));
-					GameProfile profile = new GameProfile(id, playerName);
-					Object worldServer = getWorldServer(npcWorld);
+						id = UUID.fromString(Player.getUUID(name, true));
+					GameProfile profile = new GameProfile(id, name);
+					Object worldServer = getWorldServer(world);
 					Object manager = getInteractManager(worldServer);
 					Object npc = entityPlayerConstructor.newInstance(server, worldServer, profile.get(), manager);
 					Object entityPlayers = Array.newInstance(Player.getEntityPlayer(), 1);
-					teleportTo.invoke(npc, npcLocation, false);
+					teleportTo.invoke(npc, location, false);
 					setInvisible.invoke(npc, true);
 					Array.set(entityPlayers, 0, npc);
 					Object infoPacket = packetPlayOutPlayerInfoConstructor.newInstance(ADD_PLAYER, entityPlayers);
