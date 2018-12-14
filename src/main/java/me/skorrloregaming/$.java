@@ -2219,6 +2219,7 @@ public class $ {
 				board.getObjective("sidebar-obj").unregister();
 			}
 			player.setScoreboard(board);
+			String[] arr = new String[] { " Hello "};
 		}
 	}
 }

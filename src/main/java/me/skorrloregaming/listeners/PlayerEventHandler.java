@@ -1070,18 +1070,12 @@ public class PlayerEventHandler implements Listener {
 
 	@EventHandler
 	public void onPlayerPostLogin(PlayerLoginEvent event) {
-		if (event.getHostname().toLowerCase().split(":")[0].endsWith(".com")) {
-			LocalDate ld = LocalDate.of(2018, Month.NOVEMBER, 25);
+		if (event.getHostname().toLowerCase().split(":")[0].endsWith(".ml")) {
+			LocalDate ld = LocalDate.of(2019, Month.JULY, 4);
 			StringBuilder disallowMessage = new StringBuilder("TL;DR GENERAL INFORMATION" + '\n');
 			disallowMessage.append("This address is deprecated, please use the following address." + '\n');
-			disallowMessage.append("play.skorrloregaming.ml" + '\n');
+			disallowMessage.append("play.skorrloregaming.com" + '\n');
 			disallowMessage.append("For more information you can contact the server administrators." + '\n' + '\n');
-			disallowMessage.append("TECHNICAL INFORMATION" + '\n');
-			disallowMessage.append("Domain Name: SKORRLOREGAMING.COM" + '\n');
-			disallowMessage.append("Registry Domain ID: 2191741739_DOMAIN_COM-VRSN" + '\n');
-			disallowMessage.append("Creation Date: 2017-11-25T14:23:15" + '\n');
-			disallowMessage.append("Registrar Registration Expiration Date: 2018-11-25T14:23:15" + '\n');
-			disallowMessage.append("Registrant Email: skorrloregaming.dev@gmail.com");
 			if (ld.isAfter(LocalDate.now())) {
 				String disallowMsg = disallowMessage.toString();
 				event.disallow(PlayerLoginEvent.Result.KICK_OTHER, disallowMsg);
@@ -2723,7 +2717,7 @@ public class PlayerEventHandler implements Listener {
 			player.sendMessage($.Legacy.tag + "This server is running CraftBukkit version " + Bukkit.getVersion() + " (Implementing API version " + Bukkit.getBukkitVersion() + ")");
 			event.setCancelled(true);
 		} else if (label.equalsIgnoreCase("/buy")) {
-			player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Our buycraft: " + ChatColor.RED + "http://shop.skorrloregaming.com/");
+			player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Our buycraft: " + ChatColor.RED + "https://shop.skorrloregaming.com/");
 			event.setCancelled(true);
 		} else if (label.equalsIgnoreCase("/plugins") || label.equalsIgnoreCase("/pl")) {
 			List<Plugin> plugins = new LinkedList<Plugin>(Arrays.asList(Bukkit.getPluginManager().getPlugins()));
