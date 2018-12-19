@@ -18,7 +18,6 @@ import java.util.UUID;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-import me.skorrloregaming.impl.NpcPlayer;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -1869,18 +1868,19 @@ public class $ {
 		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "kitpvp" + ChatColor.GRAY + "] " + ChatColor.RESET;
 		public static String[] validKits = new String[]{"starter", "potions"};
 		public static ItemStack kitStarter1_Weapon = $.createMaterial(Material.STONE_AXE);
-		public static ItemStack kitStarter2_Weapon = $.createMaterial(Material.IRON_AXE);
-		public static ItemStack kitStarter3_Weapon = $.createMaterial(Material.IRON_AXE);
-		public static ItemStack kitStarter4_Weapon = $.createMaterial(Material.IRON_AXE);
+		public static ItemStack kitStarter2_4_Weapon = $.createMaterial(Material.IRON_AXE);
+		public static ItemStack kitStarter5_8_Weapon = $.createMaterial(Material.DIAMOND_AXE);
 		public static ItemStack[] kitStarter1_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.LEATHER_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.LEATHER_BOOTS)};
 		public static ItemStack[] kitStarter2_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
 		public static ItemStack[] kitStarter3_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.CHAINMAIL_CHESTPLATE), $.createMaterial(Material.CHAINMAIL_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
 		public static ItemStack[] kitStarter4_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
-		public static ItemStack[] kitStarter5_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS), $.createMaterial(Material.GOLDEN_APPLE)};
-		public static ItemStack[] kitStarter6_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS), $.createMaterial(Material.GOLDEN_APPLE, 2)};
-		public static ItemStack[] kitStarter7_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS), $.createMaterial(Material.GOLDEN_APPLE, 3)};
+		public static ItemStack[] kitStarter5_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
+		public static ItemStack[] kitStarter6_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.DIAMOND_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.DIAMOND_BOOTS), $.createMaterial(Material.GOLDEN_APPLE, 1)};
+		public static ItemStack[] kitStarter7_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.DIAMOND_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.DIAMOND_LEGGINGS), $.createMaterial(Material.DIAMOND_BOOTS), $.createMaterial(Material.GOLDEN_APPLE, 2)};
+		public static ItemStack[] kitStarter8_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.DIAMOND_HELMET), $.createMaterial(Material.DIAMOND_CHESTPLATE), $.createMaterial(Material.DIAMOND_LEGGINGS), $.createMaterial(Material.DIAMOND_BOOTS), $.createMaterial(Material.GOLDEN_APPLE, 3)};
 		public static ItemStack[] kitPotions = new ItemStack[]{$.addLore($.createMaterial(Material.BLAZE_ROD, 1, ChatColor.LIGHT_PURPLE + "Enchanted Wand"), new String[]{"Using this wand, you will gain defined potion effects."})};
-		public static final int MAX_UPGRADE_VALUE = 6;
+		public static final int DONOR_MAX_UPGRADE_VALUE = 7;
+		public static final int DEFAULT_MAX_UPGRADE_VALUE = 3;
 		public static final int WEAPON_AXE = 0;
 		public static final int WEAPON_SWORD = 1;
 
@@ -1940,14 +1940,14 @@ public class $ {
 			if (!Server.getPlugin().getConfig().contains(path + ".kitpvp.upgrades"))
 				setUpgradeCount(player, 0);
 			int upgrades = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.upgrades"));
-			if (upgrades > MAX_UPGRADE_VALUE)
-				upgrades = MAX_UPGRADE_VALUE;
+			if (upgrades > DONOR_MAX_UPGRADE_VALUE)
+				upgrades = DONOR_MAX_UPGRADE_VALUE;
 			return upgrades;
 		}
 
 		public static void setUpgradeCount(Player player, int upgrades) {
-			if (upgrades > MAX_UPGRADE_VALUE)
-				upgrades = MAX_UPGRADE_VALUE;
+			if (upgrades > DONOR_MAX_UPGRADE_VALUE)
+				upgrades = DONOR_MAX_UPGRADE_VALUE;
 			String path = "config." + player.getUniqueId().toString();
 			Server.getPlugin().getConfig().set(path + ".kitpvp.upgrades", upgrades + "");
 		}
@@ -1962,14 +1962,14 @@ public class $ {
 				setPreferredUpgrade(player, upgradeCount);
 				preferredUpgrade = upgradeCount;
 			}
-			if (preferredUpgrade > MAX_UPGRADE_VALUE)
-				preferredUpgrade = MAX_UPGRADE_VALUE;
+			if (preferredUpgrade > DONOR_MAX_UPGRADE_VALUE)
+				preferredUpgrade = DONOR_MAX_UPGRADE_VALUE;
 			return preferredUpgrade;
 		}
 
 		public static void setPreferredUpgrade(Player player, int upgrade) {
-			if (upgrade > MAX_UPGRADE_VALUE)
-				upgrade = MAX_UPGRADE_VALUE;
+			if (upgrade > DONOR_MAX_UPGRADE_VALUE)
+				upgrade = DONOR_MAX_UPGRADE_VALUE;
 			String path = "config." + player.getUniqueId().toString();
 			Server.getPlugin().getConfig().set(path + ".kitpvp.preferredUpgrade", upgrade + "");
 		}
@@ -1978,17 +1978,15 @@ public class $ {
 			boolean swordType = false;
 			if ($.Kitpvp.getPreferredWeaponType(player) == WEAPON_SWORD)
 				swordType = true;
-			if (upgrade > MAX_UPGRADE_VALUE)
-				upgrade = MAX_UPGRADE_VALUE;
+			if (upgrade > DONOR_MAX_UPGRADE_VALUE)
+				upgrade = DONOR_MAX_UPGRADE_VALUE;
 			ItemStack weapon = null;
 			if (upgrade <= 0) {
 				weapon = kitStarter1_Weapon.clone();
-			} else if (upgrade == 1) {
-				weapon = kitStarter2_Weapon.clone();
-			} else if (upgrade == 2) {
-				weapon = kitStarter3_Weapon.clone();
-			} else if (upgrade >= 3) {
-				weapon = kitStarter4_Weapon.clone();
+			} else if (upgrade > 0 && upgrade <= 3) {
+				weapon = kitStarter2_4_Weapon.clone();
+			} else if (upgrade > 3 && upgrade <= 7) {
+				weapon = kitStarter5_8_Weapon.clone();
 			}
 			if (!axesOnly && swordType && weapon.getType() == Material.STONE_AXE)
 				weapon = $.createMaterial(Material.STONE_SWORD);
@@ -2001,31 +1999,34 @@ public class $ {
 			boolean swordType = false;
 			if ($.Kitpvp.getPreferredWeaponType(player) == WEAPON_SWORD)
 				swordType = true;
-			if (upgrade > MAX_UPGRADE_VALUE)
-				upgrade = MAX_UPGRADE_VALUE;
+			if (upgrade > DONOR_MAX_UPGRADE_VALUE)
+				upgrade = DONOR_MAX_UPGRADE_VALUE;
 			ArrayList<ItemStack> kitArray = new ArrayList<>();
 			ItemStack[] array = null;
 			if (upgrade <= 0) {
 				kitArray.add(kitStarter1_Weapon);
 				array = kitStarter1_Items;
 			} else if (upgrade == 1) {
-				kitArray.add(kitStarter2_Weapon);
+				kitArray.add(kitStarter2_4_Weapon);
 				array = kitStarter2_Items;
 			} else if (upgrade == 2) {
-				kitArray.add(kitStarter3_Weapon);
+				kitArray.add(kitStarter2_4_Weapon);
 				array = kitStarter3_Items;
 			} else if (upgrade == 3) {
-				kitArray.add(kitStarter4_Weapon);
+				kitArray.add(kitStarter2_4_Weapon);
 				array = kitStarter4_Items;
 			} else if (upgrade == 4) {
-				kitArray.add(kitStarter4_Weapon);
+				kitArray.add(kitStarter5_8_Weapon);
 				array = kitStarter5_Items;
 			} else if (upgrade == 5) {
-				kitArray.add(kitStarter4_Weapon);
+				kitArray.add(kitStarter5_8_Weapon);
 				array = kitStarter6_Items;
-			} else if (upgrade >= 6) {
-				kitArray.add(kitStarter4_Weapon);
+			} else if (upgrade == 6) {
+				kitArray.add(kitStarter5_8_Weapon);
 				array = kitStarter7_Items;
+			} else if (upgrade >= 7) {
+				kitArray.add(kitStarter5_8_Weapon);
+				array = kitStarter8_Items;
 			}
 			for (int i = 0; i < array.length; i++) {
 				kitArray.add(i + 1, array[i]);
@@ -2034,6 +2035,8 @@ public class $ {
 				kitArray.set(0, $.createMaterial(Material.STONE_SWORD));
 			if (!axesOnly && swordType && kitArray.get(0).getType() == Material.IRON_AXE)
 				kitArray.set(0, $.createMaterial(Material.IRON_SWORD));
+			if (!axesOnly && swordType && kitArray.get(0).getType() == Material.DIAMOND_AXE)
+				kitArray.set(0, $.createMaterial(Material.DIAMOND_SWORD));
 			return kitArray.toArray(new ItemStack[0]);
 		}
 	}

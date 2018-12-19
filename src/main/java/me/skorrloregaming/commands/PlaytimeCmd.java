@@ -33,16 +33,16 @@ public class PlaytimeCmd implements CommandExecutor {
 				totalTimePlayedInSeconds += range7Day[i];
 			String day7total = $.formatTime((int) totalTimePlayedInSeconds);
 			String path = "config." + tp.getUniqueId().toString();
-			long joined = Long.parseLong(Server.getPlugin().getConfig().getString(path + ".joined.value"));
-			boolean isJoinedAccurate = Boolean.parseBoolean(Server.getPlugin().getConfig().getString(path + "joined.inaccurate"));
+			long joined = Long.parseLong(Server.getPlugin().getConfig().getString(path + ".joined.value", System.currentTimeMillis() + ""));
+			boolean isJoinedAccurate = Boolean.parseBoolean(Server.getPlugin().getConfig().getString(path + "joined.inaccurate", "true"));
 			sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "/ Known information about " + ChatColor.RED + tp.getName());
 			sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Approximate playtime: " + ChatColor.RED + playtime);
 			sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Approximate playtime today: " + ChatColor.RED + playtimeToday);
 			sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Playtime during the past 7 days: " + ChatColor.RED + day7total);
 			if (isJoinedAccurate) {
-				sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Joined: " + ChatColor.RESET + new Date(joined));
+				sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Joined: " + ChatColor.RED + new Date(joined));
 			} else {
-				sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Joined: " + ChatColor.RESET + "No accurate date available");
+				sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Joined: " + ChatColor.RED + "No accurate date available");
 			}
 		} else {
 			sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");

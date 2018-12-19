@@ -1,8 +1,6 @@
 package me.skorrloregaming.listeners;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
@@ -1404,7 +1402,7 @@ public class PlayerEventHandler implements Listener {
 			Server.getPlugin().getConfig().set(path + ".balance.skyblock", "0");
 			Server.getPlugin().getConfig().set("warning." + ipAddress + ".count", "0");
 		}
-		if (!Server.getPlugin().getConfig().contains(path + ".joined")) {
+		if (!Server.getPlugin().getConfig().contains(path + ".joined.value")) {
 			Server.getPlugin().getConfig().set(path + ".joined.value", System.currentTimeMillis() + "");
 			if (Server.getPlugin().getConfig().contains(path)) {
 				Server.getPlugin().getConfig().set(path + ".joined.inaccurate", "true");
@@ -2041,7 +2039,15 @@ public class PlayerEventHandler implements Listener {
 						requiredBalanceStr = requiredBalanceStr.substring(0, requiredBalanceStr.indexOf(")"));
 						int requiredBalance = Integer.parseInt(requiredBalanceStr);
 						int currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
-						if (upgradeCount + 1 <= $.Kitpvp.MAX_UPGRADE_VALUE) {
+						if (upgradeCount + 1 <= $.Kitpvp.DONOR_MAX_UPGRADE_VALUE) {
+							if (upgradeCount + 1 > $.Kitpvp.DEFAULT_MAX_UPGRADE_VALUE) {
+								if ($.getRankId(player) > -2) {
+									player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+									player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you must be a donator to buy this upgrade.");
+									player.performCommand("store");
+									return;
+								}
+							}
 							if (currentBalance >= requiredBalance) {
 								EconManager.withdrawCash(player, requiredBalance, $.getMinigameDomain(player));
 								player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
