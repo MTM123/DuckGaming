@@ -363,9 +363,11 @@ public class PlayerEventHandler implements Listener {
 						event.setCancelled(true);
 						switch (data) {
 							case "KITPVP_UPGRADE_KIT":
+								player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 								UpgradeKitCmd.openKitUpgradeInventory(player);
 								return;
 							case "KITPVP_TRAILS":
+								player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 								TrailsCmd.openTrailManagementInventory(player);
 								return;
 							default:
