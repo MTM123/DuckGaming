@@ -24,7 +24,7 @@ import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Server;
 
 public class TrailsCmd implements CommandExecutor {
-	
+
 	public static void openTrailManagementInventory(Player player) {
 		int invSize = 18;
 		if (CraftGo.Player.isPocketPlayer(player))
@@ -32,29 +32,12 @@ public class TrailsCmd implements CommandExecutor {
 		Inventory inventory = Bukkit.createInventory(null, invSize, ChatColor.BOLD + "Select or purchase trails!");
 		String prefix = ChatColor.RESET + "" + ChatColor.BOLD;
 		String path = "config." + player.getUniqueId().toString();
-		if (!Server.getPlugin().getConfig().contains(path + ".kitpvp.trails.smoke")) {
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.smoke", "0");
-		}
-		if (!Server.getPlugin().getConfig().contains(path + ".kitpvp.trails.emerald")) {
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.emerald", "0");
-		}
-		if (!Server.getPlugin().getConfig().contains(path + ".kitpvp.trails.redstone")) {
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.redstone", "0");
-		}
-		if (!Server.getPlugin().getConfig().contains(path + ".kitpvp.trails.enchanting")) {
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.enchanting", "0");
-		}
 		int selectedTrail = -1;
 		if (Server.getPlugin().getConfig().contains(path + ".kitpvp.trails.selectedTrail")) {
 			selectedTrail = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.trails.selectedTrail"));
 		} else {
 			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", "-1");
 		}
-		HashMap<Integer, Integer> unlocked = new HashMap<>();
-		unlocked.put(0, Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.trails.smoke")));
-		unlocked.put(1, Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.trails.emerald")));
-		unlocked.put(2, Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.trails.redstone")));
-		unlocked.put(3, Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.trails.enchanting")));
 		ItemStack disableTrails = $.createMaterial(Material.REDSTONE, prefix + "Disable Trails");
 		if (selectedTrail == -1) {
 			if (CraftGo.Player.getProtocolVersion(player) > 314) {
@@ -62,7 +45,7 @@ public class TrailsCmd implements CommandExecutor {
 			} else {
 				disableTrails.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
 			}
-			disableTrails = $.addLore(disableTrails, new String[] { ChatColor.RESET + "This is already your preferred trail." });
+			disableTrails = $.addLore(disableTrails, new String[]{ChatColor.RESET + "This is already your preferred trail."});
 		}
 		inventory.setItem(4, disableTrails);
 		for (int i = 10; i < 17; i += 2) {
@@ -81,12 +64,7 @@ public class TrailsCmd implements CommandExecutor {
 				trail = "enchanting";
 				trailItemColor = ChatColor.LIGHT_PURPLE;
 			}
-			ItemStack trailItem;
-			if (unlocked.get((i - 10) / 2) == 1) {
-				trailItem = $.createMaterial(Material.LEATHER_BOOTS, prefix + "Select the " + trailItemColor + WordUtils.capitalize(trail) + prefix + " trail");
-			} else {
-				trailItem = $.createMaterial(Material.IRON_BARS, prefix + "This trail selection is locked :(");
-			}
+			ItemStack trailItem = $.createMaterial(Material.LEATHER_BOOTS, prefix + "Select the " + trailItemColor + WordUtils.capitalize(trail) + prefix + " trail");
 			if (trailItem.getType() == Material.LEATHER_BOOTS) {
 				if (i == 10) {
 					trailItem = $.addLeatherColor(trailItem, Color.GRAY);
@@ -98,26 +76,18 @@ public class TrailsCmd implements CommandExecutor {
 					trailItem = $.addLeatherColor(trailItem, Color.PURPLE);
 				}
 			}
-			int purchasePrice = ((((i - 10) / 2) + 1) * 50);
-			List<String> lore = new ArrayList<>();
 			if (selectedTrail == (i - 10) / 2) {
 				if (CraftGo.Player.getProtocolVersion(player) > 314) {
 					trailItem.addUnsafeEnchantment(Enchantment.BINDING_CURSE, 1);
 				} else {
 					trailItem.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
 				}
+				List<String> lore = new ArrayList<>();
+				ItemMeta meta = trailItem.getItemMeta();
 				lore.add(ChatColor.RESET + "This is already your preferred trail.");
-				lore.add(ChatColor.GREEN + WordUtils.capitalize(trail) + " trail" + ChatColor.RED + " x1");
-				lore.add("");
-				lore.add($.pricePrefix + purchasePrice);
-			} else {
-				lore.add(ChatColor.GREEN + WordUtils.capitalize(trail) + " trail" + ChatColor.RED + " x1");
-				lore.add("");
-				lore.add($.pricePrefix + purchasePrice);
+				meta.setLore(lore);
+				trailItem.setItemMeta(meta);
 			}
-			ItemMeta meta = trailItem.getItemMeta();
-			meta.setLore(lore);
-			trailItem.setItemMeta(meta);
 			inventory.setItem(i, trailItem);
 		}
 		player.openInventory(inventory);
@@ -130,6 +100,12 @@ public class TrailsCmd implements CommandExecutor {
 		Player player = ((Player) sender);
 		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
+			return true;
+		}
+		if ($.getRankId(player) > -2) {
+			player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+			player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you must be a donator to use cosmetics.");
+			player.performCommand("store");
 			return true;
 		}
 		player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);

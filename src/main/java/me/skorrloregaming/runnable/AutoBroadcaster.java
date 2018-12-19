@@ -18,7 +18,7 @@ public class AutoBroadcaster implements Runnable {
 	private int currentMsg = 0;
 
 	public AutoBroadcaster() {
-		this.messages = new String[] { "Like the server? You can support us by voting.", "Enjoy playing on here? You can help out by voting.", "Psst, you can earn a jackpot of money from voting." };
+		this.messages = new String[] { "Do you like cosmetics? You can get them with a donor rank.", "Like the server? You can support us by voting.", "Want to win the fight? Donate and get some more kits today.", "Psst, you can earn a jackpot of money from voting." };
 	}
 
 	@Override
@@ -27,8 +27,18 @@ public class AutoBroadcaster implements Runnable {
 		String message = ChatColor.stripColor($.modernMsgPrefix) + messages[currentMsg];
 		TextComponent textComponent = new TextComponent(message);
 		textComponent.setColor(ChatColor.ITALIC);
-		textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vote"));
-		textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("/vote").create()));
+		switch (currentMsg + 1 % 2) {
+			case 0:
+				textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vote"));
+				textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("/vote").create()));
+				break;
+			case 1:
+				textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/store"));
+				textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("/store").create()));
+				break;
+			default:
+				break;
+		}
 		String igMessage = ComponentSerializer.toString(textComponent);
 		currentMsg++;
 		for (Player player : Bukkit.getOnlinePlayers()) {

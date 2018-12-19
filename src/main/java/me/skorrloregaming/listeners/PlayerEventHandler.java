@@ -1390,10 +1390,6 @@ public class PlayerEventHandler implements Listener {
 			Server.getPlugin().getConfig().set(path + ".factions.deaths", "0");
 			Server.getPlugin().getConfig().set(path + ".kitpvp.upgrades", "0");
 			Server.getPlugin().getConfig().set(path + ".kitpvp.preferredUpgrade", "0");
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.smoke", "0");
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.emerald", "0");
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.redstone", "0");
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.enchanting", "0");
 			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", "-1");
 			Server.getPlugin().getConfig().set(path + ".skyblock.broken", "0");
 			Server.getPlugin().getConfig().set(path + ".skyblock.placed", "0");
@@ -1905,77 +1901,30 @@ public class PlayerEventHandler implements Listener {
 			}
 		}
 		if (!(event.getCurrentItem() == null) && event.getInventory().getName().equals(ChatColor.BOLD + "Select or purchase trails!")) {
-			if ($.getCurrentMinigame(player) == ServerMinigame.KITPVP) {
-				if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
-					event.setCancelled(true);
-					ItemStack item = event.getCurrentItem();
-					ItemMeta meta = item.getItemMeta();
-					if (item.getType() == Material.REDSTONE) {
-						Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", "-1");
-						player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
-						player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
-						TrailsCmd.openTrailManagementInventory(player);
-					} else if (item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.IRON_BARS) {
-						int currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
-						int trailType = -1;
-						String trail = null;
-						int lineNumber1 = -1;
-						int lineNumber2 = -1;
-						for (int i = 0; i < meta.getLore().size(); i++) {
-							String line = meta.getLore().get(i);
-							if (line.contains("trail")) {
-								lineNumber1 = i;
-							}
-							if (line.contains("Purchase")) {
-								lineNumber2 = i;
-							}
-						}
-						if (String.valueOf(meta.getLore().get(lineNumber1)).contains("Smoke")) {
-							trailType = 0;
-							trail = "smoke";
-						} else if (String.valueOf(meta.getLore().get(lineNumber1)).contains("Emerald")) {
-							trailType = 1;
-							trail = "emerald";
-						} else if (String.valueOf(meta.getLore().get(lineNumber1)).contains("Redstone")) {
-							trailType = 2;
-							trail = "redstone";
-						} else if (String.valueOf(meta.getLore().get(lineNumber1)).contains("Enchanting")) {
-							trailType = 3;
-							trail = "enchanting";
-						}
-						int unlocked = 0;
-						if (trail == null)
-							return;
-						if (Server.getPlugin().getConfig().contains(path + ".kitpvp.trails." + trail)) {
-							unlocked = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.trails." + trail));
-						} else {
-							Server.getPlugin().getConfig().set(path + ".kitpvp.trails." + trail, "0");
-						}
-						if (unlocked == 0) {
-							if ($.getRankId(player) > -2) {
-								player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-								player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you must be a donator to buy this cosmetic.");
-								player.performCommand("store");
-								return;
-							}
-							String requiredBalanceStr = String.valueOf(meta.getLore().get(lineNumber2));
-							int requiredBalance = Integer.valueOf(requiredBalanceStr.substring(requiredBalanceStr.indexOf("$") + 1));
-							if (currentBalance >= requiredBalance) {
-								EconManager.withdrawCash(player, requiredBalance, $.getMinigameDomain(player));
-								player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-								unlocked = 1;
-								Server.getPlugin().getConfig().set(path + ".kitpvp.trails." + trail, "1");
-							} else {
-								player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-								player.sendMessage($.Kitpvp.tag + ChatColor.RED + "You do not have enough money to buy this upgrade.");
-								return;
-							}
-						}
-						Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", trailType + "");
-						player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
-						player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
-						TrailsCmd.openTrailManagementInventory(player);
+			if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
+				event.setCancelled(true);
+				ItemStack item = event.getCurrentItem();
+				ItemMeta meta = item.getItemMeta();
+				if (item.getType() == Material.REDSTONE) {
+					Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", "-1");
+					player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
+					player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
+					TrailsCmd.openTrailManagementInventory(player);
+				} else if (item.getType() == Material.LEATHER_BOOTS) {
+					int trailType = -1;
+					if (String.valueOf(meta.getDisplayName()).contains("Smoke")) {
+						trailType = 0;
+					} else if (String.valueOf(meta.getDisplayName()).contains("Emerald")) {
+						trailType = 1;
+					} else if (String.valueOf(meta.getDisplayName()).contains("Redstone")) {
+						trailType = 2;
+					} else if (String.valueOf(meta.getDisplayName()).contains("Enchanting")) {
+						trailType = 3;
 					}
+					Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", trailType + "");
+					player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
+					player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
+					TrailsCmd.openTrailManagementInventory(player);
 				}
 			} else {
 				player.closeInventory();
