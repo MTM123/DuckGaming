@@ -1403,6 +1403,14 @@ public class PlayerEventHandler implements Listener {
 			Server.getPlugin().getConfig().set(path + ".balance.factions", "250");
 			Server.getPlugin().getConfig().set(path + ".balance.skyblock", "0");
 			Server.getPlugin().getConfig().set("warning." + ipAddress + ".count", "0");
+		}
+		if (!Server.getPlugin().getConfig().contains(path + ".joined")) {
+			Server.getPlugin().getConfig().set(path + ".joined.value", System.currentTimeMillis() + "");
+			if (Server.getPlugin().getConfig().contains(path)) {
+				Server.getPlugin().getConfig().set(path + ".joined.inaccurate", "true");
+			} else {
+				Server.getPlugin().getConfig().set(path + ".joined.inaccurate", "false");
+			}
 			String message = ChatColor.RESET + "Welcome to the server, " + ChatColor.BOLD + player.getName() + ChatColor.RESET + ".";
 			Bukkit.broadcastMessage(message);
 			Server.getDiscordBot().broadcast(

@@ -11,7 +11,7 @@ public class VoteCmd implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Our voting portal: " + ChatColor.RED + "https://vote.skorrloregaming.com/");
+		sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Our voting portal: " + ChatColor.RED + "vote.skorrloregaming.com");
 		return true;
 	}
 
