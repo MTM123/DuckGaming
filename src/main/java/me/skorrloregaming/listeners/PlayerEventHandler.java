@@ -363,11 +363,9 @@ public class PlayerEventHandler implements Listener {
 						event.setCancelled(true);
 						switch (data) {
 							case "KITPVP_UPGRADE_KIT":
-								player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 								UpgradeKitCmd.openKitUpgradeInventory(player);
 								return;
 							case "KITPVP_TRAILS":
-								player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 								TrailsCmd.openTrailManagementInventory(player);
 								return;
 							default:
@@ -1998,7 +1996,7 @@ public class PlayerEventHandler implements Listener {
 							if (upgradeCount + 1 > $.Kitpvp.DEFAULT_MAX_UPGRADE_VALUE) {
 								if ($.getRankId(player) > -2) {
 									player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-									player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you must be a donator to buy this upgrade.");
+									player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you need a donor rank to buy this upgrade.");
 									player.performCommand("store");
 									return;
 								}

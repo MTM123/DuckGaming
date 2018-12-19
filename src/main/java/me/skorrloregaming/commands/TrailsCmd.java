@@ -26,6 +26,13 @@ import me.skorrloregaming.Server;
 public class TrailsCmd implements CommandExecutor {
 
 	public static void openTrailManagementInventory(Player player) {
+		if ($.getRankId(player) > -2) {
+			player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+			player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you need a donor rank to use cosmetics.");
+			player.performCommand("store");
+			return;
+		}
+		player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 		int invSize = 18;
 		if (CraftGo.Player.isPocketPlayer(player))
 			invSize = 27;
@@ -102,13 +109,6 @@ public class TrailsCmd implements CommandExecutor {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
-		if ($.getRankId(player) > -2) {
-			player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-			player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you must be a donator to use cosmetics.");
-			player.performCommand("store");
-			return true;
-		}
-		player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 		openTrailManagementInventory(player);
 		return true;
 	}

@@ -18,7 +18,7 @@ public class AutoBroadcaster implements Runnable {
 	private int currentMsg = 0;
 
 	public AutoBroadcaster() {
-		this.messages = new String[] { "Do you like cosmetics? You can get them with a donor rank.", "Like the server? You can support us by voting.", "Want to win the fight? Donate and get some more kits today.", "Psst, you can earn a jackpot of money from voting." };
+		this.messages = new String[] { "Do you like cosmetics? You can get them with a donor rank.", "Like the server? You can support us by voting.", "Want to win the fight? Get kits with a donor rank today.", "Psst, you can earn a jackpot of money from voting." };
 	}
 
 	@Override

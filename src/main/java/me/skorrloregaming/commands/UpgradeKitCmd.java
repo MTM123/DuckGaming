@@ -24,6 +24,7 @@ import me.skorrloregaming.Server;
 public class UpgradeKitCmd implements CommandExecutor {
 
 	public static void openKitUpgradeInventory(Player player) {
+		player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 		Inventory inventory = Bukkit.createInventory(null, 27, ChatColor.BOLD + "Select or upgrade your kit!");
 		int upgradeCount = $.Kitpvp.getUpgradeCount(player);
 		int requiredAmount = 150 * ($.Kitpvp.getUpgradeCount(player) + 1);
@@ -112,7 +113,6 @@ public class UpgradeKitCmd implements CommandExecutor {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
-		player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 		openKitUpgradeInventory(player);
 		return true;
 	}
