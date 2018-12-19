@@ -1952,6 +1952,12 @@ public class PlayerEventHandler implements Listener {
 							Server.getPlugin().getConfig().set(path + ".kitpvp.trails." + trail, "0");
 						}
 						if (unlocked == 0) {
+							if ($.getRankId(player) > -2) {
+								player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+								player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you must be a donator to buy this cosmetic.");
+								player.performCommand("store");
+								return;
+							}
 							String requiredBalanceStr = String.valueOf(meta.getLore().get(lineNumber2));
 							int requiredBalance = Integer.valueOf(requiredBalanceStr.substring(requiredBalanceStr.indexOf("$") + 1));
 							if (currentBalance >= requiredBalance) {
