@@ -66,6 +66,17 @@ settings:
     topVotersHttpServerPort: 2096
 ```
 
+# Portal Configuration
+* Diamond Ore ≅ Creative
+* Gold Ore ≅ Skyfight
+* Iron Ore ≅ Kitpvp
+* Coal Ore ≅ Factions
+* Lapis Ore ≅ Survival
+* Emerald Ore ≅ Factions ∥ Survival.
+* Nether Quartz ≅ Skyblock.
+
+When a player steps on said ore, it will move them to said minigame.
+
 # Compiling
 This project uses Maven 3 to manage dependencies, packaging, and shading of necessary classes.
 

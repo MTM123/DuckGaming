@@ -2658,28 +2658,27 @@ public class PlayerEventHandler implements Listener {
 					return;
 				}
 			}
-			if (Server.getKitpvp().contains(player.getUniqueId()) && player.getGameMode() == GameMode.SURVIVAL) {
-				String path = "config." + player.getUniqueId().toString();
-				if (Server.getPlugin().getConfig().contains(path + ".kitpvp.trails.selectedTrail")) {
-					int selectedTrail = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.trails.selectedTrail"));
-					switch (selectedTrail) {
-						case 0:
-							ComplexParticle.SMOKE_NORMAL.count(10).display(player.getLocation());
-							break;
-						case 1:
-							ComplexParticle.VILLAGER_HAPPY.count(5).display(player.getLocation());
-							break;
-						case 2:
-							ComplexParticle.DRIP_LAVA.count(5).display(player.getLocation());
-							break;
-						case 3:
-							ComplexParticle.REDSTONE.count(15).data(new Particle.DustOptions(Color.WHITE, 1f)).display(player.getLocation());
-							break;
-						default:
-							break;
-					}
+			String path = "config." + player.getUniqueId().toString();
+			if (Server.getPlugin().getConfig().contains(path + ".kitpvp.trails.selectedTrail")) {
+				int selectedTrail = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.trails.selectedTrail"));
+				switch (selectedTrail) {
+					case 0:
+						ComplexParticle.SMOKE_NORMAL.count(10).display(player.getLocation());
+						break;
+					case 1:
+						ComplexParticle.VILLAGER_HAPPY.count(5).display(player.getLocation());
+						break;
+					case 2:
+						ComplexParticle.DRIP_LAVA.count(5).display(player.getLocation());
+						break;
+					case 3:
+						ComplexParticle.REDSTONE.count(15).data(new Particle.DustOptions(Color.WHITE, 1f)).display(player.getLocation());
+						break;
+					default:
+						break;
 				}
-			} else if (player.isGliding() && (Server.getSkyblock().contains(player.getUniqueId()) || Server.getFactions().contains(player.getUniqueId()))) {
+			}
+			if (player.isGliding() && (Server.getSkyblock().contains(player.getUniqueId()) || Server.getFactions().contains(player.getUniqueId()))) {
 				Environment environment = player.getWorld().getEnvironment();
 				if ((Server.getSkyblock().contains(player.getUniqueId()) && environment == Environment.NORMAL) || environment == Environment.THE_END) {
 					int blocksUntilGround = player.getLocation().getBlockY() - player.getWorld().getHighestBlockYAt(player.getLocation());
