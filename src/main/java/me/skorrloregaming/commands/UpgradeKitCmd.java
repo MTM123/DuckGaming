@@ -27,15 +27,15 @@ public class UpgradeKitCmd implements CommandExecutor {
 		Inventory inventory = Bukkit.createInventory(null, 27, ChatColor.BOLD + "Select or upgrade your kit!");
 		int upgradeCount = $.Kitpvp.getUpgradeCount(player);
 		int requiredAmount = 150 * ($.Kitpvp.getUpgradeCount(player) + 1);
-		if (requiredAmount > 750)
-			requiredAmount = 750;
 		String prefix = ChatColor.RESET + "" + ChatColor.BOLD;
 		int preferredWeaponType = $.Kitpvp.getPreferredWeaponType(player);
-		ItemStack[] weapons = new ItemStack[] { $.Kitpvp.getUpgradeClassWeapon(player, $.Kitpvp.getPreferredUpgrade(player), true), null };
+		ItemStack[] weapons = new ItemStack[]{$.Kitpvp.getUpgradeClassWeapon(player, $.Kitpvp.getPreferredUpgrade(player), true), null};
 		if (weapons[0].getType() == Material.STONE_AXE) {
 			weapons[1] = $.createMaterial(Material.STONE_SWORD);
 		} else if (weapons[0].getType() == Material.IRON_AXE) {
 			weapons[1] = $.createMaterial(Material.IRON_SWORD);
+		} else if (weapons[0].getType() == Material.IRON_AXE) {
+			weapons[1] = $.createMaterial(Material.DIAMOND_SWORD);
 		}
 		ItemMeta axeMeta = weapons[0].getItemMeta();
 		axeMeta.setDisplayName(prefix + "Select preferred weapon #1");
@@ -70,7 +70,7 @@ public class UpgradeKitCmd implements CommandExecutor {
 		int passes = 0;
 		for (int i = 10; i < 26; i += 2) {
 			if (i == 18)
-				i += 2;
+				i += 1;
 			passes++;
 			List<String> lore = new ArrayList<String>();
 			ItemStack item;
@@ -112,8 +112,8 @@ public class UpgradeKitCmd implements CommandExecutor {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
-		player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 		openKitUpgradeInventory(player);
+		player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 		return true;
 	}
 

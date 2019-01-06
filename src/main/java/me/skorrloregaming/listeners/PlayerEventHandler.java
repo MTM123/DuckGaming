@@ -1,8 +1,6 @@
 package me.skorrloregaming.listeners;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
@@ -1392,10 +1390,6 @@ public class PlayerEventHandler implements Listener {
 			Server.getPlugin().getConfig().set(path + ".factions.deaths", "0");
 			Server.getPlugin().getConfig().set(path + ".kitpvp.upgrades", "0");
 			Server.getPlugin().getConfig().set(path + ".kitpvp.preferredUpgrade", "0");
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.smoke", "0");
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.emerald", "0");
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.redstone", "0");
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.enchanting", "0");
 			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", "-1");
 			Server.getPlugin().getConfig().set(path + ".skyblock.broken", "0");
 			Server.getPlugin().getConfig().set(path + ".skyblock.placed", "0");
@@ -1403,6 +1397,14 @@ public class PlayerEventHandler implements Listener {
 			Server.getPlugin().getConfig().set(path + ".balance.factions", "250");
 			Server.getPlugin().getConfig().set(path + ".balance.skyblock", "0");
 			Server.getPlugin().getConfig().set("warning." + ipAddress + ".count", "0");
+		}
+		if (!Server.getPlugin().getConfig().contains(path + ".joined.value")) {
+			Server.getPlugin().getConfig().set(path + ".joined.value", System.currentTimeMillis() + "");
+			if (Server.getPlugin().getConfig().contains(path)) {
+				Server.getPlugin().getConfig().set(path + ".joined.inaccurate", "true");
+			} else {
+				Server.getPlugin().getConfig().set(path + ".joined.inaccurate", "false");
+			}
 			String message = ChatColor.RESET + "Welcome to the server, " + ChatColor.BOLD + player.getName() + ChatColor.RESET + ".";
 			Bukkit.broadcastMessage(message);
 			Server.getDiscordBot().broadcast(
@@ -1899,71 +1901,30 @@ public class PlayerEventHandler implements Listener {
 			}
 		}
 		if (!(event.getCurrentItem() == null) && event.getInventory().getName().equals(ChatColor.BOLD + "Select or purchase trails!")) {
-			if ($.getCurrentMinigame(player) == ServerMinigame.KITPVP) {
-				if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
-					event.setCancelled(true);
-					ItemStack item = event.getCurrentItem();
-					ItemMeta meta = item.getItemMeta();
-					if (item.getType() == Material.REDSTONE) {
-						Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", "-1");
-						player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
-						player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
-						TrailsCmd.openTrailManagementInventory(player);
-					} else if (item.getType() == Material.LEATHER_BOOTS || item.getType() == Material.IRON_BARS) {
-						int currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
-						int trailType = -1;
-						String trail = null;
-						int lineNumber1 = -1;
-						int lineNumber2 = -1;
-						for (int i = 0; i < meta.getLore().size(); i++) {
-							String line = meta.getLore().get(i);
-							if (line.contains("trail")) {
-								lineNumber1 = i;
-							}
-							if (line.contains("Purchase")) {
-								lineNumber2 = i;
-							}
-						}
-						if (String.valueOf(meta.getLore().get(lineNumber1)).contains("Smoke")) {
-							trailType = 0;
-							trail = "smoke";
-						} else if (String.valueOf(meta.getLore().get(lineNumber1)).contains("Emerald")) {
-							trailType = 1;
-							trail = "emerald";
-						} else if (String.valueOf(meta.getLore().get(lineNumber1)).contains("Redstone")) {
-							trailType = 2;
-							trail = "redstone";
-						} else if (String.valueOf(meta.getLore().get(lineNumber1)).contains("Enchanting")) {
-							trailType = 3;
-							trail = "enchanting";
-						}
-						int unlocked = 0;
-						if (trail == null)
-							return;
-						if (Server.getPlugin().getConfig().contains(path + ".kitpvp.trails." + trail)) {
-							unlocked = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.trails." + trail));
-						} else {
-							Server.getPlugin().getConfig().set(path + ".kitpvp.trails." + trail, "0");
-						}
-						if (unlocked == 0) {
-							String requiredBalanceStr = String.valueOf(meta.getLore().get(lineNumber2));
-							int requiredBalance = Integer.valueOf(requiredBalanceStr.substring(requiredBalanceStr.indexOf("$") + 1));
-							if (currentBalance >= requiredBalance) {
-								EconManager.withdrawCash(player, requiredBalance, $.getMinigameDomain(player));
-								player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-								unlocked = 1;
-								Server.getPlugin().getConfig().set(path + ".kitpvp.trails." + trail, "1");
-							} else {
-								player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-								player.sendMessage($.Kitpvp.tag + ChatColor.RED + "You do not have enough money to buy this upgrade.");
-								return;
-							}
-						}
-						Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", trailType + "");
-						player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
-						player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
-						TrailsCmd.openTrailManagementInventory(player);
+			if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
+				event.setCancelled(true);
+				ItemStack item = event.getCurrentItem();
+				ItemMeta meta = item.getItemMeta();
+				if (item.getType() == Material.REDSTONE) {
+					Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", "-1");
+					player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
+					player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
+					TrailsCmd.openTrailManagementInventory(player);
+				} else if (item.getType() == Material.LEATHER_BOOTS) {
+					int trailType = -1;
+					if (String.valueOf(meta.getDisplayName()).contains("Smoke")) {
+						trailType = 0;
+					} else if (String.valueOf(meta.getDisplayName()).contains("Emerald")) {
+						trailType = 1;
+					} else if (String.valueOf(meta.getDisplayName()).contains("Redstone")) {
+						trailType = 2;
+					} else if (String.valueOf(meta.getDisplayName()).contains("Enchanting")) {
+						trailType = 3;
 					}
+					Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", trailType + "");
+					player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
+					player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
+					TrailsCmd.openTrailManagementInventory(player);
 				}
 			} else {
 				player.closeInventory();
@@ -2033,7 +1994,15 @@ public class PlayerEventHandler implements Listener {
 						requiredBalanceStr = requiredBalanceStr.substring(0, requiredBalanceStr.indexOf(")"));
 						int requiredBalance = Integer.parseInt(requiredBalanceStr);
 						int currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
-						if (upgradeCount + 1 <= $.Kitpvp.MAX_UPGRADE_VALUE) {
+						if (upgradeCount + 1 <= $.Kitpvp.DONOR_MAX_UPGRADE_VALUE) {
+							if (upgradeCount + 1 > $.Kitpvp.DEFAULT_MAX_UPGRADE_VALUE) {
+								if ($.getRankId(player) > -2) {
+									player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+									player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you need a donor rank to buy this upgrade.");
+									player.performCommand("store");
+									return;
+								}
+							}
 							if (currentBalance >= requiredBalance) {
 								EconManager.withdrawCash(player, requiredBalance, $.getMinigameDomain(player));
 								player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
@@ -2638,28 +2607,27 @@ public class PlayerEventHandler implements Listener {
 					return;
 				}
 			}
-			if (Server.getKitpvp().contains(player.getUniqueId()) && player.getGameMode() == GameMode.SURVIVAL) {
-				String path = "config." + player.getUniqueId().toString();
-				if (Server.getPlugin().getConfig().contains(path + ".kitpvp.trails.selectedTrail")) {
-					int selectedTrail = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.trails.selectedTrail"));
-					switch (selectedTrail) {
-						case 0:
-							ComplexParticle.SMOKE_NORMAL.count(10).display(player.getLocation());
-							break;
-						case 1:
-							ComplexParticle.VILLAGER_HAPPY.count(5).display(player.getLocation());
-							break;
-						case 2:
-							ComplexParticle.DRIP_LAVA.count(5).display(player.getLocation());
-							break;
-						case 3:
-							ComplexParticle.REDSTONE.count(15).data(new Particle.DustOptions(Color.WHITE, 1f)).display(player.getLocation());
-							break;
-						default:
-							break;
-					}
+			String path = "config." + player.getUniqueId().toString();
+			if (Server.getPlugin().getConfig().contains(path + ".kitpvp.trails.selectedTrail")) {
+				int selectedTrail = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.trails.selectedTrail"));
+				switch (selectedTrail) {
+					case 0:
+						ComplexParticle.SMOKE_NORMAL.count(10).display(player.getLocation());
+						break;
+					case 1:
+						ComplexParticle.VILLAGER_HAPPY.count(5).display(player.getLocation());
+						break;
+					case 2:
+						ComplexParticle.DRIP_LAVA.count(5).display(player.getLocation());
+						break;
+					case 3:
+						ComplexParticle.REDSTONE.count(15).data(new Particle.DustOptions(Color.WHITE, 1f)).display(player.getLocation());
+						break;
+					default:
+						break;
 				}
-			} else if (player.isGliding() && (Server.getSkyblock().contains(player.getUniqueId()) || Server.getFactions().contains(player.getUniqueId()))) {
+			}
+			if (player.isGliding() && (Server.getSkyblock().contains(player.getUniqueId()) || Server.getFactions().contains(player.getUniqueId()))) {
 				Environment environment = player.getWorld().getEnvironment();
 				if ((Server.getSkyblock().contains(player.getUniqueId()) && environment == Environment.NORMAL) || environment == Environment.THE_END) {
 					int blocksUntilGround = player.getLocation().getBlockY() - player.getWorld().getHighestBlockYAt(player.getLocation());

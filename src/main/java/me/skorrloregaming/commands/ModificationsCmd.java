@@ -11,7 +11,7 @@ public class ModificationsCmd implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Our modifications: " + ChatColor.RED + "https://mods.skorrloregaming.com/");
+		sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Our modifications: " + ChatColor.RED + "mods.skorrloregaming.com");
 		return true;
 	}
 
