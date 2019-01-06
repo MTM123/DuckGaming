@@ -21,9 +21,12 @@ public class mcMMO_Listener implements Listener {
 	public void onPlayerActivateAbility(McMMOPlayerAbilityActivateEvent event) {
 		Player player = event.getPlayer();
 		ServerMinigame minigame = $.getCurrentMinigame(player);
-		if (event.getAbility() == AbilityType.TREE_FELLER) {
-			if (minigame == ServerMinigame.SKYBLOCK || minigame == ServerMinigame.FACTIONS)
+		if (minigame == ServerMinigame.SKYBLOCK || minigame == ServerMinigame.FACTIONS) {
+			if (event.getAbility() == AbilityType.TREE_FELLER) {
 				event.setCancelled(true);
+			}
+		} else {
+			event.setCancelled(true);
 		}
 	}
 }

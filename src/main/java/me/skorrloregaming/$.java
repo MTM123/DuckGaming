@@ -1833,8 +1833,6 @@ public class $ {
 		public static ItemStack[] kitObsidian = new ItemStack[]{$.createMaterial(Material.DIAMOND_SWORD), $.createMaterial(Material.DIAMOND_PICKAXE), $.createMaterial(Material.DIAMOND_AXE), $.createMaterial(Material.DIAMOND_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 32), $.createMaterial(Material.DIAMOND_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.DIAMOND_BOOTS)};
 		public static ItemStack[] kitBedrock = new ItemStack[]{$.createMaterial(Material.DIAMOND_SWORD), $.createMaterial(Material.DIAMOND_PICKAXE), $.createMaterial(Material.DIAMOND_AXE), $.createMaterial(Material.DIAMOND_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 48), $.createMaterial(Material.DIAMOND_HELMET), $.createMaterial(Material.DIAMOND_CHESTPLATE), $.createMaterial(Material.DIAMOND_LEGGINGS), $.createMaterial(Material.DIAMOND_BOOTS)};
 
-
-
 		public static int getPlayerKills(Player player) {
 			String path = "config." + player.getUniqueId().toString() + ".factions";
 			if (Server.getPlugin().getConfig().contains(path) && Server.getPlugin().getConfig().contains(path + ".kills")) {

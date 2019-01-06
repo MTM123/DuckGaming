@@ -91,6 +91,28 @@ public class Votifier_Listener implements Listener {
 				amountEarned2 = 0;
 				amountEarned3 = 0;
 			}
+			switch ($.getRankId(player.getUniqueId())) {
+				case -5:
+					amountEarned1 *= 5;
+					amountEarned2 *= 5;
+					amountEarned3 *= 5;
+					break;
+				case -4:
+					amountEarned1 *= 4;
+					amountEarned2 *= 4;
+					amountEarned3 *= 4;
+					break;
+				case -3:
+					amountEarned1 *= 3;
+					amountEarned2 *= 3;
+					amountEarned3 *= 3;
+					break;
+				case -2:
+					amountEarned1 *= 2;
+					amountEarned2 *= 2;
+					amountEarned3 *= 2;
+					break;
+			}
 			if (!spoofed || (spoofed && minigame == ServerMinigame.KITPVP))
 				EconManager.depositCash(player.getUniqueId(), amountEarned2, "kitpvp");
 			if (!spoofed || (spoofed && minigame == ServerMinigame.FACTIONS))

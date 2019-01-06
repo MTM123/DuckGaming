@@ -1,5 +1,8 @@
 package me.skorrloregaming;
 
+import com.sk89q.worldedit.BlockVector2D;
+import com.sk89q.worldedit.Vector2D;
+import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
