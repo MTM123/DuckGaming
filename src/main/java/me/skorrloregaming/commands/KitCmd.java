@@ -110,6 +110,138 @@ public class KitCmd implements CommandExecutor {
 					}
 				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Recruit");
+			} else if (args[0].equalsIgnoreCase("donator")) {
+				if (Server.Factions.getDonatorKitCooldown().containsKey(player.getUniqueId())) {
+					player.sendMessage(tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + Server.Factions.getDonatorKitCooldown().get(player.getUniqueId()) + ChatColor.GRAY + " seconds before using that kit again.");
+					return true;
+				}
+				for (ItemStack item : $.Factions.kitDonator) {
+					player.getInventory().addItem(item);
+				}
+				player.updateInventory();
+				final Player fPlayer = player;
+				final Plugin fPlugin = Server.getPlugin();
+				if (!Server.Factions.getDonatorKitCooldown().containsKey(fPlayer.getUniqueId())) {
+					Server.Factions.getDonatorKitCooldown().put(fPlayer.getUniqueId(), 60 * 15);
+				}
+				new BukkitRunnable() {
+					int time = 60 * 15;
+
+					public void run() {
+						time--;
+						Server.Factions.getDonatorKitCooldown().put(fPlayer.getUniqueId(), time);
+						if (time <= 0) {
+							Player checkPlayer = fPlugin.getServer().getPlayer(fPlayer.getUniqueId());
+							if (!(checkPlayer == null)) {
+								checkPlayer.sendMessage(tag + ChatColor.GRAY + "You can now use the kit " + ChatColor.RED + "Donator");
+							}
+							if (Server.Factions.getDonatorKitCooldown().containsKey(fPlayer.getUniqueId())) {
+								Server.Factions.getDonatorKitCooldown().remove(fPlayer.getUniqueId());
+							}
+							cancel();
+						}
+					}
+				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Donator");
+			} else if (args[0].equalsIgnoreCase("redstone")) {
+				if (Server.Factions.getRedstoneKitCooldown().containsKey(player.getUniqueId())) {
+					player.sendMessage(tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + Server.Factions.getRedstoneKitCooldown().get(player.getUniqueId()) + ChatColor.GRAY + " seconds before using that kit again.");
+					return true;
+				}
+				for (ItemStack item : $.Factions.kitRedstone) {
+					player.getInventory().addItem(item);
+				}
+				player.updateInventory();
+				final Player fPlayer = player;
+				final Plugin fPlugin = Server.getPlugin();
+				if (!Server.Factions.getRedstoneKitCooldown().containsKey(fPlayer.getUniqueId())) {
+					Server.Factions.getRedstoneKitCooldown().put(fPlayer.getUniqueId(), 60 * 15);
+				}
+				new BukkitRunnable() {
+					int time = 60 * 15;
+
+					public void run() {
+						time--;
+						Server.Factions.getRedstoneKitCooldown().put(fPlayer.getUniqueId(), time);
+						if (time <= 0) {
+							Player checkPlayer = fPlugin.getServer().getPlayer(fPlayer.getUniqueId());
+							if (!(checkPlayer == null)) {
+								checkPlayer.sendMessage(tag + ChatColor.GRAY + "You can now use the kit " + ChatColor.RED + "Redstone");
+							}
+							if (Server.Factions.getRedstoneKitCooldown().containsKey(fPlayer.getUniqueId())) {
+								Server.Factions.getRedstoneKitCooldown().remove(fPlayer.getUniqueId());
+							}
+							cancel();
+						}
+					}
+				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Redstone");
+			} else if (args[0].equalsIgnoreCase("obsidian")) {
+				if (Server.Factions.getObsidianKitCooldown().containsKey(player.getUniqueId())) {
+					player.sendMessage(tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + Server.Factions.getObsidianKitCooldown().get(player.getUniqueId()) + ChatColor.GRAY + " seconds before using that kit again.");
+					return true;
+				}
+				for (ItemStack item : $.Factions.kitObsidian) {
+					player.getInventory().addItem(item);
+				}
+				player.updateInventory();
+				final Player fPlayer = player;
+				final Plugin fPlugin = Server.getPlugin();
+				if (!Server.Factions.getObsidianKitCooldown().containsKey(fPlayer.getUniqueId())) {
+					Server.Factions.getObsidianKitCooldown().put(fPlayer.getUniqueId(), 60 * 15);
+				}
+				new BukkitRunnable() {
+					int time = 60 * 15;
+
+					public void run() {
+						time--;
+						Server.Factions.getObsidianKitCooldown().put(fPlayer.getUniqueId(), time);
+						if (time <= 0) {
+							Player checkPlayer = fPlugin.getServer().getPlayer(fPlayer.getUniqueId());
+							if (!(checkPlayer == null)) {
+								checkPlayer.sendMessage(tag + ChatColor.GRAY + "You can now use the kit " + ChatColor.RED + "Obsidian");
+							}
+							if (Server.Factions.getObsidianKitCooldown().containsKey(fPlayer.getUniqueId())) {
+								Server.Factions.getObsidianKitCooldown().remove(fPlayer.getUniqueId());
+							}
+							cancel();
+						}
+					}
+				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Obsidian");
+			} else if (args[0].equalsIgnoreCase("bedrock")) {
+				if (Server.Factions.getBedrockKitCooldown().containsKey(player.getUniqueId())) {
+					player.sendMessage(tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + Server.Factions.getBedrockKitCooldown().get(player.getUniqueId()) + ChatColor.GRAY + " seconds before using that kit again.");
+					return true;
+				}
+				for (ItemStack item : $.Factions.kitBedrock) {
+					player.getInventory().addItem(item);
+				}
+				player.updateInventory();
+				final Player fPlayer = player;
+				final Plugin fPlugin = Server.getPlugin();
+				if (!Server.Factions.getBedrockKitCooldown().containsKey(fPlayer.getUniqueId())) {
+					Server.Factions.getBedrockKitCooldown().put(fPlayer.getUniqueId(), 60 * 15);
+				}
+				new BukkitRunnable() {
+					int time = 60 * 15;
+
+					public void run() {
+						time--;
+						Server.Factions.getBedrockKitCooldown().put(fPlayer.getUniqueId(), time);
+						if (time <= 0) {
+							Player checkPlayer = fPlugin.getServer().getPlayer(fPlayer.getUniqueId());
+							if (!(checkPlayer == null)) {
+								checkPlayer.sendMessage(tag + ChatColor.GRAY + "You can now use the kit " + ChatColor.RED + "Bedrock");
+							}
+							if (Server.Factions.getBedrockKitCooldown().containsKey(fPlayer.getUniqueId())) {
+								Server.Factions.getBedrockKitCooldown().remove(fPlayer.getUniqueId());
+							}
+							cancel();
+						}
+					}
+				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Bedrock");
 			} else {
 				player.sendMessage(tag + ChatColor.RED + "The specified kit could not be found.");
 				player.performCommand("kits");

@@ -1,6 +1,8 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.ConfigurationManager;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,25 +18,35 @@ public class SetHomeCmd implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player))
 			return true;
-		Player player = ((Player) sender);
-		int marriageId = $.Marriage.getPlayerMarriageId(player);
-		if (marriageId == 0) {
-			player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are currently not married to anyone.");
+		Player player = (Player) sender;
+		if ((!Server.getFactions().contains(player.getUniqueId())) && (!Server.getSurvival().contains(player.getUniqueId()))) {
+			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
-		ServerMinigame minigame = $.getMinigameFromWorld(player.getWorld());
-		if (minigame == ServerMinigame.HUB || minigame == ServerMinigame.SKYFIGHT || minigame == ServerMinigame.UNKNOWN) {
-			player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.WHITE + "You cannot set a home in this minigame.");
+		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
-		String base = "homes." + marriageId;
-		Server.getMarriageHomesConfig().getData().set(base + ".world", player.getWorld().getName());
-		Server.getMarriageHomesConfig().getData().set(base + ".x", player.getLocation().getX());
-		Server.getMarriageHomesConfig().getData().set(base + ".y", player.getLocation().getY());
-		Server.getMarriageHomesConfig().getData().set(base + ".z", player.getLocation().getZ());
-		Server.getMarriageHomesConfig().getData().set(base + ".yaw", (int) player.getLocation().getYaw());
-		Server.getMarriageHomesConfig().getData().set(base + ".pitch", (int) player.getLocation().getPitch());
-		Server.getMarriageHomesConfig().saveData();
+		ConfigurationManager config = null;
+		if (Server.getFactions().contains(player.getUniqueId())) {
+			config = Server.getFactionsConfig();
+		} else if (Server.getSurvival().contains(player.getUniqueId())) {
+			config = Server.getSurvivalConfig();
+		}
+		String base = "homes." + player.getUniqueId().toString();
+		World world = player.getWorld();
+		double x = player.getLocation().getX();
+		double y = player.getLocation().getY();
+		double z = player.getLocation().getZ();
+		float yaw = player.getLocation().getYaw();
+		float pitch = player.getLocation().getPitch();
+		config.getData().set(base + ".world", world.getName());
+		config.getData().set(base + ".x", Double.valueOf(x));
+		config.getData().set(base + ".y", Double.valueOf(y));
+		config.getData().set(base + ".z", Double.valueOf(z));
+		config.getData().set(base + ".yaw", Integer.valueOf((int) yaw));
+		config.getData().set(base + ".pitch", Integer.valueOf((int) pitch));
+		config.saveData();
 		player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have set your home on this server.");
 		return true;
 	}

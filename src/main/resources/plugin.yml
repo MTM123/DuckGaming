@@ -56,8 +56,6 @@ commands:
     warnings:
         description: Displays the amount of warnings a player has and if they are banned
         aliases: warns
-    vote:
-        description: Displays an array of voting links for our server
     update-skin:
         description: Attempts to update the skin without waiting until the skin expires
         aliases: [updateskin, uskin, skinupdate]
@@ -82,9 +80,10 @@ commands:
         description: Center yourself in the block your standing on
     marrychat:
         description: Enter or leave marriage chat
-        aliases: [mchat, marryc, mc]
+        aliases: [mchat, marryc, mc, weddingchat, wchat, weddingc, wc]
     marry:
         description: Run marriage related commands
+        aliases: wedding
     divorce:
         description: Break up with you married partner
     modifications:

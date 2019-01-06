@@ -71,13 +71,7 @@ crashlytics-build.properties
 fabric.properties
 
 # Maven 3
-target/classes/
-target/generated-sources/
-target/generated-test-sources/
-target/maven-archiver/
-target/maven-status/
-target/surefire-reports/
-target/test-classes/
+target/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup

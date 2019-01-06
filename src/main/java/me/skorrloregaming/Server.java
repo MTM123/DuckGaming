@@ -115,6 +115,10 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConcurrentMap<UUID, Integer> starterKitCooldownKitpvp = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, Integer> recruitKitCooldownSurvival = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, Integer> recruitKitCooldownFactions = new ConcurrentHashMap<>();
+	private static ConcurrentMap<UUID, Integer> donatorKitCooldownFactions = new ConcurrentHashMap<>();
+	private static ConcurrentMap<UUID, Integer> redstoneKitCooldownFactions = new ConcurrentHashMap<>();
+	private static ConcurrentMap<UUID, Integer> obsidianKitCooldownFactions = new ConcurrentHashMap<>();
+	private static ConcurrentMap<UUID, Integer> bedrockKitCooldownFactions = new ConcurrentHashMap<>();
 
 	private static ConcurrentMap<UUID, UUID> tpaRequests = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, UUID> marriageRequests = new ConcurrentHashMap<>();
@@ -387,6 +391,22 @@ public class Server extends JavaPlugin implements Listener {
 
 		public static ConcurrentMap<UUID, Integer> getRecruitKitCooldown() {
 			return recruitKitCooldownFactions;
+		}
+
+		public static ConcurrentMap<UUID, Integer> getDonatorKitCooldown() {
+			return donatorKitCooldownFactions;
+		}
+
+		public static ConcurrentMap<UUID, Integer> getRedstoneKitCooldown() {
+			return redstoneKitCooldownFactions;
+		}
+
+		public static ConcurrentMap<UUID, Integer> getObsidianKitCooldown() {
+			return obsidianKitCooldownFactions;
+		}
+
+		public static ConcurrentMap<UUID, Integer> getBedrockKitCooldown() {
+			return bedrockKitCooldownFactions;
 		}
 
 	}

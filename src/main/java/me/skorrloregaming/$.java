@@ -1827,8 +1827,14 @@ public class $ {
 
 	public static class Factions {
 		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "factions" + ChatColor.GRAY + "] " + ChatColor.RESET;
-		public static String[] validKits = new String[]{"recruit"};
-		public static ItemStack[] kitRecruit = new ItemStack[]{$.createMaterial(Material.STONE_SWORD), $.createMaterial(Material.STONE_PICKAXE), $.createMaterial(Material.STONE_AXE), $.createMaterial(Material.STONE_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 16), $.createMaterial(Material.LEATHER_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.LEATHER_BOOTS)};
+		public static String[] validKits = new String[]{"recruit", "donator", "redstone", "obsidian", "bedrock"};
+		public static ItemStack[] kitRecruit = new ItemStack[]{$.createMaterial(Material.STONE_SWORD), $.createMaterial(Material.STONE_PICKAXE), $.createMaterial(Material.STONE_AXE), $.createMaterial(Material.STONE_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 8), $.createMaterial(Material.LEATHER_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.LEATHER_BOOTS)};
+		public static ItemStack[] kitDonator = new ItemStack[]{$.createMaterial(Material.IRON_SWORD), $.createMaterial(Material.IRON_PICKAXE), $.createMaterial(Material.IRON_AXE), $.createMaterial(Material.IRON_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 16), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
+		public static ItemStack[] kitRedstone = new ItemStack[]{$.createMaterial(Material.IRON_SWORD), $.createMaterial(Material.DIAMOND_PICKAXE), $.createMaterial(Material.IRON_AXE), $.createMaterial(Material.IRON_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
+		public static ItemStack[] kitObsidian = new ItemStack[]{$.createMaterial(Material.DIAMOND_SWORD), $.createMaterial(Material.DIAMOND_PICKAXE), $.createMaterial(Material.DIAMOND_AXE), $.createMaterial(Material.DIAMOND_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 32), $.createMaterial(Material.DIAMOND_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.DIAMOND_BOOTS)};
+		public static ItemStack[] kitBedrock = new ItemStack[]{$.createMaterial(Material.DIAMOND_SWORD), $.createMaterial(Material.DIAMOND_PICKAXE), $.createMaterial(Material.DIAMOND_AXE), $.createMaterial(Material.DIAMOND_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 48), $.createMaterial(Material.DIAMOND_HELMET), $.createMaterial(Material.DIAMOND_CHESTPLATE), $.createMaterial(Material.DIAMOND_LEGGINGS), $.createMaterial(Material.DIAMOND_BOOTS)};
+
+
 
 		public static int getPlayerKills(Player player) {
 			String path = "config." + player.getUniqueId().toString() + ".factions";
