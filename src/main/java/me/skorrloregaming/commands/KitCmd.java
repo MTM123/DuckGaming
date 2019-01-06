@@ -111,6 +111,10 @@ public class KitCmd implements CommandExecutor {
 				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Recruit");
 			} else if (args[0].equalsIgnoreCase("donator")) {
+				if ($.getRankId(player.getUniqueId()) > -2) {
+					player.sendMessage(tag + ChatColor.GRAY + "You must have rank " + ChatColor.RED + "Donator" + ChatColor.GRAY + " to use this kit.");
+					return true;
+				}
 				if (Server.Factions.getDonatorKitCooldown().containsKey(player.getUniqueId())) {
 					player.sendMessage(tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + Server.Factions.getDonatorKitCooldown().get(player.getUniqueId()) + ChatColor.GRAY + " seconds before using that kit again.");
 					return true;
@@ -144,6 +148,10 @@ public class KitCmd implements CommandExecutor {
 				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Donator");
 			} else if (args[0].equalsIgnoreCase("redstone")) {
+				if ($.getRankId(player.getUniqueId()) > -3) {
+					player.sendMessage(tag + ChatColor.GRAY + "You must have rank " + ChatColor.RED + "Redstone" + ChatColor.GRAY + " to use this kit.");
+					return true;
+				}
 				if (Server.Factions.getRedstoneKitCooldown().containsKey(player.getUniqueId())) {
 					player.sendMessage(tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + Server.Factions.getRedstoneKitCooldown().get(player.getUniqueId()) + ChatColor.GRAY + " seconds before using that kit again.");
 					return true;
@@ -177,6 +185,10 @@ public class KitCmd implements CommandExecutor {
 				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Redstone");
 			} else if (args[0].equalsIgnoreCase("obsidian")) {
+				if ($.getRankId(player.getUniqueId()) > -4) {
+					player.sendMessage(tag + ChatColor.GRAY + "You must have rank " + ChatColor.RED + "Obsidian" + ChatColor.GRAY + " to use this kit.");
+					return true;
+				}
 				if (Server.Factions.getObsidianKitCooldown().containsKey(player.getUniqueId())) {
 					player.sendMessage(tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + Server.Factions.getObsidianKitCooldown().get(player.getUniqueId()) + ChatColor.GRAY + " seconds before using that kit again.");
 					return true;
@@ -210,6 +222,10 @@ public class KitCmd implements CommandExecutor {
 				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Obsidian");
 			} else if (args[0].equalsIgnoreCase("bedrock")) {
+				if ($.getRankId(player.getUniqueId()) > -5) {
+					player.sendMessage(tag + ChatColor.GRAY + "You must have rank " + ChatColor.RED + "Bedrock" + ChatColor.GRAY + " to use this kit.");
+					return true;
+				}
 				if (Server.Factions.getBedrockKitCooldown().containsKey(player.getUniqueId())) {
 					player.sendMessage(tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + Server.Factions.getBedrockKitCooldown().get(player.getUniqueId()) + ChatColor.GRAY + " seconds before using that kit again.");
 					return true;
