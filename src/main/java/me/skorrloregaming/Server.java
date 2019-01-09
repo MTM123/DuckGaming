@@ -716,6 +716,17 @@ public class Server extends JavaPlugin implements Listener {
 				plugin.saveConfig();
 			}
 		}, 0L, 1200L);
+		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
+			@Override
+			public void run() {
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					try {
+						SolidStorage.savePlayerData(player, $.getMinigameDomain(player));
+					} catch (Exception e) {
+					}
+				}
+			}
+		}, 0L, 6000L);
 		Bukkit.getScheduler().runTaskTimer(this, new AutoBroadcaster(), 6000L, 12000L);
 		Bukkit.getScheduler().runTaskTimer(this, garbageCollector, 0L, 36000L);
 		reload();
