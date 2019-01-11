@@ -28,14 +28,17 @@ public class LaShoppeEventHandler implements Listener {
 		if (item == null)
 			return;
 		boolean removeMode = false;
-		if (inventory.getItem(0).getType() == Material.ROSE_RED) {
-			if (inventory.getItem(0).getItemMeta().hasEnchants()) {
-				if (inventory.getItem(0).getItemMeta().getDisplayName().equals("Remove items from shop")) {
-					removeMode = true;
+		if (inventory.getItem(0) != null) {
+			if (inventory.getItem(0).getType() == Material.ROSE_RED) {
+				if (inventory.getItem(0).getItemMeta().hasEnchants()) {
+					if (inventory.getItem(0).getItemMeta().getDisplayName().equals("Remove items from shop")) {
+						removeMode = true;
+					}
 				}
 			}
 		}
 		if (inventory.getName().startsWith("La Shoppe")) {
+			event.setCancelled(true);
 			String pageString = inventory.getName().substring(inventory.getName().indexOf("page ") + 5);
 			int page = Integer.parseInt(pageString);
 			if (item.getType() == Material.ROSE_RED) {
@@ -57,6 +60,17 @@ public class LaShoppeEventHandler implements Listener {
 				} else if (item.getItemMeta().getDisplayName().equals("View following page")) {
 					shoppe.createInventory(player, LaShoppeFrame.HOME, page + 1, removeMode);
 				}
+			}
+			if (item.getItemMeta().hasLore()) {
+				String priceIndexString = item.getItemMeta().getLore().get(0);
+				String priceString = priceIndexString.substring(priceIndexString.indexOf("Price: $") + 6);
+				int price = Integer.parseInt(priceString);
+				String amountIndexString = item.getItemMeta().getLore().get(1);
+				String amountString = amountIndexString.substring(amountIndexString.indexOf("Amount: ") + 6, amountIndexString.length() - 1);
+				int amount = Integer.parseInt(amountString);
+				player.sendMessage("Material: " + item.getType().toString());
+				player.sendMessage("Price: $" + price);
+				player.sendMessage("Amount: " + amount + "x");
 			}
 		}
 	}

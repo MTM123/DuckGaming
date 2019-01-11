@@ -76,6 +76,7 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConfigurationManager warpConfig;
 	private static ConfigurationManager signConfig;
 	private static ConfigurationManager factionsConfig;
+	private static ConfigurationManager factionsShoppeConfig;
 	private static ConfigurationManager survivalConfig;
 	private static ConfigurationManager marriageHomesConfig;
 	private static ConfigurationManager npcConfig;
@@ -499,6 +500,10 @@ public class Server extends JavaPlugin implements Listener {
 		return factionsConfig;
 	}
 
+	public static ConfigurationManager getFactionsShoppeConfig() {
+		return factionsShoppeConfig;
+	}
+
 	public static ConfigurationManager getSurvivalConfig() {
 		return survivalConfig;
 	}
@@ -590,6 +595,7 @@ public class Server extends JavaPlugin implements Listener {
 		warpConfig = new ConfigurationManager();
 		signConfig = new ConfigurationManager();
 		factionsConfig = new ConfigurationManager();
+		factionsShoppeConfig = new ConfigurationManager();
 		survivalConfig = new ConfigurationManager();
 		banConfig = new ConfigurationManager();
 		npcConfig = new ConfigurationManager();

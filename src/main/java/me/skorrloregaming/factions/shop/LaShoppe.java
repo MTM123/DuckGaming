@@ -28,10 +28,27 @@ public class LaShoppe {
 	}
 
 	public void createItem(Material material, int price, int amount) {
-
+		int index = 0;
+		while (true) {
+			index++;
+			if (!Server.getFactionsShoppeConfig().getData().contains(index + ""))
+				break;
+		}
+		Server.getFactionsShoppeConfig().getData().set(index + ".material", material.toString());
+		Server.getFactionsShoppeConfig().getData().set(index + ".price", price);
+		Server.getFactionsShoppeConfig().getData().set(index + ".amount", amount);
+		Server.getFactionsShoppeConfig().saveData();
 	}
 
-	public Inventory createInventory(Player player, LaShoppeFrame frame, int page, boolean removeMode) {
+	public LaShoppeItem retrieveItem(int index) {
+		String materialString = Server.getFactionsShoppeConfig().getData().getString(index + ".material");
+		Material material = Material.getMaterial(materialString);
+		int price = Server.getFactionsShoppeConfig().getData().getInt(index + ".price");
+		int amount = Server.getFactionsShoppeConfig().getData().getInt(index + ".amount");
+		return new LaShoppeItem(material, price, amount);
+	}
+
+	public void createInventory(Player player, LaShoppeFrame frame, int page, boolean removeMode) {
 		switch (frame) {
 			case HOME:
 				int startIndex = 0;
@@ -48,20 +65,22 @@ public class LaShoppe {
 					}
 					inventory.setItem(0, removeItemModeItem);
 					inventory.setItem(8, $.createMaterial(Material.CACTUS_GREEN, "Add new shop item"));
-					startIndex = 8;
+					startIndex = 7;
 				} else {
 					inventory = Bukkit.createInventory(null, 27, "La Shoppe, page " + page);
 				}
 				ItemStack viewPrevious = $.createMaterial(Material.EMERALD, "View previous page");
 				ItemStack viewFollowing = $.createMaterial(Material.EMERALD, "View following page");
-				inventory.setItem(startIndex + 18, viewPrevious);
-				inventory.setItem(startIndex + 26, viewFollowing);
+				inventory.setItem(startIndex + 9, viewPrevious);
+				inventory.setItem(startIndex + 17, viewFollowing);
 				for (int i = 0; i < 27; i++) {
 					int horizontal = i % 7;
 					int line = (int) (Math.floor(i / 7) + 1);
 					int slot = (horizontal + 1) + (9 * (line - 1));
 					if (slot < inventory.getSize()) {
-						inventory.setItem(startIndex + slot, $.createMaterial(Material.DIRT));
+						int index = ((page - 1) * 27) + i;
+						if (Server.getFactionsShoppeConfig().getData().contains(index + ""))
+							inventory.setItem(startIndex + slot, retrieveItem(index).toItemStack());
 					}
 				}
 				player.openInventory(inventory);
@@ -82,7 +101,6 @@ public class LaShoppe {
 			default:
 				break;
 		}
-		return Bukkit.createInventory(null, 9);
 	}
 
 }
