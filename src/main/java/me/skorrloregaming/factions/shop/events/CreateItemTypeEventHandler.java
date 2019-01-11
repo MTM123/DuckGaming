@@ -1,11 +1,19 @@
 package me.skorrloregaming.factions.shop.events;
 
 import me.skorrloregaming.AnvilGUI;
+import me.skorrloregaming.factions.shop.LaShoppe;
 import org.bukkit.Material;
 
 import java.lang.reflect.InvocationTargetException;
 
 public class CreateItemTypeEventHandler implements AnvilGUI.AnvilClickEventHandler {
+
+	private LaShoppe shoppe;
+
+	public CreateItemTypeEventHandler(LaShoppe shoppe) {
+		this.shoppe = shoppe;
+	}
+
 	@Override
 	public void onAnvilClick(AnvilGUI.AnvilClickEvent event) {
 		String materialName = event.getName().toUpperCase().replace(" ", "_");
@@ -21,7 +29,7 @@ public class CreateItemTypeEventHandler implements AnvilGUI.AnvilClickEventHandl
 			}
 		}
 		try {
-			new AnvilGUI(event.getPlayer(), new CreateItemPriceEventHandler(material))
+			new AnvilGUI(event.getPlayer(), new CreateItemPriceEventHandler(shoppe, material))
 					.setInputName("Enter item price")
 					.open();
 		} catch (IllegalAccessException e) {

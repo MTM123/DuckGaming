@@ -27,17 +27,25 @@ public class LaShoppeEventHandler implements Listener {
 		ItemStack item = event.getCurrentItem();
 		if (item == null)
 			return;
-		if (inventory.getName().startsWith(ChatColor.RESET + "La Shoppe")) {
+		boolean removeMode = false;
+		if (inventory.getItem(0).getType() == Material.ROSE_RED) {
+			if (inventory.getItem(0).getItemMeta().hasEnchants()) {
+				if (inventory.getItem(0).getItemMeta().getDisplayName().equals("Remove items from shop")) {
+					removeMode = true;
+				}
+			}
+		}
+		if (inventory.getName().startsWith("La Shoppe")) {
 			String pageString = inventory.getName().substring(inventory.getName().indexOf("page ") + 5);
 			int page = Integer.parseInt(pageString);
 			if (item.getType() == Material.ROSE_RED) {
 				if (item.getItemMeta().getDisplayName().equals("Remove items from shop")) {
-					// do something
+					shoppe.createInventory(player, LaShoppeFrame.HOME, page, !removeMode);
 					return;
 				}
 			} else if (item.getType() == Material.CACTUS_GREEN) {
 				if (item.getItemMeta().getDisplayName().equals("Add new shop item")) {
-					shoppe.createInventory(player, LaShoppeFrame.CREATE_ITEM, page);
+					shoppe.createInventory(player, LaShoppeFrame.CREATE_ITEM, page, removeMode);
 				}
 			} else if (item.getType() == Material.EMERALD) {
 				if (item.getItemMeta().getDisplayName().equals("View previous page")) {
@@ -45,9 +53,9 @@ public class LaShoppeEventHandler implements Listener {
 						player.playSound(player.getEyeLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
 						return;
 					}
-					shoppe.createInventory(player, LaShoppeFrame.HOME, page - 1);
+					shoppe.createInventory(player, LaShoppeFrame.HOME, page - 1, removeMode);
 				} else if (item.getItemMeta().getDisplayName().equals("View following page")) {
-					shoppe.createInventory(player, LaShoppeFrame.HOME, page + 1);
+					shoppe.createInventory(player, LaShoppeFrame.HOME, page + 1, removeMode);
 				}
 			}
 		}

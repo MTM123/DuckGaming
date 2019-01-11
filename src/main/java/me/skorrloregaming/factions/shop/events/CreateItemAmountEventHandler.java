@@ -1,15 +1,20 @@
 package me.skorrloregaming.factions.shop.events;
 
 import me.skorrloregaming.AnvilGUI;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.factions.shop.LaShoppe;
 import org.bukkit.Material;
 
 public class CreateItemAmountEventHandler implements AnvilGUI.AnvilClickEventHandler {
+
+	private LaShoppe shoppe;
 
 	private Material material;
 
 	private int price;
 
-	public CreateItemAmountEventHandler(Material material, int price) {
+	public CreateItemAmountEventHandler(LaShoppe shoppe, Material material, int price) {
+		this.shoppe = shoppe;
 		this.material = material;
 		this.price = price;
 	}
@@ -27,5 +32,6 @@ public class CreateItemAmountEventHandler implements AnvilGUI.AnvilClickEventHan
 		event.getPlayer().sendMessage("Material: " + material.toString());
 		event.getPlayer().sendMessage("Price: $" + price);
 		event.getPlayer().sendMessage("Amount: " + amount + "x");
+		shoppe.createItem(material, price, amount);
 	}
 }
