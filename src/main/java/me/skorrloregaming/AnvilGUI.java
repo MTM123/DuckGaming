@@ -51,6 +51,7 @@ public class AnvilGUI {
 				if (event.getWhoClicked() instanceof Player) {
 					if (event.getInventory().equals(inv)) {
 						event.setCancelled(true);
+						Player player = (Player) event.getWhoClicked();
 						ItemStack item = event.getCurrentItem();
 						int slot = event.getRawSlot();
 						String name = "";
@@ -62,7 +63,7 @@ public class AnvilGUI {
 								}
 							}
 						}
-						AnvilClickEvent clickEvent = new AnvilClickEvent(AnvilSlot.bySlot(slot), name);
+						AnvilClickEvent clickEvent = new AnvilClickEvent(AnvilSlot.bySlot(slot), name, player);
 						handler.onAnvilClick(clickEvent);
 						if (clickEvent.getWillClose()) {
 							event.getWhoClicked().closeInventory();
@@ -179,12 +180,14 @@ public class AnvilGUI {
 
 		private AnvilSlot slot;
 		private String name;
+		private Player player;
 		private boolean close = true;
 		private boolean destroy = true;
 
-		public AnvilClickEvent(AnvilSlot slot, String name) {
+		public AnvilClickEvent(AnvilSlot slot, String name, Player player) {
 			this.slot = slot;
 			this.name = name;
+			this.player = player;
 		}
 
 		public AnvilSlot getSlot() {
@@ -193,6 +196,10 @@ public class AnvilGUI {
 
 		public String getName() {
 			return name;
+		}
+
+		public Player getPlayer() {
+			return player;
 		}
 
 		public boolean getWillClose() {

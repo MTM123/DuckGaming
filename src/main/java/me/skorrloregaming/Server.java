@@ -15,6 +15,8 @@ import java.util.concurrent.ConcurrentMap;
 import me.skorrloregaming.commands.*;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
+import me.skorrloregaming.factions.auction.Auctioneer;
+import me.skorrloregaming.factions.shop.LaShoppe;
 import me.skorrloregaming.impl.*;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
@@ -92,6 +94,8 @@ public class Server extends JavaPlugin implements Listener {
 	private static PlaytimeManager playtimeManager = null;
 	private static BarApi barApi = null;
 	private static SessionManager sessionManager = null;
+	private static Auctioneer auctioneer = null;
+	private static LaShoppe shoppe = null;
 	private static final int BASIC_TELEPORT_TIME = 3;
 
 	private static ArrayList<UUID> hub = new ArrayList<>();
@@ -551,6 +555,14 @@ public class Server extends JavaPlugin implements Listener {
 		return barApi;
 	}
 
+	public static Auctioneer getAuctioneer() {
+		return auctioneer;
+	}
+
+	public static LaShoppe getShoppe() {
+		return shoppe;
+	}
+
 	public static SessionManager getSessionManager() {
 		return sessionManager;
 	}
@@ -635,6 +647,8 @@ public class Server extends JavaPlugin implements Listener {
 		lockette.onEnable();
 		nuVotifier = new Votifier();
 		nuVotifier.onEnable();
+		auctioneer = new Auctioneer();
+		shoppe = new LaShoppe();
 		garbageCollector = new GCandAutoDemotion();
 		getConfig().options().copyDefaults(true);
 		saveConfig();

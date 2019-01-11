@@ -1,5 +1,6 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.factions.shop.LaShoppeFrame;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -27,10 +28,11 @@ public class ShopCmd implements CommandExecutor {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
-		Location zoneLocation = $.getZoneLocation($.getMinigameDomain(player) + "-shop");
+		Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, 1);
+		/*Location zoneLocation = $.getZoneLocation($.getMinigameDomain(player) + "-shop");
 		DelayedTeleport dt = new DelayedTeleport(player, Server.getTeleportationDelay(), zoneLocation, false);
 		dt.setFinishTitleSubtitle(new TitleSubtitle("", "You can use /spawner to purchase mob spawners.", true));
-		dt.runTaskTimerAsynchronously(Server.getPlugin(), 4, 4);
+		dt.runTaskTimerAsynchronously(Server.getPlugin(), 4, 4);*/
 		return true;
 	}
 
