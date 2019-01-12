@@ -1872,6 +1872,50 @@ public class PlayerEventHandler implements Listener {
 					}
 				}
 			}
+			if (event.getInventory().getName().startsWith(ChatColor.BOLD + "Virtual Store")) {
+				String name = ChatColor.stripColor(event.getInventory().getName());
+				Material material = null;
+				int amount = 0;
+				int data = 0;
+				String code = player.getWorld().getName() + ";" + name.substring(name.lastIndexOf("[") + 1, name.lastIndexOf("]"));
+				if (event.getInventory().getName().contains(";")) {
+					if (Server.getSignConfig().getData().contains("signs." + code.replace(";", ""))) {
+						int blockX = Integer.parseInt(code.split(";")[1]);
+						int blockY = Integer.parseInt(code.split(";")[2]);
+						int blockZ = Integer.parseInt(code.split(";")[3]);
+						BlockState state = player.getWorld().getBlockAt(blockX, blockY, blockZ).getState();
+						if (state instanceof Sign) {
+							Sign sign = (Sign) state;
+							if (ChatColor.stripColor(sign.getLine(0)).equals("Sell")) {
+								material = Material.getMaterial(String.valueOf(sign.getLine(1)).replace(" ", "_").toUpperCase().split(":")[0]);
+								amount = event.getCurrentItem().getAmount();
+								data = 0;
+								try {
+									data = Integer.parseInt(String.valueOf(sign.getLine(1)).split(":")[1]);
+								} catch (Exception ig) {
+								}
+							}
+						}
+					}
+				} else {
+					code = code.substring(code.indexOf(";") + 1);
+					int index = Integer.parseInt(code);
+					if (Server.getFactionsShoppeConfig().getData().contains("items." + index)) {
+						LaShoppeItem item = Server.getShoppe().retrieveItem(index);
+						material = item.getMaterial();
+						amount = event.getCurrentItem().getAmount();
+						data = item.getData();
+					}
+				}
+				ItemStack item = new ItemStack(material, amount, (short) data);
+				if (material == Material.SPAWNER)
+					item = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), amount);
+				if (!(event.getCurrentItem().getType() == Material.AIR)) {
+					if (!event.getCurrentItem().isSimilar(item)) {
+						event.setCancelled(true);
+					}
+				}
+			}
 			if (event.getInventory().getName().startsWith("La Shoppe")) {
 				event.setCancelled(true);
 				String pageString = event.getInventory().getName().substring(event.getInventory().getName().indexOf("page ") + 5);
@@ -2229,50 +2273,6 @@ public class PlayerEventHandler implements Listener {
 				event.setCancelled(true);
 			return;
 		}
-		if (!(event.getCurrentItem() == null) && event.getInventory().getName().startsWith(ChatColor.BOLD + "Virtual Store")) {
-			String name = ChatColor.stripColor(event.getInventory().getName());
-			Material material = null;
-			int amount = 0;
-			int data = 0;
-			String code = player.getWorld().getName() + ";" + name.substring(name.lastIndexOf("[") + 1, name.lastIndexOf("]"));
-			if (event.getInventory().getName().contains(";")) {
-				if (Server.getSignConfig().getData().contains("signs." + code.replace(";", ""))) {
-					int blockX = Integer.parseInt(code.split(";")[1]);
-					int blockY = Integer.parseInt(code.split(";")[2]);
-					int blockZ = Integer.parseInt(code.split(";")[3]);
-					BlockState state = player.getWorld().getBlockAt(blockX, blockY, blockZ).getState();
-					if (state instanceof Sign) {
-						Sign sign = (Sign) state;
-						if (ChatColor.stripColor(sign.getLine(0)).equals("Sell")) {
-							material = Material.getMaterial(String.valueOf(sign.getLine(1)).replace(" ", "_").toUpperCase().split(":")[0]);
-							amount = event.getCurrentItem().getAmount();
-							data = 0;
-							try {
-								data = Integer.parseInt(String.valueOf(sign.getLine(1)).split(":")[1]);
-							} catch (Exception ig) {
-							}
-						}
-					}
-				}
-			} else {
-				code = code.substring(code.indexOf(";") + 1);
-				int index = Integer.parseInt(code);
-				if (Server.getFactionsShoppeConfig().getData().contains("items." + index)) {
-					LaShoppeItem item = Server.getShoppe().retrieveItem(index);
-					material = item.getMaterial();
-					amount = item.getAmount();
-				}
-			}
-			ItemStack item = new ItemStack(material, amount, (short) data);
-			if (material == Material.SPAWNER)
-				item = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), amount);
-			if (!(event.getCurrentItem().getType() == Material.AIR)) {
-				if (!(event.getCurrentItem().getType() == item.getType())) {
-					if (!(event.getCurrentItem().getDurability() == item.getDurability()))
-						event.setCancelled(true);
-				}
-			}
-		}
 		if (event.getInventory().getName().equals(ChatColor.BOLD + "Buy Monster Spawners")) {
 			if (event.getCurrentItem() == null)
 				return;
@@ -2441,6 +2441,7 @@ public class PlayerEventHandler implements Listener {
 					material = item.getMaterial();
 					price = item.getPrice();
 					amount = item.getAmount();
+					data = item.getData();
 				}
 			}
 			DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
