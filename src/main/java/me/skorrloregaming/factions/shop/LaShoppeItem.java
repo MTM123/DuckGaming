@@ -1,6 +1,8 @@
 package me.skorrloregaming.factions.shop;
 
 import me.skorrloregaming.$;
+import me.skorrloregaming.CraftGo;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -49,7 +51,14 @@ public class LaShoppeItem {
 	}
 
 	public ItemStack toItemStack() {
-		ItemStack itemStack = $.createMaterial(material);
+		ItemStack itemStack = null;
+		if (material == Material.SPAWNER) {
+			String entityName = CraftGo.MobSpawner.convertEntityIdToEntityType(data).toString().toLowerCase();
+			String displayName = ChatColor.RESET + $.capitalizeAll(WordUtils.capitalize(entityName) + " Spawner", "_");
+			itemStack = $.createMaterial(material, displayName);
+		} else {
+			itemStack = $.createMaterial(material);
+		}
 		List<String> lore = new ArrayList<String>();
 		lore.add(ChatColor.RESET + "Index: " + index);
 		lore.add(ChatColor.RESET + "Price: $" + price);
