@@ -1,22 +1,24 @@
-package me.skorrloregaming.factions.shop.events;
+package me.skorrloregaming.factions.shop.events.enchant;
 
 import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.factions.shop.LaShoppe;
+import me.skorrloregaming.impl.EnchantInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class CreateItemPriceEventHandler implements AnvilGUI.AnvilClickEventHandler {
+public class CreateEnchantPriceEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
 	private LaShoppe shoppe;
 
-	private Material material;
+	private Enchantment enchantment;
 
-	public CreateItemPriceEventHandler(LaShoppe shoppe, Material material) {
+	public CreateEnchantPriceEventHandler(LaShoppe shoppe, Enchantment enchantment) {
 		this.shoppe = shoppe;
-		this.material = material;
+		this.enchantment = enchantment;
 	}
 
 	@Override
@@ -26,7 +28,7 @@ public class CreateItemPriceEventHandler implements AnvilGUI.AnvilClickEventHand
 		try {
 			price = Integer.parseInt(priceString);
 		} catch (Exception ex) {
-			event.getPlayer().sendMessage("Sorry, that's not a valid item price.");
+			event.getPlayer().sendMessage("Sorry, that's not a valid enchant price.");
 			return;
 		}
 		Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
@@ -34,8 +36,8 @@ public class CreateItemPriceEventHandler implements AnvilGUI.AnvilClickEventHand
 			@Override
 			public void run() {
 				try {
-					new AnvilGUI(event.getPlayer(), new CreateItemAmountEventHandler(shoppe, material, price))
-							.setInputName("Enter item amount")
+					new AnvilGUI(event.getPlayer(), new CreateEnchantTierEventHandler(shoppe, enchantment, price))
+							.setInputName("Enter tier")
 							.open();
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();

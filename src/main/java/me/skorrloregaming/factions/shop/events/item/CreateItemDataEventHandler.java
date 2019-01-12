@@ -1,4 +1,4 @@
-package me.skorrloregaming.factions.shop.events;
+package me.skorrloregaming.factions.shop.events.item;
 
 import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.factions.shop.LaShoppe;

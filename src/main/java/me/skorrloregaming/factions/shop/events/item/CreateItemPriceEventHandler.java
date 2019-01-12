@@ -1,35 +1,33 @@
-package me.skorrloregaming.factions.shop.events;
+package me.skorrloregaming.factions.shop.events.item;
 
 import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.factions.shop.LaShoppe;
+import me.skorrloregaming.factions.shop.events.item.CreateItemAmountEventHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class CreateItemAmountEventHandler implements AnvilGUI.AnvilClickEventHandler {
+public class CreateItemPriceEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
 	private LaShoppe shoppe;
 
 	private Material material;
 
-	private int price;
-
-	public CreateItemAmountEventHandler(LaShoppe shoppe, Material material, int price) {
+	public CreateItemPriceEventHandler(LaShoppe shoppe, Material material) {
 		this.shoppe = shoppe;
 		this.material = material;
-		this.price = price;
 	}
 
 	@Override
 	public void onAnvilClick(AnvilGUI.AnvilClickEvent event) {
-		String amountString = event.getName().replace("x", "");
-		final int amount;
+		String priceString = event.getName().replace("$", "");
+		final int price;
 		try {
-			amount = Integer.parseInt(amountString);
+			price = Integer.parseInt(priceString);
 		} catch (Exception ex) {
-			event.getPlayer().sendMessage("Sorry, that's not a valid item amount.");
+			event.getPlayer().sendMessage("Sorry, that's not a valid item price.");
 			return;
 		}
 		Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
@@ -37,8 +35,8 @@ public class CreateItemAmountEventHandler implements AnvilGUI.AnvilClickEventHan
 			@Override
 			public void run() {
 				try {
-					new AnvilGUI(event.getPlayer(), new CreateItemDataEventHandler(shoppe, material, price, amount))
-							.setInputName("Enter item data")
+					new AnvilGUI(event.getPlayer(), new CreateItemAmountEventHandler(shoppe, material, price))
+							.setInputName("Enter amount")
 							.open();
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();

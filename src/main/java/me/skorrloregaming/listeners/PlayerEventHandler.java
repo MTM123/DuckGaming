@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import me.skorrloregaming.discord.Channel;
+import me.skorrloregaming.factions.shop.LaShoppeEnchant;
 import me.skorrloregaming.factions.shop.LaShoppeFrame;
 import me.skorrloregaming.factions.shop.LaShoppeItem;
 import me.skorrloregaming.impl.*;
@@ -1886,6 +1887,10 @@ public class PlayerEventHandler implements Listener {
 					if (event.getCurrentItem().getItemMeta().getDisplayName().equals("Add new shop item")) {
 						Server.getShoppe().createInventory(player, LaShoppeFrame.CREATE_ITEM, page, removeMode);
 					}
+				} else if (event.getCurrentItem().getType() == Material.LAPIS_LAZULI) {
+					if (event.getCurrentItem().getItemMeta().getDisplayName().equals("Add new shop enchant")) {
+						Server.getShoppe().createInventory(player, LaShoppeFrame.CREATE_ENCHANT, page, removeMode);
+					}
 				} else if (event.getCurrentItem().getType() == Material.EMERALD) {
 					if (event.getCurrentItem().getItemMeta().getDisplayName().equals("View previous page")) {
 						if (page == 1) {
@@ -1899,66 +1904,127 @@ public class PlayerEventHandler implements Listener {
 				}
 				if (event.getCurrentItem().hasItemMeta()) {
 					if (event.getCurrentItem().getItemMeta().hasLore()) {
-						String indexIndexString = event.getCurrentItem().getItemMeta().getLore().get(0);
-						String indexString = indexIndexString.substring(indexIndexString.indexOf("Index: ") + 7);
-						int index = Integer.parseInt(indexString);
-						String priceIndexString = event.getCurrentItem().getItemMeta().getLore().get(1);
-						String priceString = priceIndexString.substring(priceIndexString.indexOf("Price: $") + 8);
-						int price = Integer.parseInt(priceString);
-						String amountIndexString = event.getCurrentItem().getItemMeta().getLore().get(2);
-						String amountString = amountIndexString.substring(amountIndexString.indexOf("Amount: ") + 8, amountIndexString.length() - 1);
-						int amount = Integer.parseInt(amountString);
-						String dataIndexString = event.getCurrentItem().getItemMeta().getLore().get(3);
-						String dataString = dataIndexString.substring(dataIndexString.indexOf("Data: ") + 6);
-						int data = Integer.parseInt(dataString);
-						if (removeMode) {
-							if (player.isOp()) {
-								Server.getFactionsShoppeConfig().getData().set(index + "", null);
-								Server.getFactionsShoppeConfig().saveData();
-								final boolean fRemoveMode = removeMode;
-								Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
-									@Override
-									public void run() {
-										Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page, fRemoveMode);
-									}
-								}, 1L);
-							}
-						}
-						if (event.isLeftClick()) {
-							Inventory inv = Bukkit.createInventory(null, 54, ChatColor.BOLD + "Virtual Store [" + index + "]");
-							player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
-							player.openInventory(inv);
-						} else if (event.isRightClick()) {
-							try {
-								DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-								String materialName = $.formatMaterial(event.getCurrentItem().getType());
-								String subDomain = $.getMinigameDomain(player);
-								int cash = EconManager.retrieveCash(player, subDomain);
-								String tag = $.getMinigameTag(player);
-								if (cash >= price * 2 && player.isSneaking()) {
-									amount = amount * 2;
-									price = price * 2;
+						if (event.getCurrentItem().getType() == Material.ENCHANTED_BOOK) {
+							String indexIndexString = event.getCurrentItem().getItemMeta().getLore().get(0);
+							String indexString = indexIndexString.substring(indexIndexString.indexOf("Index: ") + 7);
+							int index = Integer.parseInt(indexString);
+							LaShoppeEnchant enchant = Server.getShoppe().retrieveEnchant(index);
+							int price = enchant.getPrice();
+							int tier = enchant.getTier();
+							if (removeMode) {
+								if (player.isOp()) {
+									Server.getFactionsShoppeConfig().getData().set("enchant." + index, null);
+									Server.getFactionsShoppeConfig().saveData();
+									final boolean fRemoveMode = removeMode;
+									Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+										@Override
+										public void run() {
+											Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page, fRemoveMode);
+										}
+									}, 1L);
 								}
-								ItemStack purchaseItem = new ItemStack(event.getCurrentItem().getType(), amount, (short) data);
-								if (event.getCurrentItem().getType() == Material.SPAWNER)
-									purchaseItem = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), amount);
-								if (cash >= price) {
-									if (player.getInventory().firstEmpty() == -1) {
-										player.sendMessage(tag + ChatColor.RED + "Inventory full. " + ChatColor.GRAY + "Empty some slots then try again.");
+							}
+							if (event.isRightClick()) {
+								try {
+									DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
+									String materialName = $.formatMaterial(event.getCurrentItem().getType());
+									String subDomain = $.getMinigameDomain(player);
+									int cash = EconManager.retrieveCash(player, subDomain);
+									String tag = $.getMinigameTag(player);
+									String enchantName = $.formatEnchantment(String.valueOf(enchant.getEnchantment().getKey().getKey().trim()), tier);
+									if (cash >= price) {
+										ItemStack currentItem = player.getInventory().getItemInMainHand();
+										if (currentItem.getType() == Material.AIR || currentItem == null || currentItem.getType() == null) {
+											player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
+											return;
+										}
+										if (currentItem.getEnchantments().containsKey(enchant) && currentItem.getEnchantments().get(enchant) == tier) {
+											player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
+											return;
+										}
+										try {
+											currentItem.addUnsafeEnchantment(enchant.getEnchantment(), tier);
+										} catch (Exception ex) {
+											player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
+											return;
+										}
+										EconManager.withdrawCash(player, price, subDomain);
+										player.getInventory().setItemInMainHand(currentItem);
+										player.updateInventory();
+										player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + enchantName + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
+										return;
+									} else {
+										player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money.");
 										return;
 									}
-									EconManager.withdrawCash(player, price, subDomain);
-									player.getInventory().addItem(purchaseItem);
-									player.updateInventory();
-									player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + materialName + " x" + amount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
+								} catch (Exception ex) {
+									player.sendMessage("An internal error has occured whilist processing this shop information.");
+									ex.printStackTrace();
 									return;
 								}
-								player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money.");
-								return;
-							} catch (Exception ex) {
-								player.sendMessage("An internal error has occured whilist processing this shop information.");
-								ex.printStackTrace();
-								return;
+							}
+						} else {
+							String indexIndexString = event.getCurrentItem().getItemMeta().getLore().get(0);
+							String indexString = indexIndexString.substring(indexIndexString.indexOf("Index: ") + 7);
+							int index = Integer.parseInt(indexString);
+							String priceIndexString = event.getCurrentItem().getItemMeta().getLore().get(1);
+							String priceString = priceIndexString.substring(priceIndexString.indexOf("Price: $") + 8);
+							int price = Integer.parseInt(priceString);
+							String amountIndexString = event.getCurrentItem().getItemMeta().getLore().get(2);
+							String amountString = amountIndexString.substring(amountIndexString.indexOf("Amount: ") + 8, amountIndexString.length() - 1);
+							int amount = Integer.parseInt(amountString);
+							String dataIndexString = event.getCurrentItem().getItemMeta().getLore().get(3);
+							String dataString = dataIndexString.substring(dataIndexString.indexOf("Data: ") + 6);
+							int data = Integer.parseInt(dataString);
+							if (removeMode) {
+								if (player.isOp()) {
+									Server.getFactionsShoppeConfig().getData().set("items." + index, null);
+									Server.getFactionsShoppeConfig().saveData();
+									final boolean fRemoveMode = removeMode;
+									Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+										@Override
+										public void run() {
+											Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page, fRemoveMode);
+										}
+									}, 1L);
+								}
+							}
+							if (event.isLeftClick()) {
+								Inventory inv = Bukkit.createInventory(null, 54, ChatColor.BOLD + "Virtual Store [" + index + "]");
+								player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
+								player.openInventory(inv);
+							} else if (event.isRightClick()) {
+								try {
+									DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
+									String materialName = $.formatMaterial(event.getCurrentItem().getType());
+									String subDomain = $.getMinigameDomain(player);
+									int cash = EconManager.retrieveCash(player, subDomain);
+									String tag = $.getMinigameTag(player);
+									if (cash >= price * 2 && player.isSneaking()) {
+										amount = amount * 2;
+										price = price * 2;
+									}
+									ItemStack purchaseItem = new ItemStack(event.getCurrentItem().getType(), amount, (short) data);
+									if (event.getCurrentItem().getType() == Material.SPAWNER)
+										purchaseItem = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), amount);
+									if (cash >= price) {
+										if (player.getInventory().firstEmpty() == -1) {
+											player.sendMessage(tag + ChatColor.RED + "Inventory full. " + ChatColor.GRAY + "Empty some slots then try again.");
+											return;
+										}
+										EconManager.withdrawCash(player, price, subDomain);
+										player.getInventory().addItem(purchaseItem);
+										player.updateInventory();
+										player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + materialName + " x" + amount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
+										return;
+									}
+									player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money.");
+									return;
+								} catch (Exception ex) {
+									player.sendMessage("An internal error has occured whilist processing this shop information.");
+									ex.printStackTrace();
+									return;
+								}
 							}
 						}
 					}
@@ -2191,7 +2257,7 @@ public class PlayerEventHandler implements Listener {
 			} else {
 				code = code.substring(code.indexOf(";") + 1);
 				int index = Integer.parseInt(code);
-				if (Server.getFactionsShoppeConfig().getData().contains(index + "")) {
+				if (Server.getFactionsShoppeConfig().getData().contains("items." + index)) {
 					LaShoppeItem item = Server.getShoppe().retrieveItem(index);
 					material = item.getMaterial();
 					amount = item.getAmount();
@@ -2370,7 +2436,7 @@ public class PlayerEventHandler implements Listener {
 			} else {
 				code = code.substring(code.indexOf(";") + 1);
 				int index = Integer.parseInt(code);
-				if (Server.getFactionsShoppeConfig().getData().contains(index + "")) {
+				if (Server.getFactionsShoppeConfig().getData().contains("items." + index)) {
 					LaShoppeItem item = Server.getShoppe().retrieveItem(index);
 					material = item.getMaterial();
 					price = item.getPrice();
