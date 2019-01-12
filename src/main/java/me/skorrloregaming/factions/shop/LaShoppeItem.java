@@ -1,6 +1,7 @@
 package me.skorrloregaming.factions.shop;
 
 import me.skorrloregaming.$;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,10 +16,13 @@ public class LaShoppeItem {
 
 	private int amount;
 
-	public LaShoppeItem(Material material, int price, int amount) {
+	private int index;
+
+	public LaShoppeItem(Material material, int price, int amount, int index) {
 		this.material = material;
 		this.price = price;
 		this.amount = amount;
+		this.index = index;
 	}
 
 	public Material getMaterial() {
@@ -33,11 +37,19 @@ public class LaShoppeItem {
 		return amount;
 	}
 
+	public int getIndex() {
+		return index;
+	}
+
 	public ItemStack toItemStack() {
 		ItemStack itemStack = $.createMaterial(material);
 		List<String> lore = new ArrayList<String>();
-		lore.add("Price: $" + price);
-		lore.add("Amount: " + amount + "x");
+		lore.add(ChatColor.RESET + "Index: " + index);
+		lore.add(ChatColor.RESET + "Price: $" + price);
+		lore.add(ChatColor.RESET + "Amount: " + amount + "x");
+		lore.add("");
+		lore.add(ChatColor.RESET + "Use LEFT click to SELL this item");
+		lore.add(ChatColor.RESET + "Use RIGHT click to BUY this item");
 		return $.addLore(itemStack, lore.toArray(new String[0]));
 	}
 

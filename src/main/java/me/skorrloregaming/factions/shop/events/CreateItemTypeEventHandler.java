@@ -1,7 +1,9 @@
 package me.skorrloregaming.factions.shop.events;
 
 import me.skorrloregaming.AnvilGUI;
+import me.skorrloregaming.Server;
 import me.skorrloregaming.factions.shop.LaShoppe;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.lang.reflect.InvocationTargetException;
@@ -28,16 +30,23 @@ public class CreateItemTypeEventHandler implements AnvilGUI.AnvilClickEventHandl
 				return;
 			}
 		}
-		try {
-			new AnvilGUI(event.getPlayer(), new CreateItemPriceEventHandler(shoppe, material))
-					.setInputName("Enter item price")
-					.open();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		}
+		final Material fMaterial = material;
+		Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					new AnvilGUI(event.getPlayer(), new CreateItemPriceEventHandler(shoppe, fMaterial))
+							.setInputName("Enter item price")
+							.open();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				}
+			}
+		}, 1L);
 	}
 }

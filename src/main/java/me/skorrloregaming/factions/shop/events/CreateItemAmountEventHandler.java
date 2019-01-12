@@ -3,7 +3,10 @@ package me.skorrloregaming.factions.shop.events;
 import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.factions.shop.LaShoppe;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class CreateItemAmountEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
@@ -22,16 +25,29 @@ public class CreateItemAmountEventHandler implements AnvilGUI.AnvilClickEventHan
 	@Override
 	public void onAnvilClick(AnvilGUI.AnvilClickEvent event) {
 		String amountString = event.getName().replace("x", "");
-		int amount = 0;
+		final int amount;
 		try {
 			amount = Integer.parseInt(amountString);
 		} catch (Exception ex) {
 			event.getPlayer().sendMessage("Sorry, that's not a valid item amount.");
 			return;
 		}
-		event.getPlayer().sendMessage("Material: " + material.toString());
-		event.getPlayer().sendMessage("Price: $" + price);
-		event.getPlayer().sendMessage("Amount: " + amount + "x");
-		shoppe.createItem(material, price, amount);
+		Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					new AnvilGUI(event.getPlayer(), new CreateItemDataEventHandler(shoppe, material, price, amount))
+							.setInputName("Enter item data")
+							.open();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				}
+			}
+		}, 1L);
 	}
 }

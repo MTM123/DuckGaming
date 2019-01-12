@@ -612,6 +612,7 @@ public class Server extends JavaPlugin implements Listener {
 		warpConfig.setup(new File(this.getDataFolder(), "warps.yml"));
 		signConfig.setup(new File(this.getDataFolder(), "shops.yml"));
 		factionsConfig.setup(new File(this.getDataFolder(), "factions.yml"));
+		factionsShoppeConfig.setup(new File(this.getDataFolder(), "factions_shoppe.yml"));
 		survivalConfig.setup(new File(this.getDataFolder(), "survival.yml"));
 		banConfig.setup(new File(this.getDataFolder(), "banned.yml"));
 		npcConfig.setup(new File(this.getDataFolder(), "npc_storage.yml"));
