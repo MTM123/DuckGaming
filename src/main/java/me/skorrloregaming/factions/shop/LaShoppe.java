@@ -35,7 +35,8 @@ public class LaShoppe {
 		Material material = Material.getMaterial(materialString);
 		int price = Server.getFactionsShoppeConfig().getData().getInt(index + ".price");
 		int amount = Server.getFactionsShoppeConfig().getData().getInt(index + ".amount");
-		return new LaShoppeItem(material, price, amount, index);
+		int data = Server.getFactionsShoppeConfig().getData().getInt(index + ".data");
+		return new LaShoppeItem(material, price, amount, data, index);
 	}
 
 	public void createInventory(Player player, LaShoppeFrame frame, int page, boolean removeMode) {

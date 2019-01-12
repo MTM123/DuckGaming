@@ -22,6 +22,7 @@ public class ReloadConfigCmd implements CommandExecutor {
 		Server.getWarpConfig().reloadData();
 		Server.getSignConfig().reloadData();
 		Server.getFactionsConfig().reloadData();
+		Server.getFactionsShoppeConfig().reloadData();
 		Server.getMarriageHomesConfig().reloadData();
 		Server.getNpcConfig().reloadData();
 		Server.getSpawnerConfig().reloadData();

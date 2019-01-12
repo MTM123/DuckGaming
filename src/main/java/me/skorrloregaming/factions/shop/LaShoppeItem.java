@@ -18,10 +18,13 @@ public class LaShoppeItem {
 
 	private int index;
 
-	public LaShoppeItem(Material material, int price, int amount, int index) {
+	private int data;
+
+	public LaShoppeItem(Material material, int price, int amount, int data, int index) {
 		this.material = material;
 		this.price = price;
 		this.amount = amount;
+		this.data = data;
 		this.index = index;
 	}
 
@@ -37,6 +40,10 @@ public class LaShoppeItem {
 		return amount;
 	}
 
+	public int getData() {
+		return data;
+	}
+
 	public int getIndex() {
 		return index;
 	}
@@ -47,6 +54,7 @@ public class LaShoppeItem {
 		lore.add(ChatColor.RESET + "Index: " + index);
 		lore.add(ChatColor.RESET + "Price: $" + price);
 		lore.add(ChatColor.RESET + "Amount: " + amount + "x");
+		lore.add(ChatColor.RESET + "Data: " + data);
 		lore.add("");
 		lore.add(ChatColor.RESET + "Use LEFT click to SELL this item");
 		lore.add(ChatColor.RESET + "Use RIGHT click to BUY this item");
