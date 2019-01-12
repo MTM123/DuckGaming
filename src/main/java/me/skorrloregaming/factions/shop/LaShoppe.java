@@ -56,7 +56,7 @@ public class LaShoppe {
 					}
 					inventory.setItem(0, removeItemModeItem);
 					inventory.setItem(8, $.createMaterial(Material.CACTUS_GREEN, "Add new shop item"));
-					startIndex = 8;
+					startIndex = 7;
 				} else {
 					inventory = Bukkit.createInventory(null, 27, "La Shoppe, page " + page);
 				}
@@ -74,7 +74,7 @@ public class LaShoppe {
 					int horizontal = i % 7;
 					int line = (int) (Math.floor(i / 7) + 1);
 					int slot = (horizontal + 1) + (9 * (line - 1));
-					if (slot < inventory.getSize()) {
+					if (startIndex + slot < inventory.getSize()) {
 						int index = ((page - 1) * 26) + i;
 						if (Server.getFactionsShoppeConfig().getData().contains(index + ""))
 							inventory.setItem(startIndex + slot, retrieveItem(index).toItemStack());

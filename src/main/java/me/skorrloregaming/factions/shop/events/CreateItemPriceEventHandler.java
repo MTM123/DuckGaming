@@ -29,7 +29,6 @@ public class CreateItemPriceEventHandler implements AnvilGUI.AnvilClickEventHand
 			event.getPlayer().sendMessage("Sorry, that's not a valid item price.");
 			return;
 		}
-		event.getPlayer().sendMessage("Price: " + price);
 		Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 
 			@Override

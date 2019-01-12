@@ -1911,11 +1911,6 @@ public class PlayerEventHandler implements Listener {
 						String dataIndexString = event.getCurrentItem().getItemMeta().getLore().get(3);
 						String dataString = dataIndexString.substring(dataIndexString.indexOf("Data: ") + 6);
 						int data = Integer.parseInt(dataString);
-						player.sendMessage("Index: " + index);
-						player.sendMessage("Material: " + event.getCurrentItem().getType().toString());
-						player.sendMessage("Price: $" + price);
-						player.sendMessage("Amount: " + amount + "x");
-						player.sendMessage("Data: " + data);
 						if (removeMode) {
 							if (player.isOp()) {
 								Server.getFactionsShoppeConfig().getData().set(index + "", null);
@@ -2194,6 +2189,7 @@ public class PlayerEventHandler implements Listener {
 					}
 				}
 			} else {
+				code = code.substring(code.indexOf(";") + 1);
 				int index = Integer.parseInt(code);
 				if (Server.getFactionsShoppeConfig().getData().contains(index + "")) {
 					LaShoppeItem item = Server.getShoppe().retrieveItem(index);
@@ -2372,6 +2368,7 @@ public class PlayerEventHandler implements Listener {
 					}
 				}
 			} else {
+				code = code.substring(code.indexOf(";") + 1);
 				int index = Integer.parseInt(code);
 				if (Server.getFactionsShoppeConfig().getData().contains(index + "")) {
 					LaShoppeItem item = Server.getShoppe().retrieveItem(index);
