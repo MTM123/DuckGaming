@@ -1911,7 +1911,7 @@ public class PlayerEventHandler implements Listener {
 				if (material == Material.SPAWNER)
 					item = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), amount);
 				if (!(event.getCurrentItem().getType() == Material.AIR)) {
-					if (!event.getCurrentItem().isSimilar(item)) {
+					if (!$.removeLore(event.getCurrentItem()).isSimilar($.removeLore(item))) {
 						event.setCancelled(true);
 					}
 				}
@@ -1968,7 +1968,7 @@ public class PlayerEventHandler implements Listener {
 									}, 1L);
 								}
 							}
-							if (event.isRightClick()) {
+							if (event.isRightClick() || event.isShiftClick()) {
 								try {
 									DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 									String materialName = $.formatMaterial(event.getCurrentItem().getType());

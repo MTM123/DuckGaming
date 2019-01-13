@@ -1173,6 +1173,14 @@ public class $ {
 		return false;
 	}
 
+	public static ItemStack removeLore(ItemStack item) {
+		ItemStack cloneItem = item;
+		ItemMeta cloneItemMeta = cloneItem.getItemMeta();
+		cloneItemMeta.setLore(new ArrayList<String>());
+		cloneItem.setItemMeta(cloneItemMeta);
+		return cloneItem;
+	}
+
 	public static void destroyTree(Block block) {
 		if (!isBlockLog(block) && !isBlockLeaves(block))
 			return;

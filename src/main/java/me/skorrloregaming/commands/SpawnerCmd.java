@@ -48,8 +48,8 @@ public class SpawnerCmd implements CommandExecutor {
 		blazeSpawner = $.appendLore(blazeSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(3) });
 		ItemStack creeperSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.CREEPER, 1);
 		creeperSpawner = $.appendLore(creeperSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(4) });
-		ItemStack golemSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.IRON_GOLEM, 1);
-		golemSpawner = $.appendLore(golemSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(5) });
+		ItemStack caveSpiderSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.CAVE_SPIDER, 1);
+		caveSpiderSpawner = $.appendLore(caveSpiderSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(5) });
 		ItemStack cowSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.COW, 1);
 		cowSpawner = $.appendLore(cowSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(6) });
 		ItemStack pigSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.PIG, 1);
@@ -61,7 +61,7 @@ public class SpawnerCmd implements CommandExecutor {
 		inventory.setItem(2 + add, spiderSpawner);
 		inventory.setItem(3 + add, blazeSpawner);
 		inventory.setItem(4 + add, creeperSpawner);
-		inventory.setItem(5 + add, golemSpawner);
+		inventory.setItem(5 + add, caveSpiderSpawner);
 		inventory.setItem(6 + add, cowSpawner);
 		inventory.setItem(7 + add, pigSpawner);
 		inventory.setItem(8 + add, chickenSpawner);

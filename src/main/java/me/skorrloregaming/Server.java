@@ -636,7 +636,7 @@ public class Server extends JavaPlugin implements Listener {
 		spawnerPrices.put(2, 9500);
 		spawnerPrices.put(3, 9500);
 		spawnerPrices.put(4, 34500);
-		spawnerPrices.put(5, 14500);
+		spawnerPrices.put(5, 9500);
 		spawnerPrices.put(6, 4500);
 		spawnerPrices.put(7, 3000);
 		spawnerPrices.put(8, 3000);
