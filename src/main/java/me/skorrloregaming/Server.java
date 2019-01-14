@@ -761,6 +761,7 @@ public class Server extends JavaPlugin implements Listener {
 		sessionManager.setup();
 		topVotersHttpServer = new TopVotersHttpServer(getConfig().getInt("settings.topVotersHttpServerPort", 2096));
 		CustomRecipes.loadRecipes();
+		getCommand("feed").setExecutor(new FeedCmd());
 		getCommand("fly").setExecutor(new FlyCmd());
 		getCommand("printblockstate").setExecutor(new PrintBlockStateCmd());
 		getCommand("ignore").setExecutor(new IgnoreCmd());
