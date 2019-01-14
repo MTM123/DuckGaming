@@ -52,11 +52,11 @@ public class SolidStorage {
 		}
 	}
 
-	public static void savePersonalChest(Player player, String data, ItemStack[] contents) throws Exception {
+	public static void savePersonalChest(Player player, String data, ItemStack[] contents, int chestNumber) throws Exception {
 		if (!$.validStorageMinigames.contains(data))
 			return;
 		String folder = getDataFolder() + File.separator + "Chest";
-		String file = player.getUniqueId().toString() + "_" + data + ".yml";
+		String file = player.getUniqueId().toString() + "_" + data + "_" + chestNumber + ".yml";
 		File chestFile = new File(folder, file);
 		chestFile.getParentFile().mkdirs();
 		YamlConfiguration c = new YamlConfiguration();
@@ -65,23 +65,29 @@ public class SolidStorage {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Inventory restorePersonalChest(Player player, String data, boolean personal) {
+	public static Inventory restorePersonalChest(Player player, String data, boolean personal, int chestNumber) {
 		int slotCount = 9 * 6;
 		if ($.getCurrentMinigame(player) == ServerMinigame.SKYBLOCK)
 			slotCount = 9 * 3;
 		if (!$.validStorageMinigames.contains(data))
 			return Bukkit.createInventory(null, slotCount);
 		String folder = getDataFolder() + File.separator + "Chest";
-		String file = player.getUniqueId().toString() + "_" + data + ".yml";
+		String oldFile = player.getUniqueId().toString() + "_" + data + ".yml";
+		String file = player.getUniqueId().toString() + "_" + data + "_" + chestNumber + ".yml";
+		File oldChestFile = new File(folder, oldFile);
 		File chestFile = new File(folder, file);
+		if (!chestFile.exists() && oldChestFile.exists()) {
+			oldChestFile.renameTo(chestFile);
+			chestFile = new File(folder, file);
+		}
 		ItemStack[] content = null;
 		if (chestFile.exists()) {
 			YamlConfiguration c = YamlConfiguration.loadConfiguration(chestFile);
 			content = ((List<ItemStack>) c.get("inventory.content")).toArray(new ItemStack[0]);
 		}
-		String name = ChatColor.BOLD + "Temporary Inventory";
+		String name = ChatColor.BOLD + "Temporary Inventory [" + chestNumber + "]";
 		if (personal)
-			name = ChatColor.BOLD + "Personal Inventory";
+			name = ChatColor.BOLD + "Personal Inventory [" + chestNumber + "]";
 		Inventory inv = Bukkit.createInventory(null, slotCount, name);
 		if (!(content == null))
 			inv.setContents(content);

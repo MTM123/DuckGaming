@@ -7,6 +7,9 @@ softdepend: [AuthMe, ProtocolSupport, ProtocolSupportPocketStuff, ProtocolLib, m
 loadbefore: [ChestShop, Factions]
 api-version: 1.13
 commands:
+    feed:
+        description: Instantly saturates your food level on factions
+        aliases: eat
     fly:
         description: Enable or disable faction flight in own territory
     printblockstate:

@@ -622,8 +622,8 @@ public class $ {
 		}
 	}
 
-	public static CompletableFuture<?> teleport(Entity entity, Location loc) {
-		return entity.teleportAsync(loc);
+	public static void teleport(Entity entity, Location loc) {
+		entity.teleportAsync(loc);
 	}
 
 	public static boolean isPrefixedRankingEnabled() {

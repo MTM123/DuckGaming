@@ -2470,9 +2470,11 @@ public class PlayerEventHandler implements Listener {
 				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Sold " + ChatColor.RED + materialName + " x" + totalAmount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(totalPrice));
 			}
 		}
-		if (event.getInventory().getName().equals(ChatColor.BOLD + "Personal Inventory")) {
+		if (event.getInventory().getName().startsWith(ChatColor.BOLD + "Personal Inventory")) {
 			try {
 				Player tp = player;
+				String chestNumberStr = event.getInventory().getName().substring(event.getInventory().getName().indexOf("[") + 1, event.getInventory().getName().length() - 1);
+				int chestNumber = Integer.parseInt(chestNumberStr);
 				boolean saveInventory = false;
 				if (Server.getSavePersonalChest().containsKey(player)) {
 					tp = Server.getSavePersonalChest().get(player);
@@ -2490,7 +2492,7 @@ public class PlayerEventHandler implements Listener {
 					}
 					tp.getInventory().setContents(contents);
 				} else {
-					SolidStorage.savePersonalChest(tp, subDomain, event.getInventory().getContents());
+					SolidStorage.savePersonalChest(tp, subDomain, event.getInventory().getContents(), chestNumber);
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
