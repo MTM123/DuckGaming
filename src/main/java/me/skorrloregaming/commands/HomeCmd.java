@@ -39,14 +39,16 @@ public class HomeCmd implements CommandExecutor {
 			config = Server.getSurvivalConfig();
 		}
 		int count = 0;
+		String home = "familiar";
 		if (config.getData().contains("home." + player.getUniqueId().toString())) {
 			Set<String> values = config.getData().getConfigurationSection("home." + player.getUniqueId().toString()).getKeys(false);
 			count = values.size();
 			if (count > 0) {
+				home = values.toArray(new String[0])[0];
 				StringBuilder homes = new StringBuilder();
 				String homesString = null;
-				for (String home : values) {
-					homes.append(ChatColor.RED + home + ChatColor.GRAY + ", ");
+				for (String homeValue : values) {
+					homes.append(ChatColor.RED + homeValue + ChatColor.GRAY + ", ");
 				}
 				if (homes.length() > 0) {
 					homesString = homes.toString().substring(0, homes.toString().length() - 2);
@@ -56,7 +58,6 @@ public class HomeCmd implements CommandExecutor {
 				player.sendMessage($.getMinigameTag(player) + ChatColor.GRAY + "Homes: " + homesString);
 			}
 		}
-		String home = "familiar";
 		if (args.length > 0)
 			home = args[0];
 		String oldBase = "homes." + player.getUniqueId().toString();
