@@ -59,6 +59,7 @@ public class ChestCmd implements CommandExecutor {
 							} else {
 								player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a donor rank to use this vault.");
 							}
+							return true;
 						}
 						break;
 					case 4:
@@ -68,6 +69,7 @@ public class ChestCmd implements CommandExecutor {
 							} else {
 								player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a donor rank to use this vault.");
 							}
+							return true;
 						}
 						break;
 					case 5:

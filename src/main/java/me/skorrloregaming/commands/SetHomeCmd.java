@@ -63,6 +63,7 @@ public class SetHomeCmd implements CommandExecutor {
 					} else {
 						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a donor rank to set more homes.");
 					}
+					return true;
 				}
 				break;
 			case 3:
@@ -72,6 +73,7 @@ public class SetHomeCmd implements CommandExecutor {
 					} else {
 						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a donor rank to set more homes.");
 					}
+					return true;
 				}
 				break;
 			case 4:
