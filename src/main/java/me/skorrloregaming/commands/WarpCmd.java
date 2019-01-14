@@ -26,8 +26,7 @@ public class WarpCmd implements CommandExecutor {
 			Location zoneLocation = $.getZoneLocation(args[0]);
 			if (!(zoneLocation == null)) {
 				player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Teleporting to " + ChatColor.RED + args[0] + ChatColor.GRAY + "..");
-				$.preloadChunk(zoneLocation);
-				player.teleport(zoneLocation);
+				$.teleport(player, zoneLocation);
 			} else {
 				player.sendMessage($.Legacy.tag + ChatColor.GRAY + "The warp " + ChatColor.RED + args[0] + ChatColor.GRAY + " does not exist.");
 			}

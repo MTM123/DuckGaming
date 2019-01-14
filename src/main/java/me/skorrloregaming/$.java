@@ -15,9 +15,11 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
+import io.papermc.lib.features.asyncteleport.AsyncTeleportPaper;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -620,16 +622,8 @@ public class $ {
 		}
 	}
 
-	public static boolean preloadChunk(Location loc) {
-		if (Server.getPlugin().getConfig().contains("settings.enable.preloadChunks")) {
-			if (Server.getPlugin().getConfig().getBoolean("settings.enable.preloadChunks")) {
-				loc.getChunk().load();
-				return true;
-			}
-			return false;
-		} else {
-			return false;
-		}
+	public static CompletableFuture<?> teleport(Entity entity, Location loc) {
+		return entity.teleportAsync(loc);
 	}
 
 	public static boolean isPrefixedRankingEnabled() {

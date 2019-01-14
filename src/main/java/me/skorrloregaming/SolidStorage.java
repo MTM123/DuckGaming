@@ -168,8 +168,7 @@ public class SolidStorage {
 			float yaw = (float) Double.parseDouble(args[4]);
 			float pitch = (float) Double.parseDouble(args[5]);
 			Location teleportLocation = new Location(world, x, y, z, yaw, pitch);
-			teleportLocation.getChunk().load();
-			player.teleport(teleportLocation);
+			$.teleport(player, teleportLocation);
 			return true;
 		} else {
 			System.out.println("SolidStorage: Failed to restore location to player " + player.getName());

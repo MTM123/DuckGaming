@@ -46,8 +46,7 @@ public class HubCmd implements CommandExecutor {
 			}
 			if (!Server.getUseFactionsAsHub()) {
 				Location hubLocation = $.getZoneLocation("hub");
-				$.preloadChunk(hubLocation);
-				player.teleport(hubLocation);
+				$.teleport(player, hubLocation);
 				Server.getInstance().fetchLobby(player);
 				player.setAllowFlight(true);
 			}

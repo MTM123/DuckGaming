@@ -8,6 +8,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.Factions;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.factions.shop.LaShoppeEnchant;
 import me.skorrloregaming.factions.shop.LaShoppeFrame;
@@ -742,13 +745,12 @@ public class PlayerEventHandler implements Listener {
 							return;
 						}
 						Location exactLoc = new Location(w, 0.5, 0, 0.5);
-						$.preloadChunk(exactLoc);
+						$.teleport(player, exactLoc);
 						exactLoc.setY(w.getHighestBlockYAt(exactLoc));
 						if (exactLoc.getBlockY() == 0) {
 							player.sendMessage("Aborted. Failed to find a safe spawn location.");
 							return;
 						}
-						player.teleport(exactLoc, TeleportCause.END_PORTAL);
 						w.playSound(exactLoc, Sound.BLOCK_PORTAL_TRAVEL, 1, 1);
 						if ($.isEffectsEnabled(player)) {
 							for (int i = 0; i < 360; i += 2) {
@@ -1183,14 +1185,12 @@ public class PlayerEventHandler implements Listener {
 					@Override
 					public void run() {
 						Location hubLocation = $.getZoneLocation("hub");
-						$.preloadChunk(hubLocation);
-						player.teleport(hubLocation);
+						$.teleport(player, hubLocation);
 					}
 				}, 10L);
 			} else {
 				Location hubLocation = $.getZoneLocation("hub");
-				$.preloadChunk(hubLocation);
-				player.teleport(hubLocation);
+				$.teleport(player, hubLocation);
 			}
 			$.clearPlayer(player);
 		}
@@ -1641,8 +1641,7 @@ public class PlayerEventHandler implements Listener {
 		} else {
 			if (!player.isDead()) {
 				Location hubLocation = $.getZoneLocation("hub");
-				$.preloadChunk(hubLocation);
-				player.teleport(hubLocation);
+				$.teleport(player, hubLocation);
 				Server.getInstance().fetchLobby(player);
 				player.setAllowFlight(true);
 			}
@@ -1827,8 +1826,10 @@ public class PlayerEventHandler implements Listener {
 		Player player = event.getPlayer();
 		if (player.getGameMode() == GameMode.CREATIVE)
 			return;
-		player.setFlying(false);
-		event.setCancelled(true);
+		if (!(Server.getFactionFlyPlayers().contains(player.getUniqueId()))) {
+			player.setFlying(false);
+			event.setCancelled(true);
+		}
 		if (Server.getHub().contains(player.getUniqueId()) || Server.getSkyfight().containsKey(player.getUniqueId())) {
 			if (player.getAllowFlight())
 				player.setAllowFlight(false);
@@ -2552,6 +2553,12 @@ public class PlayerEventHandler implements Listener {
 			}
 			if (Server.getKitpvp().contains(player.getUniqueId()) || Server.getFactions().contains(player.getUniqueId())) {
 				String tag = $.getMinigameTag(player);
+				if (Server.getFactions().contains(player.getUniqueId())) {
+					FPlayer fplayer = FPlayers.getInstance().getByPlayer(player);
+					FPlayer fkiller = FPlayers.getInstance().getByPlayer(killer);
+					if (fplayer.getFactionId().equals(fkiller.getFactionId()))
+						return;
+				}
 				if (!Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
 					CombatTimer ct = new CombatTimer(player, killer, 12, tag);
 					ct.runTaskTimer(Server.getPlugin(), 4, 4);
@@ -2713,8 +2720,7 @@ public class PlayerEventHandler implements Listener {
 						}
 						if (!player.getWorld().getName().equals(Server.getLastKnownHubWorld()) && !Server.getModeratingPlayers().containsKey(player.getUniqueId())) {
 							Location hubLocation = $.getZoneLocation("hub");
-							$.preloadChunk(hubLocation);
-							player.teleport(hubLocation);
+							$.teleport(player, hubLocation);
 						}
 						ItemStack item0 = player.getInventory().getItem(0);
 						if (item0 == null || !(item0.getType() == Material.COMPASS))
@@ -2829,6 +2835,17 @@ public class PlayerEventHandler implements Listener {
 						break;
 				}
 			}
+			if (Server.getFactionFlyPlayers().contains(player.getUniqueId())) {
+				if (!FPlayers.getInstance().getByPlayer(player).isInOwnTerritory()) {
+					if (Server.getFactionFlyPlayers().contains(player.getUniqueId())) {
+						Server.getFactionFlyPlayers().remove(player.getUniqueId());
+						if (player.isFlying())
+							player.setFlying(false);
+						player.setAllowFlight(false);
+						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Faction flight disabled.");
+					}
+				}
+			}
 			if (player.isGliding() && (Server.getSkyblock().contains(player.getUniqueId()) || Server.getFactions().contains(player.getUniqueId()))) {
 				Environment environment = player.getWorld().getEnvironment();
 				if ((Server.getSkyblock().contains(player.getUniqueId()) && environment == Environment.NORMAL) || environment == Environment.THE_END) {
@@ -2935,6 +2952,9 @@ public class PlayerEventHandler implements Listener {
 				event.setCancelled(true);
 			} else if (label.equalsIgnoreCase("/skyblock")) {
 				player.performCommand("server skyblock");
+				event.setCancelled(true);
+			} else if (event.getMessage().equalsIgnoreCase("/f fly")) {
+				player.performCommand("fly");
 				event.setCancelled(true);
 			} else if (label.equalsIgnoreCase("/pt")) {
 				event.setMessage($.replaceCommandLabelInCommand(event.getMessage(), "/playtime"));

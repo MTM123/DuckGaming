@@ -7,6 +7,8 @@ softdepend: [AuthMe, ProtocolSupport, ProtocolSupportPocketStuff, ProtocolLib, m
 loadbefore: [ChestShop, Factions]
 api-version: 1.13
 commands:
+    fly:
+        description: Enable or disable faction flight in own territory
     printblockstate:
         description: Print the block state of the block your standing in
         aliases: pbs

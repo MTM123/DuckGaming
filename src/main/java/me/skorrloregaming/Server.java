@@ -142,6 +142,7 @@ public class Server extends JavaPlugin implements Listener {
 	private static ArrayList<UUID> spectatingPlayers = new ArrayList<>();
 	private static ArrayList<UUID> mutedPlayers = new ArrayList<UUID>();
 	private static ArrayList<UUID> opmePlayers = new ArrayList<UUID>();
+	private static ArrayList<UUID> factionFlyPlayers = new ArrayList<UUID>();
 	private static ConcurrentMap<String, Integer> timeSinceLastLogin = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, SwitchUUIDString> transferAcceptPlayers = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, DelayedTeleport> delayedTeleports = new ConcurrentHashMap<>();
@@ -334,6 +335,10 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static ArrayList<UUID> getOpmePlayers() {
 		return opmePlayers;
+	}
+
+	public static ArrayList<UUID> getFactionFlyPlayers() {
+		return factionFlyPlayers;
 	}
 
 	public static ConcurrentMap<UUID, UUID> getTpaRequests() {
@@ -756,6 +761,7 @@ public class Server extends JavaPlugin implements Listener {
 		sessionManager.setup();
 		topVotersHttpServer = new TopVotersHttpServer(getConfig().getInt("settings.topVotersHttpServerPort", 2096));
 		CustomRecipes.loadRecipes();
+		getCommand("fly").setExecutor(new FlyCmd());
 		getCommand("printblockstate").setExecutor(new PrintBlockStateCmd());
 		getCommand("ignore").setExecutor(new IgnoreCmd());
 		getCommand("logger").setExecutor(new LoggerCmd());
@@ -1085,12 +1091,10 @@ public class Server extends JavaPlugin implements Listener {
 					Location teleportLocation = $.getZoneLocation("kitpvp");
 					if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
 						if (teleportLocation.distance(player.getLocation()) > 0.1) {
-							$.preloadChunk(teleportLocation);
-							player.teleport(teleportLocation);
+							$.teleport(player, teleportLocation);
 						}
 					} else {
-						$.preloadChunk(teleportLocation);
-						player.teleport(teleportLocation);
+						$.teleport(player, teleportLocation);
 					}
 					player.performCommand("kit starter");
 				}
@@ -1098,12 +1102,10 @@ public class Server extends JavaPlugin implements Listener {
 				Location teleportLocation = $.getZoneLocation("kitpvp");
 				if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
 					if (teleportLocation.distance(player.getLocation()) > 0.1) {
-						$.preloadChunk(teleportLocation);
-						player.teleport(teleportLocation);
+						$.teleport(player, teleportLocation);
 					}
 				} else {
-					$.preloadChunk(teleportLocation);
-					player.teleport(teleportLocation);
+					$.teleport(player, teleportLocation);
 				}
 			}
 			if (!noLog) {
@@ -1179,12 +1181,10 @@ public class Server extends JavaPlugin implements Listener {
 					Location teleportLocation = $.getZoneLocation("factions");
 					if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
 						if (teleportLocation.distance(player.getLocation()) > 0.1) {
-							$.preloadChunk(teleportLocation);
-							player.teleport(teleportLocation);
+							$.teleport(player, teleportLocation);
 						}
 					} else {
-						$.preloadChunk(teleportLocation);
-						player.teleport(teleportLocation);
+						$.teleport(player, teleportLocation);
 					}
 					player.performCommand("kit recruit");
 				}
@@ -1192,12 +1192,10 @@ public class Server extends JavaPlugin implements Listener {
 				Location teleportLocation = $.getZoneLocation("factions");
 				if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
 					if (teleportLocation.distance(player.getLocation()) > 0.1) {
-						$.preloadChunk(teleportLocation);
-						player.teleport(teleportLocation);
+						$.teleport(player, teleportLocation);
 					}
 				} else {
-					$.preloadChunk(teleportLocation);
-					player.teleport(teleportLocation);
+					$.teleport(player, teleportLocation);
 				}
 			}
 			if (!noLog) {
@@ -1240,6 +1238,8 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			factions.remove(player.getUniqueId());
 			player.setAllowFlight(true);
+			if (Server.getFactionFlyPlayers().contains(player.getUniqueId()))
+				Server.getFactionFlyPlayers().remove(player.getUniqueId());
 			$.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);
 			return 1;
 		}
@@ -1273,12 +1273,10 @@ public class Server extends JavaPlugin implements Listener {
 					Location teleportLocation = $.getZoneLocation("survival");
 					if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
 						if (teleportLocation.distance(player.getLocation()) > 0.1) {
-							$.preloadChunk(teleportLocation);
-							player.teleport(teleportLocation);
+							$.teleport(player, teleportLocation);
 						}
 					} else {
-						$.preloadChunk(teleportLocation);
-						player.teleport(teleportLocation);
+						$.teleport(player, teleportLocation);
 					}
 					player.performCommand("kit recruit");
 				}
@@ -1286,12 +1284,10 @@ public class Server extends JavaPlugin implements Listener {
 				Location teleportLocation = $.getZoneLocation("survival");
 				if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
 					if (teleportLocation.distance(player.getLocation()) > 0.1) {
-						$.preloadChunk(teleportLocation);
-						player.teleport(teleportLocation);
+						$.teleport(player, teleportLocation);
 					}
 				} else {
-					$.preloadChunk(teleportLocation);
-					player.teleport(teleportLocation);
+					$.teleport(player, teleportLocation);
 				}
 			}
 			if (!noLog) {
@@ -1425,12 +1421,10 @@ public class Server extends JavaPlugin implements Listener {
 		Location teleportLocation = $.getZoneLocation("skyfight" + ran);
 		if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
 			if (teleportLocation.distance(player.getLocation()) > 0.1) {
-				$.preloadChunk(teleportLocation);
-				player.teleport(teleportLocation);
+				$.teleport(player, teleportLocation);
 			}
 		} else {
-			$.preloadChunk(teleportLocation);
-			player.teleport(teleportLocation);
+			$.teleport(player, teleportLocation);
 		}
 		player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
 		for (Entry<UUID, $.Skyfight.Player> id : skyfight.entrySet()) {
@@ -1516,24 +1510,20 @@ public class Server extends JavaPlugin implements Listener {
 					Location teleportLocation = $.getZoneLocation("creative");
 					if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
 						if (teleportLocation.distance(player.getLocation()) > 0.1) {
-							$.preloadChunk(teleportLocation);
-							player.teleport(teleportLocation);
+							$.teleport(player, teleportLocation);
 						}
 					} else {
-						$.preloadChunk(teleportLocation);
-						player.teleport(teleportLocation);
+						$.teleport(player, teleportLocation);
 					}
 				}
 			} else {
 				Location teleportLocation = $.getZoneLocation("creative");
 				if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
 					if (teleportLocation.distance(player.getLocation()) > 0.1) {
-						$.preloadChunk(teleportLocation);
-						player.teleport(teleportLocation);
+						$.teleport(player, teleportLocation);
 					}
 				} else {
-					$.preloadChunk(teleportLocation);
-					player.teleport(teleportLocation);
+					$.teleport(player, teleportLocation);
 				}
 			}
 			if (!noLog) {
@@ -1556,8 +1546,10 @@ public class Server extends JavaPlugin implements Listener {
 						player.addAttachment(plugin, "plots.permpack.basic", true);
 						player.addAttachment(plugin, "plots.plot.1", true);
 						player.addAttachment(plugin, "plots.visit.other", true);
-						for (String permission : Directory.basicWorldEditPermissions) {
-							player.addAttachment(plugin, permission, true);
+						if ($.getRankId(player) < -1 || $.getRankId(player) > -1) {
+							for (String permission : Directory.basicWorldEditPermissions) {
+								player.addAttachment(plugin, permission, true);
+							}
 						}
 					}
 				}
@@ -1596,8 +1588,10 @@ public class Server extends JavaPlugin implements Listener {
 				player.addAttachment(this, "plots.permpack.basic", false);
 				player.addAttachment(this, "plots.plot.1", false);
 				player.addAttachment(this, "plots.visit.other", false);
-				for (String permission : Directory.basicWorldEditPermissions) {
-					player.addAttachment(plugin, permission, false);
+				if ($.getRankId(player) < -1 || $.getRankId(player) > -1) {
+					for (String permission : Directory.basicWorldEditPermissions) {
+						player.addAttachment(plugin, permission, false);
+					}
 				}
 			}
 			$.clearPlayer(player);
@@ -1633,24 +1627,20 @@ public class Server extends JavaPlugin implements Listener {
 					Location teleportLocation = $.getZoneLocation("skyblock");
 					if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
 						if (teleportLocation.distance(player.getLocation()) > 0.1) {
-							$.preloadChunk(teleportLocation);
-							player.teleport(teleportLocation);
+							$.teleport(player, teleportLocation);
 						}
 					} else {
-						$.preloadChunk(teleportLocation);
-						player.teleport(teleportLocation);
+						$.teleport(player, teleportLocation);
 					}
 				}
 			} else {
 				Location teleportLocation = $.getZoneLocation("skyblock");
 				if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
 					if (teleportLocation.distance(player.getLocation()) > 0.1) {
-						$.preloadChunk(teleportLocation);
-						player.teleport(teleportLocation);
+						$.teleport(player, teleportLocation);
 					}
 				} else {
-					$.preloadChunk(teleportLocation);
-					player.teleport(teleportLocation);
+					$.teleport(player, teleportLocation);
 				}
 			}
 			if (!noLog) {

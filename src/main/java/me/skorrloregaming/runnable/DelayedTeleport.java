@@ -2,6 +2,7 @@ package me.skorrloregaming.runnable;
 
 import java.util.concurrent.Callable;
 
+import me.skorrloregaming.$;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -106,8 +107,7 @@ public class DelayedTeleport extends BukkitRunnable {
 					Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
 						@Override
 						public void run() {
-							teleportLocation.getChunk().load();
-							player.teleport(teleportLocation);
+							$.teleport(player, teleportLocation);
 							if (!(finishTitleSubtitle == null))
 								CraftGo.Player.sendTimedTitleAndSubtitle(player, finishTitleSubtitle);
 							Server.getDelayedTeleports().remove(player.getUniqueId());
