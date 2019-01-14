@@ -47,13 +47,13 @@ public class ChestCmd implements CommandExecutor {
 				int rankId = $.getRankId(player);
 				switch (chestNumber) {
 					case 2:
-						if (!(rankId < -1 || rankId > -1)) {
+						if (!(rankId < -1)) {
 							player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a donor rank to use this vault.");
 							return true;
 						}
 						break;
 					case 3:
-						if (!(rankId < -2 || rankId > -1)) {
+						if (!(rankId < -2)) {
 							if (rankId < -1) {
 								player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a higher donor rank to use this.");
 							} else {
@@ -62,7 +62,7 @@ public class ChestCmd implements CommandExecutor {
 						}
 						break;
 					case 4:
-						if (!(rankId < -3 || rankId > -1)) {
+						if (!(rankId < -3)) {
 							if (rankId < -1) {
 								player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a higher donor rank to use this.");
 							} else {
@@ -71,7 +71,7 @@ public class ChestCmd implements CommandExecutor {
 						}
 						break;
 					case 5:
-						if (!(rankId < -4 || rankId > -1)) {
+						if (!(rankId < -4)) {
 							if (rankId < -1) {
 								player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a higher donor rank to use this.");
 							} else {

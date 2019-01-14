@@ -56,7 +56,6 @@ public class HomeCmd implements CommandExecutor {
 				player.sendMessage($.getMinigameTag(player) + ChatColor.GRAY + "Homes: " + homesString);
 			}
 		}
-		player.sendMessage();
 		String home = "familiar";
 		if (args.length > 0)
 			home = args[0];

@@ -51,13 +51,13 @@ public class SetHomeCmd implements CommandExecutor {
 			case 0:
 				break;
 			case 1:
-				if (!(rankId < -1 || rankId > -1)) {
+				if (!(rankId < -1)) {
 					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a donor rank to set more homes.");
 					return true;
 				}
 				break;
 			case 2:
-				if (!(rankId < -2 || rankId > -1)) {
+				if (!(rankId < -2)) {
 					if (rankId < -1) {
 						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a higher donor rank to set more.");
 					} else {
@@ -66,7 +66,7 @@ public class SetHomeCmd implements CommandExecutor {
 				}
 				break;
 			case 3:
-				if (!(rankId < -3 || rankId > -1)) {
+				if (!(rankId < -3)) {
 					if (rankId < -1) {
 						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a higher donor rank to set more.");
 					} else {
@@ -75,7 +75,7 @@ public class SetHomeCmd implements CommandExecutor {
 				}
 				break;
 			case 4:
-				if (!(rankId < -4 || rankId > -1)) {
+				if (!(rankId < -4)) {
 					if (rankId < -1) {
 						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a higher donor rank to set more.");
 					} else {

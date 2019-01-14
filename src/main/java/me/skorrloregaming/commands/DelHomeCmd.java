@@ -10,6 +10,8 @@ import me.skorrloregaming.$;
 import me.skorrloregaming.ConfigurationManager;
 import me.skorrloregaming.Server;
 
+import java.util.Set;
+
 public class DelHomeCmd implements CommandExecutor {
 
 	@Override
@@ -32,12 +34,43 @@ public class DelHomeCmd implements CommandExecutor {
 		} else if (Server.getSurvival().contains(player.getUniqueId())) {
 			config = Server.getSurvivalConfig();
 		}
-		if (!config.getData().contains("homes." + player.getUniqueId().toString())) {
+		int count = 0;
+		if (config.getData().contains("home." + player.getUniqueId().toString())) {
+			Set<String> values = config.getData().getConfigurationSection("home." + player.getUniqueId().toString()).getKeys(false);
+			count = values.size();
+		}
+		if (count == 0) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You have not yet set a home on this server.");
-		} else {
-			config.getData().set("homes." + player.getUniqueId().toString(), null);
+			return true;
+		} else if (count == 1) {
+			config.getData().set("home." + player.getUniqueId().toString(), null);
 			config.saveData();
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have unset your home on this server.");
+			return true;
+		}
+		if (args.length == 0) {
+			Set<String> values = config.getData().getConfigurationSection("home." + player.getUniqueId().toString()).getKeys(false);
+			StringBuilder homes = new StringBuilder();
+			String homesString = null;
+			for (String home : values) {
+				homes.append(ChatColor.RED + home + ChatColor.GRAY + ", ");
+			}
+			if (homes.length() > 0) {
+				homesString = homes.toString().substring(0, homes.toString().length() - 2);
+			} else {
+				homesString = homes.toString();
+			}
+			player.sendMessage($.getMinigameTag(player) + ChatColor.GRAY + "Homes: " + homesString);
+			player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <name>");
+			return true;
+		}
+		String home = args[0];
+		if (config.getData().contains("home." + player.getUniqueId().toString() + "." + home)) {
+			config.getData().set("home." + player.getUniqueId().toString() + "." + home, null);
+			config.saveData();
+			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Home " + ChatColor.RED + home + ChatColor.GRAY + " has been unset.");
+		} else {
+			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have the specified home set.");
 		}
 		return true;
 	}

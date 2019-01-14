@@ -42,7 +42,7 @@ public class FlyCmd implements CommandExecutor {
 				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not in your territory.");
 			}
 		} else {
-			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a donor rank to use flight.");
+			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You need rank " + ChatColor.RED + "Obsidian" + ChatColor.GRAY + " to use flight.");
 		}
 		return true;
 	}
