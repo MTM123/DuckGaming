@@ -42,7 +42,7 @@ public class ChestCmd implements CommandExecutor {
 			player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified vault does not exist.");
 			return true;
 		}
-		if (args.length == 0 || (!(Bukkit.getPlayer(args[1]) == null) && Bukkit.getPlayer(args[1]).getName().equals(player.getName()))) {
+		if (args.length < 2 || (!(Bukkit.getPlayer(args[1]) == null) && Bukkit.getPlayer(args[1]).getName().equals(player.getName()))) {
 			if (chestNumber > 1) {
 				int rankId = $.getRankId(player);
 				switch (chestNumber) {
@@ -54,19 +54,29 @@ public class ChestCmd implements CommandExecutor {
 						break;
 					case 3:
 						if (!(rankId < -2 || rankId > -1)) {
-							player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a donor rank to use this vault.");
-							return true;
+							if (rankId < -1) {
+								player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a higher donor rank to use this.");
+							} else {
+								player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a donor rank to use this vault.");
+							}
 						}
 						break;
 					case 4:
 						if (!(rankId < -3 || rankId > -1)) {
-							player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a donor rank to use this vault.");
-							return true;
+							if (rankId < -1) {
+								player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a higher donor rank to use this.");
+							} else {
+								player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a donor rank to use this vault.");
+							}
 						}
 						break;
 					case 5:
 						if (!(rankId < -4 || rankId > -1)) {
-							player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a donor rank to use this vault.");
+							if (rankId < -1) {
+								player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a higher donor rank to use this.");
+							} else {
+								player.sendMessage($.Legacy.tag + ChatColor.RED + "Sorry, you need a donor rank to use this vault.");
+							}
 							return true;
 						}
 						break;

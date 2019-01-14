@@ -13,6 +13,10 @@ import me.skorrloregaming.ConfigurationManager;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.runnable.DelayedTeleport;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class HomeCmd implements CommandExecutor {
 
 	@Override
@@ -34,10 +38,36 @@ public class HomeCmd implements CommandExecutor {
 		} else if (Server.getSurvival().contains(player.getUniqueId())) {
 			config = Server.getSurvivalConfig();
 		}
-		if (!config.getData().contains("homes." + player.getUniqueId().toString())) {
+		int count = 0;
+		if (config.getData().contains("home." + player.getUniqueId().toString())) {
+			Set<String> values = config.getData().getConfigurationSection("home." + player.getUniqueId().toString()).getKeys(false);
+			count = values.size();
+			if (count > 0) {
+				StringBuilder homes = new StringBuilder();
+				String homesString = null;
+				for (String home : values) {
+					homes.append(ChatColor.RED + home + ChatColor.GRAY + ", ");
+				}
+				if (homes.length() > 0) {
+					homesString = homes.toString().substring(0, homes.toString().length() - 2);
+				} else {
+					homesString = homes.toString();
+				}
+				player.sendMessage($.getMinigameTag(player) + ChatColor.GRAY + "Homes: " + homesString);
+			}
+		}
+		player.sendMessage();
+		String home = "familiar";
+		if (args.length > 0)
+			home = args[0];
+		String oldBase = "homes." + player.getUniqueId().toString();
+		String base = "home." + player.getUniqueId().toString() + "." + home;
+		if (!config.getData().contains(base) && config.getData().contains(oldBase)) {
+			base = oldBase;
+		}
+		if (!config.getData().contains(base)) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You have not yet set a home on this server.");
 		} else {
-			String base = "homes." + player.getUniqueId().toString();
 			World world = Server.getPlugin().getServer().getWorld(config.getData().getString(base + ".world"));
 			double x = config.getData().getDouble(base + ".x");
 			double y = config.getData().getDouble(base + ".y");

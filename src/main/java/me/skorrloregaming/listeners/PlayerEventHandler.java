@@ -2389,7 +2389,7 @@ public class PlayerEventHandler implements Listener {
 			}
 		} else if (Server.getSkyfight().containsKey(player.getUniqueId()) && player.getGameMode() == GameMode.SURVIVAL) {
 			event.setCancelled(true);
-		} else if (event.getInventory().getName().equals(ChatColor.BOLD + "Temporary Inventory")) {
+		} else if (event.getInventory().getName().startsWith(ChatColor.BOLD + "Temporary Inventory")) {
 			event.setCancelled(true);
 		}
 	}

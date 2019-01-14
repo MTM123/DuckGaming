@@ -12,6 +12,8 @@ import me.skorrloregaming.$;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.impl.ServerMinigame;
 
+import java.util.Set;
+
 public class SetHomeCmd implements CommandExecutor {
 
 	@Override
@@ -33,7 +35,59 @@ public class SetHomeCmd implements CommandExecutor {
 		} else if (Server.getSurvival().contains(player.getUniqueId())) {
 			config = Server.getSurvivalConfig();
 		}
-		String base = "homes." + player.getUniqueId().toString();
+		String home = "familiar";
+		if (args.length > 0)
+			home = args[0];
+		String base = "home." + player.getUniqueId().toString() + "." + home;
+		int count = 0;
+		if (config.getData().contains("home." + player.getUniqueId().toString())) {
+			Set<String> values = config.getData().getConfigurationSection("home." + player.getUniqueId().toString()).getKeys(false);
+			count = values.size();
+		}
+		if (config.getData().contains(base))
+			count--;
+		int rankId = $.getRankId(player);
+		switch (count) {
+			case 0:
+				break;
+			case 1:
+				if (!(rankId < -1 || rankId > -1)) {
+					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a donor rank to set more homes.");
+					return true;
+				}
+				break;
+			case 2:
+				if (!(rankId < -2 || rankId > -1)) {
+					if (rankId < -1) {
+						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a higher donor rank to set more.");
+					} else {
+						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a donor rank to set more homes.");
+					}
+				}
+				break;
+			case 3:
+				if (!(rankId < -3 || rankId > -1)) {
+					if (rankId < -1) {
+						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a higher donor rank to set more.");
+					} else {
+						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a donor rank to set more homes.");
+					}
+				}
+				break;
+			case 4:
+				if (!(rankId < -4 || rankId > -1)) {
+					if (rankId < -1) {
+						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a higher donor rank to set more.");
+					} else {
+						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a donor rank to set more homes.");
+					}
+					return true;
+				}
+				break;
+			default:
+				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot set any more homes on here.");
+				return true;
+		}
 		World world = player.getWorld();
 		double x = player.getLocation().getX();
 		double y = player.getLocation().getY();
@@ -47,7 +101,7 @@ public class SetHomeCmd implements CommandExecutor {
 		config.getData().set(base + ".yaw", Integer.valueOf((int) yaw));
 		config.getData().set(base + ".pitch", Integer.valueOf((int) pitch));
 		config.saveData();
-		player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have set your home on this server.");
+		player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Home " + ChatColor.RED + home + ChatColor.GRAY + " has been set.");
 		return true;
 	}
 
