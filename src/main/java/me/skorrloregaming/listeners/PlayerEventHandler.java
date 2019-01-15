@@ -742,12 +742,12 @@ public class PlayerEventHandler implements Listener {
 							return;
 						}
 						Location exactLoc = new Location(w, 0.5, 0, 0.5);
-						$.teleport(player, exactLoc);
 						exactLoc.setY(w.getHighestBlockYAt(exactLoc));
-						if (exactLoc.getBlockY() == 0) {
+						if (exactLoc.getY() < 1 && exactLoc.getY() > -1) {
 							player.sendMessage("Aborted. Failed to find a safe spawn location.");
 							return;
 						}
+						$.teleport(player, exactLoc);
 						w.playSound(exactLoc, Sound.BLOCK_PORTAL_TRAVEL, 1, 1);
 						if ($.isEffectsEnabled(player)) {
 							for (int i = 0; i < 360; i += 2) {
