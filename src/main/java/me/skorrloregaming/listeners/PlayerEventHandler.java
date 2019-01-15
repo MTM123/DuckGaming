@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Factions;
@@ -51,13 +52,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -2620,6 +2616,24 @@ public class PlayerEventHandler implements Listener {
 		if (event.getEntity() instanceof Player) {
 			for (Player op : Bukkit.getOnlinePlayers()) {
 				$.Scoreboard.configureHealth(op);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onProjectileLaunch(PlayerLaunchProjectileEvent event) {
+		Player player = event.getPlayer();
+		if (event.getProjectile() instanceof EnderPearl) {
+			if (Server.getDelayedTasks().contains(player.getUniqueId())) {
+				event.setCancelled(true);
+			} else {
+				Server.getDelayedTasks().add(player.getUniqueId());
+				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+					@Override
+					public void run() {
+						Server.getDelayedTasks().remove(player.getUniqueId());
+					}
+				}, 7L);
 			}
 		}
 	}
