@@ -35,12 +35,12 @@ public class CustomRecipes {
 		endPortal.setIngredient('D', Material.NETHER_STAR);
 		Bukkit.getServer().addRecipe(endPortal);
 		ShapedRecipe goldenApple = new ShapedRecipe(randomKey(), $.createMaterial(Material.GOLDEN_APPLE));
-		endPortal.shape("BBB", "BAB", "BB");
+		endPortal.shape("BBB", "BAB", "BBB");
 		endPortal.setIngredient('A', Material.APPLE);
 		endPortal.setIngredient('B', Material.GOLD_INGOT);
 		Bukkit.getServer().addRecipe(goldenApple);
 		ShapedRecipe notchApple = new ShapedRecipe(randomKey(), $.createMaterial(Material.ENCHANTED_GOLDEN_APPLE));
-		endPortal.shape("BBB", "BAB", "BB");
+		endPortal.shape("BBB", "BAB", "BBB");
 		endPortal.setIngredient('A', Material.APPLE);
 		endPortal.setIngredient('B', Material.GOLD_BLOCK);
 		Bukkit.getServer().addRecipe(notchApple);
