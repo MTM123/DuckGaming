@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.netty.buffer.ByteBuf;
+import me.skorrloregaming.skins.model.SkinModel;
+import me.skorrloregaming.skins.model.SkinProperty;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.apache.commons.lang.Validate;
@@ -2205,9 +2207,9 @@ public class CraftGo {
 			}
 		}
 
-		public static Object getSkinProperty(String uuid) {
+		public static Optional<SkinModel> getSkinProperty(String uuid) {
 			if (uuid == null || uuid.equals("null"))
-				return null;
+				return Optional.empty();
 			String skinurl = "https://sessionserver.mojang.com/session/minecraft/profile/";
 			String output = null;
 			try {
@@ -2216,11 +2218,11 @@ public class CraftGo {
 				signature = signature.substring(0, signature.indexOf("\""));
 				String value = output.substring(output.indexOf("\"value\":\"") + "\"value\":\"".length());
 				value = value.substring(0, value.indexOf("\""));
-				return Server.getSkinStorage().createProperty("textures", value, signature);
+				return Optional.of(SkinModel.createSkinFromEncoded(value, signature));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return output;
+			return Optional.empty();
 		}
 
 		private static String readURL(String url) {

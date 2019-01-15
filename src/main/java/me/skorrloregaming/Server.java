@@ -739,13 +739,8 @@ public class Server extends JavaPlugin implements Listener {
 		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
 			@Override
 			public void run() {
-				plugin.saveConfig();
-			}
-		}, 0L, 1200L);
-		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
-			@Override
-			public void run() {
 				for (Player player : Bukkit.getOnlinePlayers()) {
+					plugin.saveConfig();
 					try {
 						SolidStorage.savePlayerData(player, $.getMinigameDomain(player));
 					} catch (Exception e) {
@@ -920,7 +915,7 @@ public class Server extends JavaPlugin implements Listener {
 				if (message.length() > 16)
 					message += message.substring(0, 16);
 				Hashtable<String, Integer> array = new Hashtable<String, Integer>();
-				array.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Servers", 2018);
+				array.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Servers", 2019);
 				if ($.isMinigameEnabled(ServerMinigame.KITPVP))
 					array.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Kitpvp", kitpvp.size());
 				if ($.isMinigameEnabled(ServerMinigame.FACTIONS))

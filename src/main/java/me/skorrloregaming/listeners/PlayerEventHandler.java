@@ -16,6 +16,7 @@ import me.skorrloregaming.factions.shop.LaShoppeEnchant;
 import me.skorrloregaming.factions.shop.LaShoppeFrame;
 import me.skorrloregaming.factions.shop.LaShoppeItem;
 import me.skorrloregaming.impl.*;
+import me.skorrloregaming.skins.model.SkinModel;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -1158,11 +1159,12 @@ public class PlayerEventHandler implements Listener {
 			}
 		});
 		CraftGo.Player.getUUID(player.getName(), false, true);
-		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
+		Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
 				if (!Bukkit.getOnlineMode()) {
-					Server.getSkinStorage().getFactory().applySkin(player, Server.getSkinStorage().getSkinData(player.getName(), true));
+					Optional<SkinModel> model = Server.getSkinStorage().getSkinData(player, true);
+					Server.getSkinStorage().getFactory(player, model.get()).applySkin();
 				}
 			}
 		});
@@ -1263,11 +1265,16 @@ public class PlayerEventHandler implements Listener {
 							bypass = Server.getProtoSupportListener().isOnlineMode(player);
 						if (bypass) {
 							Object authObject = $.getAuthenticationSuite();
-							if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
-								((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
-							} else {
-								((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceRegister(player, UUID.nameUUIDFromBytes(player.getName().getBytes()).toString().substring(0, 30), true);
-							}
+							Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
+								@Override
+								public void run() {
+									if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
+										((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
+									} else {
+										((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceRegister(player, UUID.nameUUIDFromBytes(player.getName().getBytes()).toString().substring(0, 30), true);
+									}
+								}
+							});
 							return;
 						}
 						boolean dailyAuth = Server.getPlugin().getConfig().getBoolean("settings.enable.authme.dailyAuth");
@@ -1299,11 +1306,16 @@ public class PlayerEventHandler implements Listener {
 										player.sendMessage($.italicGray + "Your session was invalidated, please login to your account again.");
 									} else {
 										try {
-											if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
-												((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
-												Server.getInstance().fetchLobby(player);
-												return;
-											}
+											Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
+												@Override
+												public void run() {
+													if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
+														((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
+														Server.getInstance().fetchLobby(player);
+													}
+												}
+											});
+											return;
 										} catch (Exception ex) {
 											ex.printStackTrace();
 											Server.getAuthListener().onPlayerAuth(new fr.xephi.authme.events.LoginEvent(player));
@@ -1367,11 +1379,10 @@ public class PlayerEventHandler implements Listener {
 			@Override
 			public void run() {
 				if (!Bukkit.getOnlineMode()) {
-					Object skin = Server.getSkinStorage().getOrCreateSkinForPlayer(player.getName());
-					if (skin == null) {
+					Optional<SkinModel> model = Server.getSkinStorage().getSkinData(player, false);
+					if (!model.isPresent())
 						return;
-					}
-					Server.getSkinStorage().getFactory().applySkin(player, skin);
+					Server.getSkinStorage().getFactory(player, model.get()).applySkin();
 				}
 			}
 		});
@@ -1426,7 +1437,7 @@ public class PlayerEventHandler implements Listener {
 			player.sendMessage(ChatColor.GRAY + "/ Type " + ChatColor.RED + "/discord" + ChatColor.GRAY + " for a direct link to our discord.");
 			player.sendMessage(ChatColor.GRAY + "/ Players online: " + ChatColor.RED + (connectedPlayers - 1) + ChatColor.GRAY + " - Staff online: " + ChatColor.RED + $.getStaffOnline(Server.getPlugin(), player).length);
 			if (!Bukkit.getOnlineMode() && Server.getSkinStorage().ENABLE_ONJOIN_MESSAGE) {
-				long timestamp = Server.getSkinStorage().getSkinTimestamp(player.getName());
+				long timestamp = Server.getSkinStorage().getSkinTimestamp(player);
 				long timeTillExpire = (timestamp + Server.getSkinStorage().TIME_EXPIRE_MILLISECOND) - System.currentTimeMillis();
 				if (timeTillExpire < 0)
 					timeTillExpire = Server.getSkinStorage().TIME_EXPIRE_MILLISECOND;

@@ -1,5 +1,6 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.skins.model.SkinModel;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,6 +11,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Server;
+
+import java.util.Optional;
 
 public class UpdateSkinCmd implements CommandExecutor {
 
@@ -48,13 +51,12 @@ public class UpdateSkinCmd implements CommandExecutor {
 		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
-				Object skin = CraftGo.Player.getSkinProperty(CraftGo.Player.getUUID(player.getName(), false));
-				if (skin == null) {
+				Optional<SkinModel> model = Server.getSkinStorage().forceSkinUpdate(player);
+				if (!model.isPresent()) {
 					player.sendMessage("Failed to fetch your latest skin from mojang " + "\u2639" + ".");
 					return;
 				}
-				Server.getSkinStorage().getFactory().applySkin(player, Server.getSkinStorage().getOrCreateSkinForPlayer(player.getName()));
-				player.sendMessage(skin.toString());
+				Server.getSkinStorage().getFactory(player, model.get()).applySkin();
 				player.sendMessage("Skin updated. You are now using the latest skin available.");
 			}
 		});

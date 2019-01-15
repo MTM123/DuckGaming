@@ -2,8 +2,8 @@ main: me.skorrloregaming.Server
 name: SkorrloreGaming
 version: 2.3.6-SNAPSHOT
 author: "Speentie8081"
-depend: [WorldEdit, WorldGuard]
-softdepend: [AuthMe, ProtocolSupport, ProtocolSupportPocketStuff, ProtocolLib, mcMMO, Vault, ploader]
+depend: [WorldEdit, WorldGuard, ProtocolLib]
+softdepend: [AuthMe, ProtocolSupport, ProtocolSupportPocketStuff, mcMMO, Vault, ploader]
 loadbefore: [ChestShop, Factions]
 api-version: 1.13
 commands:
