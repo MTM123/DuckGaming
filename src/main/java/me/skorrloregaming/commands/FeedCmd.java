@@ -16,10 +16,6 @@ public class FeedCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getFactions().contains(player.getUniqueId())) {
-			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
-			return true;
-		}
 		if ($.getRankId(player) < -1) {
 			player.setFoodLevel(20);
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Your food level has been saturated.");

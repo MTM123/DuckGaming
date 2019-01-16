@@ -27,7 +27,8 @@ public interface DisposableScoreboard {
 
 	default ScoreboardType getCurrentScoreboardType(Player player, boolean silent) {
 		if (taskIdentifiers.containsKey(player)) {
-			boolean value = useSecondaryScoreboard.get(taskIdentifiers.get(player).getTaskId()).booleanValue();
+			ScoreboardTask task = taskIdentifiers.get(player);
+			boolean value = useSecondaryScoreboard.get(task.getTaskId()).booleanValue();
 			if (value) {
 				return ScoreboardType.Primary;
 			} else {
@@ -62,7 +63,8 @@ public interface DisposableScoreboard {
 		if (displayType == DisplayType.Secondary) {
 			if (!(type == null) && type == ScoreboardType.Secondary) {
 				try {
-					((DisposableScoreboard) secondaryScoreboard.newInstance()).refreshScoreboard(player, false);
+					DisposableScoreboard secondary = ((DisposableScoreboard) secondaryScoreboard.newInstance());
+					secondary.refreshScoreboard(player, false);
 					return true;
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -71,9 +73,18 @@ public interface DisposableScoreboard {
 			}
 			return false;
 		}
-		if ((taskIdentifiers.containsKey(player) && displayType == DisplayType.Primary && useSecondaryScoreboard.get(taskIdentifiers.get(player).getTaskId()).booleanValue() == true) || displayType == DisplayType.Primary) {
+		if (displayType == DisplayType.Primary) {
 			refreshScoreboard(player, false);
 			return true;
+		}
+		if (taskIdentifiers.containsKey(player)) {
+			if (displayType == DisplayType.Primary) {
+				boolean isSecondary = useSecondaryScoreboard.get(taskIdentifiers.get(player).getTaskId()).booleanValue();
+				if (isSecondary) {
+					refreshScoreboard(player, false);
+					return true;
+				}
+			}
 		}
 		long delay = 0L;
 		if (displayType == DisplayType.Five_Second_Period)

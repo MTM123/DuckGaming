@@ -133,8 +133,6 @@ public class PlayerEventHandler implements Listener {
 		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
-				rainbowIndex++;
-				rainbowIndex %= 10;
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					ServerMinigame minigame = $.getCurrentMinigame(player);
 					DisposableScoreboard scoreboard = $.getPrimaryScoreboard(minigame);
@@ -143,6 +141,8 @@ public class PlayerEventHandler implements Listener {
 							scoreboard.schedule(player);
 						}
 					}
+					/*rainbowIndex++;
+					rainbowIndex %= 10;
 					try {
 						CraftGo.Packet.DataSerializer dataSerializer = CraftGo.Packet.DataSerializer.newInstance(Unpooled.buffer());
 						Object serializedData = dataSerializer.serializePacketData($.getRainbowColor(rainbowIndex) + "play.skorrloregaming.com" + ChatColor.RESET);
@@ -150,7 +150,7 @@ public class PlayerEventHandler implements Listener {
 						CraftGo.Packet.sendPacket(CraftGo.Player.getPlayerConnection(player), packet);
 					} catch (Exception e) {
 						e.printStackTrace();
-					}
+					}*/
 				}
 			}
 		}, 5L, 5L);
