@@ -24,6 +24,6 @@ public class Kitpvp_StatisticsScoreboard implements DisposableScoreboard {
 		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Kills: " + ChatColor.RESET + formatter.format(currentPlayerKills), 3);
 		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Deaths: " + ChatColor.RESET + formatter.format(currentPlayerDeaths), 2);
 		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Level: " + ChatColor.RESET + formatter.format(currentPlayerDPK + 1), 1);
-		$.Scoreboard.configureSidebar(player, ChatColor.RESET + "SkorrloreGaming", list, clearValues, true);
+		$.Scoreboard.configureSidebar(player, "SkorrloreGaming", list, clearValues, true);
 	}
 }

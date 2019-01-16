@@ -10,7 +10,7 @@ public class Logger {
 
 	private static void broadcast(String msg, int minRankId) {
 		for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
-			if ($.getRankId(otherPlayer) >= minRankId) {
+			if (minRankId == -1 || $.getRankId(otherPlayer) >= minRankId) {
 				otherPlayer.sendMessage($.italicGray + msg);
 			}
 		}

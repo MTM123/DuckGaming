@@ -43,6 +43,6 @@ public class Skyfight_LeaderboardScoreboard implements DisposableScoreboard {
 			}
 			list.put(ChatColor.GOLD + "│ " + prefix + otherPlayer.getName(), Server.getSkyfight().get(otherPlayer.getUniqueId()).getScore());
 		}
-		$.Scoreboard.configureSidebar(player, ChatColor.RESET + "SkorrloreGaming", list, clearValues, true);
+		$.Scoreboard.configureSidebar(player, "SkorrloreGaming", list, clearValues, true);
 	}
 }

@@ -47,6 +47,6 @@ public class Skyblock_StatisticsScoreboard implements DisposableScoreboard {
 		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Balance: " + ChatColor.RESET + "$" + formatter.format(currentPlayerCash), 3);
 		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Placed: " + ChatColor.RESET + formatter.format(placedBlocks), 2);
 		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Broken: " + ChatColor.RESET + formatter.format(brokenBlocks), 1);
-		$.Scoreboard.configureSidebar(player, ChatColor.RESET + "SkorrloreGaming", list, clearValues, true);
+		$.Scoreboard.configureSidebar(player, "SkorrloreGaming", list, clearValues, true);
 	}
 }

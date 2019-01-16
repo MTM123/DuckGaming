@@ -37,6 +37,6 @@ public class Factions_StatisticsScoreboard implements DisposableScoreboard {
 		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Balance: " + ChatColor.RESET + "$" + formatter.format(currentPlayerCash), 3);
 		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Kills: " + ChatColor.RESET + formatter.format(currentPlayerKills), 2);
 		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Deaths: " + ChatColor.RESET + formatter.format(currentPlayerDeaths), 1);
-		$.Scoreboard.configureSidebar(player, ChatColor.RESET + "SkorrloreGaming", list, clearValues, true);
+		$.Scoreboard.configureSidebar(player,"SkorrloreGaming", list, clearValues, true);
 	}
 }

@@ -48,6 +48,6 @@ public class Kitpvp_LeaderboardScoreboard implements DisposableScoreboard {
 			String username = Bukkit.getOfflinePlayer(uuid).getName();
 			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " " + username + ": " + ChatColor.RESET + formatter.format(playerMoney.get(i).getArg0()), 5 - i);
 		}
-		$.Scoreboard.configureSidebar(player, ChatColor.RESET + "SkorrloreGaming", list, clearValues, true);
+		$.Scoreboard.configureSidebar(player, "SkorrloreGaming", list, clearValues, true);
 	}
 }

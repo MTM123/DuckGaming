@@ -931,7 +931,7 @@ public class Server extends JavaPlugin implements Listener {
 				hubScoreboardTitleIndex.putIfAbsent(player.getUniqueId(), 0);
 				int index = hubScoreboardTitleIndex.get(player.getUniqueId());
 				if (message.length() <= 16) {
-					$.Scoreboard.configureSidebar(player, ChatColor.RESET + message, array, false, false);
+					$.Scoreboard.configureSidebar(player, message, array, false, false);
 				} else {
 					int finalIndex = index + 16;
 					if (index < message.length() && finalIndex < message.length()) {
