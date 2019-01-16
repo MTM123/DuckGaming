@@ -16,19 +16,14 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
 import io.papermc.lib.features.asyncteleport.AsyncTeleportPaper;
 import org.apache.commons.lang3.text.WordUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
+import org.bukkit.*;
 import org.bukkit.FireworkEffect.Type;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
@@ -1201,19 +1196,6 @@ public class $ {
 			return true;
 		}
 		return false;
-	}
-
-	public static Location getRandomLocation(Player player) {
-		double x = 0;
-		while (x < 500 && x > -500) {
-			x = -5000 + new Random(UUID.randomUUID().hashCode()).nextInt(10000) + 0.5;
-		}
-		double z = 0;
-		while (z < 500 && z > -500) {
-			z = -5000 + new Random(UUID.randomUUID().hashCode()).nextInt(10000) + 0.5;
-		}
-		double y = player.getWorld().getHighestBlockAt((int) x, (int) z).getY();
-		return new Location(player.getWorld(), x, y + 1, z);
 	}
 
 	public static Location getZoneLocation(String zone) {

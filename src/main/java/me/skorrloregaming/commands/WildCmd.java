@@ -1,8 +1,10 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.runnable.AsyncRandomTeleport;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World.Environment;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,6 +13,9 @@ import org.bukkit.entity.Player;
 import me.skorrloregaming.$;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.runnable.DelayedTeleport;
+
+import java.util.Random;
+import java.util.UUID;
 
 public class WildCmd implements CommandExecutor {
 
@@ -27,15 +32,7 @@ public class WildCmd implements CommandExecutor {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
-		Location teleportLocation;
-		while (!(teleportLocation = $.getRandomLocation(player)).clone().subtract(0, 1, 0).getBlock().getType().isSolid()) {
-		}
-		if (player.getWorld().getEnvironment() == Environment.NETHER) {
-			teleportLocation.setY(128);
-		}
-		player.sendMessage($.Legacy.tag + "Teleport destination: " + ChatColor.RED + teleportLocation.getX() + ChatColor.RESET + ", " + ChatColor.RED + teleportLocation.getY() + ChatColor.RESET + ", " + ChatColor.RED + teleportLocation.getZ() + ChatColor.RESET + ".");
-		DelayedTeleport dt = new DelayedTeleport(player, Server.getTeleportationDelay() * 1.5, teleportLocation, false);
-		dt.runTaskTimerAsynchronously(Server.getPlugin(), 4, 4);
+		new AsyncRandomTeleport(player).execute();
 		return true;
 	}
 
