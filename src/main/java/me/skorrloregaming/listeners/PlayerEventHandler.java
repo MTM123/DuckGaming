@@ -1274,16 +1274,11 @@ public class PlayerEventHandler implements Listener {
 							bypass = Server.getProtoSupportListener().isOnlineMode(player);
 						if (bypass) {
 							Object authObject = $.getAuthenticationSuite();
-							Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
-								@Override
-								public void run() {
-									if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
-										((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
-									} else {
-										((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceRegister(player, UUID.nameUUIDFromBytes(player.getName().getBytes()).toString().substring(0, 30), true);
-									}
-								}
-							});
+							if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
+								((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
+							} else {
+								((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceRegister(player, UUID.nameUUIDFromBytes(player.getName().getBytes()).toString().substring(0, 30), true);
+							}
 							return;
 						}
 						boolean dailyAuth = Server.getPlugin().getConfig().getBoolean("settings.enable.authme.dailyAuth");
@@ -1315,15 +1310,10 @@ public class PlayerEventHandler implements Listener {
 										player.sendMessage($.italicGray + "Your session was invalidated, please login to your account again.");
 									} else {
 										try {
-											Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
-												@Override
-												public void run() {
-													if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
-														((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
-														Server.getInstance().fetchLobby(player);
-													}
-												}
-											});
+											if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
+												((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
+												Server.getInstance().fetchLobby(player);
+											}
 											return;
 										} catch (Exception ex) {
 											ex.printStackTrace();
