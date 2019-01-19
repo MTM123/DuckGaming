@@ -373,6 +373,18 @@ public class PlayerEventHandler implements Listener {
 								player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 								TrailsCmd.openTrailManagementInventory(player);
 								return;
+							case "PARKOUR":
+								String path = "config." + player.getUniqueId().toString();
+								long timestamp = Server.getPlugin().getConfig().getLong(path + ".parkour.timestamp", 0L);
+								long diff = System.currentTimeMillis() - timestamp;
+								if (diff > 43200000L) {
+									Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "spoof-vote " + player.getName() + " 1");
+									Server.getPlugin().getConfig().set(path + ".parkour.timestamp", System.currentTimeMillis());
+									Server.getPlugin().saveConfig();
+									player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have collected your daily reward.");
+								} else {
+									player.sendMessage($.Legacy.tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + $.formatTime(diff / 1000) + ChatColor.GRAY + " before using this again.");
+								}
 							default:
 								if (player.isOp())
 									player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Invalid data was assigned to this npc.");
