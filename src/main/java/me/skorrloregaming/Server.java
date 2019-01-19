@@ -42,7 +42,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import me.skorrloregaming.CraftGo.BarApi;
 import me.skorrloregaming.hooks.AuthMe_Listener;
 import me.skorrloregaming.hooks.Factions_Listener;
-import me.skorrloregaming.hooks.ProtocolLib_Listener;
 import me.skorrloregaming.hooks.ProtocolSupportPocketStuff_Listener;
 import me.skorrloregaming.hooks.ProtocolSupport_Listener;
 import me.skorrloregaming.hooks.Votifier_Listener;
@@ -86,7 +85,8 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConfigurationManager geolCacheConfig;
 	private static ConfigurationManager monthlyVoteConfig;
 	private static ConfigurationManager locketteConfig;
-	private static ConfigurationManager chatitemConfig;
+	private static ConfigurationManager chatItemConfig;
+	private static ConfigurationManager chestShopConfig;
 
 	private static Plugin plugin;
 	private static Server instance;
@@ -171,7 +171,6 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConcurrentMap<UUID, Integer> barApiTitleIndex = new ConcurrentHashMap<>();
 	private static ConcurrentMap<Integer, Long> hideLoginMessage = new ConcurrentHashMap<>();
 
-	private static ProtocolLib_Listener protoListener = null;
 	private static AuthMe_Listener authListener = null;
 	private static Factions_Listener factionsListener = null;
 	private static ProtocolSupport_Listener protoSupportListener = null;
@@ -180,10 +179,6 @@ public class Server extends JavaPlugin implements Listener {
 	private static mcMMO_Listener mcmmoListener = null;
 
 	private static DiscordBot discordBot;
-
-	public static ProtocolLib_Listener getProtoListener() {
-		return protoListener;
-	}
 
 	public static AuthMe_Listener getAuthListener() {
 		return authListener;
@@ -546,7 +541,11 @@ public class Server extends JavaPlugin implements Listener {
 	}
 
 	public static ConfigurationManager getChatItemConfig() {
-		return chatitemConfig;
+		return chatItemConfig;
+	}
+
+	public static ConfigurationManager getChestShopConfig() {
+		return chestShopConfig;
 	}
 
 	public static AntiCheat getAntiCheat() {
@@ -610,7 +609,8 @@ public class Server extends JavaPlugin implements Listener {
 		geolCacheConfig = new ConfigurationManager();
 		monthlyVoteConfig = new ConfigurationManager();
 		locketteConfig = new ConfigurationManager();
-		chatitemConfig = new ConfigurationManager();
+		chatItemConfig = new ConfigurationManager();
+		chestShopConfig = new ConfigurationManager();
 		barApi = new BarApi();
 		skinStorage = new SkinStorage();
 		$.createDataFolder();
@@ -627,6 +627,7 @@ public class Server extends JavaPlugin implements Listener {
 		geolCacheConfig.setup(new File(this.getDataFolder(), "geolocation_cache.yml"));
 		monthlyVoteConfig.setup(new File(this.getDataFolder(), "monthly_votes.yml"));
 		locketteConfig.setup(new File(this.getDataFolder(), "lockette_config.yml"));
+		chestShopConfig.setup(new File(this.getDataFolder(), "chestshop_config.yml"));
 		File chatItemConfig = new File(this.getDataFolder(), "chatitem_config.yml");
 		if (!chatItemConfig.exists()) {
 			try {
@@ -635,7 +636,7 @@ public class Server extends JavaPlugin implements Listener {
 				e.printStackTrace();
 			}
 		}
-		chatitemConfig.setup(chatItemConfig);
+		Server.chatItemConfig.setup(chatItemConfig);
 		spawnerPrices.put(0, 6500);
 		spawnerPrices.put(1, 6500);
 		spawnerPrices.put(2, 9500);
@@ -669,6 +670,8 @@ public class Server extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new PlayerEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new EntityEventHandler(), this);
 		pingInjector = new PingInjector();
+		chatitem = new ChatItem();
+		chatitem.onEnable();
 		if (getConfig().contains("settings.enable.pingInjector")) {
 			if (getConfig().getBoolean("settings.enable.pingInjector"))
 				pingInjector.register();
@@ -681,12 +684,6 @@ public class Server extends JavaPlugin implements Listener {
 		}
 		if (!getConfig().contains("settings.topVotersHttpServerPort")) {
 			getConfig().set("settings.topVotersHttpServerPort", 2095);
-		}
-		if ($.isPluginEnabled("ProtocolLib")) {
-			protoListener = new ProtocolLib_Listener();
-			protoListener.register();
-			chatitem = new ChatItem();
-			chatitem.onEnable();
 		}
 		if ($.isPluginEnabled("mcMMO")) {
 			mcmmoListener = new mcMMO_Listener();
@@ -864,8 +861,6 @@ public class Server extends JavaPlugin implements Listener {
 			lockette.onDisable();
 		if (!(chatitem == null))
 			chatitem.onDisable();
-		if (!(protoListener == null))
-			protoListener.unregister();
 		try {
 			topVotersHttpServer.server.close();
 			getLogger().info("Top voters web server disabled.");

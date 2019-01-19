@@ -77,6 +77,8 @@ settings:
 
 When a player steps on said ore, it will move them to said minigame.
 
+* Make sure the hub is above y level 30 because player is teleported otherwise.
+
 # Compiling
 This project uses Maven 3 to manage dependencies, packaging, and shading of necessary classes.
 

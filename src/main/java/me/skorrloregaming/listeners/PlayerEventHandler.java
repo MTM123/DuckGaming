@@ -2749,6 +2749,10 @@ public class PlayerEventHandler implements Listener {
 							Location hubLocation = $.getZoneLocation("hub");
 							$.teleport(player, hubLocation);
 						}
+						if (!(player.getGameMode() == GameMode.CREATIVE) && player.getLocation().getY() < 30.0) {
+							Location hubLocation = $.getZoneLocation("hub");
+							$.teleport(player, hubLocation);
+						}
 						ItemStack item0 = player.getInventory().getItem(0);
 						if (item0 == null || !(item0.getType() == Material.COMPASS))
 							Server.getInstance().fetchLobby(player);
