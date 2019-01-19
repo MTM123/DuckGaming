@@ -383,7 +383,8 @@ public class PlayerEventHandler implements Listener {
 									Server.getPlugin().saveConfig();
 									player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have collected your daily reward.");
 								} else {
-									player.sendMessage($.Legacy.tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + $.formatTime(diff / 1000) + ChatColor.GRAY + " before using this again.");
+									long secondsToWait = (43200000L - diff) / 1000L;
+									player.sendMessage($.Legacy.tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + $.formatTime(secondsToWait) + ChatColor.GRAY + " before using this again.");
 								}
 							default:
 								if (player.isOp())
@@ -2761,9 +2762,19 @@ public class PlayerEventHandler implements Listener {
 							Location hubLocation = $.getZoneLocation("hub");
 							$.teleport(player, hubLocation);
 						}
-						if (!(player.getGameMode() == GameMode.CREATIVE) && player.getLocation().getY() < 30.0) {
-							Location hubLocation = $.getZoneLocation("hub");
-							$.teleport(player, hubLocation);
+						if (!(player.getGameMode() == GameMode.CREATIVE)) {
+							if (player.getLocation().getY() < 30.0) {
+								Location hubLocation = $.getZoneLocation("hub");
+								$.teleport(player, hubLocation);
+							}
+							for (String minigame : $.validMinigames) {
+								Location portal = $.getZoneLocation(minigame + "-portal");
+								if (player.getEyeLocation().getBlock().isLiquid()) {
+									if (player.getLocation().distance(portal) < 10) {
+										player.performCommand("server " + minigame);
+									}
+								}
+							}
 						}
 						ItemStack item0 = player.getInventory().getItem(0);
 						if (item0 == null || !(item0.getType() == Material.COMPASS))
