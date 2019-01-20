@@ -409,8 +409,10 @@ public class AntiCheat implements Listener {
 		String modifiedMessage = new String(messageChars);
 		if (detectedSwearing) {
 			Logger.info($.italicGray + ChatColor.stripColor(message));
-			if (player.isOnline())
+			if (player.isOnline()) {
+				player.getPlayer().sendMessage($.italicGray + ChatColor.stripColor(message));
 				player.getPlayer().sendMessage(ChatColor.RED + "Please do not swear, otherwise action will be taken.");
+			}
 		}
 		return modifiedMessage;
 	}
