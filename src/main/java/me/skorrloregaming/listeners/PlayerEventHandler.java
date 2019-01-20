@@ -104,6 +104,8 @@ public class PlayerEventHandler implements Listener {
 
 	public int rainbowIndex = 0;
 
+	public long lastSuspiciousConnectionTimestamp = 0L;
+
 	public PlayerEventHandler() {
 
 		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
@@ -1093,6 +1095,17 @@ public class PlayerEventHandler implements Listener {
 				String disallowMsg = disallowMessage.toString();
 				event.disallow(PlayerLoginEvent.Result.KICK_OTHER, disallowMsg);
 				Logger.info($.italicGray + "Server: Disallow " + event.getPlayer().getName() + " '" + disallowMsg + "'", false);
+			}
+		}
+		if (event.getPlayer().getName().length() == 12) {
+			if (!CraftGo.Player.getOnlineMode(event.getPlayer())) {
+				long diff = System.currentTimeMillis() - lastSuspiciousConnectionTimestamp;
+				if (diff < 2000) {
+					String message = "Bot attacks are strictly prohibited on this server";
+					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "ban " + event.getAddress().getHostName() + " " + message);
+					event.disallow(PlayerLoginEvent.Result.KICK_BANNED, message);
+				}
+				lastSuspiciousConnectionTimestamp = System.currentTimeMillis();
 			}
 		}
 	}
@@ -2769,68 +2782,6 @@ public class PlayerEventHandler implements Listener {
 						ItemStack item0 = player.getInventory().getItem(0);
 						if (item0 == null || !(item0.getType() == Material.COMPASS))
 							Server.getInstance().fetchLobby(player);
-					}
-					Material faceDownType1 = event.getTo().getBlock().getRelative(BlockFace.DOWN).getType();
-					Material faceDownType2 = event.getFrom().getBlock().getRelative(BlockFace.DOWN).getType();
-					if (!(faceDownType1 == faceDownType2)) {
-						switch (faceDownType1) {
-							case DIAMOND_ORE:
-								if ($.isMinigameEnabled(ServerMinigame.CREATIVE)) {
-									if (player.getGameMode() == GameMode.SURVIVAL) {
-										Server.getInstance().enterCreative(player, false, false);
-										return;
-									}
-								}
-								break;
-							case GOLD_ORE:
-								if ($.isMinigameEnabled(ServerMinigame.SKYFIGHT)) {
-									if (player.getGameMode() == GameMode.SURVIVAL) {
-										Server.getInstance().enterSkyfight(player, false, false);
-										return;
-									}
-								}
-							case IRON_ORE:
-								if ($.isMinigameEnabled(ServerMinigame.KITPVP)) {
-									if (player.getGameMode() == GameMode.SURVIVAL) {
-										Server.getInstance().enterKitpvp(player, false, false);
-										return;
-									}
-								}
-								break;
-							case COAL_ORE:
-								if ($.isMinigameEnabled(ServerMinigame.FACTIONS)) {
-									if (player.getGameMode() == GameMode.SURVIVAL) {
-										Server.getInstance().enterFactions(player, false, false);
-										return;
-									}
-								}
-							case LAPIS_ORE:
-								if ($.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
-									if (player.getGameMode() == GameMode.SURVIVAL) {
-										Server.getInstance().enterSurvival(player, false, false);
-										return;
-									}
-								}
-								break;
-							case EMERALD_ORE:
-								if ($.isMinigameEnabled(ServerMinigame.FACTIONS) || $.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
-									if (player.getGameMode() == GameMode.SURVIVAL) {
-										openSurvivalServerSelectorMenu(player);
-										return;
-									}
-								}
-								break;
-							case NETHER_QUARTZ_ORE:
-								if ($.isMinigameEnabled(ServerMinigame.SKYBLOCK)) {
-									if (player.getGameMode() == GameMode.SURVIVAL) {
-										Server.getInstance().enterSkyblock(player, false, false);
-										return;
-									}
-								}
-								break;
-							default:
-								break;
-						}
 					}
 				}
 				if (!(event.getTo().getBlock().getRelative(BlockFace.DOWN).getType() == Material.AIR)) {

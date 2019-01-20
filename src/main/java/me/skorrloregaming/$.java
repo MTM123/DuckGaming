@@ -420,6 +420,7 @@ public class $ {
 		} else {
 			player.setDisplayName(toRankTag(getRank(player)) + player.getName() + ChatColor.RESET);
 		}
+		player.setPlayerListName(player.getDisplayName());
 	}
 
 	public static String getFlashPlayerDisplayName(OfflinePlayer player) {
