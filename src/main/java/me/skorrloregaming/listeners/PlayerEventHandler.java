@@ -1156,6 +1156,8 @@ public class PlayerEventHandler implements Listener {
 		}
 	}
 
+	public List<UUID> bannedBots = new ArrayList<UUID>();
+
 	@EventHandler
 	public void onPlayerPreJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
@@ -1164,6 +1166,7 @@ public class PlayerEventHandler implements Listener {
 				long diff = System.currentTimeMillis() - lastSuspiciousConnectionTimestamp;
 				if (diff < 2000) {
 					String message = "Bot attacks are strictly prohibited on this server";
+					bannedBots.add(player.getUniqueId());
 					player.kickPlayer(message);
 					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "ban " + player.getAddress().getAddress().getHostName() + " " + message);
 					lastSuspiciousConnectionTimestamp = System.currentTimeMillis();
@@ -1683,11 +1686,15 @@ public class PlayerEventHandler implements Listener {
 		if ($.isPluginEnabled("AuthMe")) {
 			if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString()) || !$.isAuthenticated(player)) {
 				if (!Server.getOnlineMode().getOrDefault(player.getUniqueId(), false)) {
-					String message = $.italicGray + "Player " + player.getName() + " has left without registering for this server";
-					Bukkit.broadcastMessage(message);
-					Server.getDiscordBot().broadcast(
-							ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-							, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+					if (bannedBots.contains(player.getUniqueId())) {
+						bannedBots.remove(player.getUniqueId());
+					} else {
+						String message = $.italicGray + "Player " + player.getName() + " has left without registering for this server";
+						Bukkit.broadcastMessage(message);
+						Server.getDiscordBot().broadcast(
+								ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+								, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+					}
 				}
 			}
 		}
