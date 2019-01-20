@@ -2789,7 +2789,52 @@ public class PlayerEventHandler implements Listener {
 								Location portal = $.getZoneLocation(minigame + "-portal");
 								if (player.getEyeLocation().getBlock().isLiquid()) {
 									if (player.getLocation().distance(portal) < 10) {
-										player.performCommand("server " + minigame);
+										switch (minigame) {
+											case "factions":
+												if ($.isMinigameEnabled(ServerMinigame.FACTIONS)) {
+													Server.getInstance().enterFactions(player, false, false);
+													return;
+												}
+												break;
+											case "survival":
+												if ($.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
+													Server.getInstance().enterSurvival(player, false, false);
+													return;
+												}
+												break;
+											case "creative":
+												if ($.isMinigameEnabled(ServerMinigame.CREATIVE)) {
+													Server.getInstance().enterCreative(player, false, false);
+													return;
+												}
+												break;
+											case "kitpvp":
+												if ($.isMinigameEnabled(ServerMinigame.KITPVP)) {
+													Server.getInstance().enterKitpvp(player, false, false);
+													return;
+												}
+												break;
+											case "skyblock":
+												if ($.isMinigameEnabled(ServerMinigame.SKYBLOCK)) {
+													Server.getInstance().enterSkyblock(player, false, false);
+													return;
+												}
+												break;
+											case "skyfight":
+												if ($.isMinigameEnabled(ServerMinigame.SKYFIGHT)) {
+													Server.getInstance().enterSkyfight(player, false, false);
+													return;
+												}
+												break;
+											case "prison":
+												if ($.isMinigameEnabled(ServerMinigame.PRISON)) {
+													Server.getInstance().enterPrison(player, false, false);
+													return;
+												}
+												break;
+											default:
+												break;
+										}
 									}
 								}
 							}
