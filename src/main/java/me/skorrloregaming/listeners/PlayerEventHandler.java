@@ -1097,17 +1097,6 @@ public class PlayerEventHandler implements Listener {
 				Logger.info($.italicGray + "Server: Disallow " + event.getPlayer().getName() + " '" + disallowMsg + "'", false);
 			}
 		}
-		if (event.getPlayer().getName().length() == 12) {
-			if (!CraftGo.Player.getOnlineMode(event.getPlayer())) {
-				long diff = System.currentTimeMillis() - lastSuspiciousConnectionTimestamp;
-				if (diff < 2000) {
-					String message = "Bot attacks are strictly prohibited on this server";
-					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "ban " + event.getAddress().getHostName() + " " + message);
-					event.disallow(PlayerLoginEvent.Result.KICK_BANNED, message);
-				}
-				lastSuspiciousConnectionTimestamp = System.currentTimeMillis();
-			}
-		}
 	}
 
 	@EventHandler
@@ -1170,6 +1159,19 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler
 	public void onPlayerPreJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
+		if (event.getPlayer().getName().length() == 12) {
+			if (!CraftGo.Player.getOnlineMode(event.getPlayer())) {
+				long diff = System.currentTimeMillis() - lastSuspiciousConnectionTimestamp;
+				if (diff < 2000) {
+					String message = "Bot attacks are strictly prohibited on this server";
+					player.kickPlayer(message);
+					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "ban " + player.getAddress().getAddress().getHostName() + " " + message);
+					lastSuspiciousConnectionTimestamp = System.currentTimeMillis();
+					return;
+				}
+				lastSuspiciousConnectionTimestamp = System.currentTimeMillis();
+			}
+		}
 		for (NpcPlayer npc : Server.getNpcPlayers())
 			CraftGo.Packet.PlayerInfo.spawnNpc(player, npc.getWorld(), npc.getLocation(), npc.getName());
 		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {

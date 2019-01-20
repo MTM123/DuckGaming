@@ -69,10 +69,10 @@ public class $ {
 	public static String pricePrefix = ChatColor.RESET + "Purchase Price: " + ChatColor.RED + "$";
 	public static List<String> validRanks = Arrays.asList(new String[]{"default", "default-plus", "founder", "owner", "manager", "admin", "moderator", "helper", "developer", "builder", "senior", "youtube", "donator", "redstone", "obsidian", "bedrock"});
 	public static List<String> validRanksNotifyWorkerExecuteCommand = Arrays.asList(new String[]{"founder"});
-	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock"});
-	public static List<String> validStorageMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "creative", "skyblock"});
-	public static List<String> validLocketteMinigames = Arrays.asList(new String[]{"skyblock", "factions"});
-	public static List<String> validStairSeatMinigames = Arrays.asList(new String[]{"creative", "skyblock", "factions"});
+	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock", "prison"});
+	public static List<String> validStorageMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "creative", "skyblock", "prison"});
+	public static List<String> validLocketteMinigames = Arrays.asList(new String[]{"skyblock", "factions", "prison"});
+	public static List<String> validStairSeatMinigames = Arrays.asList(new String[]{"creative", "skyblock", "factions", "prison"});
 	public static List<String> scoreboardAutoUpdateMinigames = Arrays.asList(new String[]{"skyblock", "factions", "kitpvp"});
 	public static List<String> betaMinigames = Arrays.asList(new String[]{});
 	public static Kitpvp_LeaderboardScoreboard kitpvpLeaderboardScoreboard = new Kitpvp_LeaderboardScoreboard();
