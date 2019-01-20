@@ -12,6 +12,7 @@ import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Factions;
+import me.skorrloregaming.commands.BanCmd;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.factions.shop.LaShoppeEnchant;
 import me.skorrloregaming.factions.shop.LaShoppeFrame;
@@ -1168,7 +1169,7 @@ public class PlayerEventHandler implements Listener {
 					String message = "Bot attacks are strictly prohibited on this server";
 					bannedBots.add(player.getUniqueId());
 					player.kickPlayer(message);
-					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "ban " + player.getAddress().getAddress().getHostName() + " " + message);
+					BanCmd.ban(player.getAddress().getAddress().getHostName(), message);
 					lastSuspiciousConnectionTimestamp = System.currentTimeMillis();
 					return;
 				}
@@ -1683,11 +1684,20 @@ public class PlayerEventHandler implements Listener {
 		}
 		if (player.isInsideVehicle())
 			player.leaveVehicle();
+		if (!bannedBots.contains(player.getUniqueId())) {
+			Server.getDiscordBot().broadcast(
+					":heavy_minus_sign:" + ChatColor.stripColor(
+							event.getQuitMessage().replace(player.getName(), "**" + player.getName() + "**")
+					)
+					, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
+			);
+		}
 		if ($.isPluginEnabled("AuthMe")) {
 			if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString()) || !$.isAuthenticated(player)) {
 				if (!Server.getOnlineMode().getOrDefault(player.getUniqueId(), false)) {
 					if (bannedBots.contains(player.getUniqueId())) {
 						bannedBots.remove(player.getUniqueId());
+						event.setQuitMessage(null);
 					} else {
 						String message = $.italicGray + "Player " + player.getName() + " has left without registering for this server";
 						Bukkit.broadcastMessage(message);
@@ -1705,12 +1715,6 @@ public class PlayerEventHandler implements Listener {
 		for (Player op : Bukkit.getOnlinePlayers())
 			if (Server.getSkyfight().containsKey(op.getUniqueId()))
 				$.skyfightScoreboard.schedule(op, true);
-		Server.getDiscordBot().broadcast(
-				":heavy_minus_sign:" + ChatColor.stripColor(
-						event.getQuitMessage().replace(player.getName(), "**" + player.getName() + "**")
-				)
-				, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
-		);
 		if (Server.getOnlineMode().containsKey(player.getUniqueId()))
 			Server.getOnlineMode().remove(player.getUniqueId());
 	}

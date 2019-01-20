@@ -16,6 +16,11 @@ import me.skorrloregaming.Server;
 
 public class BanCmd implements CommandExecutor {
 
+	public static void ban(String hostName, String reason) {
+		Server.getBanConfig().getData().set(hostName.replace(".", "x"), reason);
+		Server.getBanConfig().saveData();
+	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender.isOp()) {
@@ -60,8 +65,7 @@ public class BanCmd implements CommandExecutor {
 						}
 					}
 				}
-				Server.getBanConfig().getData().set(ipAddress, sb.toString().trim());
-				Server.getBanConfig().saveData();
+				ban(ipAddress, sb.toString().trim());
 				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The address should now be banned.");
 			}
 		} else {
