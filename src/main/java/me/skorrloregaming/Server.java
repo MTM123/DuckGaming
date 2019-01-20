@@ -106,6 +106,7 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConcurrentMap<UUID, $.Skyfight.Player> skyfight = new ConcurrentHashMap<>();
 	private static ArrayList<UUID> creative = new ArrayList<>();
 	private static ArrayList<UUID> skyblock = new ArrayList<>();
+	private static ArrayList<UUID> prison = new ArrayList<>();
 
 	private static String tempMotd = "/unspecified";
 	private static ArrayList<UUID> simpleDelayedTask = new ArrayList<>();
@@ -482,6 +483,10 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static ArrayList<UUID> getSkyblock() {
 		return skyblock;
+	}
+
+	public static ArrayList<UUID> getPrison() {
+		return prison;
 	}
 
 	public static ConfigurationManager getRamConfig() {
@@ -1671,6 +1676,94 @@ public class Server extends JavaPlugin implements Listener {
 						, Channel.SERVER_CHAT);
 			}
 			skyblock.remove(player.getUniqueId());
+			$.clearPlayer(player);
+			player.setAllowFlight(false);
+			$.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);
+			return 1;
+		}
+		return 0;
+	}
+
+	public void enterPrison(Player player, boolean noRestore, boolean noLog) {
+		if ($.isPlayerNotAllowedToJoin(player, ServerMinigame.PRISON)) {
+			player.sendMessage("You are not allowed to enter this minigame.");
+			return;
+		}
+		if (!prison.contains(player.getUniqueId())) {
+			if (moderatingPlayers.containsKey(player.getUniqueId())) {
+				noRestore = true;
+				noLog = true;
+			}
+			ServerMinigame minigame = $.getCurrentMinigame(player);
+			int changes = performBuggedLeave(player, noRestore, noLog);
+			if (changes == 0 && !(minigame == ServerMinigame.HUB || minigame == ServerMinigame.UNKNOWN))
+				return;
+			if (hub.contains(player.getUniqueId())) {
+				hub.remove(player.getUniqueId());
+				$.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);
+				hubScoreboardTitleIndex.put(player.getUniqueId(), 0);
+			}
+			prison.add(player.getUniqueId());
+			$.clearPlayer(player);
+			if (!noRestore) {
+				boolean success = SolidStorage.restorePlayerData(player, "prison");
+				if (!success) {
+					Location teleportLocation = $.getZoneLocation("prison");
+					if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
+						if (teleportLocation.distance(player.getLocation()) > 0.1) {
+							$.teleport(player, teleportLocation);
+						}
+					} else {
+						$.teleport(player, teleportLocation);
+					}
+				}
+			} else {
+				Location teleportLocation = $.getZoneLocation("prison");
+				if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
+					if (teleportLocation.distance(player.getLocation()) > 0.1) {
+						$.teleport(player, teleportLocation);
+					}
+				} else {
+					$.teleport(player, teleportLocation);
+				}
+			}
+			if (!noLog) {
+				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Prison";
+				Bukkit.broadcastMessage(message);
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+						, Channel.SERVER_CHAT);
+			}
+			player.setAllowFlight(false);
+			$.prisonScoreboard.schedule(player);
+		}
+	}
+
+	public int leavePrison(Player player, boolean noSave, boolean noLog) {
+		if (prison.contains(player.getUniqueId())) {
+			if (moderatingPlayers.containsKey(player.getUniqueId())) {
+				noSave = true;
+				noLog = true;
+			}
+			if (vanishedPlayers.containsKey(player.getUniqueId())) {
+				player.performCommand("vanish");
+			}
+			if (!noSave) {
+				try {
+					SolidStorage.savePlayerData(player, "prison");
+				} catch (Exception ig) {
+				}
+			}
+			if (!noLog) {
+				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Prison";
+				Bukkit.broadcastMessage(message);
+				message = message.substring(message.indexOf(ChatColor.RED + ""));
+				Server.getDiscordBot().broadcast(
+						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+						, Channel.SERVER_CHAT);
+			}
+			prison.remove(player.getUniqueId());
 			$.clearPlayer(player);
 			player.setAllowFlight(false);
 			$.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);

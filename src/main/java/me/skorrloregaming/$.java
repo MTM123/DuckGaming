@@ -21,6 +21,7 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
 import io.papermc.lib.features.asyncteleport.AsyncTeleportPaper;
+import me.skorrloregaming.scoreboard.boards.*;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.*;
 import org.bukkit.FireworkEffect.Type;
@@ -55,11 +56,6 @@ import me.skorrloregaming.impl.MarriageGender;
 import me.skorrloregaming.impl.ServerMinigame;
 import me.skorrloregaming.impl.Switches.SwitchStringMinigame;
 import me.skorrloregaming.scoreboard.DisposableScoreboard;
-import me.skorrloregaming.scoreboard.boards.Factions_StatisticsScoreboard;
-import me.skorrloregaming.scoreboard.boards.Kitpvp_LeaderboardScoreboard;
-import me.skorrloregaming.scoreboard.boards.Kitpvp_StatisticsScoreboard;
-import me.skorrloregaming.scoreboard.boards.Skyblock_StatisticsScoreboard;
-import me.skorrloregaming.scoreboard.boards.Skyfight_LeaderboardScoreboard;
 import net.md_5.bungee.api.ChatColor;
 
 public class $ {
@@ -80,6 +76,7 @@ public class $ {
 	public static Skyblock_StatisticsScoreboard skyblockScoreboard = new Skyblock_StatisticsScoreboard();
 	public static Skyfight_LeaderboardScoreboard skyfightScoreboard = new Skyfight_LeaderboardScoreboard();
 	public static Factions_StatisticsScoreboard factionsScoreboard = new Factions_StatisticsScoreboard();
+	public static Prison_StatisticsScoreboard prisonScoreboard = new Prison_StatisticsScoreboard();
 	public static List<SwitchStringMinigame> playersNotAllowedToJoinSpecificMinigames = Arrays.asList(new SwitchStringMinigame[]{new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.KITPVP), new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.SKYFIGHT)});
 
 	public static DisposableScoreboard getPrimaryScoreboard(ServerMinigame minigame) {
@@ -92,6 +89,8 @@ public class $ {
 				return skyfightScoreboard;
 			case FACTIONS:
 				return factionsScoreboard;
+			case PRISON:
+				return prisonScoreboard;
 			default:
 				return null;
 		}
@@ -1400,6 +1399,10 @@ public class $ {
 			return ServerMinigame.SKYBLOCK;
 		if ($.getZoneLocation("skyblock_nether").getWorld().getName().equals(world.getName()))
 			return ServerMinigame.SKYBLOCK;
+		if ($.getZoneLocation("prison_mines").getWorld().getName().equals(world.getName()))
+			return ServerMinigame.PRISON;
+		if ($.getZoneLocation("prison_plots").getWorld().getName().equals(world.getName()))
+			return ServerMinigame.PRISON;
 		if ($.getZoneLocation("hub").getWorld().getName().equals(world.getName()))
 			return ServerMinigame.HUB;
 		return ServerMinigame.UNKNOWN;
@@ -1418,6 +1421,8 @@ public class $ {
 			return Server.getSurvival();
 		if (domain.equals("skyblock"))
 			return Server.getSkyblock();
+		if (domain.equals("prison"))
+			return Server.getPrison();
 		if (domain.equals("hub"))
 			return Server.getHub();
 		return null;
@@ -1436,6 +1441,8 @@ public class $ {
 			return "survival";
 		if (Server.getSkyblock().contains(player.getUniqueId()))
 			return "skyblock";
+		if (Server.getPrison().contains(player.getUniqueId()))
+			return "prison";
 		if (Server.getHub().contains(player.getUniqueId()))
 			return "hub";
 		return "hub";
@@ -1458,6 +1465,8 @@ public class $ {
 			return Survival.tag;
 		if (domain.equals("skyblock"))
 			return Skyblock.tag;
+		if (domain.equals("prison"))
+			return Prison.tag;
 		if (domain.equals("hub"))
 			return Lobby.tag;
 		return Lobby.tag;
@@ -1807,6 +1816,12 @@ public class $ {
 				}
 			}
 		}
+	}
+
+	public static class Prison {
+
+		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "prison" + ChatColor.GRAY + "] " + ChatColor.RESET;
+
 	}
 
 	public static class Factions {
