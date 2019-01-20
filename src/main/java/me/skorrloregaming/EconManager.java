@@ -23,7 +23,7 @@ public class EconManager {
 	}
 
 	public static void withdrawCash(UUID id, int amount, String subDomain, boolean updateScoreboard) {
-		if (subDomain.equals("kitpvp") || subDomain.equals("factions") || subDomain.equals("skyblock")) {
+		if ($.validEconomyMinigames.contains(subDomain)) {
 			String path = "config." + id.toString() + ".balance." + subDomain;
 			if (!Server.getPlugin().getConfig().contains(path)) {
 				Server.getPlugin().getConfig().set(path, 0);
@@ -47,7 +47,7 @@ public class EconManager {
 	}
 
 	public static void depositCash(UUID id, int amount, String subDomain, boolean updateScoreboard) {
-		if (subDomain.equals("kitpvp") || subDomain.equals("factions") || subDomain.equals("skyblock")) {
+		if ($.validEconomyMinigames.contains(subDomain)) {
 			String path = "config." + id.toString() + ".balance." + subDomain;
 			if (!Server.getPlugin().getConfig().contains(path)) {
 				Server.getPlugin().getConfig().set(path, 0);
@@ -63,7 +63,7 @@ public class EconManager {
 	}
 
 	public static int retrieveCash(UUID id, String subDomain) {
-		if (subDomain.equals("kitpvp") || subDomain.equals("factions") || subDomain.equals("skyblock")) {
+		if ($.validEconomyMinigames.contains(subDomain)) {
 			String path = "config." + id.toString() + ".balance." + subDomain;
 			if (!Server.getPlugin().getConfig().contains(path)) {
 				Server.getPlugin().getConfig().set(path, 0);

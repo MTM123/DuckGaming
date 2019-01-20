@@ -15,10 +15,10 @@ public class Prison_StatisticsScoreboard implements DisposableScoreboard {
 		DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 		Hashtable<String, Integer> list = new Hashtable<String, Integer>();
 		int currentPlayerCash = EconManager.retrieveCash(player, "prison");
-		int currentPlayerLevel = 0;
+		char currentPlayerRank = $.Prison.getRankLetter($.Prison.getPlayerRank(player));
 		list.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Statistics", 3);
 		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Balance: " + ChatColor.RESET + "$" + formatter.format(currentPlayerCash), 2);
-		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Level: " + ChatColor.RESET + formatter.format(currentPlayerLevel), 1);
+		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Rank: " + ChatColor.RESET + currentPlayerRank, 1);
 		$.Scoreboard.configureSidebar(player, "SkorrloreGaming", list, clearValues, true);
 	}
 }

@@ -67,6 +67,7 @@ public class $ {
 	public static List<String> validRanksNotifyWorkerExecuteCommand = Arrays.asList(new String[]{"founder"});
 	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock", "prison"});
 	public static List<String> validStorageMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "creative", "skyblock", "prison"});
+	public static List<String> validEconomyMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "skyblock", "prison"});
 	public static List<String> validLocketteMinigames = Arrays.asList(new String[]{"skyblock", "factions", "prison"});
 	public static List<String> validStairSeatMinigames = Arrays.asList(new String[]{"creative", "skyblock", "factions", "prison"});
 	public static List<String> scoreboardAutoUpdateMinigames = Arrays.asList(new String[]{"skyblock", "factions", "kitpvp"});
@@ -1821,6 +1822,79 @@ public class $ {
 	public static class Prison {
 
 		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "prison" + ChatColor.GRAY + "] " + ChatColor.RESET;
+
+		public static int getPlayerRank(Player player) {
+			String path = "config." + player.getUniqueId().toString() + ".prison";
+			if (Server.getPlugin().getConfig().contains(path) && Server.getPlugin().getConfig().contains(path + ".rank")) {
+				return Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".rank"));
+			}
+			Server.getPlugin().getConfig().set(path + ".rank", "0");
+			return 0;
+		}
+
+		public static void setPlayerRank(Player player, int value) {
+			String path = "config." + player.getUniqueId().toString() + ".prison";
+			Server.getPlugin().getConfig().set(path + ".rank", value + "");
+		}
+
+		public static char getRankLetter(int rank) {
+			switch (rank) {
+				case 1:
+					return 'A';
+				case 2:
+					return 'B';
+				case 3:
+					return 'C';
+				case 4:
+					return 'D';
+				case 5:
+					return 'E';
+				case 6:
+					return 'F';
+				case 7:
+					return 'G';
+				case 8:
+					return 'H';
+				case 9:
+					return 'I';
+				case 10:
+					return 'J';
+				case 11:
+					return 'K';
+				case 12:
+					return 'L';
+				case 13:
+					return 'M';
+				case 14:
+					return 'N';
+				case 15:
+					return 'O';
+				case 16:
+					return 'P';
+				case 17:
+					return 'Q';
+				case 18:
+					return 'R';
+				case 19:
+					return 'S';
+				case 20:
+					return 'T';
+				case 21:
+					return 'U';
+				case 22:
+					return 'V';
+				case 23:
+					return 'W';
+				case 24:
+					return 'X';
+				case 25:
+					return 'Y';
+				case 26:
+					return 'Z';
+				default:
+					return '?';
+			}
+		}
 
 	}
 

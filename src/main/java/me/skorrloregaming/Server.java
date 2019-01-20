@@ -928,6 +928,8 @@ public class Server extends JavaPlugin implements Listener {
 					array.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Creative", creative.size());
 				if ($.isMinigameEnabled(ServerMinigame.SKYBLOCK))
 					array.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Skyblock", skyblock.size());
+				if ($.isMinigameEnabled(ServerMinigame.PRISON))
+					array.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Prison", prison.size());
 				hubScoreboardTitleIndex.putIfAbsent(player.getUniqueId(), 0);
 				int index = hubScoreboardTitleIndex.get(player.getUniqueId());
 				if (message.length() <= 16) {

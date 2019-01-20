@@ -1425,9 +1425,11 @@ public class PlayerEventHandler implements Listener {
 			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", "-1");
 			Server.getPlugin().getConfig().set(path + ".skyblock.broken", "0");
 			Server.getPlugin().getConfig().set(path + ".skyblock.placed", "0");
+			Server.getPlugin().getConfig().set(path + ".prison.rank", "1");
 			Server.getPlugin().getConfig().set(path + ".balance.kitpvp", "0");
 			Server.getPlugin().getConfig().set(path + ".balance.factions", "250");
 			Server.getPlugin().getConfig().set(path + ".balance.skyblock", "0");
+			Server.getPlugin().getConfig().set(path + ".balance.prison", "0");
 			Server.getPlugin().getConfig().set("warning." + ipAddress + ".count", "0");
 		}
 		if (!Server.getPlugin().getConfig().contains(path + ".joined.value")) {
