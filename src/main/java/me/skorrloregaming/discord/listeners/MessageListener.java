@@ -3,6 +3,7 @@ package me.skorrloregaming.discord.listeners;
 import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Logger;
+import me.skorrloregaming.Server;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -12,7 +13,11 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+
+import java.util.Map;
+import java.util.UUID;
 
 public class MessageListener extends ListenerAdapter {
 
@@ -24,11 +29,28 @@ public class MessageListener extends ListenerAdapter {
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
+		int discriminator = Integer.parseInt(event.getMember().getUser().getDiscriminator());
 		if (event.isFromType(ChannelType.TEXT)) {
 			if (!event.getAuthor().isBot())
 				if (event.getTextChannel().getName().equals(discordBot.getChannelName(Channel.SERVER_CHAT))) {
 					String rawMessage = event.getMessage().getContentDisplay();
 					String memberName = event.getMember().getEffectiveName();
+					String altAddress = null;
+					OfflinePlayer op = CraftGo.Player.getOfflinePlayer(memberName);
+					if (op.hasPlayedBefore() || op.isOnline()) {
+						String path = "config." + op.getUniqueId().toString();
+						if (Server.getPlugin().getConfig().contains(path + ".ip")) {
+							altAddress = Server.getPlugin().getConfig().getString(path + ".ip");
+						}
+					}
+					if (altAddress == null || Server.getBanConfig().getData().contains(altAddress.replace(".", "x")) || !Server.getDiscordVerifyConfig().getData().contains("verified." + discriminator)) {
+						discordBot.broadcast("Sorry, you are no longer verified as that player.", Channel.SERVER_CHAT);
+						Server.getDiscordVerifyConfig().getData().set("verified." + discriminator, null);
+						Server.getDiscordVerifyConfig().saveData();
+						event.getGuild().getController().removeRolesFromMember(event.getMember(), event.getJDA().getRolesByName("Verified", true)).complete();
+						event.getGuild().getController().setNickname(event.getMember(), event.getMember().getUser().getName()).complete();
+						return;
+					}
 					String displayName = $.getFlashPlayerDisplayName(memberName);
 					String username = event.getMember().getUser().getName() + "#" + event.getMember().getUser().getDiscriminator();
 					TextComponent newLine = new TextComponent(ComponentSerializer.parse("{text: \"\n\"}"));
@@ -49,6 +71,42 @@ public class MessageListener extends ListenerAdapter {
 					Logger.info(new TextComponent(message).toPlainText(), true);
 					for (Player player : Bukkit.getOnlinePlayers()) {
 						CraftGo.Player.sendJson(player, ComponentSerializer.toString(message));
+					}
+				} else if (event.getTextChannel().getName().equals(discordBot.getChannelName(Channel.SERVER_CHAT_VERIFY))) {
+					String id = event.getMember().getUser().getId();
+					String rawMessage = event.getMessage().getContentDisplay();
+					if (rawMessage.startsWith("?verify")) {
+						String[] args = rawMessage.split(" ");
+						if (args.length > 1) {
+							String codeString = args[1];
+							try {
+								int code = Integer.parseInt(codeString);
+								boolean hit = false;
+								UUID hitUUID = null;
+								for (Map.Entry<Integer, UUID> entry : Server.getDiscordVerifyPlayers().entrySet()) {
+									if (entry.getKey().intValue() == code) {
+										hitUUID = entry.getValue();
+										Server.getDiscordVerifyConfig().getData().set("verified." + discriminator, entry.getValue().toString());
+										Server.getDiscordVerifyConfig().saveData();
+										discordBot.broadcast("Thank you for verifying you minecraft account, <@" + id + ">!", Channel.SERVER_CHAT_VERIFY);
+										hit = true;
+									}
+								}
+								if (!hit) {
+									discordBot.broadcast("That's not a valid code, you can get one with /verify on the server.", Channel.SERVER_CHAT_VERIFY);
+								} else {
+									Server.getDiscordVerifyPlayers().remove(code, hitUUID);
+									OfflinePlayer player = Bukkit.getOfflinePlayer(hitUUID);
+									event.getGuild().getController().addRolesToMember(event.getMember(), event.getJDA().getRolesByName("Verified", true)).complete();
+									event.getGuild().getController().setNickname(event.getMember(), player.getName()).complete();
+								}
+							} catch (Exception ex) {
+								ex.printStackTrace();
+								discordBot.broadcast("Please use ?verify <code> to link your minecraft account.", Channel.SERVER_CHAT_VERIFY);
+							}
+						}
+					} else {
+						discordBot.broadcast("Please use ?verify <code> to link your minecraft account.", Channel.SERVER_CHAT_VERIFY);
 					}
 				}
 		}

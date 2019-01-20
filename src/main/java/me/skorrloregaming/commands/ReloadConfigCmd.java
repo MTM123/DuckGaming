@@ -18,6 +18,8 @@ public class ReloadConfigCmd implements CommandExecutor {
 			$.playLackPermissionMessage(sender);
 			return true;
 		}
+		Server.getDiscordVerifyConfig().reloadData();
+		Server.getChatItemConfig().reloadData();
 		Server.getBanConfig().reloadData();
 		Server.getWarpConfig().reloadData();
 		Server.getSignConfig().reloadData();

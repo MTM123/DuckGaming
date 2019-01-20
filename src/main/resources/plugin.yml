@@ -7,6 +7,8 @@ softdepend: [AuthMe, ProtocolSupport, ProtocolSupportPocketStuff, mcMMO, Vault, 
 loadbefore: [ChestShop, Factions]
 api-version: 1.13
 commands:
+    verify:
+        description: Verify your minecraft account on discord
     feed:
         description: Instantly saturates your food level on factions
         aliases: eat

@@ -87,6 +87,7 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConfigurationManager locketteConfig;
 	private static ConfigurationManager chatItemConfig;
 	private static ConfigurationManager chestShopConfig;
+	private static ConfigurationManager discordVerifyConfig;
 
 	private static Plugin plugin;
 	private static Server instance;
@@ -146,6 +147,7 @@ public class Server extends JavaPlugin implements Listener {
 	private static ArrayList<UUID> factionFlyPlayers = new ArrayList<UUID>();
 	private static ConcurrentMap<String, Integer> timeSinceLastLogin = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, SwitchUUIDString> transferAcceptPlayers = new ConcurrentHashMap<>();
+	private static ConcurrentMap<Integer, UUID> discordVerifyPlayers = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, DelayedTeleport> delayedTeleports = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, SwitchIntDouble> playersInCombat = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, ServerMinigame> moderatingPlayers = new ConcurrentHashMap<>();
@@ -291,6 +293,10 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static ConcurrentMap<UUID, SwitchUUIDString> getTransferAcceptPlayers() {
 		return transferAcceptPlayers;
+	}
+
+	public static ConcurrentMap<Integer, UUID> getDiscordVerifyPlayers() {
+		return discordVerifyPlayers;
 	}
 
 	public static ConcurrentMap<UUID, DelayedTeleport> getDelayedTeleports() {
@@ -553,6 +559,10 @@ public class Server extends JavaPlugin implements Listener {
 		return chestShopConfig;
 	}
 
+	public static ConfigurationManager getDiscordVerifyConfig() {
+		return discordVerifyConfig;
+	}
+
 	public static AntiCheat getAntiCheat() {
 		return anticheat;
 	}
@@ -616,6 +626,7 @@ public class Server extends JavaPlugin implements Listener {
 		locketteConfig = new ConfigurationManager();
 		chatItemConfig = new ConfigurationManager();
 		chestShopConfig = new ConfigurationManager();
+		discordVerifyConfig = new ConfigurationManager();
 		barApi = new BarApi();
 		skinStorage = new SkinStorage();
 		$.createDataFolder();
@@ -633,6 +644,7 @@ public class Server extends JavaPlugin implements Listener {
 		monthlyVoteConfig.setup(new File(this.getDataFolder(), "monthly_votes.yml"));
 		locketteConfig.setup(new File(this.getDataFolder(), "lockette_config.yml"));
 		chestShopConfig.setup(new File(this.getDataFolder(), "chestshop_config.yml"));
+		discordVerifyConfig.setup(new File(this.getDataFolder(), "discord_config.yml"));
 		File chatItemConfig = new File(this.getDataFolder(), "chatitem_config.yml");
 		if (!chatItemConfig.exists()) {
 			try {
@@ -758,6 +770,7 @@ public class Server extends JavaPlugin implements Listener {
 		sessionManager.setup();
 		topVotersHttpServer = new TopVotersHttpServer(getConfig().getInt("settings.topVotersHttpServerPort", 2096));
 		CustomRecipes.loadRecipes();
+		getCommand("verify").setExecutor(new VerifyCmd());
 		getCommand("feed").setExecutor(new FeedCmd());
 		getCommand("fly").setExecutor(new FlyCmd());
 		getCommand("printblockstate").setExecutor(new PrintBlockStateCmd());
@@ -1741,9 +1754,7 @@ public class Server extends JavaPlugin implements Listener {
 			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 				@Override
 				public void run() {
-					if (creative.contains(player.getUniqueId())) {
-						if (!(player.getGameMode() == GameMode.CREATIVE))
-							player.setGameMode(GameMode.CREATIVE);
+					if (prison.contains(player.getUniqueId())) {
 						if (!player.getAllowFlight())
 							player.setAllowFlight(true);
 						player.addAttachment(plugin, "plots.use", true);
@@ -1788,8 +1799,8 @@ public class Server extends JavaPlugin implements Listener {
 				player.addAttachment(this, "plots.plot.1", false);
 				player.addAttachment(this, "plots.visit.other", false);
 			}
+			player.setAllowFlight(true);
 			$.clearPlayer(player);
-			player.setAllowFlight(false);
 			$.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);
 			return 1;
 		}
