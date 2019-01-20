@@ -2963,6 +2963,9 @@ public class PlayerEventHandler implements Listener {
 			} else if (label.equalsIgnoreCase("/skyblock")) {
 				player.performCommand("server skyblock");
 				event.setCancelled(true);
+			} else if (label.equalsIgnoreCase("/prison")) {
+				player.performCommand("server prison");
+				event.setCancelled(true);
 			} else if (event.getMessage().equalsIgnoreCase("/f fly")) {
 				player.performCommand("fly");
 				event.setCancelled(true);

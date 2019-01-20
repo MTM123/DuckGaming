@@ -86,6 +86,16 @@ public class ServerCmd implements CommandExecutor {
 				return true;
 			}
 			Server.getInstance().enterSkyblock(player, false, false);
+		} else if ("prison".startsWith(args[0].toLowerCase())) {
+			if (!$.isMinigameEnabled(ServerMinigame.PRISON)) {
+				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
+				return true;
+			}
+			if (Server.getPrison().contains(player.getUniqueId())) {
+				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
+				return true;
+			}
+			Server.getInstance().enterPrison(player, false, false);
 		} else {
 			player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
 			player.performCommand("servers");

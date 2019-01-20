@@ -1737,6 +1737,21 @@ public class Server extends JavaPlugin implements Listener {
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
+			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+				@Override
+				public void run() {
+					if (creative.contains(player.getUniqueId())) {
+						if (!(player.getGameMode() == GameMode.CREATIVE))
+							player.setGameMode(GameMode.CREATIVE);
+						if (!player.getAllowFlight())
+							player.setAllowFlight(true);
+						player.addAttachment(plugin, "plots.use", true);
+						player.addAttachment(plugin, "plots.permpack.basic", true);
+						player.addAttachment(plugin, "plots.plot.1", true);
+						player.addAttachment(plugin, "plots.visit.other", true);
+					}
+				}
+			}, 100L);
 			player.setAllowFlight(false);
 			$.prisonScoreboard.schedule(player);
 		}
@@ -1766,6 +1781,12 @@ public class Server extends JavaPlugin implements Listener {
 						, Channel.SERVER_CHAT);
 			}
 			prison.remove(player.getUniqueId());
+			if (running) {
+				player.addAttachment(this, "plots.use", false);
+				player.addAttachment(this, "plots.permpack.basic", false);
+				player.addAttachment(this, "plots.plot.1", false);
+				player.addAttachment(this, "plots.visit.other", false);
+			}
 			$.clearPlayer(player);
 			player.setAllowFlight(false);
 			$.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);
