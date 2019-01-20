@@ -1400,7 +1400,7 @@ public class $ {
 			return ServerMinigame.SKYBLOCK;
 		if ($.getZoneLocation("skyblock_nether").getWorld().getName().equals(world.getName()))
 			return ServerMinigame.SKYBLOCK;
-		if ($.getZoneLocation("prison_mines").getWorld().getName().equals(world.getName()))
+		if ($.getZoneLocation("prison").getWorld().getName().equals(world.getName()))
 			return ServerMinigame.PRISON;
 		if ($.getZoneLocation("prison_plots").getWorld().getName().equals(world.getName()))
 			return ServerMinigame.PRISON;
@@ -1826,10 +1826,15 @@ public class $ {
 		public static int getPlayerRank(Player player) {
 			String path = "config." + player.getUniqueId().toString() + ".prison";
 			if (Server.getPlugin().getConfig().contains(path) && Server.getPlugin().getConfig().contains(path + ".rank")) {
-				return Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".rank"));
+				int rank = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".rank"));
+				if (rank < 1) {
+					Server.getPlugin().getConfig().set(path + ".rank", "1");
+					rank = 1;
+				}
+				return rank;
 			}
-			Server.getPlugin().getConfig().set(path + ".rank", "0");
-			return 0;
+			Server.getPlugin().getConfig().set(path + ".rank", "1");
+			return 1;
 		}
 
 		public static void setPlayerRank(Player player, int value) {

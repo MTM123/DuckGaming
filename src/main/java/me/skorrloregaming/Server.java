@@ -1056,6 +1056,7 @@ public class Server extends JavaPlugin implements Listener {
 		changes += leaveSurvival(player, noRestore, noLog);
 		changes += leaveKitpvp(player, noRestore, noLog);
 		changes += leaveSkyblock(player, noRestore, noLog);
+		changes += leavePrison(player, noRestore, noLog);
 		rawChanges += changes;
 		if (changes > 0)
 			$.clearPlayer(player);
