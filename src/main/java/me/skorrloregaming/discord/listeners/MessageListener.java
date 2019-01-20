@@ -51,6 +51,7 @@ public class MessageListener extends ListenerAdapter {
 						event.getGuild().getController().setNickname(event.getMember(), event.getMember().getUser().getName()).complete();
 						return;
 					}
+					rawMessage = Server.getAntiCheat().processAntiSwear(op, rawMessage, false, true);
 					String displayName = $.getFlashPlayerDisplayName(memberName);
 					String username = event.getMember().getUser().getName() + "#" + event.getMember().getUser().getDiscriminator();
 					TextComponent newLine = new TextComponent(ComponentSerializer.parse("{text: \"\n\"}"));

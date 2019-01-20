@@ -401,7 +401,7 @@ public class AntiCheat implements Listener {
 		char[] messageChars = message.toCharArray();
 		boolean detectedSwearing = false;
 		for (String swear : swearWords) {
-			int beginIndex = message.indexOf(swear);
+			int beginIndex = message.toLowerCase().indexOf(swear);
 			if (beginIndex > -1) {
 				int endIndex = beginIndex + swear.length();
 				for (int i = beginIndex; i < endIndex; i++) {

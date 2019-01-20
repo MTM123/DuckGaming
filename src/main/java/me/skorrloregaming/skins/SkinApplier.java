@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.FieldAccessException;
 import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.*;
+import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.skins.model.SkinModel;
 import me.skorrloregaming.skins.model.SkinProperty;
@@ -58,15 +59,17 @@ public class SkinApplier implements Runnable {
 	}
 
 	public void applyInstantUpdate() {
-		WrappedGameProfile gameProfile = WrappedGameProfile.fromPlayer(receiver);
-		applyProperties(gameProfile, targetSkin);
-		Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
-			@Override
-			public void run() {
-				sendUpdateSelf(WrappedGameProfile.fromPlayer(receiver));
-				sendUpdateOthers();
-			}
-		});
+		if (!CraftGo.Player.isPocketPlayer(receiver)) {
+			WrappedGameProfile gameProfile = WrappedGameProfile.fromPlayer(receiver);
+			applyProperties(gameProfile, targetSkin);
+			Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
+				@Override
+				public void run() {
+					sendUpdateSelf(WrappedGameProfile.fromPlayer(receiver));
+					sendUpdateOthers();
+				}
+			});
+		}
 	}
 
 	public WrappedSignedProperty convertToProperty(SkinModel skinData) {
