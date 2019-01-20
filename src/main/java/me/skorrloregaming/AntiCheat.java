@@ -394,6 +394,10 @@ public class AntiCheat implements Listener {
 	}
 
 	public String processAntiSwear(OfflinePlayer player, String message) {
+		return processAntiSwear(player, message, true, false);
+	}
+
+	public String processAntiSwear(OfflinePlayer player, String message, boolean doReturn, boolean silent) {
 		char[] messageChars = message.toCharArray();
 		boolean detectedSwearing = false;
 		for (String swear : swearWords) {
@@ -408,10 +412,13 @@ public class AntiCheat implements Listener {
 		}
 		String modifiedMessage = new String(messageChars);
 		if (detectedSwearing) {
-			Logger.info($.italicGray + ChatColor.stripColor(message));
+			if (!silent)
+				Logger.info($.italicGray + ChatColor.stripColor(message));
 			if (player.isOnline()) {
-				player.getPlayer().sendMessage($.italicGray + ChatColor.stripColor(message));
-				player.getPlayer().sendMessage(ChatColor.RED + "Please do not swear, otherwise action will be taken.");
+				if (doReturn)
+					player.getPlayer().sendMessage($.italicGray + ChatColor.stripColor(message));
+				if (!silent)
+					player.getPlayer().sendMessage(ChatColor.RED + "Please do not swear, otherwise action will be taken.");
 			}
 		}
 		return modifiedMessage;

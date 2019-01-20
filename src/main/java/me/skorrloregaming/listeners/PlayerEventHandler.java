@@ -989,11 +989,11 @@ public class PlayerEventHandler implements Listener {
 					rankName = "YouTube";
 				if ($.isPrefixedRankingEnabled()) {
 					Server.getDiscordBot().broadcast(
-							"**" + rankName + "** " + player.getName() + " " + '\u00BB' + " " + Server.getAntiCheat().processAntiSwear(player, event.getMessage())
+							"**" + rankName + "** " + player.getName() + " " + '\u00BB' + " " + Server.getAntiCheat().processAntiSwear(player, event.getMessage(), false, true)
 							, Channel.SERVER_CHAT);
 				} else {
 					Server.getDiscordBot().broadcast(
-							"**" + player.getName() + "** " + '\u00BB' + " " + Server.getAntiCheat().processAntiSwear(player, event.getMessage())
+							"**" + player.getName() + "** " + '\u00BB' + " " + Server.getAntiCheat().processAntiSwear(player, event.getMessage(), false, true)
 							, Channel.SERVER_CHAT);
 				}
 			}
