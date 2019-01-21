@@ -1,4 +1,4 @@
-package me.skorrloregaming.factions.shop;
+package me.skorrloregaming.shop;
 
 import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;

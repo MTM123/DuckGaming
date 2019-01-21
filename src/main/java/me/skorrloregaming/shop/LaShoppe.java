@@ -1,11 +1,11 @@
-package me.skorrloregaming.factions.shop;
+package me.skorrloregaming.shop;
 
 import me.skorrloregaming.$;
 import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.factions.shop.events.enchant.CreateEnchantTypeEventHandler;
-import me.skorrloregaming.factions.shop.events.item.CreateItemTypeEventHandler;
+import me.skorrloregaming.shop.events.enchant.CreateEnchantTypeEventHandler;
+import me.skorrloregaming.shop.events.item.CreateItemTypeEventHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

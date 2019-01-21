@@ -11,12 +11,11 @@ import java.util.concurrent.ConcurrentMap;
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.Factions;
 import me.skorrloregaming.commands.BanCmd;
 import me.skorrloregaming.discord.Channel;
-import me.skorrloregaming.factions.shop.LaShoppeEnchant;
-import me.skorrloregaming.factions.shop.LaShoppeFrame;
-import me.skorrloregaming.factions.shop.LaShoppeItem;
+import me.skorrloregaming.shop.LaShoppeEnchant;
+import me.skorrloregaming.shop.LaShoppeFrame;
+import me.skorrloregaming.shop.LaShoppeItem;
 import me.skorrloregaming.impl.*;
 import me.skorrloregaming.skins.model.SkinModel;
 import org.apache.commons.lang.WordUtils;
@@ -61,7 +60,6 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -75,7 +73,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.util.Vector;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
-import io.netty.buffer.Unpooled;
 import me.skorrloregaming.$;
 import me.skorrloregaming.ComplexParticle;
 import me.skorrloregaming.CraftExplosion;
@@ -2413,6 +2410,7 @@ public class PlayerEventHandler implements Listener {
 		} else if (event.getInventory().getName().equals(ChatColor.DARK_PURPLE + "Server Selector (0b10)")) {
 			if (event.getCurrentItem() == null)
 				return;
+			event.setCancelled(true);
 			switch (event.getCurrentItem().getType()) {
 				case DIAMOND_SWORD:
 					Server.getInstance().enterFactions(player, false, false);
@@ -2422,7 +2420,6 @@ public class PlayerEventHandler implements Listener {
 					break;
 				default:
 					player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
-					event.setCancelled(true);
 					return;
 			}
 		} else if (Server.getSkyfight().containsKey(player.getUniqueId()) && player.getGameMode() == GameMode.SURVIVAL) {
@@ -3014,9 +3011,8 @@ public class PlayerEventHandler implements Listener {
 			} else if (event.getMessage().equalsIgnoreCase("/f fly")) {
 				player.performCommand("fly");
 				event.setCancelled(true);
-			} else if (event.getMessage().startsWith("/f top ")) {
-				player.performCommand("ftop");
-				event.setCancelled(true);
+			} else if (event.getMessage().startsWith("/f top")) {
+				event.setMessage(event.getMessage().replace("/f top", "/ftop"));
 			} else if (label.equalsIgnoreCase("/pt")) {
 				event.setMessage($.replaceCommandLabelInCommand(event.getMessage(), "/playtime"));
 			} else if (label.equalsIgnoreCase("/tp")) {

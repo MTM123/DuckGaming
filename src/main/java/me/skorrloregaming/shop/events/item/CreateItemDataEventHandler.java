@@ -1,7 +1,7 @@
-package me.skorrloregaming.factions.shop.events.item;
+package me.skorrloregaming.shop.events.item;
 
 import me.skorrloregaming.AnvilGUI;
-import me.skorrloregaming.factions.shop.LaShoppe;
+import me.skorrloregaming.shop.LaShoppe;
 import org.bukkit.Material;
 
 public class CreateItemDataEventHandler implements AnvilGUI.AnvilClickEventHandler {

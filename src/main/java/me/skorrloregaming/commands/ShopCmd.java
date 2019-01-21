@@ -1,6 +1,6 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.factions.shop.LaShoppeFrame;
+import me.skorrloregaming.shop.LaShoppeFrame;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;

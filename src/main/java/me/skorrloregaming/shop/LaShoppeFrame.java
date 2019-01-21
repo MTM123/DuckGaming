@@ -1,4 +1,4 @@
-package me.skorrloregaming.factions.shop;
+package me.skorrloregaming.shop;
 
 public enum LaShoppeFrame {
 

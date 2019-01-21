@@ -1,11 +1,9 @@
-package me.skorrloregaming.factions.shop.events.enchant;
+package me.skorrloregaming.shop.events.enchant;
 
 import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.factions.shop.LaShoppe;
-import me.skorrloregaming.impl.EnchantInfo;
+import me.skorrloregaming.shop.LaShoppe;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
 import java.lang.reflect.InvocationTargetException;

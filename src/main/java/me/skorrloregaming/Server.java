@@ -16,7 +16,7 @@ import me.skorrloregaming.commands.*;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
 import me.skorrloregaming.factions.auction.Auctioneer;
-import me.skorrloregaming.factions.shop.LaShoppe;
+import me.skorrloregaming.shop.LaShoppe;
 import me.skorrloregaming.impl.*;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
@@ -1386,8 +1386,6 @@ public class Server extends JavaPlugin implements Listener {
 		player.setAllowFlight(true);
 		Random random = new Random();
 		int ran = random.nextInt(4);
-		if (initialConnect)
-			$.clearPlayer(player);
 		ItemStack sword = $.createMaterial(Material.STONE_SWORD, ChatColor.GOLD + "The Forbidding Katana");
 		ItemStack bow = $.createMaterial(Material.BOW, ChatColor.GOLD + "The Forbidding Bow");
 		ItemStack arrow = $.createMaterial(Material.ARROW, 1, ChatColor.GOLD + "The Forbidding Darts");

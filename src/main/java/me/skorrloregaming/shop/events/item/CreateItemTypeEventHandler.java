@@ -1,9 +1,8 @@
-package me.skorrloregaming.factions.shop.events.item;
+package me.skorrloregaming.shop.events.item;
 
 import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.factions.shop.LaShoppe;
-import me.skorrloregaming.factions.shop.events.item.CreateItemPriceEventHandler;
+import me.skorrloregaming.shop.LaShoppe;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 

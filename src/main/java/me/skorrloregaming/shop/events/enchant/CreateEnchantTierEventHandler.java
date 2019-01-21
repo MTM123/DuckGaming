@@ -1,14 +1,8 @@
-package me.skorrloregaming.factions.shop.events.enchant;
+package me.skorrloregaming.shop.events.enchant;
 
 import me.skorrloregaming.AnvilGUI;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.factions.shop.LaShoppe;
-import me.skorrloregaming.factions.shop.events.item.CreateItemDataEventHandler;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import me.skorrloregaming.shop.LaShoppe;
 import org.bukkit.enchantments.Enchantment;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class CreateEnchantTierEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
