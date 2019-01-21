@@ -3014,6 +3014,9 @@ public class PlayerEventHandler implements Listener {
 			} else if (event.getMessage().equalsIgnoreCase("/f fly")) {
 				player.performCommand("fly");
 				event.setCancelled(true);
+			} else if (event.getMessage().startsWith("/f top ")) {
+				player.performCommand("ftop");
+				event.setCancelled(true);
 			} else if (label.equalsIgnoreCase("/pt")) {
 				event.setMessage($.replaceCommandLabelInCommand(event.getMessage(), "/playtime"));
 			} else if (label.equalsIgnoreCase("/tp")) {
