@@ -25,6 +25,13 @@ You can easily contribute to the project if you so desire by forking the project
 * Custom reflection class with a great deal of abstraction makes it easy for developers to mess with nms.
 * Custom explosion makes it possible to use explosions such as creeper eggs to easily blow up an ally's base.
 * Custom discord link lets players and staff communicate with people on the server from discord with ease.
+* Custom virtual shop lets players buy and sell without leaving their home, which allows for more productivity.
+* Custom verification system to link minecraft players with discord accounts to secure discord -> minecraft chat.
+* Player data, statistics, homes, votes, sessions, and marriages convert on the fly if server switches online mode.
+* Custom transfer system allows players to transfer their stuff from an old username on the fly with no issues.
+* Custom account link system to link one account to another, very useful for linking bedrock edition to java edition.
+* Custom anvil gui system to retrieve input from the player in a gui, this has been implemented for the virtual shop.
+* Custom asynchronous random teleport so teleporting to a random location is much more performant over other plugins.
 
 # Configuration
 ```Yaml
@@ -65,19 +72,6 @@ settings:
     customQuitMessage: true
     topVotersHttpServerPort: 2096
 ```
-
-# Portal Configuration
-* Diamond Ore ≅ Creative
-* Gold Ore ≅ Skyfight
-* Iron Ore ≅ Kitpvp
-* Coal Ore ≅ Factions
-* Lapis Ore ≅ Survival
-* Emerald Ore ≅ Factions ∥ Survival.
-* Nether Quartz ≅ Skyblock.
-
-When a player steps on said ore, it will move them to said minigame.
-
-* Make sure the hub is above y level 30 because player is teleported otherwise.
 
 # Compiling
 This project uses Maven 3 to manage dependencies, packaging, and shading of necessary classes.
