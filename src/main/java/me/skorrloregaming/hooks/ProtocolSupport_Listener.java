@@ -97,12 +97,7 @@ public class ProtocolSupport_Listener implements Listener {
 	@EventHandler
 	public void onPlayerProfileComplete(PlayerProfileCompleteEvent event) {
 		String playerName = event.getConnection().getProfile().getOriginalName();
-		UUID playerUUID = event.getConnection().getProfile().getUUID();
 		UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + event.getConnection().getProfile().getName()).getBytes());
-		if (playerUUID.toString().equals(offlineUUID.toString())) {
-			event.denyLogin("You are not allowed to connect with a cracked account.");
-			return;
-		}
 		event.setForcedUUID(offlineUUID);
 		String path = "sync." + event.getConnection().getProfile().getOriginalName();
 		if (Server.getPlugin().getConfig().contains(path)) {
@@ -120,6 +115,12 @@ public class ProtocolSupport_Listener implements Listener {
 		String playerName = event.getConnection().getProfile().getOriginalName();
 		if (event.getConnection().getVersion().getProtocolType().toString().equals("PE"))
 			return;
+		UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + event.getConnection().getProfile().getName()).getBytes());
+		UUID playerUUID = event.getConnection().getProfile().getOriginalUUID();
+		if (playerUUID.toString().equals(offlineUUID.toString())) {
+			event.denyLogin("You are not allowed to connect with a cracked account.");
+			return;
+		}
 		String path = "sync." + playerName;
 		if (Server.getPlugin().getConfig().contains(path)) {
 			if (!Server.getPlugin().getConfig().getBoolean(path + ".est")) {
