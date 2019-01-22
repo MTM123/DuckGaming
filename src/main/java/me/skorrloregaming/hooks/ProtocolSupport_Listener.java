@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
+import me.skorrloregaming.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
@@ -88,12 +89,6 @@ public class ProtocolSupport_Listener implements Listener {
 	@EventHandler
 	public void onPlayerLoginStart(PlayerLoginStartEvent event) {
 		String playerName = event.getConnection().getProfile().getName().toString();
-		UUID playerUUID = event.getConnection().getProfile().getUUID();
-		UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + event.getConnection().getProfile().getName()).getBytes());
-		if (playerUUID.toString().equals(offlineUUID.toString())) {
-			event.denyLogin("You are not allowed to connect with a cracked account.");
-			return;
-		}
 		if (CraftGo.Player.getUUID(playerName, false) == null)
 			return;
 		event.setOnlineMode(true);
@@ -101,7 +96,13 @@ public class ProtocolSupport_Listener implements Listener {
 
 	@EventHandler
 	public void onPlayerProfileComplete(PlayerProfileCompleteEvent event) {
+		String playerName = event.getConnection().getProfile().getOriginalName();
+		UUID playerUUID = event.getConnection().getProfile().getUUID();
 		UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + event.getConnection().getProfile().getName()).getBytes());
+		if (playerUUID.toString().equals(offlineUUID.toString())) {
+			event.denyLogin("You are not allowed to connect with a cracked account.");
+			return;
+		}
 		event.setForcedUUID(offlineUUID);
 		String path = "sync." + event.getConnection().getProfile().getOriginalName();
 		if (Server.getPlugin().getConfig().contains(path)) {
