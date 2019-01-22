@@ -1,5 +1,6 @@
 package me.skorrloregaming.runnable;
 
+import me.skorrloregaming.Server;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -18,7 +19,7 @@ public class AutoBroadcaster implements Runnable {
 	private int currentMsg = 0;
 
 	public AutoBroadcaster() {
-		this.messages = new String[] { "Do you like cosmetics? You can get them with a donor rank.", "Like the server? You can support us by voting.", "Want to win the fight? Get kits with a donor rank today.", "Psst, you can earn a jackpot of money from voting." };
+		this.messages = new String[]{"Do you like cosmetics? You can get them with a donor rank.", "Like the server? You can support us by voting.", "Want to win the fight? Get kits with a donor rank today.", "Psst, you can earn a jackpot of money from voting."};
 	}
 
 	@Override
@@ -42,7 +43,10 @@ public class AutoBroadcaster implements Runnable {
 		String igMessage = ComponentSerializer.toString(textComponent);
 		currentMsg++;
 		for (Player player : Bukkit.getOnlinePlayers()) {
-			CraftGo.Player.sendJson(player, igMessage);
+			String path = "config." + player.getUniqueId().toString();
+			boolean subscribed = Boolean.parseBoolean(Server.getPlugin().getConfig().getString(path + ".subscribed", "true"));
+			if (subscribed)
+				CraftGo.Player.sendJson(player, igMessage);
 		}
 		Logger.info(message, true);
 	}

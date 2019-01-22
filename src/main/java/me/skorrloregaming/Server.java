@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentMap;
 import me.skorrloregaming.commands.*;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
-import me.skorrloregaming.factions.auction.Auctioneer;
+import me.skorrloregaming.auction.Auctioneer;
 import me.skorrloregaming.shop.LaShoppe;
 import me.skorrloregaming.impl.*;
 import org.apache.commons.io.FileUtils;
@@ -770,6 +770,7 @@ public class Server extends JavaPlugin implements Listener {
 		sessionManager.setup();
 		topVotersHttpServer = new TopVotersHttpServer(getConfig().getInt("settings.topVotersHttpServerPort", 2096));
 		CustomRecipes.loadRecipes();
+		getCommand("unsubscribe").setExecutor(new UnsubscribeCmd());
 		getCommand("verify").setExecutor(new VerifyCmd());
 		getCommand("feed").setExecutor(new FeedCmd());
 		getCommand("fly").setExecutor(new FlyCmd());

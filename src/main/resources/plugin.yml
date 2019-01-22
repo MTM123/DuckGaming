@@ -7,6 +7,8 @@ softdepend: [AuthMe, ProtocolSupport, ProtocolSupportPocketStuff, mcMMO, Vault, 
 loadbefore: [ChestShop, Factions]
 api-version: 1.13
 commands:
+    unsubscribe:
+        description: Unsubscribe from news header and auto broadcaster
     verify:
         description: Verify your minecraft account on discord
     feed:

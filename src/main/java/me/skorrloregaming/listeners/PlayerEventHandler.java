@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentMap;
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
+import io.netty.buffer.Unpooled;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.shop.LaShoppeEnchant;
 import me.skorrloregaming.shop.LaShoppeFrame;
@@ -101,8 +102,6 @@ public class PlayerEventHandler implements Listener {
 
 	public int rainbowIndex = 0;
 
-	public long lastSuspiciousConnectionTimestamp = 0L;
-
 	public PlayerEventHandler() {
 
 		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
@@ -111,19 +110,23 @@ public class PlayerEventHandler implements Listener {
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					if ($.isAuthenticated(player) && $.getCurrentMinigame(player) == ServerMinigame.HUB)
 						Server.getInstance().fetchLobby(player);
-					String message = "   Thank you for playing on the server, please invite your friends. ";
-					message += message.substring(0, 32);
-					Server.getBarApiTitleIndex().putIfAbsent(player.getUniqueId(), 0);
-					int index = Server.getBarApiTitleIndex().get(player.getUniqueId());
-					if (message.length() <= 32) {
-						Server.getBarApi().setMessage(player, message, BarColor.RED, BarStyle.SOLID);
-					} else {
-						int finalIndex = index + 32;
-						if (index < message.length() && finalIndex < message.length()) {
-							Server.getBarApi().setMessage(player, message.substring(index, finalIndex), BarColor.RED, BarStyle.SOLID);
-							Server.getBarApiTitleIndex().put(player.getUniqueId(), index + 1);
+					String path = "config." + player.getUniqueId().toString();
+					boolean subscribed = Boolean.parseBoolean(Server.getPlugin().getConfig().getString(path + ".subscribed", "true"));
+					if (subscribed) {
+						String message = "   Thank you for playing on the server, please invite your friends. ";
+						message += message.substring(0, 32);
+						Server.getBarApiTitleIndex().putIfAbsent(player.getUniqueId(), 0);
+						int index = Server.getBarApiTitleIndex().get(player.getUniqueId());
+						if (message.length() <= 32) {
+							Server.getBarApi().setMessage(player, message, BarColor.RED, BarStyle.SOLID);
 						} else {
-							Server.getBarApiTitleIndex().put(player.getUniqueId(), 0);
+							int finalIndex = index + 32;
+							if (index < message.length() && finalIndex < message.length()) {
+								Server.getBarApi().setMessage(player, message.substring(index, finalIndex), BarColor.RED, BarStyle.SOLID);
+								Server.getBarApiTitleIndex().put(player.getUniqueId(), index + 1);
+							} else {
+								Server.getBarApiTitleIndex().put(player.getUniqueId(), 0);
+							}
 						}
 					}
 				}
@@ -140,7 +143,7 @@ public class PlayerEventHandler implements Listener {
 							scoreboard.schedule(player);
 						}
 					}
-					/*rainbowIndex++;
+					rainbowIndex++;
 					rainbowIndex %= 10;
 					try {
 						CraftGo.Packet.DataSerializer dataSerializer = CraftGo.Packet.DataSerializer.newInstance(Unpooled.buffer());
@@ -149,7 +152,7 @@ public class PlayerEventHandler implements Listener {
 						CraftGo.Packet.sendPacket(CraftGo.Player.getPlayerConnection(player), packet);
 					} catch (Exception e) {
 						e.printStackTrace();
-					}*/
+					}
 				}
 			}
 		}, 5L, 5L);
@@ -1180,7 +1183,8 @@ public class PlayerEventHandler implements Listener {
 			public void run() {
 				if (!Bukkit.getOnlineMode()) {
 					Optional<SkinModel> model = Server.getSkinStorage().getSkinData(player, true);
-					Server.getSkinStorage().getFactory(player, model.get()).applySkin();
+					if (model.isPresent())
+						Server.getSkinStorage().getFactory(player, model.get()).applySkin();
 				}
 			}
 		});
@@ -1418,6 +1422,7 @@ public class PlayerEventHandler implements Listener {
 			Server.getPlugin().getConfig().set(path + ".balance.factions", "250");
 			Server.getPlugin().getConfig().set(path + ".balance.skyblock", "0");
 			Server.getPlugin().getConfig().set(path + ".balance.prison", "0");
+			Server.getPlugin().getConfig().set(path + ".subscribed", "true");
 			Server.getPlugin().getConfig().set("warning." + ipAddress + ".count", "0");
 		}
 		if (!Server.getPlugin().getConfig().contains(path + ".joined.value")) {
@@ -2463,7 +2468,7 @@ public class PlayerEventHandler implements Listener {
 				int index = Integer.parseInt(code);
 				String prefix = minigame.toString().toLowerCase() + ".";
 				if (Server.getShoppeConfig().getData().contains(prefix + "items." + index)) {
-					LaShoppeItem item = Server.getShoppe().retrieveItem(minigame,index);
+					LaShoppeItem item = Server.getShoppe().retrieveItem(minigame, index);
 					material = item.getMaterial();
 					price = item.getPrice();
 					amount = item.getAmount();
