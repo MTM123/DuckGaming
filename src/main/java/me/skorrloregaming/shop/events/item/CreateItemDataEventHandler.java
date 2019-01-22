@@ -1,5 +1,6 @@
 package me.skorrloregaming.shop.events.item;
 
+import me.skorrloregaming.$;
 import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.shop.LaShoppe;
 import org.bukkit.Material;
@@ -35,6 +36,6 @@ public class CreateItemDataEventHandler implements AnvilGUI.AnvilClickEventHandl
 		event.getPlayer().sendMessage("Price: $" + price);
 		event.getPlayer().sendMessage("Amount: " + amount + "x");
 		event.getPlayer().sendMessage("Data: " + data);
-		shoppe.createItem(material, price, amount, data);
+		shoppe.createItem($.getCurrentMinigame(event.getPlayer()), material, price, amount, data);
 	}
 }

@@ -1,5 +1,6 @@
 package me.skorrloregaming.shop.events.enchant;
 
+import me.skorrloregaming.$;
 import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.shop.LaShoppe;
 import org.bukkit.enchantments.Enchantment;
@@ -31,6 +32,6 @@ public class CreateEnchantTierEventHandler implements AnvilGUI.AnvilClickEventHa
 		event.getPlayer().sendMessage("Enchantment: " + enchantment.getName());
 		event.getPlayer().sendMessage("Price: $" + price);
 		event.getPlayer().sendMessage("Amount: " + tier);
-		shoppe.createEnchant(enchantment, price, tier);
+		shoppe.createEnchant($.getCurrentMinigame(event.getPlayer()), enchantment, price, tier);
 	}
 }

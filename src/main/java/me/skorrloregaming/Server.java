@@ -75,7 +75,7 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConfigurationManager warpConfig;
 	private static ConfigurationManager signConfig;
 	private static ConfigurationManager factionsConfig;
-	private static ConfigurationManager factionsShoppeConfig;
+	private static ConfigurationManager shoppeConfig;
 	private static ConfigurationManager survivalConfig;
 	private static ConfigurationManager marriageHomesConfig;
 	private static ConfigurationManager npcConfig;
@@ -511,8 +511,8 @@ public class Server extends JavaPlugin implements Listener {
 		return factionsConfig;
 	}
 
-	public static ConfigurationManager getFactionsShoppeConfig() {
-		return factionsShoppeConfig;
+	public static ConfigurationManager getShoppeConfig() {
+		return shoppeConfig;
 	}
 
 	public static ConfigurationManager getSurvivalConfig() {
@@ -614,7 +614,7 @@ public class Server extends JavaPlugin implements Listener {
 		warpConfig = new ConfigurationManager();
 		signConfig = new ConfigurationManager();
 		factionsConfig = new ConfigurationManager();
-		factionsShoppeConfig = new ConfigurationManager();
+		shoppeConfig = new ConfigurationManager();
 		survivalConfig = new ConfigurationManager();
 		banConfig = new ConfigurationManager();
 		npcConfig = new ConfigurationManager();
@@ -633,7 +633,6 @@ public class Server extends JavaPlugin implements Listener {
 		warpConfig.setup(new File(this.getDataFolder(), "warps.yml"));
 		signConfig.setup(new File(this.getDataFolder(), "shops.yml"));
 		factionsConfig.setup(new File(this.getDataFolder(), "factions.yml"));
-		factionsShoppeConfig.setup(new File(this.getDataFolder(), "factions_shoppe.yml"));
 		survivalConfig.setup(new File(this.getDataFolder(), "survival.yml"));
 		banConfig.setup(new File(this.getDataFolder(), "banned.yml"));
 		npcConfig.setup(new File(this.getDataFolder(), "npc_storage.yml"));
@@ -643,6 +642,7 @@ public class Server extends JavaPlugin implements Listener {
 		geolCacheConfig.setup(new File(this.getDataFolder(), "geolocation_cache.yml"));
 		monthlyVoteConfig.setup(new File(this.getDataFolder(), "monthly_votes.yml"));
 		locketteConfig.setup(new File(this.getDataFolder(), "lockette_config.yml"));
+		shoppeConfig.setup(new File(this.getDataFolder(), "shoppe_config.yml"));
 		chestShopConfig.setup(new File(this.getDataFolder(), "chestshop_config.yml"));
 		discordVerifyConfig.setup(new File(this.getDataFolder(), "discord_config.yml"));
 		File chatItemConfig = new File(this.getDataFolder(), "chatitem_config.yml");

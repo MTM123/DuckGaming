@@ -88,13 +88,12 @@ public class ProtocolSupport_Listener implements Listener {
 	@EventHandler
 	public void onPlayerLoginStart(PlayerLoginStartEvent event) {
 		String playerName = event.getConnection().getProfile().getName().toString();
-		int timeSinceLastLogin = Server.getTimeSinceLastLogin().getOrDefault(playerName, 0);
-		int diff = ((int) (System.currentTimeMillis() / 1000)) - timeSinceLastLogin;
-		if (diff < 15) {
-			event.denyLogin("You are logging in too fast, please try again in " + (15 - diff) + " seconds.");
+		UUID playerUUID = event.getConnection().getProfile().getUUID();
+		UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + event.getConnection().getProfile().getName()).getBytes());
+		if (playerUUID.toString().equals(offlineUUID.toString())) {
+			event.denyLogin("You are not allowed to connect with a cracked account.");
 			return;
 		}
-		Server.getTimeSinceLastLogin().put(playerName, (int) (System.currentTimeMillis() / 1000));
 		if (CraftGo.Player.getUUID(playerName, false) == null)
 			return;
 		event.setOnlineMode(true);

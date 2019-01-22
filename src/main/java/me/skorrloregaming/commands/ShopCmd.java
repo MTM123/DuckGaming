@@ -28,14 +28,7 @@ public class ShopCmd implements CommandExecutor {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
-		if (Server.getFactions().contains(player.getUniqueId())) {
-			Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, 1, false);
-		} else {
-			Location zoneLocation = $.getZoneLocation($.getMinigameDomain(player) + "-shop");
-			DelayedTeleport dt = new DelayedTeleport(player, 3.0D, zoneLocation, false);
-			dt.setFinishTitleSubtitle(new TitleSubtitle("", "You can use /spawner to purchase mob spawners.", true));
-			dt.runTaskTimerAsynchronously(Server.getPlugin(), 4L, 4L);
-		}
+		Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, 1, false);
 		return true;
 	}
 

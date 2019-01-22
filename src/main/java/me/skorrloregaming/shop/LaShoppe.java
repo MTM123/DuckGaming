@@ -4,6 +4,7 @@ import me.skorrloregaming.$;
 import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.ServerMinigame;
 import me.skorrloregaming.shop.events.enchant.CreateEnchantTypeEventHandler;
 import me.skorrloregaming.shop.events.item.CreateItemTypeEventHandler;
 import org.bukkit.Bukkit;
@@ -17,59 +18,66 @@ import java.lang.reflect.InvocationTargetException;
 
 public class LaShoppe {
 
-	public int getTotalItems() {
-		if (Server.getFactionsShoppeConfig().getData().contains("items")) {
-			return Server.getFactionsShoppeConfig().getData().getConfigurationSection("items").getKeys(false).size();
+	public int getTotalItems(ServerMinigame minigame) {
+		String prefix = minigame.toString().toLowerCase() + ".";
+		if (Server.getShoppeConfig().getData().contains(prefix + "items")) {
+			return Server.getShoppeConfig().getData().getConfigurationSection(prefix + "items").getKeys(false).size();
 		} else {
 			return 0;
 		}
 	}
 
-	public void createItem(Material material, int price, int amount, int data) {
+	public void createItem(ServerMinigame minigame, Material material, int price, int amount, int data) {
+		String prefix = minigame.toString().toLowerCase() + ".";
 		int index = 0;
 		while (true) {
 			index++;
-			if (!Server.getFactionsShoppeConfig().getData().contains("items." + index))
+			if (!Server.getShoppeConfig().getData().contains(prefix + "items." + index))
 				break;
 		}
-		Server.getFactionsShoppeConfig().getData().set("items." + index + ".material", material.toString());
-		Server.getFactionsShoppeConfig().getData().set("items." + index + ".price", price);
-		Server.getFactionsShoppeConfig().getData().set("items." + index + ".amount", amount);
-		Server.getFactionsShoppeConfig().getData().set("items." + index + ".data", data);
-		Server.getFactionsShoppeConfig().saveData();
+		Server.getShoppeConfig().getData().set(prefix + "items." + index + ".material", material.toString());
+		Server.getShoppeConfig().getData().set(prefix + "items." + index + ".price", price);
+		Server.getShoppeConfig().getData().set(prefix + "items." + index + ".amount", amount);
+		Server.getShoppeConfig().getData().set(prefix + "items." + index + ".data", data);
+		Server.getShoppeConfig().saveData();
 	}
 
-	public void createEnchant(Enchantment enchantment, int price, int tier) {
+	public void createEnchant(ServerMinigame minigame, Enchantment enchantment, int price, int tier) {
+		String prefix = minigame.toString().toLowerCase() + ".";
 		int index = 0;
 		while (true) {
 			index++;
-			if (!Server.getFactionsShoppeConfig().getData().contains("enchant." + index))
+			if (!Server.getShoppeConfig().getData().contains(prefix + "enchant." + index))
 				break;
 		}
-		Server.getFactionsShoppeConfig().getData().set("enchant." + index + ".enchant", enchantment.getName());
-		Server.getFactionsShoppeConfig().getData().set("enchant." + index + ".price", price);
-		Server.getFactionsShoppeConfig().getData().set("enchant." + index + ".tier", tier);
-		Server.getFactionsShoppeConfig().saveData();
+		Server.getShoppeConfig().getData().set(prefix + "enchant." + index + ".enchant", enchantment.getName());
+		Server.getShoppeConfig().getData().set(prefix + "enchant." + index + ".price", price);
+		Server.getShoppeConfig().getData().set(prefix + "enchant." + index + ".tier", tier);
+		Server.getShoppeConfig().saveData();
 	}
 
-	public LaShoppeItem retrieveItem(int index) {
-		String materialString = Server.getFactionsShoppeConfig().getData().getString("items." + index + ".material");
+	public LaShoppeItem retrieveItem(ServerMinigame minigame, int index) {
+		String prefix = minigame.toString().toLowerCase() + ".";
+		String materialString = Server.getShoppeConfig().getData().getString(prefix + "items." + index + ".material");
 		Material material = Material.getMaterial(materialString);
-		int price = Server.getFactionsShoppeConfig().getData().getInt("items." + index + ".price");
-		int amount = Server.getFactionsShoppeConfig().getData().getInt("items." + index + ".amount");
-		int data = Server.getFactionsShoppeConfig().getData().getInt("items." + index + ".data");
+		int price = Server.getShoppeConfig().getData().getInt(prefix + "items." + index + ".price");
+		int amount = Server.getShoppeConfig().getData().getInt(prefix + "items." + index + ".amount");
+		int data = Server.getShoppeConfig().getData().getInt(prefix + "items." + index + ".data");
 		return new LaShoppeItem(material, price, amount, data, index);
 	}
 
-	public LaShoppeEnchant retrieveEnchant(int index) {
-		String enchantString = Server.getFactionsShoppeConfig().getData().getString("enchant." + index + ".enchant");
+	public LaShoppeEnchant retrieveEnchant(ServerMinigame minigame, int index) {
+		String prefix = minigame.toString().toLowerCase() + ".";
+		String enchantString = Server.getShoppeConfig().getData().getString(prefix + "enchant." + index + ".enchant");
 		Enchantment enchantment = Enchantment.getByName(enchantString);
-		int price = Server.getFactionsShoppeConfig().getData().getInt("enchant." + index + ".price");
-		int tier = Server.getFactionsShoppeConfig().getData().getInt("enchant." + index + ".tier");
+		int price = Server.getShoppeConfig().getData().getInt(prefix + "enchant." + index + ".price");
+		int tier = Server.getShoppeConfig().getData().getInt(prefix + "enchant." + index + ".tier");
 		return new LaShoppeEnchant(enchantment, price, tier, index);
 	}
 
 	public void createInventory(Player player, LaShoppeFrame frame, int page, boolean removeMode) {
+		ServerMinigame minigame = $.getCurrentMinigame(player);
+		String prefix = minigame.toString().toLowerCase() + ".";
 		switch (frame) {
 			case HOME:
 				int startIndex = 0;
@@ -106,12 +114,12 @@ public class LaShoppe {
 					int slot = (horizontal + 1) + (9 * (line - 1));
 					if (startIndex + slot < inventory.getSize()) {
 						int index = ((page - 1) * 21) + i + 1;
-						if (Server.getFactionsShoppeConfig().getData().contains("items." + index))
-							inventory.setItem(startIndex + slot, retrieveItem(index).toItemStack());
-						if (index > getTotalItems()) {
-							int enchantIndex = index - getTotalItems();
-							if (Server.getFactionsShoppeConfig().getData().contains("enchant." + enchantIndex))
-								inventory.setItem(startIndex + slot, retrieveEnchant(enchantIndex).toItemStack());
+						if (Server.getShoppeConfig().getData().contains(prefix + "items." + index))
+							inventory.setItem(startIndex + slot, retrieveItem(minigame, index).toItemStack());
+						if (index > getTotalItems(minigame)) {
+							int enchantIndex = index - getTotalItems(minigame);
+							if (Server.getShoppeConfig().getData().contains(prefix + "enchant." + enchantIndex))
+								inventory.setItem(startIndex + slot, retrieveEnchant(minigame, enchantIndex).toItemStack());
 						}
 					}
 				}

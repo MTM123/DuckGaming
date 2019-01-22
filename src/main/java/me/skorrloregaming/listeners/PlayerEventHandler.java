@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentMap;
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
-import me.skorrloregaming.commands.BanCmd;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.shop.LaShoppeEnchant;
 import me.skorrloregaming.shop.LaShoppeFrame;
@@ -1111,6 +1110,14 @@ public class PlayerEventHandler implements Listener {
 				altAddress = Server.getPlugin().getConfig().getString(path + ".ip");
 			}
 		}
+		String playerName = event.getName();
+		int timeSinceLastLogin = Server.getTimeSinceLastLogin().getOrDefault(playerName, 0);
+		int diff = ((int) (System.currentTimeMillis() / 1000)) - timeSinceLastLogin;
+		if (diff < 15) {
+			event.disallow(Result.KICK_OTHER, "You are logging in too fast, please try again in " + (15 - diff) + " seconds.");
+			return;
+		}
+		Server.getTimeSinceLastLogin().put(playerName, (int) (System.currentTimeMillis() / 1000));
 		int uuidHash = UUID.nameUUIDFromBytes(address.replace(".", "-").getBytes()).hashCode();
 		System.out.println("Checking banned signature (" + address + ") ...");
 		boolean proxyAddress = false;
@@ -1154,25 +1161,9 @@ public class PlayerEventHandler implements Listener {
 		}
 	}
 
-	public List<UUID> bannedBots = new ArrayList<UUID>();
-
 	@EventHandler
 	public void onPlayerPreJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if (event.getPlayer().getName().length() == 12) {
-			if (!CraftGo.Player.getOnlineMode(event.getPlayer())) {
-				long diff = System.currentTimeMillis() - lastSuspiciousConnectionTimestamp;
-				if (diff < 2000) {
-					String message = "Bot attacks are strictly prohibited on this server";
-					bannedBots.add(player.getUniqueId());
-					player.kickPlayer(message);
-					BanCmd.ban(player.getAddress().getAddress().getHostName(), message);
-					lastSuspiciousConnectionTimestamp = System.currentTimeMillis();
-					return;
-				}
-				lastSuspiciousConnectionTimestamp = System.currentTimeMillis();
-			}
-		}
 		for (NpcPlayer npc : Server.getNpcPlayers())
 			CraftGo.Packet.PlayerInfo.spawnNpc(player, npc.getWorld(), npc.getLocation(), npc.getName());
 		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
@@ -1683,27 +1674,20 @@ public class PlayerEventHandler implements Listener {
 		}
 		if (player.isInsideVehicle())
 			player.leaveVehicle();
-		if (!bannedBots.contains(player.getUniqueId())) {
-			Server.getDiscordBot().broadcast(
-					":heavy_minus_sign:" + ChatColor.stripColor(
-							event.getQuitMessage().replace(player.getName(), "**" + player.getName() + "**")
-					)
-					, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
-			);
-		}
+		Server.getDiscordBot().broadcast(
+				":heavy_minus_sign:" + ChatColor.stripColor(
+						event.getQuitMessage().replace(player.getName(), "**" + player.getName() + "**")
+				)
+				, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
+		);
 		if ($.isPluginEnabled("AuthMe")) {
 			if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString()) || !$.isAuthenticated(player)) {
 				if (!Server.getOnlineMode().getOrDefault(player.getUniqueId(), false)) {
-					if (bannedBots.contains(player.getUniqueId())) {
-						bannedBots.remove(player.getUniqueId());
-						event.setQuitMessage(null);
-					} else {
-						String message = $.italicGray + "Player " + player.getName() + " has left without registering for this server";
-						Bukkit.broadcastMessage(message);
-						Server.getDiscordBot().broadcast(
-								ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-								, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
-					}
+					String message = $.italicGray + "Player " + player.getName() + " has left without registering for this server";
+					Bukkit.broadcastMessage(message);
+					Server.getDiscordBot().broadcast(
+							ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+							, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 				}
 			}
 		}
@@ -1891,6 +1875,7 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
 		Player player = (Player) event.getWhoClicked();
+		ServerMinigame minigame = $.getCurrentMinigame(player);
 		String path = "config." + player.getUniqueId().toString();
 		event.setCancelled(Server.getPlaytimeManager().onInventoryClick(event));
 		if (!(event.getCurrentItem() == null) && event.getInventory().getName().startsWith(ChatColor.MAGIC + ""))
@@ -1936,8 +1921,9 @@ public class PlayerEventHandler implements Listener {
 				} else {
 					code = code.substring(code.indexOf(";") + 1);
 					int index = Integer.parseInt(code);
-					if (Server.getFactionsShoppeConfig().getData().contains("items." + index)) {
-						LaShoppeItem item = Server.getShoppe().retrieveItem(index);
+					String prefix = minigame.toString().toLowerCase() + ".";
+					if (Server.getShoppeConfig().getData().contains(prefix + "items." + index)) {
+						LaShoppeItem item = Server.getShoppe().retrieveItem(minigame, index);
 						material = item.getMaterial();
 						amount = event.getCurrentItem().getAmount();
 						data = item.getData();
@@ -1988,13 +1974,14 @@ public class PlayerEventHandler implements Listener {
 							String indexIndexString = event.getCurrentItem().getItemMeta().getLore().get(0);
 							String indexString = indexIndexString.substring(indexIndexString.indexOf("Index: ") + 7);
 							int index = Integer.parseInt(indexString);
-							LaShoppeEnchant enchant = Server.getShoppe().retrieveEnchant(index);
+							LaShoppeEnchant enchant = Server.getShoppe().retrieveEnchant(minigame, index);
 							int price = enchant.getPrice();
 							int tier = enchant.getTier();
 							if (removeMode) {
 								if (player.isOp()) {
-									Server.getFactionsShoppeConfig().getData().set("enchant." + index, null);
-									Server.getFactionsShoppeConfig().saveData();
+									String prefix = minigame.toString().toLowerCase() + ".";
+									Server.getShoppeConfig().getData().set(prefix + "enchant." + index, null);
+									Server.getShoppeConfig().saveData();
 									final boolean fRemoveMode = removeMode;
 									Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 										@Override
@@ -2004,7 +1991,7 @@ public class PlayerEventHandler implements Listener {
 									}, 1L);
 								}
 							}
-							if (event.isRightClick() || event.isShiftClick()) {
+							if (event.isRightClick()) {
 								try {
 									DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 									String materialName = $.formatMaterial(event.getCurrentItem().getType());
@@ -2058,8 +2045,9 @@ public class PlayerEventHandler implements Listener {
 							int data = Integer.parseInt(dataString);
 							if (removeMode) {
 								if (player.isOp()) {
-									Server.getFactionsShoppeConfig().getData().set("items." + index, null);
-									Server.getFactionsShoppeConfig().saveData();
+									String prefix = minigame.toString().toLowerCase() + ".";
+									Server.getShoppeConfig().getData().set(prefix + "items." + index, null);
+									Server.getShoppeConfig().saveData();
 									final boolean fRemoveMode = removeMode;
 									Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 										@Override
@@ -2432,6 +2420,7 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
 		Player player = (Player) event.getPlayer();
+		ServerMinigame minigame = $.getCurrentMinigame(player);
 		if (event.getInventory().getType() == InventoryType.ENCHANTING) {
 			EnchantingInventory inventory = (EnchantingInventory) event.getInventory();
 			inventory.setItem(1, $.createMaterial(Material.AIR));
@@ -2472,8 +2461,9 @@ public class PlayerEventHandler implements Listener {
 			} else {
 				code = code.substring(code.indexOf(";") + 1);
 				int index = Integer.parseInt(code);
-				if (Server.getFactionsShoppeConfig().getData().contains("items." + index)) {
-					LaShoppeItem item = Server.getShoppe().retrieveItem(index);
+				String prefix = minigame.toString().toLowerCase() + ".";
+				if (Server.getShoppeConfig().getData().contains(prefix + "items." + index)) {
+					LaShoppeItem item = Server.getShoppe().retrieveItem(minigame,index);
 					material = item.getMaterial();
 					price = item.getPrice();
 					amount = item.getAmount();
