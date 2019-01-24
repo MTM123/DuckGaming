@@ -16,6 +16,7 @@ import me.skorrloregaming.commands.*;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
 import me.skorrloregaming.auction.Auctioneer;
+import me.skorrloregaming.mysql.SQLDatabase;
 import me.skorrloregaming.shop.LaShoppe;
 import me.skorrloregaming.impl.*;
 import org.apache.commons.io.FileUtils;
@@ -182,6 +183,7 @@ public class Server extends JavaPlugin implements Listener {
 	private static mcMMO_Listener mcmmoListener = null;
 
 	private static DiscordBot discordBot;
+	private static SQLDatabase sqlDatabase;
 
 	public static AuthMe_Listener getAuthListener() {
 		return authListener;
@@ -599,6 +601,10 @@ public class Server extends JavaPlugin implements Listener {
 		return discordBot;
 	}
 
+	public static SQLDatabase getSqlDatabase() {
+		return sqlDatabase;
+	}
+
 	@Override
 	public void onLoad() {
 		serverStartTime = System.currentTimeMillis();
@@ -671,8 +677,14 @@ public class Server extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
+		getConfig().options().copyDefaults(true);
+		saveConfig();
 		discordBot = new DiscordBot(getPluginName(), getConfig().getString("settings.discordBot.token", "TOKEN"));
 		discordBot.register();
+		String dbUsername = getConfig().getString("settings.database.username", "username");
+		String dbPassword = getConfig().getString("settings.database.password", "password");
+		sqlDatabase = new SQLDatabase("localhost", dbUsername, dbPassword);
+		sqlDatabase.testLogic();
 		lockette = new Lockette();
 		lockette.onEnable();
 		nuVotifier = new Votifier();
@@ -680,8 +692,6 @@ public class Server extends JavaPlugin implements Listener {
 		auctioneer = new Auctioneer();
 		shoppe = new LaShoppe();
 		garbageCollector = new GCandAutoDemotion();
-		getConfig().options().copyDefaults(true);
-		saveConfig();
 		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(new BlockEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new PlayerEventHandler(), this);
