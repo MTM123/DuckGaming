@@ -1,298 +1,67 @@
-main: me.skorrloregaming.Server
-name: SkorrloreGaming
-version: 2.3.6-SNAPSHOT
-author: "Speentie8081"
-depend: [WorldEdit, WorldGuard, ProtocolLib]
-softdepend: [AuthMe, ProtocolSupport, ProtocolSupportPocketStuff, mcMMO, Vault, ploader]
-loadbefore: [ChestShop, Factions]
-api-version: 1.13
+name: Q-S
+main: com.sg.qs.QuantumSurvival.QuantumSurvival
+version: 10.16.14
+description: Another Bukkit Plugin
 commands:
-    unsubscribe:
-        description: Unsubscribe from news header and auto broadcaster
-    verify:
-        description: Verify your minecraft account on discord
-    feed:
-        description: Instantly saturates your food level on factions
-        aliases: eat
-    fly:
-        description: Enable or disable faction flight in own territory
-    printblockstate:
-        description: Print the block state of the block your standing in
-        aliases: pbs
-    cireload:
-        description: Reload the ChatItem config.
-        aliases: [chatitemreload, citemreload, cir]
-        permission: chatitem.reload
-    lockette:
-        aliases: [lock]
-        description: Access to the Lockette plugin via commands.
-        usage: |
-            /<command> <line number> <text> - Edits signs on locked containers. Right click on the sign to edit.
-            /<command> fix - Fixes an automatic door that is in the wrong position. Look at the door to edit.
-            /<command> reload - Reloads the configuration files.  Operators only.
-            /<command> version - Reports Lockette version string.
-    ignore:
-        description: Ignore the specified player until the next server update
-        alaises: ig
-    logger:
-        description: Enable or disable in-game anticheat logging
-        aliases: logging
-    desync:
-        description: Unlink your alternative account from your primary account
-        aliases: [unsync, desync-account, desyncaccount, unsync-account, unsyncaccount, unsynca, desynca, delink, delink-account, delinka, unlinka, unlink, unlink-account]
-    sync:
-        description: Link your alternative account with your primary account
-        aliases: [sync-account, syncaccount, synca, link-account, linkaccount, link, linka]
-    spoof-vote:
-        description: Spoof a number of votes for the specified player
-        aliases: [spoofvote, sv]
-    buy:
-        description: Access the buycraft store
-        aliases: [store, purchase, donate]
-    playertime:
-        description: Set the time of day of your own player
-        aliases: ptime
-    sessions:
-        description: Views the stored sesssions for the specified player
-        aliases: session
-    transfer:
-        description: Force a transfer from an account to another account
-    transferaccept:
-        description: Accept a pending transfer for your account
-        aliases: [accepttransfer, tfaccept]
-    transferdeny:
-        description: Deny a pending transfer for your account
-        aliases: [denytransfer, tfdeny]
-    warnings:
-        description: Displays the amount of warnings a player has and if they are banned
-        aliases: warns
-    update-skin:
-        description: Attempts to update the skin without waiting until the skin expires
-        aliases: [updateskin, uskin, skinupdate]
-    spectate:
-        description: Spectate the specified player
-        aliases: s
-    discord:
-        description: Sends the url of our discord to the sender
-    playtime-report:
-        description: Gets the range of stored playtime information for a player
-        aliases: [playtime-report, ptreport, ptr]
-    address:
-        description: Displays the server ip address to the sender
-        aliases: ip
-    rollback:
-        description: Restore someone to their last player data save
-        aliases: restore
-    setsuffixrank:
-        description: About the same as set rank but with suffixes instead
-        aliases: setsuffix
-    center:
-        description: Center yourself in the block your standing on
-    marrychat:
-        description: Enter or leave marriage chat
-        aliases: [mchat, marryc, mc, weddingchat, wchat, weddingc, wc]
-    marry:
-        description: Run marriage related commands
-        aliases: wedding
-    divorce:
-        description: Break up with you married partner
-    modifications:
-        description: Link to our vanilla modifications wiki
-        aliases: mods
-    spawner:
-        description: Purchase a spawner containing a specific monster
-        aliases: spawners
-    staffchat:
-        description: Enter or leave the private staff chat
-        aliases: sc
-    vote:
-        description: View a list of available vote portals
-    effect:
-        description: Enable or disable effects for your account
-        aliases: [effects, particle, particles]
-    debug:
-        description: Enable or disable debugging of this plugin
-    website:
-        description: Link to our minecraft server website
-        aliases: [store, forums, forum, apply]
-    trails:
-        description: Select or purchase a trail to use
-        aliases: trail
-    clear:
-        description: On execution your inventory will be cleared
-        aliases: [clearinventory, clearinv, ci]
-    upgrade-kit:
-        description: Upgrade the Starter kit to something even better
-        aliases: [kit-upgrade, kit-upgrades, upgrades, upgrade]
-    spawn-npc:
-        description: Spawn a custom npc at your location
-        aliases: [spawnnpc, snpc, npc]
-    remove-npc:
-        description: Unregister a custom npc from the server
-        aliases: [removenpc, rm-npc, rmnpc]
-    autologin:
-        description: Toggle the autologin feature for your account
-        aliases: autolog
-    reset:
-        description: Unregister a defined player from the server
-    skull:
-        description: Give yourself a skull based on player name
-        aliases: head
-    playtime:
-        description: Retrieves the play time for a given player
-        aliases: pt
-    who:
-        description: Retrieves information about a given player
-        aliases: whois
-    list:
-        description: Lists the currently connected players
-    build-time:
-        description: Get compilation time of this plugin
-    moderate:
-        description: Toggle the administrative moderation mode
-        aliases: mod
-    rules:
-        description: View the servers' defined rules
-    motd:
-        description: Temporarily change the MOTD for the server
-    wild:
-        description: Teleport yourself randomly in the wild
-        aliases: rtp
-    give:
-        description: A modified version of the vanilla command
-        aliases: [giveme, i]
-    rename:
-        description: Rename the held item to specified
-        aliases: rn
-    opme:
-        description: Op yourself for around one minute
-    vanish:
-        description: Hide yourself from other players
-        aliases: v
-    workbench:
-        description: Your virtual crafting table
-        aliases: [wb, craft]
-    dispose:
-        description: Trash your most useless items
-        aliases: trash
-    sign-edit:
-        description: Edit specific lines on a sign
-    chest:
-        description: View someone's personal inventory
-        aliases: [pv, echest, enderchest, ec]
-    inventorysee:
-        description: View someone's legacy inventory
-        aliases: invsee
-    ping:
-        description: Find your connection latency
-        aliases: latency
-    mute:
-        description: Mute the specified player
-    warning:
-        description: Warn a specific player (max of 3)
-        aliases: warn
-    kick:
-        description: Kicks the specified player
-    ban:
-        description: Bans the specified player
-        aliases: ban-ip
-    pardon:
-        description: Unbans the specified player
-    clearchat:
-        description: Clear the server chat
-        aliases: cc
-    reboot:
-        description: Server restart command
-    say:
-        description: Customized broadcast system
-    activate-shop:
-        description: Gives staff the activation wand
-    reload-cfg:
-        description: Reloads the configuration file
-    kitpvp:
-        description: Teleport to the kitpvp server
-    skyfight:
-        description: Teleport to the skyfight server
-    creative:
-        description: Teleport to the creative server
-    factions:
-        description: Teleport to the factions server
-    hub:
-        description: Teleport to the hub server
-        aliases: lobby
-    home:
-        description: Teleport to your defined home
-    sethome:
-        description: Locally set your home location
-    delhome:
-        description: Remove your home from the server
-    tpa:
-        description: Teleport to anyone you want
-    tpaccept:
-        description: Accept a pending teleportation request
-        aliases: tpyes
-    shop:
-        description: Teleport to the factions-shop server
-    setzone:
-        description: Declare a zone in memory
-    warp:
-        description: Teleport to a declared zone
-    setrank:
-        description: Change someones rank
-    disable-plugin:
-        description: Disable a plugin on the server
-    enable-plugin:
-        description: Enable a plugin on the server
-    servers:
-        description: Retrieves a list of the valid servers
-    server:
-        description: Teleport to the specified server
-    reply:
-        description: Message the person you last messaged
-        aliases: r
-    tell:
-        description: Message a player on the server
-        aliases: [msg, message, w, pm]
-    statistics:
-        description: View the stats for the current minigame
-        aliases: stats
-    spawn:
-        description: Teleport to the spawn for the current minigame
-    kit:
-        description: Pull the kit you want down from memory
-    kits:
-        description: View the kits for the current minigame
-    balancetop:
-        description: View the ranking of currency on given server
-        aliases: baltop
-    balance:
-        description: View the balance you have in your account
-        aliases: [bal, money, currency]
-    pay:
-        description: Pay someone the specified amount of cash
-    suicide:
-        description: Pretty much /kill but integrated with the server
-        aliases: kill
-permissions:
-    lockette.user.create.chest:
-        default: true
-    lockette.user.create.furnace:
-        default: true
-    lockette.user.create.dispenser:
-        default: true
-    lockette.user.create.dropper:
-        default: true
-    lockette.user.create.brewingstand:
-        default: true
-    lockette.user.create.custom:
-        default: true
-    lockette.user.create.trapdoor:
-        default: true
-    lockette.user.create.door:
-        default: true
-    chatitem.use:
-        description: Allows your messages to be parsed by the plugin
-        default: true
-    chatitem.ignore-cooldown:
-        description: Allows you to ignore cooldowns (if enabled)
-        default: true
+  qgive:
+     description: Base plugin command.
+  qenchant:
+     description: Base plugin command.
+  qhat:
+     description: Base plugin command.
+  qgod:
+     description: Base plugin command.
+  qmute:
+     description: Base plugin command.
+  qvanish:
+     description: Base plugin command.
+  qnick:
+     description: Base plugin command.
+  qsetmotd:
+     description: Base plugin command.
+  qban:
+     description: Base plugin command.
+  qkick:
+     description: Base plugin command.
+  qdeop:
+     description: Base plugin command.
+  qop:
+     description: Base plugin command.
+  qheal:
+     description: Base plugin command.
+  qgm:
+     description: Base plugin command.
+  qfeed:
+     description: Base plugin command.
+  qxp:
+     description: Base plugin command.
+  qclear:
+     description: Base plugin command.
+  qkill:
+     description: Base plugin command.
+  qrepair:
+     description: Base plugin command.
+  qpinfo:
+     description: Base plugin command.
+  qsmite:
+     description: Base plugin command.
+  qbroadcast:
+     description: Base plugin command.
+  qsuicide:
+     description: Base plugin command.
+  qhelp:
+     description: Base plugin command.
+  qclearchat:
+     description: Base plugin command.
+  qfakejoin:
+     description: Base plugin command.
+  qfakeleave:
+     description: Base plugin command.
+  qfly:
+     description: Base plugin command.
+  qsetspawn:
+     description: Base plugin command.
+  qspawn:
+     description: Base plugin command.
+  qreload:
+     description: Base plugin command.
