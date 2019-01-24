@@ -1,27 +1,34 @@
+/*
+ * Decompiled with CFR 0_129.
+ */
 package me.skorrloregaming;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Directory;
+import me.skorrloregaming.Go;
+import me.skorrloregaming.Logger;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.ServerMinigame;
+import me.skorrloregaming.impl.extreme.ExtremeSwear;
+import me.skorrloregaming.impl.extreme.ExtremeSwearData;
+import mkremins.fanciful.FancyMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
-import org.bukkit.World.Environment;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -29,100 +36,118 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import me.skorrloregaming.impl.LastLocation;
-import me.skorrloregaming.impl.ServerMinigame;
-
-public class AntiCheat implements Listener {
-
+public class AntiCheat
+		implements Listener {
+	public Plugin plugin;
 	public AntiAfk antiafk;
-	public ArrayList<UUID> shootDelay = new ArrayList<>();
-	public ArrayList<UUID> attackDelay = new ArrayList<>();
-	public ArrayList<String> swearWords = new ArrayList<String>();
-	public ConcurrentHashMap<UUID, Location> lastPlayerLocation = new ConcurrentHashMap<>();
-	public ConcurrentHashMap<UUID, Integer> ignoredPlayers = new ConcurrentHashMap<>();
-	public ArrayList<ServerMinigame> flightCheckDisabledMinigames = new ArrayList<>();
-	public ArrayList<ServerMinigame> speedCheckDisabledMinigames = new ArrayList<>();
-	public ArrayList<ServerMinigame> fastbowCheckDisabledMinigames = new ArrayList<>();
-	public ArrayList<ServerMinigame> rangeCheckDisabledMinigames = new ArrayList<>();
-	public final long shootDelayTime = 3;
+	public ExtremeSwearData swearData;
+	public ArrayList<UUID> shootDelay = new ArrayList();
+	public ArrayList<UUID> attackDelay = new ArrayList();
+	public ArrayList<String> swearWords = new ArrayList();
+	public ConcurrentHashMap<UUID, Location> lastPlayerLocation = new ConcurrentHashMap();
+	public ConcurrentHashMap<UUID, Integer> ignoredPlayers = new ConcurrentHashMap();
+	public ArrayList<ServerMinigame> flightCheckDisabledMinigames = new ArrayList();
+	public ArrayList<ServerMinigame> speedCheckDisabledMinigames = new ArrayList();
+	public ArrayList<ServerMinigame> fastbowCheckDisabledMinigames = new ArrayList();
+	public ArrayList<ServerMinigame> rangeCheckDisabledMinigames = new ArrayList();
+	public final long shootDelayTime = 3L;
 	public final int messagesPerSecondBeforeWarning = 2;
 	public final int messagesPerSecondBeforeKick = 3;
-	public final double maxAttackRange = 4.75;
-	public final double maxDistanceMoved = 0.84;
-	public final double maxDistanceMovedFloor = 0.48;
+	public final double maxAttackRange = 4.5;
+	public final double maxDistanceMoved = 0.8;
+	public final double maxDistanceMovedFloor = 0.44;
 	public final double maxVerticalBlockChange = -0.8;
 	public final double lackWeaponDamage = 0.2;
 	public final double withWeaponDamageMultiplierEntity = 1.5;
-	public final double withWeaponDamageMultiplierPlayer = 1;
+	public final double withWeaponDamageMultiplierPlayer = 1.0;
+
+	public AntiCheat(Plugin plugin) {
+		this.plugin = plugin;
+	}
 
 	public void register() {
-		Bukkit.getPluginManager().registerEvents(this, Server.getPlugin());
-		antiafk = new AntiAfk();
-		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), antiafk, 600L, 600L);
-		swearWords.add("fuck");
-		swearWords.add("nigga");
-		swearWords.add("nigger");
-		swearWords.add("bitch");
-		swearWords.add("dick");
-		swearWords.add("cunt");
-		swearWords.add("crap");
-		swearWords.add("shit");
-		swearWords.add("whore");
-		swearWords.add("twat");
-		swearWords.add("arse");
-		swearWords.add("ass");
-		swearWords.add("horny");
-		swearWords.add("aroused");
-		swearWords.add("hentai");
-		swearWords.add("slut");
-		swearWords.add("slag");
-		swearWords.add("boob");
-		swearWords.add("pussy");
-		swearWords.add("vagina");
-		swearWords.add("faggot");
-		swearWords.add("bugger");
-		swearWords.add("bastard");
-		swearWords.add("anal");
-		swearWords.add("wanker");
-		swearWords.add("rape");
-		swearWords.add("rapist");
-		swearWords.add("cock");
-		swearWords.add("titt");
-		swearWords.add("piss");
-		swearWords.add("spunk");
-		swearWords.add("milf");
-		swearWords.add("anus");
-		swearWords.add("dafuq");
-		swearWords.add("damn");
+		Bukkit.getPluginManager().registerEvents((Listener) this, Server.plugin);
+		Bukkit.getScheduler().runTaskTimer(Server.plugin, new Runnable() {
+
+			@Override
+			public void run() {
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					if (AntiCheat.this.getDistanceFromGround((Entity) player) > 2 && AntiCheat.this.lastPlayerLocation.containsKey(player.getUniqueId())) {
+						int type;
+						Location historicalLocation = AntiCheat.this.lastPlayerLocation.get(player.getUniqueId());
+						if (!(!player.getWorld().getName().equals(historicalLocation.getWorld().getName()) || player.getLocation().distance(historicalLocation) != 0.0 || AntiCheat.this.isEntityNearGround((Entity) player) || player.getGameMode() == GameMode.CREATIVE || player.isFlying() || player.isOp() || (type = player.getWorld().getBlockTypeIdAt(player.getLocation())) == 65 || type == 106 || type == 8 || type == 9 || type == 10 || type == 11 || AntiCheat.this.flightCheckDisabledMinigames.contains( Go.getCurrentMinigame(player)) || AntiCheat.this.ignoredPlayers.containsKey(player.getUniqueId()))) {
+							player.kickPlayer("Hovering is not allowed on this server.");
+							AntiCheat.log(player, String.valueOf(player.getName()) + " has been kicked for hovering too long ( > 2 seconds )");
+						}
+					}
+					AntiCheat.this.lastPlayerLocation.put(player.getUniqueId(), player.getLocation());
+				}
+			}
+		}, 20L, 20L);
+		this.antiafk = new AntiAfk(this.plugin);
+		this.swearData = new ExtremeSwearData();
+		Bukkit.getScheduler().runTaskTimer(this.plugin, (Runnable) this.antiafk, 300L, 300L);
+		this.swearWords.add("fuck");
+		this.swearWords.add("nigga");
+		this.swearWords.add("nigger");
+		this.swearWords.add("bitch");
+		this.swearWords.add("dick");
+		this.swearWords.add("cunt");
+		this.swearWords.add("crap");
+		this.swearWords.add("shit");
+		this.swearWords.add("whore");
+		this.swearWords.add("twat");
+		this.swearWords.add("arse");
+		this.swearWords.add("ass");
+		this.swearWords.add("horny");
+		this.swearWords.add("aroused");
+		this.swearWords.add("hentai");
+		this.swearWords.add("slut");
+		this.swearWords.add("slag");
+		this.swearWords.add("boob");
+		this.swearWords.add("pussy");
+		this.swearWords.add("vagina");
+		this.swearWords.add("faggot");
+		this.swearWords.add("bugger");
+		this.swearWords.add("bastard");
+		this.swearWords.add("anal");
+		this.swearWords.add("wanker");
+		this.swearWords.add("rape");
+		this.swearWords.add("rapist");
+		this.swearWords.add("cock");
+		this.swearWords.add("titt");
+		this.swearWords.add("piss");
+		this.swearWords.add("spunk");
+		this.swearWords.add("milf");
+		this.swearWords.add("anus");
+		this.swearWords.add("dafuq");
+		for (String string : this.swearWords) {
+			this.swearData.fill(string);
+		}
 	}
 
 	public boolean isEntityNearGround(Entity entity) {
-		Material air = Material.AIR;
-		Material middleCenter = entity.getWorld().getBlockAt(entity.getLocation().clone().subtract(0, 1, 0)).getType();
-		Material innerCircle = entity.getWorld().getBlockAt(entity.getLocation().clone().subtract(1, 1, 0)).getType();
-		Material outerBlocks = entity.getWorld().getBlockAt(entity.getLocation().clone().subtract(1, 1, 1)).getType();
+		int middleCenter = entity.getWorld().getBlockTypeIdAt(entity.getLocation().clone().subtract(0.0, 1.0, 0.0));
+		int innerCircle = entity.getWorld().getBlockTypeIdAt(entity.getLocation().clone().subtract(1.0, 1.0, 0.0));
+		int outerBlocks = entity.getWorld().getBlockTypeIdAt(entity.getLocation().clone().subtract(1.0, 1.0, 1.0));
 		boolean succeededInnerCircle = false;
-		if (entity.getWorld().getBlockAt(entity.getLocation().clone().subtract(0, 1, 1)).getType() == innerCircle) {
-			if (entity.getWorld().getBlockAt(entity.getLocation().clone().subtract(-1, 1, 0)).getType() == innerCircle) {
-				if (entity.getWorld().getBlockAt(entity.getLocation().clone().subtract(0, 1, -1)).getType() == innerCircle) {
-					succeededInnerCircle = true;
-				}
-			}
+		if (entity.getWorld().getBlockTypeIdAt(entity.getLocation().clone().subtract(0.0, 1.0, 1.0)) == innerCircle && entity.getWorld().getBlockTypeIdAt(entity.getLocation().clone().subtract(-1.0, 1.0, 0.0)) == innerCircle && entity.getWorld().getBlockTypeIdAt(entity.getLocation().clone().subtract(0.0, 1.0, -1.0)) == innerCircle) {
+			succeededInnerCircle = true;
 		}
 		boolean succeededOuterBlocks = false;
-		if (entity.getWorld().getBlockAt(entity.getLocation().clone().subtract(1, 1, -1)).getType() == outerBlocks) {
-			if (entity.getWorld().getBlockAt(entity.getLocation().clone().subtract(-1, 1, -1)).getType() == outerBlocks) {
-				if (entity.getWorld().getBlockAt(entity.getLocation().clone().subtract(-1, 1, 1)).getType() == outerBlocks) {
-					succeededOuterBlocks = true;
-				}
-			}
+		if (entity.getWorld().getBlockTypeIdAt(entity.getLocation().clone().subtract(1.0, 1.0, -1.0)) == outerBlocks && entity.getWorld().getBlockTypeIdAt(entity.getLocation().clone().subtract(-1.0, 1.0, -1.0)) == outerBlocks && entity.getWorld().getBlockTypeIdAt(entity.getLocation().clone().subtract(-1.0, 1.0, 1.0)) == outerBlocks) {
+			succeededOuterBlocks = true;
 		}
-		if (succeededOuterBlocks && succeededInnerCircle && innerCircle == air && outerBlocks == air && middleCenter == air)
+		if (succeededOuterBlocks && succeededInnerCircle && innerCircle == 0 && outerBlocks == 0 && middleCenter == 0) {
 			return false;
+		}
 		return true;
 	}
 
@@ -130,35 +155,36 @@ public class AntiCheat implements Listener {
 		Location loc = entity.getLocation().clone();
 		double y = loc.getBlockY();
 		int distance = 0;
-		for (double i = y; i >= 0; i--) {
+		double i = y;
+		while (i >= 0.0) {
 			loc.setY(i);
-			if (!(loc.getWorld().getBlockAt(loc).getType() == Material.AIR))
-				break;
-			distance++;
+			if (loc.getWorld().getBlockTypeIdAt(loc) > 0) break;
+			++distance;
+			i -= 1.0;
 		}
 		return distance;
 	}
 
-	public boolean disableFor(Player player, long time) {
+	public boolean disableFor(final Player player, long time) {
 		try {
-			long delay = (long) (20 * Math.floor(time / 1000));
+			long delay = (long) (20.0 * Math.floor(time / 1000L));
 			int previousTaskID = 0;
-			if (ignoredPlayers.containsKey(player.getUniqueId())) {
-				previousTaskID = ignoredPlayers.get(player.getUniqueId());
+			if (this.ignoredPlayers.containsKey(player.getUniqueId())) {
+				previousTaskID = this.ignoredPlayers.get(player.getUniqueId());
 			}
 			if (previousTaskID > 0) {
 				Bukkit.getScheduler().cancelTask(previousTaskID);
 			}
 			BukkitRunnable run = new BukkitRunnable() {
-				@Override
+
 				public void run() {
-					if (!ignoredPlayers.contains(player.getUniqueId())) {
-						ignoredPlayers.remove(player.getUniqueId());
+					if (!AntiCheat.this.ignoredPlayers.contains(player.getUniqueId())) {
+						AntiCheat.this.ignoredPlayers.remove(player.getUniqueId());
 					}
 				}
 			};
-			run.runTaskLater(Server.getPlugin(), delay);
-			ignoredPlayers.put(player.getUniqueId(), run.getTaskId());
+			run.runTaskLater(this.plugin, delay);
+			this.ignoredPlayers.put(player.getUniqueId(), run.getTaskId());
 			return true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -167,57 +193,29 @@ public class AntiCheat implements Listener {
 	}
 
 	public void handleVelocity(Player player, Vector velo) {
-		handleVelocity(player, velo, false);
+		this.handleVelocity(player, velo, false);
 	}
 
 	public void handleVelocity(Player player, Vector velo, boolean direct) {
-		if (!direct)
-			disableFor(player, 2000);
+		if (!direct) {
+			this.disableFor(player, 2000L);
+		}
 		player.setVelocity(velo);
 	}
 
-	public static class LimiterArgs {
-		public String lastMsg = "";
-		public int hits = 0;
-		public int lastPeriod = 0;
-	}
-
-	public static HashMap<Player, LimiterArgs> consoleLimiterArgs = new HashMap<Player, LimiterArgs>();
-
 	public static void log(Player detected, String msg, boolean permissionOnly, boolean consoleOnly) {
-		boolean eventCancelled = false;
-		LimiterArgs args = consoleLimiterArgs.getOrDefault(detected, new LimiterArgs());
-		int currentPeriod = (int) (System.currentTimeMillis() / 1000);
-		if (currentPeriod / 3 != args.lastPeriod) {
-			args.lastPeriod = currentPeriod / 3;
-			args.lastMsg = "";
-			args.hits = 0;
-		} else if (msg.equals(args.lastMsg)) {
-			args.hits++;
-			consoleLimiterArgs.put(detected, args);
-			return;
-		} else {
-			args.lastMsg = msg;
-		}
-		consoleLimiterArgs.put(detected, args);
-		if (eventCancelled)
-			return;
 		try {
 			String tag = "SimpleAC: ";
-			Logger.info(tag + msg, true);
-			if (!consoleOnly && Server.getIngameAnticheatDebug()) {
-				TextComponent message = new TextComponent(tag + msg);
-				message.setColor(ChatColor.ITALIC);
-				message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/who " + detected.getName()));
-				message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("/who " + detected.getName()).create()));
-				String igMessage = ComponentSerializer.toString(message);
+			Logger.warning(String.valueOf(tag) + msg);
+			if (!consoleOnly) {
+				String igMessage = new FancyMessage(String.valueOf(tag) + msg).style(ChatColor.ITALIC).suggest("/who " + detected.getName()).tooltip("/who " + detected.getName()).toJSONString();
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					int rankID = -1;
-					if (!permissionOnly)
-						rankID = $.getRankId(player);
-					if (player.isOp() || rankID > -1) {
-						CraftGo.Player.sendJson(player, igMessage);
+					if (!permissionOnly) {
+						rankID = Go.getRankId(player, Server.plugin);
 					}
+					if (!player.hasPermission("skorrloregaming.events.chatlisten") && rankID <= -1) continue;
+					CraftGo.Player.sendJson(player, igMessage);
 				}
 			}
 		} catch (Exception ex) {
@@ -226,97 +224,113 @@ public class AntiCheat implements Listener {
 	}
 
 	public static void log(Player detected, String msg) {
-		log(detected, msg, false, false);
+		AntiCheat.log(detected, msg, false, false);
 	}
 
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		if (event.isCancelled())
+		if (event.isCancelled()) {
 			return;
+		}
 		Player player = event.getPlayer();
-		if (Server.getPluginDebug())
-			log(player, player.getName() + " has triggered PlayerTeleportEvent", true, true);
-		disableFor(player, 5000);
+		if (Server.pluginDebug) {
+			AntiCheat.log(player, String.valueOf(player.getName()) + " has triggered PlayerTeleportEvent", true, true);
+		}
+		this.disableFor(player, 5000L);
 	}
 
 	@EventHandler
 	public void onArrowShoot(ProjectileLaunchEvent event) {
-		if (event.isCancelled())
+		if (event.isCancelled()) {
 			return;
+		}
 		if (event.getEntity().getShooter() instanceof Player) {
-			Player player = (Player) event.getEntity().getShooter();
-			if (Server.getPluginDebug())
-				log(player, player.getName() + " has triggered ProjectileLaunchEvent", true, true);
+			final Player player = (Player) event.getEntity().getShooter();
+			if (Server.pluginDebug) {
+				AntiCheat.log(player, String.valueOf(player.getName()) + " has triggered ProjectileLaunchEvent", true, true);
+			}
 			if (player.isOp()) {
-				if (Server.getPluginDebug())
-					log(player, player.getName() + " is currently opped; Terminating ProjectileLaunchEvent", true, true);
+				if (Server.pluginDebug) {
+					AntiCheat.log(player, String.valueOf(player.getName()) + " is currently opped; Terminating ProjectileLaunchEvent", true, true);
+				}
 				return;
 			}
-			if (fastbowCheckDisabledMinigames.contains($.getCurrentMinigame(player)))
-				return;
-			if (ignoredPlayers.containsKey(player.getUniqueId())) {
-				if (Server.getPluginDebug())
-					log(player, player.getName() + " is currently ignored; Terminating ProjectileLaunchEvent", true, true);
+			if (this.fastbowCheckDisabledMinigames.contains( Go.getCurrentMinigame(player))) {
 				return;
 			}
-			if (shootDelay.contains(player.getUniqueId())) {
+			if (this.ignoredPlayers.containsKey(player.getUniqueId())) {
+				if (Server.pluginDebug) {
+					AntiCheat.log(player, String.valueOf(player.getName()) + " is currently ignored; Terminating ProjectileLaunchEvent", true, true);
+				}
+				return;
+			}
+			if (this.shootDelay.contains(player.getUniqueId())) {
 				event.setCancelled(true);
-				log(player, player.getName() + " launched projectiles faster then normal ( > 1 in " + shootDelayTime + " ticks )");
+				AntiCheat.log(player, String.valueOf(player.getName()) + " launched projectiles faster then normal ( > 1 in " + 3L + " ticks )");
 			} else {
-				shootDelay.add(player.getUniqueId());
-				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+				this.shootDelay.add(player.getUniqueId());
+				Bukkit.getScheduler().runTaskLater(Server.plugin, new Runnable() {
+
 					@Override
 					public void run() {
-						shootDelay.remove(player.getUniqueId());
+						AntiCheat.this.shootDelay.remove(player.getUniqueId());
 					}
-				}, shootDelayTime);
+				}, 3L);
 			}
 		}
 	}
 
 	@EventHandler
 	public void onEntityDamage(EntityDamageByEntityEvent event) {
-		if (event.isCancelled())
+		Player damagee;
+		if (event.isCancelled()) {
 			return;
+		}
 		if (event.getEntity() instanceof Player) {
-			Player damagee = (Player) event.getEntity();
-			disableFor(damagee, 2000);
+			damagee = (Player) event.getEntity();
+			this.disableFor(damagee, 2000L);
 		}
 		if (event.getDamager() instanceof Player) {
 			Player damager = (Player) event.getDamager();
 			boolean lackWeapon = false;
-			if (damager.getInventory().getItemInMainHand() == null || damager.getInventory().getItemInMainHand().getType() == Material.AIR) {
-				event.setDamage(lackWeaponDamage);
+			if (damager.getItemInHand() == null || damager.getItemInHand().getType() == Material.AIR) {
+				event.setDamage(0.2);
 				lackWeapon = true;
-			} else if (!Directory.repairableItems.contains(damager.getInventory().getItemInMainHand().getType())) {
-				event.setDamage(lackWeaponDamage);
+			} else if (!Directory.repairableItems.contains( damager.getItemInHand().getType())) {
+				event.setDamage(0.2);
 				lackWeapon = true;
 			}
-			if (!lackWeapon && !(event.getEntity() instanceof Player))
-				event.setDamage(event.getDamage() * withWeaponDamageMultiplierEntity);
+			if (!lackWeapon && !(event.getEntity() instanceof Player)) {
+				event.setDamage(event.getDamage() * 1.5);
+			}
 		}
-		if (event.getDamager() instanceof Arrow)
+		if (event.getDamager() instanceof Arrow) {
 			event.setDamage(event.getDamage() * 0.5);
+		}
 		if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
-			Player damagee = (Player) event.getEntity();
+			damagee = (Player) event.getEntity();
 			Player damager = (Player) event.getDamager();
-			if (Server.getPluginDebug())
-				log(damagee, damagee.getName() + " has triggered EntityDamageByEntityEvent", true, true);
+			if (Server.pluginDebug) {
+				AntiCheat.log(damagee, String.valueOf(damagee.getName()) + " has triggered EntityDamageByEntityEvent", true, true);
+			}
 			if (damager.isOp()) {
-				if (Server.getPluginDebug())
-					log(damager, damager.getName() + " is currently opped; Terminating EntityDamageByEntityEvent", true, true);
+				if (Server.pluginDebug) {
+					AntiCheat.log(damager, String.valueOf(damager.getName()) + " is currently opped; Terminating EntityDamageByEntityEvent", true, true);
+				}
 				return;
 			}
-			if (rangeCheckDisabledMinigames.contains($.getCurrentMinigame(damager)))
-				return;
-			if (ignoredPlayers.containsKey(damager.getUniqueId())) {
-				if (Server.getPluginDebug())
-					log(damager, damager.getName() + " is currently ignored; Terminating EntityDamageByEntityEvent", true, true);
+			if (this.rangeCheckDisabledMinigames.contains( Go.getCurrentMinigame(damager))) {
 				return;
 			}
-			event.setDamage(event.getDamage() * withWeaponDamageMultiplierPlayer);
-			if (damagee.getLocation().distance(damager.getLocation()) > maxAttackRange) {
-				log(damager, damager.getName() + " has attacked with a greater range then normal ( > " + maxAttackRange + " blocks )");
+			if (this.ignoredPlayers.containsKey(damager.getUniqueId())) {
+				if (Server.pluginDebug) {
+					AntiCheat.log(damager, String.valueOf(damager.getName()) + " is currently ignored; Terminating EntityDamageByEntityEvent", true, true);
+				}
+				return;
+			}
+			event.setDamage(event.getDamage() * 1.0);
+			if (damagee.getLocation().distance(damager.getLocation()) > 4.5) {
+				AntiCheat.log(damager, String.valueOf(damager.getName()) + " has attacked with a greater range then normal ( > " + 4.5 + " blocks )");
 				event.setCancelled(true);
 			}
 		}
@@ -324,34 +338,36 @@ public class AntiCheat implements Listener {
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
-		if (event.isCancelled())
+		if (event.isCancelled()) {
 			return;
+		}
 		Player player = event.getPlayer();
-		if (player.isInsideVehicle() || player.isGliding() || player.isOp())
+		if (player.isInsideVehicle() || player.isGliding() || player.isOp()) {
 			return;
-		if (speedCheckDisabledMinigames.contains($.getCurrentMinigame(player)))
+		}
+		if (this.speedCheckDisabledMinigames.contains( Go.getCurrentMinigame(player))) {
 			return;
-		if (ignoredPlayers.containsKey(player.getUniqueId()))
+		}
+		if (this.ignoredPlayers.containsKey(player.getUniqueId())) {
 			return;
-		double maxSpeed = maxDistanceMoved;
-		if (player.getGameMode() == GameMode.CREATIVE && player.isFlying())
-			maxSpeed = Math.round((maxSpeed * 1.5) * 100.0) / 100.0;
+		}
+		double maxSpeed = 0.8;
+		if (player.getGameMode() == GameMode.CREATIVE && player.isFlying()) {
+			maxSpeed = (double) Math.round(maxSpeed * 1.5 * 100.0) / 100.0;
+		}
 		Location from = event.getFrom().clone();
 		Location to = event.getTo().clone();
-		if (player.isOnGround())
-			maxSpeed = maxDistanceMovedFloor;
-		if (player.hasPotionEffect(PotionEffectType.SPEED))
-			maxSpeed += (player.getPotionEffect(PotionEffectType.SPEED).getAmplifier() + 1) * 0.14;
-		if (from.getY() - to.getY() < maxVerticalBlockChange && !player.isInsideVehicle() && !player.isGliding()) {
-			if (!(player.getGameMode() == GameMode.CREATIVE)) {
-				log(player, player.getName() + " has moved with a greater speed then normal ( < " + maxVerticalBlockChange + " blocks )");
-				event.setCancelled(true);
-			}
+		if (player.isOnGround()) {
+			maxSpeed = 0.44;
 		}
-		from.setY(0);
-		to.setY(0);
+		if (from.getY() - to.getY() < -0.8 && !player.isInsideVehicle() && !player.isGliding() && player.getGameMode() != GameMode.CREATIVE) {
+			AntiCheat.log(player, String.valueOf(player.getName()) + " has moved with a greater speed then normal ( < " + -0.8 + " blocks )");
+			event.setCancelled(true);
+		}
+		from.setY(0.0);
+		to.setY(0.0);
 		if (from.distance(to) > maxSpeed) {
-			log(player, player.getName() + " has moved with a greater speed then normal ( > " + maxSpeed + " blocks )");
+			AntiCheat.log(player, String.valueOf(player.getName()) + " has moved with a greater speed then normal ( > " + maxSpeed + " blocks )");
 			event.setCancelled(true);
 		}
 	}
@@ -359,20 +375,23 @@ public class AntiCheat implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		if (Server.getPluginDebug())
-			log(player, player.getName() + " has triggered PlayerQuitEvent", true, true);
-		if (lastPlayerLocation.containsKey(player.getUniqueId()))
-			lastPlayerLocation.remove(player.getUniqueId());
+		if (Server.pluginDebug) {
+			AntiCheat.log(player, String.valueOf(player.getName()) + " has triggered PlayerQuitEvent", true, true);
+		}
+		if (this.lastPlayerLocation.containsKey(player.getUniqueId())) {
+			this.lastPlayerLocation.remove(player.getUniqueId());
+		}
 	}
 
 	public boolean onBlockBreak(Block block, Entity entity) {
 		boolean bypass = false;
-		if (!(entity == null) && entity instanceof Player)
-			bypass = ((Player) entity).isOp();
-		ServerMinigame minigame = $.getMinigameFromWorld(block.getWorld());
-		if (!bypass && (minigame == ServerMinigame.SURVIVAL || minigame == ServerMinigame.FACTIONS)) {
-			Location spawnLocation = $.getZoneLocation(block.getWorld().getName());
-			if (!(block.getWorld().getEnvironment() == Environment.THE_END) && block.getLocation().distance(spawnLocation) < 20) {
+		if (entity != null && entity instanceof Player) {
+			bypass = ((Player) entity).hasPermission("skorrloregaming.bypass.spawnProtection");
+		}
+		ServerMinigame minigame = Go.getMinigameFromWorld(block.getWorld(), this.plugin);
+		if (!(bypass || minigame != ServerMinigame.SURVIVAL && minigame != ServerMinigame.FACTIONS)) {
+			Location spawnLocation = Go.getZoneLocation(block.getWorld().getName(), Server.plugin);
+			if (block.getLocation().distance(spawnLocation) < 30.0) {
 				return true;
 			}
 		}
@@ -381,96 +400,111 @@ public class AntiCheat implements Listener {
 
 	public boolean onBlockPlace(Block block, Entity entity) {
 		boolean bypass = false;
-		if (!(entity == null) && entity instanceof Player)
-			bypass = ((Player) entity).isOp();
-		ServerMinigame minigame = $.getMinigameFromWorld(block.getWorld());
-		if (!bypass && (minigame == ServerMinigame.SURVIVAL || minigame == ServerMinigame.FACTIONS)) {
-			Location spawnLocation = $.getZoneLocation(block.getWorld().getName());
-			if (!(block.getWorld().getEnvironment() == Environment.THE_END) && block.getLocation().distance(spawnLocation) < 20) {
+		if (entity != null && entity instanceof Player) {
+			bypass = ((Player) entity).hasPermission("skorrloregaming.bypass.spawnProtection");
+		}
+		ServerMinigame minigame = Go.getMinigameFromWorld(block.getWorld(), this.plugin);
+		if (!(bypass || minigame != ServerMinigame.SURVIVAL && minigame != ServerMinigame.FACTIONS)) {
+			Location spawnLocation = Go.getZoneLocation(block.getWorld().getName(), Server.plugin);
+			if (block.getLocation().distance(spawnLocation) < 30.0) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public String processAntiSwear(OfflinePlayer player, String message) {
-		return processAntiSwear(player, message, true, false);
-	}
-
-	public String processAntiSwear(OfflinePlayer player, String message, boolean doReturn, boolean silent) {
-		char[] messageChars = message.toCharArray();
+	public String processAntiSwear(Player player, String message) {
+		String modifiedMessage = message;
+		char[] messageChars = modifiedMessage.toCharArray();
+		ExtremeSwear commonSwear = new ExtremeSwear(0, false, "", 0);
 		boolean detectedSwearing = false;
-		for (String swear : swearWords) {
-			int beginIndex = message.toLowerCase().indexOf(swear);
-			if (beginIndex > -1) {
-				int endIndex = beginIndex + swear.length();
-				for (int i = beginIndex; i < endIndex; i++) {
-					messageChars[i] = '*';
+		for (int i = 0; i < modifiedMessage.length() + 1; i++) {
+			if (commonSwear.getArg1()) {
+				String currentSwear = commonSwear.getArg2();
+				int startIndex = commonSwear.getArg0();
+				if (this.swearWords.contains(currentSwear.replace(" ", ""))) {
+					int endIndex = commonSwear.getArg3();
+					for (int index = startIndex; index < endIndex + 1; index++) {
+						messageChars[index] = '*';
+					}
+					modifiedMessage = new String(messageChars);
+					commonSwear = new ExtremeSwear(0, false, "", 0);
+					detectedSwearing = true;
+					i = 0;
+					continue;
 				}
-				detectedSwearing = true;
+				if (messageChars.length > i) {
+					if (this.swearData.get(currentSwear.length()).contains(Character.valueOf(messageChars[i]))) {
+						currentSwear = currentSwear + messageChars[i];
+						boolean taskSuccess = false;
+						for (String string : this.swearWords) {
+							if (string.contains(currentSwear)) {
+								taskSuccess = true;
+								break;
+							}
+						}
+						if (taskSuccess) {
+							commonSwear = new ExtremeSwear(startIndex, true, currentSwear, i);
+							continue;
+						}
+					}
+					if (messageChars[i] != ' ') {
+						commonSwear = new ExtremeSwear(0, false, "", 0);
+					}
+				}
+			}
+			if ((messageChars.length > i) && (this.swearData.get(0).contains(Character.valueOf(messageChars[i])))) {
+				commonSwear = new ExtremeSwear(i, true, String.valueOf(messageChars[i]), i);
 			}
 		}
-		String modifiedMessage = new String(messageChars);
 		if (detectedSwearing) {
-			if (!silent)
-				Logger.info($.italicGray + ChatColor.stripColor(message));
-			if (player.isOnline()) {
-				if (doReturn)
-					player.getPlayer().sendMessage($.italicGray + ChatColor.stripColor(message));
-				if (!silent)
-					player.getPlayer().sendMessage(ChatColor.RED + "Please do not swear, otherwise action will be taken.");
-			}
+			Logger.info(modifiedMessage);
+			player.sendMessage(ChatColor.RED + "Please do not swear, otherwise action will be taken.");
 		}
 		return modifiedMessage;
 	}
 
-	public class AntiAfk extends AntiCheat implements Runnable {
+	public class AntiAfk
+			extends AntiCheat
+			implements Runnable {
+		public ConcurrentHashMap<UUID, Location> lastPlayerLocation;
+		public ConcurrentHashMap<UUID, Double> lackingMovementMinutes;
 
-		public ConcurrentHashMap<UUID, LastLocation> lastPlayerLocation = new ConcurrentHashMap<>();
-		public ConcurrentHashMap<UUID, Double> lackingActivityMinutes = new ConcurrentHashMap<>();
-		public String afkKickMessage = "You have been kicked for afking too long.";
+		public AntiAfk(Plugin plugin) {
+			super(plugin);
+			this.lastPlayerLocation = new ConcurrentHashMap();
+			this.lackingMovementMinutes = new ConcurrentHashMap();
+		}
 
 		@Override
 		public void run() {
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (!lastPlayerLocation.containsKey(player.getUniqueId()))
-					lastPlayerLocation.put(player.getUniqueId(), new LastLocation(player, player.getLocation()));
-				LastLocation lastLocation = lastPlayerLocation.get(player.getUniqueId());
+				if (Go.getRankId(player, this.plugin) >= 2) continue;
+				if (!this.lastPlayerLocation.containsKey(player.getUniqueId())) {
+					this.lastPlayerLocation.put(player.getUniqueId(), player.getLocation());
+				}
+				Location lastLocation = this.lastPlayerLocation.get(player.getUniqueId());
 				boolean hasMoved = true;
-				if (lastLocation.getWorld().getName().equals(player.getWorld().getName())) {
-					if (lastLocation.distance(player.getLocation()) < maxAttackRange || (lastLocation.getBlock().isLiquid() && player.getLocation().getBlock().isLiquid()) || (lastLocation.isInsideVehicle() && player.isInsideVehicle())) {
-						if (!lackingActivityMinutes.containsKey(player.getUniqueId()))
-							lackingActivityMinutes.put(player.getUniqueId(), 0.0);
-						double lastMinutes = lackingActivityMinutes.get(player.getUniqueId());
-						double newMinutes = lastMinutes + 0.5;
-						lackingActivityMinutes.put(player.getUniqueId(), newMinutes);
-						if (newMinutes >= 5.0 && newMinutes < 15.0) {
-							Server.getPlaytimeManager().handle_QuitEvent(player);
-						} else if (newMinutes > 30.0) {
-							lackingActivityMinutes.remove(player.getUniqueId());
-							player.playSound(player.getEyeLocation(), Sound.ENTITY_CHICKEN_EGG, 1F, 1F);
-							Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
-								@Override
-								public void run() {
-									player.kickPlayer(afkKickMessage);
-									for (Player pl : Server.getPlugin().getServer().getOnlinePlayers()) {
-										pl.sendMessage($.italicGray + "Server: Kicked " + player.getName() + " '" + afkKickMessage + "'");
-									}
-								}
-							}, 20L);
-						}
-						hasMoved = false;
+				if (lastLocation.getWorld().getName().equals(player.getWorld().getName()) && lastLocation.distance(player.getLocation()) < 4.5) {
+					if (!this.lackingMovementMinutes.containsKey(player.getUniqueId())) {
+						this.lackingMovementMinutes.put(player.getUniqueId(), 0.0);
 					}
+					double lastMinutes = this.lackingMovementMinutes.get(player.getUniqueId());
+					double newMinutes = lastMinutes + 0.25;
+					this.lackingMovementMinutes.put(player.getUniqueId(), newMinutes);
+					if (newMinutes >= 5.0) {
+						player.kickPlayer("You have been kicked for afking too long.");
+						this.lackingMovementMinutes.remove(player.getUniqueId());
+					}
+					hasMoved = false;
 				}
-				if (!lackingActivityMinutes.containsKey(player.getUniqueId()) || (lackingActivityMinutes.containsKey(player.getUniqueId()) && lackingActivityMinutes.get(player.getUniqueId()) < 5.0)) {
-					Server.getPlaytimeManager().handle_JoinEvent(player);
+				if (hasMoved && this.lackingMovementMinutes.containsKey(player.getUniqueId())) {
+					this.lackingMovementMinutes.remove(player.getUniqueId());
 				}
-				if (hasMoved) {
-					if (lackingActivityMinutes.containsKey(player.getUniqueId()))
-						lackingActivityMinutes.remove(player.getUniqueId());
-				}
-				lastPlayerLocation.put(player.getUniqueId(), new LastLocation(player, player.getLocation()));
+				this.lastPlayerLocation.put(player.getUniqueId(), player.getLocation());
 			}
 		}
 	}
+
 }
+

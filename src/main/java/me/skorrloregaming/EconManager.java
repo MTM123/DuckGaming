@@ -1,96 +1,82 @@
+/*
+ * Decompiled with CFR 0_129.
+ */
 package me.skorrloregaming;
 
 import java.util.UUID;
 
+import me.skorrloregaming.Go;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.impl.ServerMinigame;
-import me.skorrloregaming.scoreboard.DisposableScoreboard;
+import org.bukkit.plugin.Plugin;
 
 public class EconManager {
-	public static final int MAX_CASH = 1_000_000_000;
+	public static final int MAX_CASH = 1000000000;
 	public static final int MIN_CASH = 0;
 
-	private static void updateScoreboards(String subDomain, UUID id) {
-		Player player = Bukkit.getPlayer(id);
-		if (player == null)
+	public static void withdrawCash(UUID id, int amount, String subDomain, Plugin plugin) {
+		int value;
+		if (subDomain.equals("hub") || subDomain.equals("skyfight") || subDomain.equals("creative")) {
 			return;
-		ServerMinigame minigame = $.getMinigameFromWorld(player.getWorld());
-		DisposableScoreboard scoreboard = $.getPrimaryScoreboard(minigame);
-		if (!(scoreboard == null))
-			scoreboard.schedule(player);
-	}
-
-	public static void withdrawCash(UUID id, int amount, String subDomain, boolean updateScoreboard) {
-		if ($.validEconomyMinigames.contains(subDomain)) {
-			String path = "config." + id.toString() + ".balance." + subDomain;
-			if (!Server.getPlugin().getConfig().contains(path)) {
-				Server.getPlugin().getConfig().set(path, 0);
-			}
-			int value = Integer.parseInt(Server.getPlugin().getConfig().getString(path)) - amount;
-			if (value < MIN_CASH)
-				value = MIN_CASH;
-			Server.getPlugin().getConfig().set(path, value + "");
-			if (updateScoreboard) {
-				updateScoreboards(subDomain, id);
-			}
+		}
+		String path = "config." + id.toString() + ".balance." + subDomain;
+		if (!plugin.getConfig().contains(path)) {
+			plugin.getConfig().set(path,  0);
+			plugin.saveConfig();
+		}
+		if ((value = Integer.parseInt(plugin.getConfig().getString(path)) - amount) < 0) {
+			value = 0;
+		}
+		plugin.getConfig().set(path,  String.valueOf(value));
+		plugin.saveConfig();
+		if (subDomain == "kitpvp" && Bukkit.getPlayer((UUID) id) != null) {
+			Go.Kitpvp.refreshScoreboard(Bukkit.getPlayer((UUID) id), plugin);
 		}
 	}
 
-	public static void withdrawCash(UUID id, int amount, String subDomain) {
-		withdrawCash(id, amount, subDomain, true);
-	}
-
-	public static void depositCash(UUID id, int amount, String subDomain) {
-		depositCash(id, amount, subDomain, true);
-	}
-
-	public static void depositCash(UUID id, int amount, String subDomain, boolean updateScoreboard) {
-		if ($.validEconomyMinigames.contains(subDomain)) {
-			String path = "config." + id.toString() + ".balance." + subDomain;
-			if (!Server.getPlugin().getConfig().contains(path)) {
-				Server.getPlugin().getConfig().set(path, 0);
-			}
-			int value = Integer.parseInt(Server.getPlugin().getConfig().getString(path)) + amount;
-			if (value > MAX_CASH)
-				value = MAX_CASH;
-			Server.getPlugin().getConfig().set(path, value + "");
-			if (updateScoreboard) {
-				updateScoreboards(subDomain, id);
-			}
+	public static void depositCash(UUID id, int amount, String subDomain, Plugin plugin) {
+		int value;
+		if (subDomain.equals("hub") || subDomain.equals("skyfight") || subDomain.equals("creative")) {
+			return;
+		}
+		String path = "config." + id.toString() + ".balance." + subDomain;
+		if (!plugin.getConfig().contains(path)) {
+			plugin.getConfig().set(path,  0);
+			plugin.saveConfig();
+		}
+		if ((value = Integer.parseInt(plugin.getConfig().getString(path)) + amount) > 1000000000) {
+			value = 1000000000;
+		}
+		plugin.getConfig().set(path,  String.valueOf(value));
+		plugin.saveConfig();
+		if (subDomain == "kitpvp" && Bukkit.getPlayer((UUID) id) != null) {
+			Go.Kitpvp.refreshScoreboard(Bukkit.getPlayer((UUID) id), plugin);
 		}
 	}
 
-	public static int retrieveCash(UUID id, String subDomain) {
-		if ($.validEconomyMinigames.contains(subDomain)) {
-			String path = "config." + id.toString() + ".balance." + subDomain;
-			if (!Server.getPlugin().getConfig().contains(path)) {
-				Server.getPlugin().getConfig().set(path, 0);
-			}
-			return Integer.parseInt(Server.getPlugin().getConfig().getString(path));
-		} else {
+	public static int retrieveCash(UUID id, String subDomain, Plugin plugin) {
+		if (subDomain.equals("hub") || subDomain.equals("skyfight") || subDomain.equals("creative")) {
 			return 0;
 		}
+		String path = "config." + id.toString() + ".balance." + subDomain;
+		if (!plugin.getConfig().contains(path)) {
+			plugin.getConfig().set(path,  0);
+			plugin.saveConfig();
+		}
+		return Integer.parseInt(plugin.getConfig().getString(path));
 	}
 
-	public static void withdrawCash(Player player, int amount, String subDomain) {
-		withdrawCash(player.getUniqueId(), amount, subDomain);
+	public static void withdrawCash(Player player, int amount, String subDomain, Plugin plugin) {
+		EconManager.withdrawCash(player.getUniqueId(), amount, subDomain, plugin);
 	}
 
-	public static void depositCash(Player player, int amount, String subDomain) {
-		depositCash(player.getUniqueId(), amount, subDomain);
+	public static void depositCash(Player player, int amount, String subDomain, Plugin plugin) {
+		EconManager.depositCash(player.getUniqueId(), amount, subDomain, plugin);
 	}
 
-	public static void withdrawCash(Player player, int amount, String subDomain, boolean updateScoreboard) {
-		withdrawCash(player.getUniqueId(), amount, subDomain, updateScoreboard);
-	}
-
-	public static void depositCash(Player player, int amount, String subDomain, boolean updateScoreboard) {
-		depositCash(player.getUniqueId(), amount, subDomain, updateScoreboard);
-	}
-
-	public static int retrieveCash(Player player, String subDomain) {
-		return retrieveCash(player.getUniqueId(), subDomain);
+	public static int retrieveCash(Player player, String subDomain, Plugin plugin) {
+		return EconManager.retrieveCash(player.getUniqueId(), subDomain, plugin);
 	}
 }
+

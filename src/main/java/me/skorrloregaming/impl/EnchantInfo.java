@@ -1,3 +1,6 @@
+/*
+ * Decompiled with CFR 0_129.
+ */
 package me.skorrloregaming.impl;
 
 import org.bukkit.enchantments.Enchantment;
@@ -11,3 +14,4 @@ public class EnchantInfo {
 		this.power = power;
 	}
 }
+

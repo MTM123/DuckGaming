@@ -1,11 +1,18 @@
+/*
+ * Decompiled with CFR 0_129.
+ */
 package me.skorrloregaming.impl;
 
+import java.util.UUID;
+
+import me.skorrloregaming.ConfigurationManager;
+import me.skorrloregaming.Server;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-
-import me.skorrloregaming.Server;
 
 public class CustomNpc {
 	public ArmorStand entity;
@@ -15,16 +22,16 @@ public class CustomNpc {
 	}
 
 	public static CustomNpc spawn(Location location, String name) {
-		location.setX(location.getBlockX() + 0.5);
-		location.setY(location.getBlockY() + 0.5);
-		location.setZ(location.getBlockZ() + 0.5);
+		location.setX((double) location.getBlockX() + 0.5);
+		location.setY((double) location.getBlockY() + 0.5);
+		location.setZ((double) location.getBlockZ() + 0.5);
 		ArmorStand entity = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
 		entity.setAI(false);
 		entity.setCanPickupItems(false);
 		entity.setCollidable(false);
 		entity.setInvulnerable(true);
 		entity.setArms(true);
-		if (!(name == null)) {
+		if (name != null) {
 			entity.setCustomName(name);
 			entity.setCustomNameVisible(true);
 		}
@@ -32,30 +39,36 @@ public class CustomNpc {
 	}
 
 	public static String getNpcData(Entity entity) {
-		if (!Server.getNpcConfig().getData().contains("npc." + entity.getUniqueId().toString()))
+		if (!Server.npcConfig.getData().contains("npc." + entity.getUniqueId().toString())) {
 			return null;
-		String value = Server.getNpcConfig().getData().getString("npc." + entity.getUniqueId().toString());
-		if (value.equals("unspecified"))
+		}
+		String value = Server.npcConfig.getData().getString("npc." + entity.getUniqueId().toString());
+		if (value.equals("unspecified")) {
 			return null;
+		}
 		return String.valueOf(value);
 	}
 
 	public boolean register(String npcData) {
-		if (Server.getNpcConfig().getData().contains("npc." + entity.getUniqueId().toString()))
+		if (Server.npcConfig.getData().contains("npc." + this.entity.getUniqueId().toString())) {
 			return false;
+		}
 		String hash = "unspecified";
-		if (!(npcData == null))
+		if (npcData != null) {
 			hash = npcData;
-		Server.getNpcConfig().getData().set("npc." + entity.getUniqueId().toString(), hash);
-		Server.getNpcConfig().saveData();
+		}
+		Server.npcConfig.getData().set("npc." + this.entity.getUniqueId().toString(),  hash);
+		Server.npcConfig.saveData();
 		return true;
 	}
 
 	public boolean unregister() {
-		if (!Server.getNpcConfig().getData().contains("npc." + entity.getUniqueId().toString()))
+		if (!Server.npcConfig.getData().contains("npc." + this.entity.getUniqueId().toString())) {
 			return false;
-		Server.getNpcConfig().getData().set("npc." + entity.getUniqueId().toString(), null);
-		Server.getNpcConfig().saveData();
+		}
+		Server.npcConfig.getData().set("npc." + this.entity.getUniqueId().toString(),  null);
+		Server.npcConfig.saveData();
 		return true;
 	}
 }
+

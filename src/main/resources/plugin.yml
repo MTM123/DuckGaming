@@ -1,107 +1,10 @@
 main: me.skorrloregaming.Server
 name: SkorrloreGaming
-version: 2.3.6-SNAPSHOT
+version: 1
 author: "Speentie8081"
-depend: [WorldEdit, WorldGuard, ProtocolLib]
-softdepend: [AuthMe, ProtocolSupport, ProtocolSupportPocketStuff, mcMMO, Vault, ploader]
-loadbefore: [ChestShop, Factions]
-api-version: 1.13
+depend: [Factions, WorldEdit, WorldGuard]
+softdepend: [AuthMe, ProtocolSupport, ProtocolLib, mcMMO, Votifier]
 commands:
-    unsubscribe:
-        description: Unsubscribe from news header and auto broadcaster
-    verify:
-        description: Verify your minecraft account on discord
-    feed:
-        description: Instantly saturates your food level on factions
-        aliases: eat
-    fly:
-        description: Enable or disable faction flight in own territory
-    printblockstate:
-        description: Print the block state of the block your standing in
-        aliases: pbs
-    cireload:
-        description: Reload the ChatItem config.
-        aliases: [chatitemreload, citemreload, cir]
-        permission: chatitem.reload
-    lockette:
-        aliases: [lock]
-        description: Access to the Lockette plugin via commands.
-        usage: |
-            /<command> <line number> <text> - Edits signs on locked containers. Right click on the sign to edit.
-            /<command> fix - Fixes an automatic door that is in the wrong position. Look at the door to edit.
-            /<command> reload - Reloads the configuration files.  Operators only.
-            /<command> version - Reports Lockette version string.
-    ignore:
-        description: Ignore the specified player until the next server update
-        alaises: ig
-    logger:
-        description: Enable or disable in-game anticheat logging
-        aliases: logging
-    desync:
-        description: Unlink your alternative account from your primary account
-        aliases: [unsync, desync-account, desyncaccount, unsync-account, unsyncaccount, unsynca, desynca, delink, delink-account, delinka, unlinka, unlink, unlink-account]
-    sync:
-        description: Link your alternative account with your primary account
-        aliases: [sync-account, syncaccount, synca, link-account, linkaccount, link, linka]
-    spoof-vote:
-        description: Spoof a number of votes for the specified player
-        aliases: [spoofvote, sv]
-    buy:
-        description: Access the buycraft store
-        aliases: [store, purchase, donate]
-    playertime:
-        description: Set the time of day of your own player
-        aliases: ptime
-    sessions:
-        description: Views the stored sesssions for the specified player
-        aliases: session
-    transfer:
-        description: Force a transfer from an account to another account
-    transferaccept:
-        description: Accept a pending transfer for your account
-        aliases: [accepttransfer, tfaccept]
-    transferdeny:
-        description: Deny a pending transfer for your account
-        aliases: [denytransfer, tfdeny]
-    warnings:
-        description: Displays the amount of warnings a player has and if they are banned
-        aliases: warns
-    update-skin:
-        description: Attempts to update the skin without waiting until the skin expires
-        aliases: [updateskin, uskin, skinupdate]
-    spectate:
-        description: Spectate the specified player
-        aliases: s
-    discord:
-        description: Sends the url of our discord to the sender
-    playtime-report:
-        description: Gets the range of stored playtime information for a player
-        aliases: [playtime-report, ptreport, ptr]
-    address:
-        description: Displays the server ip address to the sender
-        aliases: ip
-    rollback:
-        description: Restore someone to their last player data save
-        aliases: restore
-    setsuffixrank:
-        description: About the same as set rank but with suffixes instead
-        aliases: setsuffix
-    center:
-        description: Center yourself in the block your standing on
-    marrychat:
-        description: Enter or leave marriage chat
-        aliases: [mchat, marryc, mc, weddingchat, wchat, weddingc, wc]
-    marry:
-        description: Run marriage related commands
-        aliases: wedding
-    divorce:
-        description: Break up with you married partner
-    modifications:
-        description: Link to our vanilla modifications wiki
-        aliases: mods
-    spawner:
-        description: Purchase a spawner containing a specific monster
-        aliases: spawners
     staffchat:
         description: Enter or leave the private staff chat
         aliases: sc
@@ -137,13 +40,13 @@ commands:
         description: Unregister a defined player from the server
     skull:
         description: Give yourself a skull based on player name
-        aliases: head
+    getenchant:
+        description: Returns the enchantment name of a given ID
     playtime:
         description: Retrieves the play time for a given player
         aliases: pt
     who:
         description: Retrieves information about a given player
-        aliases: whois
     list:
         description: Lists the currently connected players
     build-time:
@@ -159,8 +62,8 @@ commands:
         description: Teleport yourself randomly in the wild
         aliases: rtp
     give:
-        description: A modified version of the vanilla command
-        aliases: [giveme, i]
+        description: A special version of the vanilla command
+        aliases: giveme
     rename:
         description: Rename the held item to specified
         aliases: rn
@@ -179,7 +82,7 @@ commands:
         description: Edit specific lines on a sign
     chest:
         description: View someone's personal inventory
-        aliases: [pv, echest, enderchest, ec]
+        aliases: [pv, echest, enderchest]
     inventorysee:
         description: View someone's legacy inventory
         aliases: invsee
@@ -253,9 +156,8 @@ commands:
     tell:
         description: Message a player on the server
         aliases: [msg, message, w, pm]
-    statistics:
+    stats:
         description: View the stats for the current minigame
-        aliases: stats
     spawn:
         description: Teleport to the spawn for the current minigame
     kit:
@@ -267,32 +169,9 @@ commands:
         aliases: baltop
     balance:
         description: View the balance you have in your account
-        aliases: [bal, money, currency]
+        aliases: bal
     pay:
         description: Pay someone the specified amount of cash
     suicide:
         description: Pretty much /kill but integrated with the server
         aliases: kill
-permissions:
-    lockette.user.create.chest:
-        default: true
-    lockette.user.create.furnace:
-        default: true
-    lockette.user.create.dispenser:
-        default: true
-    lockette.user.create.dropper:
-        default: true
-    lockette.user.create.brewingstand:
-        default: true
-    lockette.user.create.custom:
-        default: true
-    lockette.user.create.trapdoor:
-        default: true
-    lockette.user.create.door:
-        default: true
-    chatitem.use:
-        description: Allows your messages to be parsed by the plugin
-        default: true
-    chatitem.ignore-cooldown:
-        description: Allows you to ignore cooldowns (if enabled)
-        default: true

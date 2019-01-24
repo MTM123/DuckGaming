@@ -1,3 +1,6 @@
+/*
+ * Decompiled with CFR 0_129.
+ */
 package me.skorrloregaming.impl;
 
 public class SignInfo {
@@ -10,7 +13,7 @@ public class SignInfo {
 	}
 
 	public int getLine() {
-		return line;
+		return this.line;
 	}
 
 	public void setLine(int line) {
@@ -18,10 +21,11 @@ public class SignInfo {
 	}
 
 	public String getText() {
-		return text;
+		return this.text;
 	}
 
 	public void setText(String text) {
 		this.text = text;
 	}
 }
+

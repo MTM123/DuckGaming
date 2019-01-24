@@ -1,20 +1,20 @@
+/*
+ * Decompiled with CFR 0_129.
+ */
 package me.skorrloregaming;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
+import me.skorrloregaming.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 public class ConfigurationManager {
 	static ConfigurationManager instance = new ConfigurationManager();
 	FileConfiguration data;
 	File dfile;
-	public List<Plugin> plugins = new ArrayList<Plugin>();
 
 	public static ConfigurationManager getInstance() {
 		return instance;
@@ -26,10 +26,10 @@ public class ConfigurationManager {
 			try {
 				this.dfile.createNewFile();
 			} catch (IOException e) {
-				Logger.severe(ChatColor.RED + "Could not create file configuration!");
+				Logger.severe( ChatColor.RED + "Could not create file configuration!");
 			}
 		}
-		this.data = YamlConfiguration.loadConfiguration(this.dfile);
+		this.data = YamlConfiguration.loadConfiguration((File) this.dfile);
 	}
 
 	public FileConfiguration getData() {
@@ -39,8 +39,9 @@ public class ConfigurationManager {
 	public void clearData() {
 		try {
 			this.dfile.delete();
-			setup(dfile);
-		} catch (Exception e) {
+			this.setup(this.dfile);
+		} catch (Exception exception) {
+			// empty catch block
 		}
 	}
 
@@ -48,11 +49,12 @@ public class ConfigurationManager {
 		try {
 			this.data.save(this.dfile);
 		} catch (IOException e) {
-			Logger.severe(ChatColor.RED + "Could not save file configuration!");
+			Logger.severe( ChatColor.RED + "Could not save file configuration!");
 		}
 	}
 
 	public void reloadData() {
-		this.data = YamlConfiguration.loadConfiguration(this.dfile);
+		this.data = YamlConfiguration.loadConfiguration((File) this.dfile);
 	}
 }
+
