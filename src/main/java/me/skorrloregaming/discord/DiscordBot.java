@@ -5,6 +5,9 @@ import me.skorrloregaming.discord.listeners.ReadyListener;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.requests.restaction.MessageAction;
+
+import java.util.concurrent.TimeUnit;
 
 public class DiscordBot {
 
@@ -28,7 +31,7 @@ public class DiscordBot {
 					.build();
 			messageListener = new MessageListener(this);
 			bot.addEventListener(messageListener);
-			bot.getPresence().setGame(Game.of(Game.GameType.DEFAULT,"Minecraft"));
+			bot.getPresence().setGame(Game.of(Game.GameType.DEFAULT, "Minecraft"));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -49,9 +52,16 @@ public class DiscordBot {
 	}
 
 	public void broadcast(String message, Channel... channels) {
+		broadcast(message, 0L, channels);
+	}
+
+	public void broadcast(String message, long deleteAfter,  Channel... channels) {
 		for (Channel channel : channels)
 			try {
-				getTextChannel(getChannelName(channel)).sendMessage(message).queue();
+				MessageAction messageAction = getTextChannel(getChannelName(channel)).sendMessage(message);
+				Message channelMessage = messageAction.complete();
+				if (deleteAfter > 0L)
+					channelMessage.delete().queueAfter(deleteAfter, TimeUnit.MILLISECONDS);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
