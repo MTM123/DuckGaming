@@ -36,8 +36,9 @@ public class ReplyCmd implements CommandExecutor {
 					sb.append(args[i] + " ");
 				}
 				int rank = $.getRankId(player);
+				int donorRank = $.getDonorRankId(player);
 				String message = sb.toString();
-				if (player.isOp() || rank > -1 || rank < -2) {
+				if (player.isOp() || rank > -1 || donorRank < -2) {
 					message = ChatColor.translateAlternateColorCodes('&', message);
 				}
 				player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "me" + ChatColor.WHITE + " " + '\u00BB' + " " + ChatColor.RED + targetPlayer.getName() + ChatColor.WHITE + "] " + message);

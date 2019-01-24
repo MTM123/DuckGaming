@@ -239,6 +239,8 @@ commands:
         description: Teleport to a declared zone
     setrank:
         description: Change someones rank
+    setdonorrank:
+        description: Change someones donor rank
     disable-plugin:
         description: Disable a plugin on the server
     enable-plugin:

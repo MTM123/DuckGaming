@@ -527,7 +527,8 @@ public class PlayerEventHandler implements Listener {
 				if (Server.getSignEditParam().containsKey(player)) {
 					SignInfo info = Server.getSignEditParam().get(player);
 					int rank = $.getRankId(player);
-					if (player.isOp() || rank > -1 || rank < -2) {
+					int donorRank = $.getDonorRankId(player);
+					if (player.isOp() || rank > -1 || donorRank < -2) {
 						info.setText(ChatColor.translateAlternateColorCodes('&', info.getText()));
 					}
 					sign.setLine(info.getLine(), info.getText());
@@ -974,7 +975,8 @@ public class PlayerEventHandler implements Listener {
 		}
 		msg = Server.getAntiCheat().processAntiSwear(player, msg);
 		int rank = $.getRankId(player);
-		if (player.isOp() || rank > -1 || rank < -2) {
+		int donorRank = $.getDonorRankId(player);
+		if (player.isOp() || rank > -1 || donorRank < -2) {
 			msg = ChatColor.translateAlternateColorCodes('&', msg);
 		}
 		Logger.info(msg, true);
@@ -1402,8 +1404,8 @@ public class PlayerEventHandler implements Listener {
 		Server.getSessionManager().updateSession(player, new Session(SessionManager.encodeHex(ipAddress.replace("x", ".")).toCharArray(), player, System.currentTimeMillis()));
 		if (!Server.getPlugin().getConfig().contains(path)) {
 			Server.getPlugin().getConfig().set(path + ".username", displayName);
-			Server.getPlugin().getConfig().set(path + ".rank", $.validRanks.get(0));
-			Server.getPlugin().getConfig().set(path + ".suffixRank", $.validRanks.get(0));
+			Server.getSqlDatabase().set("rank", player.getUniqueId().toString(), $.validRanks.get(0));
+			Server.getSqlDatabase().set("donorRank", player.getUniqueId().toString(), $.validDonorRanks.get(0));
 			Server.getPlugin().getConfig().set(path + ".marry.marriedTo", "0");
 			Server.getPlugin().getConfig().set(path + ".marry.marriageId", "0");
 			Server.getPlugin().getConfig().set(path + ".marry.marriedPvp", "true");
@@ -2242,7 +2244,7 @@ public class PlayerEventHandler implements Listener {
 						int currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
 						if (upgradeCount + 1 <= $.Kitpvp.DONOR_MAX_UPGRADE_VALUE) {
 							if (upgradeCount + 1 > $.Kitpvp.DEFAULT_MAX_UPGRADE_VALUE) {
-								if ($.getRankId(player) > -2) {
+								if ($.getDonorRankId(player) > -2) {
 									player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
 									player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you need a donor rank to buy this upgrade.");
 									player.performCommand("store");

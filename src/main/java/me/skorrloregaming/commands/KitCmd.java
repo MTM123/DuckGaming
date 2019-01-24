@@ -111,7 +111,7 @@ public class KitCmd implements CommandExecutor {
 				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Recruit");
 			} else if (args[0].equalsIgnoreCase("donator")) {
-				if ($.getRankId(player.getUniqueId()) > -2) {
+				if ($.getDonorRankId(player.getUniqueId()) > -2) {
 					player.sendMessage(tag + ChatColor.GRAY + "You must have rank " + ChatColor.RED + "Donator" + ChatColor.GRAY + " to use this kit.");
 					return true;
 				}
@@ -148,7 +148,7 @@ public class KitCmd implements CommandExecutor {
 				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Donator");
 			} else if (args[0].equalsIgnoreCase("redstone")) {
-				if ($.getRankId(player.getUniqueId()) > -3) {
+				if ($.getDonorRankId(player.getUniqueId()) > -3) {
 					player.sendMessage(tag + ChatColor.GRAY + "You must have rank " + ChatColor.RED + "Redstone" + ChatColor.GRAY + " to use this kit.");
 					return true;
 				}
@@ -185,7 +185,7 @@ public class KitCmd implements CommandExecutor {
 				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Redstone");
 			} else if (args[0].equalsIgnoreCase("obsidian")) {
-				if ($.getRankId(player.getUniqueId()) > -4) {
+				if ($.getDonorRankId(player.getUniqueId()) > -4) {
 					player.sendMessage(tag + ChatColor.GRAY + "You must have rank " + ChatColor.RED + "Obsidian" + ChatColor.GRAY + " to use this kit.");
 					return true;
 				}
@@ -222,7 +222,7 @@ public class KitCmd implements CommandExecutor {
 				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Obsidian");
 			} else if (args[0].equalsIgnoreCase("bedrock")) {
-				if ($.getRankId(player.getUniqueId()) > -5) {
+				if ($.getDonorRankId(player.getUniqueId()) > -5) {
 					player.sendMessage(tag + ChatColor.GRAY + "You must have rank " + ChatColor.RED + "Bedrock" + ChatColor.GRAY + " to use this kit.");
 					return true;
 				}

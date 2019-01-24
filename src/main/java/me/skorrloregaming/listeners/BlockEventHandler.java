@@ -125,7 +125,8 @@ public class BlockEventHandler implements Listener {
 				return;
 			}
 			int rank = $.getRankId(player);
-			if (player.isOp() || rank > -1 || rank < -2) {
+			int donorRank = $.getDonorRankId(player);
+			if (player.isOp() || rank > -1 || donorRank < -2) {
 				for (int i = 0; i < s.length; i++) {
 					event.setLine(i, ChatColor.translateAlternateColorCodes('&', s[i]));
 				}

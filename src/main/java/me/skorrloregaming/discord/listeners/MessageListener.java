@@ -1,5 +1,7 @@
 package me.skorrloregaming.discord.listeners;
 
+import fr.xephi.authme.datasource.MySQL;
+import fr.xephi.authme.datasource.mysqlextensions.MySqlExtension;
 import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Logger;
