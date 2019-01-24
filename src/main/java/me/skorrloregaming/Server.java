@@ -684,7 +684,6 @@ public class Server extends JavaPlugin implements Listener {
 		String dbUsername = getConfig().getString("settings.database.username", "username");
 		String dbPassword = getConfig().getString("settings.database.password", "password");
 		sqlDatabase = new SQLDatabase("localhost", dbUsername, dbPassword);
-		sqlDatabase.testLogic();
 		lockette = new Lockette();
 		lockette.onEnable();
 		nuVotifier = new Votifier();
@@ -862,6 +861,7 @@ public class Server extends JavaPlugin implements Listener {
 		getCommand("setzone").setExecutor(new SetZoneCmd());
 		getCommand("warp").setExecutor(new WarpCmd());
 		getCommand("setrank").setExecutor(new SetRankCmd());
+		getCommand("setdonorrank").setExecutor(new SetDonorRankCmd());
 		getCommand("disable-plugin").setExecutor(new DisablePluginCmd());
 		getCommand("enable-plugin").setExecutor(new EnablePluginCmd());
 		getCommand("servers").setExecutor(new ServersCmd());
@@ -884,6 +884,7 @@ public class Server extends JavaPlugin implements Listener {
 		plugin.saveConfig();
 		barApi.onDisable();
 		nuVotifier.onDisable();
+		sqlDatabase.close();
 		discordBot.broadcast(":octagonal_sign: **Server has stopped**", Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 		discordBot.unregister();
 		if (!(lockette == null))

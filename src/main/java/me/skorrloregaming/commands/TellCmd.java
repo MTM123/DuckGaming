@@ -32,8 +32,9 @@ public class TellCmd implements CommandExecutor {
 					sb.append(args[i] + " ");
 				}
 				int rank = $.getRankId(player);
+				int donorRank = $.getDonorRankId(player);
 				String message = sb.toString();
-				if (player.isOp() || rank > -1 || rank < -2) {
+				if (player.isOp() || rank > -1 || donorRank < -2) {
 					message = ChatColor.translateAlternateColorCodes('&', message);
 				}
 				message =Server.getAntiCheat().processAntiSwear(player, message);

@@ -81,8 +81,6 @@ public class GCandAutoDemotion implements Runnable {
 					return;
 				String rank = $.getRank(player.getUniqueId());
 				int rankId = $.getRankId(player.getUniqueId());
-				if ($.getSuffixRank(player.getUniqueId()).equals("senior"))
-					return;
 				if (rankId > -1 && rankId < 3) {
 					int totalPlaytime = Server.getPlaytimeManager().getTotalStoredPlayerPlaytime(player);
 					long[] range = Server.getPlaytimeManager().getRangeOfStoredPlayerPlaytime(player, dayOfYear - 6, dayOfYear + 1);
@@ -93,26 +91,11 @@ public class GCandAutoDemotion implements Runnable {
 					if (rankId > 0)
 						playtimeRequirementPerWeek = 60 * 60 * 7;
 					int managerPlaytimeRequirement = 60 * 60 * 24 * 4;
-					if (totalPlaytime > 60 * 60 * 24 * 2) {
-						if ($.getSuffixRank(player.getUniqueId()).equals("default")) {
-							Logger.info("Auto-assign default-plus suffix rank to " + player.getName());
-							Server.getPlugin().getConfig().set(configPath + ".suffixRank", $.validRanks.get(1));
-							if ($.isPrefixedRankingEnabled() && player.isOnline()) {
-								$.flashPlayerDisplayName(player.getPlayer());
-							}
-						}
-					} else if ($.getSuffixRank(player.getUniqueId()).equals("default-plus")) {
-						Logger.info("Auto-remove default-plus suffix rank from " + player.getName());
-						Server.getPlugin().getConfig().set(configPath + ".suffixRank", $.validRanks.get(0));
-						if ($.isPrefixedRankingEnabled() && player.isOnline()) {
-							$.flashPlayerDisplayName(player.getPlayer());
-						}
-					}
 					if (rank.equals("admin")) {
 						if (totalPlaytime > managerPlaytimeRequirement) {
 							if ($.validRanks.contains("manager")) {
 								Logger.info("Auto-promotion of " + player.getName() + " to Manager");
-								Server.getPlugin().getConfig().set(configPath + ".rank", "manager");
+								Server.getSqlDatabase().set("rank", player.getUniqueId().toString(), "manager");
 								if ($.isPrefixedRankingEnabled() && player.isOnline()) {
 									$.flashPlayerDisplayName(player.getPlayer());
 								}
@@ -124,7 +107,7 @@ public class GCandAutoDemotion implements Runnable {
 						playtimeRequirementPerWeek /= 2;
 					if (totalTimePlayedInSeconds < playtimeRequirementPerWeek) {
 						Logger.info("Auto-demotion of " + player.getName() + " to " + $.validRanks.get(0));
-						Server.getPlugin().getConfig().set(configPath + ".rank", $.validRanks.get(0));
+						Server.getSqlDatabase().set("rank", player.getUniqueId().toString(), $.validRanks.get(0));
 						if ($.isPrefixedRankingEnabled() && player.isOnline()) {
 							$.flashPlayerDisplayName(player.getPlayer());
 						}

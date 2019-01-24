@@ -15,38 +15,11 @@ public class SQLDatabase {
 		}
 	}
 
-	public void testLogic() {
-		System.out.println("Hit testLogic() of SQLDatabase");
-		createTable("test");
-		System.out.println("Passed section 1 of testLogic()");
-		if (tableExists("test"))
-			System.out.println("Passed section 2 of testLogic()");
-		set("test", "message", "Hello World");
-		System.out.println("Passed section 3 of testLogic()");
-		String message = getString("test", "message");
-		System.out.println("Passed section 4 of testLogic()");
-		if (message.equals("Hello World"))
-			System.out.println("Passed section 5 of testLogic()");
-		dropTable("test");
-		System.out.println("Passed section 6 of testLogic()");
-		set("test2", "message2", "Hello there World, it is I.");
-		System.out.println("Passed section 7 of testLogic()");
-		if (tableExists("test2"))
-			System.out.println("Passed section 8 of testLogic()");
-		String message2 = getString("test2", "message2");
-		System.out.println("Passed section 9 of testLogic()");
-		if (message2.equals("Hello there World, it is I."))
-			System.out.println("Passed section 10 of testLogic()");
-		dropTable("test2");
-		System.out.println("Passed section 11 of testLogic()");
-	}
-
 	public int createTable(String table) {
 		try {
-			String sql = "CREATE TABLE IF NOT EXISTS " + table + "(sql_key VARCHAR(255), sql_value VARCHAR(255))";
+			String sql = "CREATE TABLE " + table + "(sql_key VARCHAR(255), sql_value VARCHAR(255))";
 			return connection.prepareStatement(sql).executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
 			return -1;
 		}
 	}
@@ -56,7 +29,6 @@ public class SQLDatabase {
 			String sql = "DROP TABLE " + table;
 			return connection.prepareStatement(sql).executeUpdate();
 		} catch (Exception e) {
-			e.printStackTrace();
 			return -1;
 		}
 	}
@@ -67,7 +39,6 @@ public class SQLDatabase {
 			connection.prepareStatement(sql).executeQuery();
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 	}
@@ -78,18 +49,19 @@ public class SQLDatabase {
 
 	private int set(String table, String key, String value, boolean loopback) {
 		try {
+			if (contains(table, key)) {
+				String sql = "DELETE FROM " + table + " WHERE sql_key = '" + key + "'";
+				connection.prepareStatement(sql).executeUpdate();
+			}
 			String sql = "INSERT INTO " + table + "(sql_key, sql_value) VALUES('" + key + "', '" + value + "')";
 			return connection.prepareStatement(sql).executeUpdate();
 		} catch (Exception e) {
 			if (loopback) {
-				if (createTable(table) == -1) {
-					e.printStackTrace();
+				if (createTable(table) == -1)
 					return -1;
-				}
 				return set(table, key, value, false);
-			}
-			e.printStackTrace();
-			return -1;
+			} else
+				return -1;
 		}
 	}
 
@@ -111,15 +83,18 @@ public class SQLDatabase {
 			return null;
 		} catch (Exception e) {
 			if (loopback) {
-				if (createTable(table) == -1) {
-					e.printStackTrace();
+				if (createTable(table) == -1)
 					return null;
-				}
 				return getString(table, key, false);
-			}
-			e.printStackTrace();
-			return null;
+			} else
+				return null;
 		}
+	}
+
+	public boolean contains(String table, String key) {
+		if (getString(table, key) == null)
+			return false;
+		return true;
 	}
 
 	public boolean close() {
@@ -129,7 +104,6 @@ public class SQLDatabase {
 			connection.close();
 			return true;
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			return false;
 		}
 	}

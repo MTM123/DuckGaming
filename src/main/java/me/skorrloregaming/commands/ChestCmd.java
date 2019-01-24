@@ -44,7 +44,7 @@ public class ChestCmd implements CommandExecutor {
 		}
 		if (args.length < 2 || (!(Bukkit.getPlayer(args[1]) == null) && Bukkit.getPlayer(args[1]).getName().equals(player.getName()))) {
 			if (chestNumber > 1) {
-				int rankId = $.getRankId(player);
+				int rankId = $.getDonorRankId(player);
 				switch (chestNumber) {
 					case 2:
 						if (!(rankId < -1)) {

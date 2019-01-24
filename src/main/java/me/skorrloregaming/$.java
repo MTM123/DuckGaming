@@ -15,12 +15,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-import io.papermc.lib.features.asyncteleport.AsyncTeleportPaper;
 import me.skorrloregaming.scoreboard.boards.*;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.*;
@@ -63,7 +60,8 @@ public class $ {
 	public static String modernMsgPrefix = ChatColor.BOLD + "\u00BB" + " ";
 	public static String consoleTag = ChatColor.RED + "[" + ChatColor.GRAY + "Console" + ChatColor.RED + "] " + ChatColor.RED;
 	public static String pricePrefix = ChatColor.RESET + "Purchase Price: " + ChatColor.RED + "$";
-	public static List<String> validRanks = Arrays.asList(new String[]{"default", "default-plus", "founder", "owner", "manager", "admin", "moderator", "helper", "developer", "builder", "senior", "youtube", "donator", "redstone", "obsidian", "bedrock"});
+	public static List<String> validRanks = Arrays.asList(new String[]{"default", "default-plus", "founder", "owner", "manager", "admin", "moderator", "helper", "developer", "builder"});
+	public static List<String> validDonorRanks = Arrays.asList(new String[]{"default", "youtube", "donator", "redstone", "obsidian", "bedrock"});
 	public static List<String> validRanksNotifyWorkerExecuteCommand = Arrays.asList(new String[]{"founder"});
 	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock", "prison"});
 	public static List<String> validStorageMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "creative", "skyblock", "prison"});
@@ -134,94 +132,82 @@ public class $ {
 		return false;
 	}
 
-	public static String toSuffixRankTag(Player player, String str) {
-		switch (str.toString()) {
-			case "default-plus":
-				if (getRank(player.getUniqueId()).equals("builder")) {
-					return ChatColor.GRAY + "[" + ChatColor.WHITE + "Member+" + ChatColor.GRAY + "]" + ChatColor.RESET;
-				} else {
-					return toRankTag(str).substring(0, toRankTag(str).lastIndexOf(" ")) + ChatColor.RESET;
-				}
-			default:
-				return toRankTag(str).substring(0, toRankTag(str).lastIndexOf(" ")) + ChatColor.RESET;
-		}
+	public static String toDonorRankTag(String rank) {
+		return toRankTag(rank).substring(0, toRankTag(rank).lastIndexOf(" ")) + ChatColor.RESET;
 	}
 
-	public static String toRankTag(String str) {
-		if (str.equals("default"))
+	public static String toRankTag(String rank) {
+		if (rank.equals("default"))
 			return ChatColor.DARK_GRAY + "[" + ChatColor.GRAY + "Member" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY;
-		if (str.equals("default-plus"))
-			return ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + "Member+" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY;
-		if (str.equals("helper"))
+		if (rank.equals("helper"))
 			return ChatColor.RED + "[" + ChatColor.GRAY + "Helper" + ChatColor.RED + "] ";
-		if (str.equals("developer"))
+		if (rank.equals("developer"))
 			return ChatColor.DARK_PURPLE + "[" + ChatColor.LIGHT_PURPLE + "Developer" + ChatColor.DARK_PURPLE + "] " + ChatColor.LIGHT_PURPLE;
-		if (str.equals("builder"))
+		if (rank.equals("builder"))
 			return ChatColor.GRAY + "[" + ChatColor.WHITE + "Builder" + ChatColor.GRAY + "] " + ChatColor.WHITE;
-		if (str.equals("moderator"))
+		if (rank.equals("moderator"))
 			return ChatColor.RED + "[" + ChatColor.GRAY + "Moderator" + ChatColor.RED + "] ";
-		if (str.equals("admin"))
+		if (rank.equals("admin"))
 			return ChatColor.RED + "[" + ChatColor.GRAY + "Admin" + ChatColor.RED + "] ";
-		if (str.equals("manager"))
+		if (rank.equals("manager"))
 			return ChatColor.RED + "[" + ChatColor.GRAY + "Manager" + ChatColor.RED + "] ";
-		if (str.equals("owner"))
+		if (rank.equals("owner"))
 			return ChatColor.RED + "[" + ChatColor.GRAY + "Owner" + ChatColor.RED + "] ";
-		if (str.equals("founder"))
+		if (rank.equals("founder"))
 			return ChatColor.RED + "[" + ChatColor.GRAY + "Founder" + ChatColor.RED + "] ";
-		if (str.equals("donator"))
+		if (rank.equals("donator"))
 			return ChatColor.DARK_GREEN + "[" + ChatColor.GREEN + "Donator" + ChatColor.DARK_GREEN + "] " + ChatColor.GRAY;
-		if (str.equals("senior"))
-			return ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + "Senior" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY;
-		if (str.equals("youtube"))
+		if (rank.equals("youtube"))
 			return ChatColor.GRAY + "[" + ChatColor.RED + "You" + ChatColor.WHITE + "Tube" + ChatColor.GRAY + "] " + ChatColor.RESET;
-		if (str.equals("redstone"))
+		if (rank.equals("redstone"))
 			return ChatColor.DARK_GREEN + "[" + ChatColor.GREEN + "Redstone" + ChatColor.DARK_GREEN + "] " + ChatColor.GRAY;
-		if (str.equals("obsidian"))
+		if (rank.equals("obsidian"))
 			return ChatColor.DARK_GREEN + "[" + ChatColor.GREEN + "Obsidian" + ChatColor.DARK_GREEN + "] " + ChatColor.GRAY;
-		if (str.equals("bedrock"))
+		if (rank.equals("bedrock"))
 			return ChatColor.DARK_GREEN + "[" + ChatColor.GREEN + "Bedrock" + ChatColor.DARK_GREEN + "] " + ChatColor.GRAY;
 		return "";
 	}
 
-	public static String toRankDisplayName(String str) {
-		if (str.equals("default"))
+	public static String toRankDisplayName(String rank) {
+		if (rank.equals("default"))
 			return "member";
-		if (str.equals("default-plus"))
-			return "member+";
-		if (str.equals("helper"))
+		if (rank.equals("helper"))
 			return "helper";
-		if (str.equals("developer"))
+		if (rank.equals("developer"))
 			return "developer";
-		if (str.equals("builder"))
+		if (rank.equals("builder"))
 			return "builder";
-		if (str.equals("moderator"))
+		if (rank.equals("moderator"))
 			return "moderator";
-		if (str.equals("admin"))
+		if (rank.equals("admin"))
 			return "admin";
-		if (str.equals("manager"))
+		if (rank.equals("manager"))
 			return "manager";
-		if (str.equals("owner"))
+		if (rank.equals("owner"))
 			return "owner";
-		if (str.equals("founder"))
+		if (rank.equals("founder"))
 			return "founder";
-		if (str.equals("donator"))
+		if (rank.equals("donator"))
 			return "donator";
-		if (str.equals("senior"))
-			return "senior";
-		if (str.equals("youtube"))
+		if (rank.equals("youtube"))
 			return "youtube";
-		if (str.equals("redstone"))
+		if (rank.equals("redstone"))
 			return "redstone";
-		if (str.equals("obsidian"))
+		if (rank.equals("obsidian"))
 			return "obsidian";
-		if (str.equals("bedrock"))
+		if (rank.equals("bedrock"))
 			return "bedrock";
 		return "";
 	}
 
 	public static String getRank(UUID id) {
-		if (isRankingEnabled() && Server.getPlugin().getConfig().contains("config." + id.toString() + ".rank")) {
-			return Server.getPlugin().getConfig().getString("config." + id.toString() + ".rank");
+		if (isRankingEnabled()) {
+			if (Server.getSqlDatabase().contains("rank", id.toString())) {
+				return Server.getSqlDatabase().getString("rank", id.toString());
+			} else {
+				Server.getSqlDatabase().set("rank", id.toString(), validRanks.get(0));
+				return validRanks.get(0);
+			}
 		} else {
 			return validRanks.get(0);
 		}
@@ -231,30 +217,27 @@ public class $ {
 		return getRank(player.getUniqueId());
 	}
 
-	public static String getSuffixRank(UUID id) {
-		if (isRankingEnabled() && Server.getPlugin().getConfig().contains("config." + id.toString() + ".suffixRank")) {
-			return Server.getPlugin().getConfig().getString("config." + id.toString() + ".suffixRank");
+	public static String getDonorRank(UUID id) {
+		if (isRankingEnabled()) {
+			if (Server.getSqlDatabase().contains("donorRank", id.toString())) {
+				return Server.getSqlDatabase().getString("donorRank", id.toString());
+			} else {
+				Server.getSqlDatabase().set("donorRank", id.toString(), validDonorRanks.get(0));
+				return validDonorRanks.get(0);
+			}
 		} else {
-			return validRanks.get(0);
+			return validDonorRanks.get(0);
 		}
 	}
 
-	public static String getSuffixRank(Player player) {
-		return getSuffixRank(player.getUniqueId());
+	public static String getDonorRank(Player player) {
+		return getDonorRank(player.getUniqueId());
 	}
 
 	public static int getRankId(UUID id) {
 		String rank = getRank(id);
-		if (rank.equals("default") || rank.equals("default-plus") || rank.equals("senior") || rank.equals("youtube") || !isRankingEnabled())
+		if (rank.equals("default") || !isRankingEnabled())
 			return -1;
-		if (rank.equals("bedrock"))
-			return -5;
-		if (rank.equals("obsidian"))
-			return -4;
-		if (rank.equals("redstone"))
-			return -3;
-		if (rank.equals("donator"))
-			return -2;
 		if (rank.equals("helper") || rank.equals("developer") || rank.equals("builder"))
 			return 0;
 		if (rank.equals("moderator"))
@@ -268,6 +251,25 @@ public class $ {
 
 	public static int getRankId(Player player) {
 		return getRankId(player.getUniqueId());
+	}
+
+	public static int getDonorRankId(UUID id) {
+		String rank = getDonorRank(id);
+		if (rank.equals("default") || rank.equals("youtube") || !isRankingEnabled())
+			return -1;
+		if (rank.equals("bedrock"))
+			return -5;
+		if (rank.equals("obsidian"))
+			return -4;
+		if (rank.equals("redstone"))
+			return -3;
+		if (rank.equals("donator"))
+			return -2;
+		return -100;
+	}
+
+	public static int getDonorRankId(Player player) {
+		return getDonorRankId(player.getUniqueId());
 	}
 
 	public static String formatMonthId(int month) {
@@ -386,49 +388,32 @@ public class $ {
 		return formatMonthId(cal.get(Calendar.MONTH)) + " " + cal.get(Calendar.DAY_OF_MONTH) + ", " + cal.get(Calendar.YEAR);
 	}
 
-	public static int getSuffixRankId(UUID id) {
-		String rank = getSuffixRank(id);
-		if (rank.equals("default") || rank.equals("default-plus") || rank.equals("senior") || !isRankingEnabled())
-			return -1;
-		if (rank.equals("bedrock"))
-			return -5;
-		if (rank.equals("obsidian"))
-			return -4;
-		if (rank.equals("redstone"))
-			return -3;
-		if (rank.equals("donator"))
-			return -2;
-		if (rank.equals("helper") || rank.equals("developer") || rank.equals("builder"))
-			return 0;
-		if (rank.equals("moderator"))
-			return 1;
-		if (rank.equals("admin") || rank.equals("manager"))
-			return 2;
-		if (rank.equals("founder") || rank.equals("owner"))
-			return 3;
-		return -100;
-	}
-
-	public static int getSuffixRankId(Player player) {
-		return getSuffixRankId(player.getUniqueId());
-	}
-
 	public static void flashPlayerDisplayName(Player player) {
-		String suffixRank = getSuffixRank(player);
-		if (!(suffixRank.equals("default"))) {
-			player.setDisplayName(toRankTag(getRank(player)) + player.getName() + " " + toSuffixRankTag(player, suffixRank) + ChatColor.RESET);
+		String rank = getRank(player);
+		String donorRank = getDonorRank(player);
+		if (donorRank.equals("default")) {
+			player.setDisplayName(toRankTag(rank) + player.getName() + ChatColor.RESET);
 		} else {
-			player.setDisplayName(toRankTag(getRank(player)) + player.getName() + ChatColor.RESET);
+			if (rank.equals("default")) {
+				player.setDisplayName(toRankTag(donorRank) + player.getName() + ChatColor.RESET);
+			} else {
+				player.setDisplayName(toRankTag(rank) + player.getName() + " " + toDonorRankTag(donorRank) + ChatColor.RESET);
+			}
 		}
 		player.setPlayerListName(player.getDisplayName());
 	}
 
 	public static String getFlashPlayerDisplayName(OfflinePlayer player) {
-		String suffixRank = getSuffixRank(player.getUniqueId());
-		if (!(suffixRank.equals("default"))) {
-			return toRankTag(getRank(player.getUniqueId())) + player.getName() + " " + toRankTag(suffixRank) + ChatColor.RESET;
+		String rank = getRank(player.getUniqueId());
+		String donorRank = getDonorRank(player.getUniqueId());
+		if (donorRank.equals("default")) {
+			return toRankTag(rank) + player.getName() + ChatColor.RESET;
 		} else {
-			return toRankTag(getRank(player.getUniqueId())) + player.getName() + ChatColor.RESET;
+			if (rank.equals("default")) {
+				return toRankTag(donorRank) + player.getName() + ChatColor.RESET;
+			} else {
+				return toRankTag(rank) + player.getName() + " " + toDonorRankTag(donorRank) + ChatColor.RESET;
+			}
 		}
 	}
 
@@ -436,11 +421,16 @@ public class $ {
 		UUID id = UUID.nameUUIDFromBytes(("OfflinePlayer:" + playerName).getBytes());
 		if (Bukkit.getOnlineMode())
 			id = UUID.fromString(CraftGo.Player.getUUID(playerName, true));
-		String suffixRank = getSuffixRank(id);
-		if (!(suffixRank.equals("default"))) {
-			return toRankTag(getRank(id)) + playerName + " " + toRankTag(suffixRank) + ChatColor.RESET;
+		String rank = getRank(id);
+		String donorRank = getDonorRank(id);
+		if (donorRank.equals("default")) {
+			return toRankTag(rank) + playerName + ChatColor.RESET;
 		} else {
-			return toRankTag(getRank(id)) + playerName + ChatColor.RESET;
+			if (rank.equals("default")) {
+				return toRankTag(donorRank) + playerName + ChatColor.RESET;
+			} else {
+				return toRankTag(rank) + playerName + " " + toDonorRankTag(donorRank) + ChatColor.RESET;
+			}
 		}
 	}
 
