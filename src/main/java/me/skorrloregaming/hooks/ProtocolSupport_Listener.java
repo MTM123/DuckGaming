@@ -113,10 +113,11 @@ public class ProtocolSupport_Listener implements Listener {
 			return;
 		UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + event.getConnection().getProfile().getName()).getBytes());
 		UUID playerUUID = event.getConnection().getProfile().getOriginalUUID();
-		if (playerUUID.toString().equals(offlineUUID.toString())) {
-			event.denyLogin("You are not allowed to connect with a cracked account.");
-			return;
-		}
+		if (!Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false))
+			if (playerUUID.toString().equals(offlineUUID.toString())) {
+				event.denyLogin("You are not allowed to connect with a cracked account.");
+				return;
+			}
 		String path = "sync." + playerName;
 		if (Server.getPlugin().getConfig().contains(path)) {
 			if (!Server.getPlugin().getConfig().getBoolean(path + ".est")) {

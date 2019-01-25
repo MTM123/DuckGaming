@@ -114,8 +114,7 @@ public class PlayerEventHandler implements Listener {
 					ByteArrayDataOutput out = ByteStreams.newDataOutput();
 					out.writeUTF("PlayerList");
 					out.writeUTF("prison");
-					Player messenger = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
-					messenger.sendPluginMessage(Server.getPlugin(), "BungeeCord", out.toByteArray());
+					Bukkit.getServer().sendPluginMessage(Server.getPlugin(), "BungeeCord", out.toByteArray());
 				}
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					if ($.isAuthenticated(player) && $.getCurrentMinigame(player) == ServerMinigame.HUB)
