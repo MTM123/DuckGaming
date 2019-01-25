@@ -60,7 +60,7 @@ public class $ {
 	public static String modernMsgPrefix = ChatColor.BOLD + "\u00BB" + " ";
 	public static String consoleTag = ChatColor.RED + "[" + ChatColor.GRAY + "Console" + ChatColor.RED + "] " + ChatColor.RED;
 	public static String pricePrefix = ChatColor.RESET + "Purchase Price: " + ChatColor.RED + "$";
-	public static List<String> validRanks = Arrays.asList(new String[]{"default", "default-plus", "founder", "owner", "manager", "admin", "moderator", "helper", "developer", "builder"});
+	public static List<String> validRanks = Arrays.asList(new String[]{"default", "founder", "owner", "manager", "admin", "moderator", "helper", "developer", "builder"});
 	public static List<String> validDonorRanks = Arrays.asList(new String[]{"default", "youtube", "donator", "redstone", "obsidian", "bedrock"});
 	public static List<String> validRanksNotifyWorkerExecuteCommand = Arrays.asList(new String[]{"founder"});
 	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock", "prison"});

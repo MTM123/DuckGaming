@@ -1,7 +1,5 @@
 package me.skorrloregaming.discord.listeners;
 
-import fr.xephi.authme.datasource.MySQL;
-import fr.xephi.authme.datasource.mysqlextensions.MySqlExtension;
 import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Logger;
@@ -48,8 +46,8 @@ public class MessageListener extends ListenerAdapter {
 						}
 					}
 					if (altAddress == null || Server.getBanConfig().getData().contains(altAddress.replace(".", "x")) || !Server.getDiscordVerifyConfig().getData().contains("verified." + id)) {
-						event.getMessage().delete().queueAfter(1000, TimeUnit.MILLISECONDS);
-						discordBot.broadcast("Sorry " + mention + ", you are no longer verified as that player.", 1000, Channel.SERVER_CHAT);
+						event.getMessage().delete().queueAfter(2000, TimeUnit.MILLISECONDS);
+						discordBot.broadcast("Sorry " + mention + ", you are no longer verified as that player.", 2000, Channel.SERVER_CHAT);
 						Server.getDiscordVerifyConfig().getData().set("verified." + id, null);
 						Server.getDiscordVerifyConfig().saveData();
 						event.getGuild().getController().removeRolesFromMember(event.getMember(), event.getJDA().getRolesByName("Verified", true)).complete();
@@ -78,7 +76,7 @@ public class MessageListener extends ListenerAdapter {
 					for (Player player : Bukkit.getOnlinePlayers()) {
 						CraftGo.Player.sendJson(player, ComponentSerializer.toString(message));
 					}
-				} else if (event.getTextChannel().getName().equals(discordBot.getChannelName(Channel.SERVER_CHAT_VERIFY))) {
+				} else if (event.getTextChannel().getName().equals(discordBot.getChannelName(Channel.SERVER_VERIFY))) {
 					String rawMessage = event.getMessage().getContentDisplay();
 					if (rawMessage.startsWith("?verify")) {
 						String[] args = rawMessage.split(" ");
@@ -93,13 +91,13 @@ public class MessageListener extends ListenerAdapter {
 										hitUUID = entry.getValue();
 										Server.getDiscordVerifyConfig().getData().set("verified." + id, entry.getValue().toString());
 										Server.getDiscordVerifyConfig().saveData();
-										discordBot.broadcast("Thank you for verifying you minecraft account, " + mention + "!", Channel.SERVER_CHAT_VERIFY);
+										discordBot.broadcast("Thank you for verifying you minecraft account, " + mention + "!", Channel.SERVER_VERIFY);
 										hit = true;
 									}
 								}
 								if (!hit) {
-									event.getMessage().delete().queueAfter(1000, TimeUnit.MILLISECONDS);
-									discordBot.broadcast("That's not a valid code, you can get one with /verify on the server.", 1000, Channel.SERVER_CHAT_VERIFY);
+									event.getMessage().delete().queueAfter(2000, TimeUnit.MILLISECONDS);
+									discordBot.broadcast("That's not a valid code, you can get one with /verify on the server.", 2000, Channel.SERVER_VERIFY);
 								} else {
 									Server.getDiscordVerifyPlayers().remove(code, hitUUID);
 									OfflinePlayer player = Bukkit.getOfflinePlayer(hitUUID);
@@ -108,13 +106,13 @@ public class MessageListener extends ListenerAdapter {
 								}
 							} catch (Exception ex) {
 								ex.printStackTrace();
-								event.getMessage().delete().queueAfter(1000, TimeUnit.MILLISECONDS);
-								discordBot.broadcast("Please use ?verify <code> to link your minecraft account.", 1000, Channel.SERVER_CHAT_VERIFY);
+								event.getMessage().delete().queueAfter(2000, TimeUnit.MILLISECONDS);
+								discordBot.broadcast("Please use ?verify <code> to link your minecraft account.", 2000, Channel.SERVER_VERIFY);
 							}
 						}
 					} else {
-						event.getMessage().delete().queueAfter(1000, TimeUnit.MILLISECONDS);
-						discordBot.broadcast("Please use ?verify <code> to link your minecraft account.", 1000, Channel.SERVER_CHAT_VERIFY);
+						event.getMessage().delete().queueAfter(2000, TimeUnit.MILLISECONDS);
+						discordBot.broadcast("Please use ?verify <code> to link your minecraft account.", 2000, Channel.SERVER_VERIFY);
 					}
 				}
 		}

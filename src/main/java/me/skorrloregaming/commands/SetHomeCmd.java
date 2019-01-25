@@ -46,7 +46,7 @@ public class SetHomeCmd implements CommandExecutor {
 		}
 		if (config.getData().contains(base))
 			count--;
-		int rankId = $.getRankId(player);
+		int rankId = $.getDonorRankId(player);
 		switch (count) {
 			case 0:
 				break;

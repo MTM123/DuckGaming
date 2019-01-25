@@ -24,7 +24,7 @@ public class FlyCmd implements CommandExecutor {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
-		if ($.getRankId(player) < -3) {
+		if ($.getDonorRankId(player) < -3) {
 			if (FPlayers.getInstance().getByPlayer(player).isInOwnTerritory()) {
 				if (Server.getFactionFlyPlayers().contains(player.getUniqueId())) {
 					Server.getFactionFlyPlayers().remove(player.getUniqueId());

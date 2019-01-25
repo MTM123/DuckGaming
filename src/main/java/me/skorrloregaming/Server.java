@@ -1568,7 +1568,7 @@ public class Server extends JavaPlugin implements Listener {
 						player.addAttachment(plugin, "plots.permpack.basic", true);
 						player.addAttachment(plugin, "plots.plot.1", true);
 						player.addAttachment(plugin, "plots.visit.other", true);
-						if ($.getRankId(player) < -1 || $.getRankId(player) > -1) {
+						if ($.getDonorRankId(player) < -1 || $.getRankId(player) > -1) {
 							for (String permission : Directory.basicWorldEditPermissions) {
 								player.addAttachment(plugin, permission, true);
 							}
@@ -1610,7 +1610,7 @@ public class Server extends JavaPlugin implements Listener {
 				player.addAttachment(this, "plots.permpack.basic", false);
 				player.addAttachment(this, "plots.plot.1", false);
 				player.addAttachment(this, "plots.visit.other", false);
-				if ($.getRankId(player) < -1 || $.getRankId(player) > -1) {
+				if ($.getDonorRankId(player) < -1 || $.getRankId(player) > -1) {
 					for (String permission : Directory.basicWorldEditPermissions) {
 						player.addAttachment(plugin, permission, false);
 					}

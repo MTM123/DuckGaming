@@ -91,7 +91,7 @@ public class Votifier_Listener implements Listener {
 				amountEarned2 = 0;
 				amountEarned3 = 0;
 			}
-			switch ($.getRankId(player.getUniqueId())) {
+			switch ($.getDonorRankId(player.getUniqueId())) {
 				case -5:
 					amountEarned1 *= 5;
 					amountEarned2 *= 5;
