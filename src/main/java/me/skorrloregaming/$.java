@@ -62,12 +62,11 @@ public class $ {
 	public static String pricePrefix = ChatColor.RESET + "Purchase Price: " + ChatColor.RED + "$";
 	public static List<String> validRanks = Arrays.asList(new String[]{"default", "founder", "owner", "manager", "admin", "moderator", "helper", "developer", "builder"});
 	public static List<String> validDonorRanks = Arrays.asList(new String[]{"default", "youtube", "donator", "redstone", "obsidian", "bedrock"});
-	public static List<String> validRanksNotifyWorkerExecuteCommand = Arrays.asList(new String[]{"founder"});
-	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock", "prison"});
-	public static List<String> validStorageMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "creative", "skyblock", "prison"});
-	public static List<String> validEconomyMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "skyblock", "prison"});
-	public static List<String> validLocketteMinigames = Arrays.asList(new String[]{"skyblock", "factions", "prison"});
-	public static List<String> validStairSeatMinigames = Arrays.asList(new String[]{"creative", "skyblock", "factions", "prison"});
+	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock"});
+	public static List<String> validStorageMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "creative", "skyblock"});
+	public static List<String> validEconomyMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "skyblock"});
+	public static List<String> validLocketteMinigames = Arrays.asList(new String[]{"skyblock", "factions"});
+	public static List<String> validStairSeatMinigames = Arrays.asList(new String[]{"creative", "skyblock", "factions"});
 	public static List<String> scoreboardAutoUpdateMinigames = Arrays.asList(new String[]{"skyblock", "factions", "kitpvp"});
 	public static List<String> betaMinigames = Arrays.asList(new String[]{});
 	public static Kitpvp_LeaderboardScoreboard kitpvpLeaderboardScoreboard = new Kitpvp_LeaderboardScoreboard();
@@ -75,7 +74,6 @@ public class $ {
 	public static Skyblock_StatisticsScoreboard skyblockScoreboard = new Skyblock_StatisticsScoreboard();
 	public static Skyfight_LeaderboardScoreboard skyfightScoreboard = new Skyfight_LeaderboardScoreboard();
 	public static Factions_StatisticsScoreboard factionsScoreboard = new Factions_StatisticsScoreboard();
-	public static Prison_StatisticsScoreboard prisonScoreboard = new Prison_StatisticsScoreboard();
 	public static List<SwitchStringMinigame> playersNotAllowedToJoinSpecificMinigames = Arrays.asList(new SwitchStringMinigame[]{new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.KITPVP), new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.SKYFIGHT)});
 
 	public static DisposableScoreboard getPrimaryScoreboard(ServerMinigame minigame) {
@@ -88,8 +86,6 @@ public class $ {
 				return skyfightScoreboard;
 			case FACTIONS:
 				return factionsScoreboard;
-			case PRISON:
-				return prisonScoreboard;
 			default:
 				return null;
 		}
@@ -1390,10 +1386,6 @@ public class $ {
 			return ServerMinigame.SKYBLOCK;
 		if ($.getZoneLocation("skyblock_nether").getWorld().getName().equals(world.getName()))
 			return ServerMinigame.SKYBLOCK;
-		if ($.getZoneLocation("prison").getWorld().getName().equals(world.getName()))
-			return ServerMinigame.PRISON;
-		if ($.getZoneLocation("prison_plots").getWorld().getName().equals(world.getName()))
-			return ServerMinigame.PRISON;
 		if ($.getZoneLocation("hub").getWorld().getName().equals(world.getName()))
 			return ServerMinigame.HUB;
 		return ServerMinigame.UNKNOWN;
@@ -1412,8 +1404,6 @@ public class $ {
 			return Server.getSurvival();
 		if (domain.equals("skyblock"))
 			return Server.getSkyblock();
-		if (domain.equals("prison"))
-			return Server.getPrison();
 		if (domain.equals("hub"))
 			return Server.getHub();
 		return null;
@@ -1432,8 +1422,6 @@ public class $ {
 			return "survival";
 		if (Server.getSkyblock().contains(player.getUniqueId()))
 			return "skyblock";
-		if (Server.getPrison().contains(player.getUniqueId()))
-			return "prison";
 		if (Server.getHub().contains(player.getUniqueId()))
 			return "hub";
 		return "hub";
@@ -1456,8 +1444,6 @@ public class $ {
 			return Survival.tag;
 		if (domain.equals("skyblock"))
 			return Skyblock.tag;
-		if (domain.equals("prison"))
-			return Prison.tag;
 		if (domain.equals("hub"))
 			return Lobby.tag;
 		return Lobby.tag;
@@ -1672,10 +1658,6 @@ public class $ {
 		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "hub" + ChatColor.GRAY + "] " + ChatColor.RESET;
 	}
 
-	public static class NotifyWorker {
-		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "notify" + ChatColor.GRAY + "] " + ChatColor.RESET;
-	}
-
 	public static class Skyfight {
 		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "skyfight" + ChatColor.GRAY + "] " + ChatColor.RESET;
 
@@ -1807,90 +1789,6 @@ public class $ {
 				}
 			}
 		}
-	}
-
-	public static class Prison {
-
-		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "prison" + ChatColor.GRAY + "] " + ChatColor.RESET;
-
-		public static int getPlayerRank(Player player) {
-			String path = "config." + player.getUniqueId().toString() + ".prison";
-			if (Server.getPlugin().getConfig().contains(path) && Server.getPlugin().getConfig().contains(path + ".rank")) {
-				int rank = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".rank"));
-				if (rank < 1) {
-					Server.getPlugin().getConfig().set(path + ".rank", "1");
-					rank = 1;
-				}
-				return rank;
-			}
-			Server.getPlugin().getConfig().set(path + ".rank", "1");
-			return 1;
-		}
-
-		public static void setPlayerRank(Player player, int value) {
-			String path = "config." + player.getUniqueId().toString() + ".prison";
-			Server.getPlugin().getConfig().set(path + ".rank", value + "");
-		}
-
-		public static char getRankLetter(int rank) {
-			switch (rank) {
-				case 1:
-					return 'A';
-				case 2:
-					return 'B';
-				case 3:
-					return 'C';
-				case 4:
-					return 'D';
-				case 5:
-					return 'E';
-				case 6:
-					return 'F';
-				case 7:
-					return 'G';
-				case 8:
-					return 'H';
-				case 9:
-					return 'I';
-				case 10:
-					return 'J';
-				case 11:
-					return 'K';
-				case 12:
-					return 'L';
-				case 13:
-					return 'M';
-				case 14:
-					return 'N';
-				case 15:
-					return 'O';
-				case 16:
-					return 'P';
-				case 17:
-					return 'Q';
-				case 18:
-					return 'R';
-				case 19:
-					return 'S';
-				case 20:
-					return 'T';
-				case 21:
-					return 'U';
-				case 22:
-					return 'V';
-				case 23:
-					return 'W';
-				case 24:
-					return 'X';
-				case 25:
-					return 'Y';
-				case 26:
-					return 'Z';
-				default:
-					return '?';
-			}
-		}
-
 	}
 
 	public static class Factions {

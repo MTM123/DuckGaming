@@ -11,7 +11,6 @@ settings:
         skyfight: true
         creative: true
         skyblock: false
-        prison: false
         welcomeMessage: true
         pingInjector: true
         authme:
@@ -26,7 +25,7 @@ settings:
                     1m10: true
                     1m9: true
                     1m8: true
-                    1m7: true
+                    1m7: false
                     1m6: false
                     1m5: false
                     1m4: false

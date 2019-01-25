@@ -108,7 +108,6 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConcurrentMap<UUID, $.Skyfight.Player> skyfight = new ConcurrentHashMap<>();
 	private static ArrayList<UUID> creative = new ArrayList<>();
 	private static ArrayList<UUID> skyblock = new ArrayList<>();
-	private static ArrayList<UUID> prison = new ArrayList<>();
 
 	private static String tempMotd = "/unspecified";
 	private static ArrayList<UUID> simpleDelayedTask = new ArrayList<>();
@@ -491,10 +490,6 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static ArrayList<UUID> getSkyblock() {
 		return skyblock;
-	}
-
-	public static ArrayList<UUID> getPrison() {
-		return prison;
 	}
 
 	public static ConfigurationManager getRamConfig() {
@@ -953,8 +948,6 @@ public class Server extends JavaPlugin implements Listener {
 					array.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Creative", creative.size());
 				if ($.isMinigameEnabled(ServerMinigame.SKYBLOCK))
 					array.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Skyblock", skyblock.size());
-				if ($.isMinigameEnabled(ServerMinigame.PRISON))
-					array.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Prison", prison.size());
 				hubScoreboardTitleIndex.putIfAbsent(player.getUniqueId(), 0);
 				int index = hubScoreboardTitleIndex.get(player.getUniqueId());
 				if (message.length() <= 16) {
@@ -1081,7 +1074,6 @@ public class Server extends JavaPlugin implements Listener {
 		changes += leaveSurvival(player, noRestore, noLog);
 		changes += leaveKitpvp(player, noRestore, noLog);
 		changes += leaveSkyblock(player, noRestore, noLog);
-		changes += leavePrison(player, noRestore, noLog);
 		rawChanges += changes;
 		if (changes > 0)
 			$.clearPlayer(player);
@@ -1704,113 +1696,6 @@ public class Server extends JavaPlugin implements Listener {
 			skyblock.remove(player.getUniqueId());
 			$.clearPlayer(player);
 			player.setAllowFlight(false);
-			$.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);
-			return 1;
-		}
-		return 0;
-	}
-
-	public void enterPrison(Player player, boolean noRestore, boolean noLog) {
-		if ($.isPlayerNotAllowedToJoin(player, ServerMinigame.PRISON)) {
-			player.sendMessage("You are not allowed to enter this minigame.");
-			return;
-		}
-		if (!prison.contains(player.getUniqueId())) {
-			if (moderatingPlayers.containsKey(player.getUniqueId())) {
-				noRestore = true;
-				noLog = true;
-			}
-			ServerMinigame minigame = $.getCurrentMinigame(player);
-			int changes = performBuggedLeave(player, noRestore, noLog);
-			if (changes == 0 && !(minigame == ServerMinigame.HUB || minigame == ServerMinigame.UNKNOWN))
-				return;
-			if (hub.contains(player.getUniqueId())) {
-				hub.remove(player.getUniqueId());
-				$.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);
-				hubScoreboardTitleIndex.put(player.getUniqueId(), 0);
-			}
-			prison.add(player.getUniqueId());
-			$.clearPlayer(player);
-			if (!noRestore) {
-				boolean success = SolidStorage.restorePlayerData(player, "prison");
-				if (!success) {
-					Location teleportLocation = $.getZoneLocation("prison");
-					if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
-						if (teleportLocation.distance(player.getLocation()) > 0.1) {
-							$.teleport(player, teleportLocation);
-						}
-					} else {
-						$.teleport(player, teleportLocation);
-					}
-				}
-			} else {
-				Location teleportLocation = $.getZoneLocation("prison");
-				if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
-					if (teleportLocation.distance(player.getLocation()) > 0.1) {
-						$.teleport(player, teleportLocation);
-					}
-				} else {
-					$.teleport(player, teleportLocation);
-				}
-			}
-			if (!noLog) {
-				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Prison";
-				Bukkit.broadcastMessage(message);
-				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
-						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-						, Channel.SERVER_CHAT);
-			}
-			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-				@Override
-				public void run() {
-					if (prison.contains(player.getUniqueId())) {
-						if (!player.getAllowFlight())
-							player.setAllowFlight(true);
-						player.addAttachment(plugin, "plots.use", true);
-						player.addAttachment(plugin, "plots.permpack.basic", true);
-						player.addAttachment(plugin, "plots.plot.1", true);
-						player.addAttachment(plugin, "plots.visit.other", true);
-					}
-				}
-			}, 100L);
-			player.setAllowFlight(false);
-			$.prisonScoreboard.schedule(player);
-		}
-	}
-
-	public int leavePrison(Player player, boolean noSave, boolean noLog) {
-		if (prison.contains(player.getUniqueId())) {
-			if (moderatingPlayers.containsKey(player.getUniqueId())) {
-				noSave = true;
-				noLog = true;
-			}
-			if (vanishedPlayers.containsKey(player.getUniqueId())) {
-				player.performCommand("vanish");
-			}
-			if (!noSave) {
-				try {
-					SolidStorage.savePlayerData(player, "prison");
-				} catch (Exception ig) {
-				}
-			}
-			if (!noLog) {
-				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Prison";
-				Bukkit.broadcastMessage(message);
-				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
-						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-						, Channel.SERVER_CHAT);
-			}
-			prison.remove(player.getUniqueId());
-			if (running) {
-				player.addAttachment(this, "plots.use", false);
-				player.addAttachment(this, "plots.permpack.basic", false);
-				player.addAttachment(this, "plots.plot.1", false);
-				player.addAttachment(this, "plots.visit.other", false);
-			}
-			player.setAllowFlight(true);
-			$.clearPlayer(player);
 			$.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);
 			return 1;
 		}

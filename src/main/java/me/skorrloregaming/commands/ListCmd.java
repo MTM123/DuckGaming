@@ -20,9 +20,7 @@ public class ListCmd implements CommandExecutor {
 		StringBuilder skyfightArray = new StringBuilder();
 		StringBuilder creativeArray = new StringBuilder();
 		StringBuilder skyblockArray = new StringBuilder();
-		StringBuilder prisonArray = new StringBuilder();
 		StringBuilder hubArray = new StringBuilder();
-		StringBuilder notifyWorkerArray = new StringBuilder();
 		int length = 0;
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			length++;
@@ -39,8 +37,6 @@ public class ListCmd implements CommandExecutor {
 				creativeArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
 			} else if (domain.equals("skyblock")) {
 				skyblockArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
-			} else if (domain.equals("prison")) {
-				prisonArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
 			} else if (domain.equals("hub")) {
 				hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
 			}
@@ -55,9 +51,7 @@ public class ListCmd implements CommandExecutor {
 		String skyfightMsg = skyfightArray.toString();
 		String creativeMsg = creativeArray.toString();
 		String skyblockMsg = skyblockArray.toString();
-		String prisonMsg = prisonArray.toString();
 		String hubMsg = hubArray.toString();
-		String notifyWorkerMsg = notifyWorkerArray.toString();
 		sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "There are currently " + ChatColor.RED + length + "/" + Bukkit.getMaxPlayers() + ChatColor.GRAY + " players online.");
 		if (kitpvpMsg.length() > 0) {
 			sender.sendMessage($.Kitpvp.tag + ChatColor.RED + kitpvpMsg.substring(0, kitpvpMsg.lastIndexOf(", " + ChatColor.RED)));
@@ -77,14 +71,8 @@ public class ListCmd implements CommandExecutor {
 		if (skyblockMsg.length() > 0) {
 			sender.sendMessage($.Skyblock.tag + ChatColor.RED + skyblockMsg.substring(0, skyblockMsg.lastIndexOf(", " + ChatColor.RED)));
 		}
-		if (prisonMsg.length() > 0) {
-			sender.sendMessage($.Prison.tag + ChatColor.RED + prisonMsg.substring(0, prisonMsg.lastIndexOf(", " + ChatColor.RED)));
-		}
 		if (hubMsg.length() > 0) {
 			sender.sendMessage($.Lobby.tag + ChatColor.RED + hubMsg.substring(0, hubMsg.lastIndexOf(", " + ChatColor.RED)));
-		}
-		if (notifyWorkerMsg.length() > 0) {
-			sender.sendMessage($.NotifyWorker.tag + ChatColor.RED + notifyWorkerMsg.substring(0, notifyWorkerMsg.lastIndexOf(", " + ChatColor.RED)));
 		}
 	}
 

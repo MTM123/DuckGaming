@@ -1419,11 +1419,9 @@ public class PlayerEventHandler implements Listener {
 			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", "-1");
 			Server.getPlugin().getConfig().set(path + ".skyblock.broken", "0");
 			Server.getPlugin().getConfig().set(path + ".skyblock.placed", "0");
-			Server.getPlugin().getConfig().set(path + ".prison.rank", "1");
 			Server.getPlugin().getConfig().set(path + ".balance.kitpvp", "0");
 			Server.getPlugin().getConfig().set(path + ".balance.factions", "250");
 			Server.getPlugin().getConfig().set(path + ".balance.skyblock", "0");
-			Server.getPlugin().getConfig().set(path + ".balance.prison", "0");
 			Server.getPlugin().getConfig().set(path + ".subscribed", "true");
 			Server.getPlugin().getConfig().set("warning." + ipAddress + ".count", "0");
 		}
@@ -2820,12 +2818,6 @@ public class PlayerEventHandler implements Listener {
 													return;
 												}
 												break;
-											case "prison":
-												if ($.isMinigameEnabled(ServerMinigame.PRISON)) {
-													Server.getInstance().enterPrison(player, false, false);
-													return;
-												}
-												break;
 											default:
 												break;
 										}
@@ -3001,9 +2993,6 @@ public class PlayerEventHandler implements Listener {
 				event.setCancelled(true);
 			} else if (label.equalsIgnoreCase("/skyblock")) {
 				player.performCommand("server skyblock");
-				event.setCancelled(true);
-			} else if (label.equalsIgnoreCase("/prison")) {
-				player.performCommand("server prison");
 				event.setCancelled(true);
 			} else if (event.getMessage().equalsIgnoreCase("/f fly")) {
 				player.performCommand("fly");
