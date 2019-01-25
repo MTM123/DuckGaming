@@ -1926,9 +1926,13 @@ public class CraftGo {
 		}
 
 		public static boolean getOnlineMode(org.bukkit.entity.Player player) {
+			if (player == null || !player.isOnline())
+				return false;
 			if (!$.isPluginEnabled("ProtocolSupport")) {
 				return Bukkit.getOnlineMode();
 			} else {
+				if (Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false))
+					return true;
 				return protocolsupport.api.ProtocolSupportAPI.getConnection(player).getProfile().isOnlineMode();
 			}
 		}

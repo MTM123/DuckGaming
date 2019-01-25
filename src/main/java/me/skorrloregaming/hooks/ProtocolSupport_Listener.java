@@ -80,18 +80,14 @@ public class ProtocolSupport_Listener implements Listener {
 			ProtocolSupportAPI.disableProtocolVersion(ProtocolVersion.valueOf("MINECRAFT_" + version.replace(".", "_")));
 	}
 
-	public boolean isOnlineMode(Player player) {
-		if (player == null || !player.isOnline())
-			return false;
-		return ProtocolSupportAPI.getConnection(player).getProfile().isOnlineMode();
-	}
-
 	@EventHandler
 	public void onPlayerLoginStart(PlayerLoginStartEvent event) {
 		String playerName = event.getConnection().getProfile().getName().toString();
-		if (CraftGo.Player.getUUID(playerName, false) == null)
-			return;
-		event.setOnlineMode(true);
+		if (!Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
+			if (CraftGo.Player.getUUID(playerName, false) == null)
+				return;
+			event.setOnlineMode(true);
+		}
 	}
 
 	@EventHandler

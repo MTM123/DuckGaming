@@ -9,6 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
+import com.google.common.collect.Iterables;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import io.netty.buffer.Unpooled;
@@ -107,6 +110,13 @@ public class PlayerEventHandler implements Listener {
 		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
+				if (Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
+					ByteArrayDataOutput out = ByteStreams.newDataOutput();
+					out.writeUTF("PlayerList");
+					out.writeUTF("prison");
+					Player messenger = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
+					messenger.sendPluginMessage(Server.getPlugin(), "BungeeCord", out.toByteArray());
+				}
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					if ($.isAuthenticated(player) && $.getCurrentMinigame(player) == ServerMinigame.HUB)
 						Server.getInstance().fetchLobby(player);
@@ -1282,9 +1292,7 @@ public class PlayerEventHandler implements Listener {
 				@Override
 				public void run() {
 					try {
-						boolean bypass = false;
-						if (!(Server.getProtoSupportListener() == null))
-							bypass = Server.getProtoSupportListener().isOnlineMode(player);
+						boolean bypass = CraftGo.Player.getOnlineMode(player);
 						if (bypass) {
 							Object authObject = $.getAuthenticationSuite();
 							if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
@@ -2781,45 +2789,63 @@ public class PlayerEventHandler implements Listener {
 								Location portal = $.getZoneLocation(minigame + "-portal");
 								if (player.getEyeLocation().getBlock().isLiquid()) {
 									if (player.getLocation().distance(portal) < 10) {
-										switch (minigame) {
-											case "factions":
-												if ($.isMinigameEnabled(ServerMinigame.FACTIONS)) {
-													Server.getInstance().enterFactions(player, false, false);
-													return;
+										if (!Server.getDelayedTasks().contains(player.getUniqueId())) {
+											Server.getDelayedTasks().add(player.getUniqueId());
+											Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+												@Override
+												public void run() {
+													Server.getDelayedTasks().remove(player.getUniqueId());
 												}
-												break;
-											case "survival":
-												if ($.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
-													Server.getInstance().enterSurvival(player, false, false);
-													return;
-												}
-												break;
-											case "creative":
-												if ($.isMinigameEnabled(ServerMinigame.CREATIVE)) {
-													Server.getInstance().enterCreative(player, false, false);
-													return;
-												}
-												break;
-											case "kitpvp":
-												if ($.isMinigameEnabled(ServerMinigame.KITPVP)) {
-													Server.getInstance().enterKitpvp(player, false, false);
-													return;
-												}
-												break;
-											case "skyblock":
-												if ($.isMinigameEnabled(ServerMinigame.SKYBLOCK)) {
-													Server.getInstance().enterSkyblock(player, false, false);
-													return;
-												}
-												break;
-											case "skyfight":
-												if ($.isMinigameEnabled(ServerMinigame.SKYFIGHT)) {
-													Server.getInstance().enterSkyfight(player, false, false);
-													return;
-												}
-												break;
-											default:
-												break;
+											}, 20L);
+											switch (minigame) {
+												case "factions":
+													if ($.isMinigameEnabled(ServerMinigame.FACTIONS)) {
+														Server.getInstance().enterFactions(player, false, false);
+														return;
+													}
+													break;
+												case "survival":
+													if ($.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
+														Server.getInstance().enterSurvival(player, false, false);
+														return;
+													}
+													break;
+												case "creative":
+													if ($.isMinigameEnabled(ServerMinigame.CREATIVE)) {
+														Server.getInstance().enterCreative(player, false, false);
+														return;
+													}
+													break;
+												case "kitpvp":
+													if ($.isMinigameEnabled(ServerMinigame.KITPVP)) {
+														Server.getInstance().enterKitpvp(player, false, false);
+														return;
+													}
+													break;
+												case "skyblock":
+													if ($.isMinigameEnabled(ServerMinigame.SKYBLOCK)) {
+														Server.getInstance().enterSkyblock(player, false, false);
+														return;
+													}
+													break;
+												case "prison":
+													if ($.isMinigameEnabled(ServerMinigame.PRISON)) {
+														ByteArrayDataOutput out = ByteStreams.newDataOutput();
+														out.writeUTF("Connect");
+														out.writeUTF("prison");
+														player.sendPluginMessage(Server.getPlugin(), "BungeeCord", out.toByteArray());
+														return;
+													}
+													break;
+												case "skyfight":
+													if ($.isMinigameEnabled(ServerMinigame.SKYFIGHT)) {
+														Server.getInstance().enterSkyfight(player, false, false);
+														return;
+													}
+													break;
+												default:
+													break;
+											}
 										}
 									}
 								}
@@ -2950,7 +2976,7 @@ public class PlayerEventHandler implements Listener {
 		} else if (label.equalsIgnoreCase("/plugins") || label.equalsIgnoreCase("/pl")) {
 			List<Plugin> plugins = new LinkedList<Plugin>(Arrays.asList(Bukkit.getPluginManager().getPlugins()));
 			if (!player.hasPermission("bukkit.command.plugins") || $.getRankId(player) < 0) {
-				if (!(Server.getProtoSupportListener() == null) && Server.getProtoSupportListener().isOnlineMode(player))
+				if (CraftGo.Player.getOnlineMode(player))
 					if ($.isPluginEnabled("AuthMe"))
 						for (int i = 0; i < plugins.size(); i++)
 							if (plugins.get(i).getName().equals("AuthMe"))
@@ -2993,6 +3019,9 @@ public class PlayerEventHandler implements Listener {
 				event.setCancelled(true);
 			} else if (label.equalsIgnoreCase("/skyblock")) {
 				player.performCommand("server skyblock");
+				event.setCancelled(true);
+			} else if (label.equalsIgnoreCase("/prison")) {
+				player.performCommand("server prison");
 				event.setCancelled(true);
 			} else if (event.getMessage().equalsIgnoreCase("/f fly")) {
 				player.performCommand("fly");

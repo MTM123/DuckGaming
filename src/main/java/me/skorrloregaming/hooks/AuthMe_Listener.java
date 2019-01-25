@@ -1,5 +1,6 @@
 package me.skorrloregaming.hooks;
 
+import me.skorrloregaming.CraftGo;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,9 +25,7 @@ public class AuthMe_Listener implements Listener {
 	@EventHandler
 	public void onPlayerAuth(LoginEvent event) {
 		Player player = event.getPlayer();
-		if (Server.getProtoSupportListener() == null) {
-			playWelcomeMessage(player);
-		} else if (!Server.getProtoSupportListener().isOnlineMode(player)) {
+		if (!CraftGo.Player.getOnlineMode(player)) {
 			playWelcomeMessage(player);
 		}
 		String joinMessage = Server.getDefaultJoinMessage().replace("{player}", player.getName());

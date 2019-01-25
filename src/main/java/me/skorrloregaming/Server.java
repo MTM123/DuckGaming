@@ -16,6 +16,7 @@ import me.skorrloregaming.commands.*;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
 import me.skorrloregaming.auction.Auctioneer;
+import me.skorrloregaming.hooks.*;
 import me.skorrloregaming.mysql.SQLDatabase;
 import me.skorrloregaming.shop.LaShoppe;
 import me.skorrloregaming.impl.*;
@@ -41,12 +42,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.DisplaySlot;
 
 import me.skorrloregaming.CraftGo.BarApi;
-import me.skorrloregaming.hooks.AuthMe_Listener;
-import me.skorrloregaming.hooks.Factions_Listener;
-import me.skorrloregaming.hooks.ProtocolSupportPocketStuff_Listener;
-import me.skorrloregaming.hooks.ProtocolSupport_Listener;
-import me.skorrloregaming.hooks.Votifier_Listener;
-import me.skorrloregaming.hooks.mcMMO_Listener;
 import me.skorrloregaming.impl.Switches.SwitchIntDouble;
 import me.skorrloregaming.impl.Switches.SwitchUUIDString;
 import me.skorrloregaming.listeners.BlockEventHandler;
@@ -108,6 +103,7 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConcurrentMap<UUID, $.Skyfight.Player> skyfight = new ConcurrentHashMap<>();
 	private static ArrayList<UUID> creative = new ArrayList<>();
 	private static ArrayList<UUID> skyblock = new ArrayList<>();
+	private static ArrayList<String> prison = new ArrayList<>();
 
 	private static String tempMotd = "/unspecified";
 	private static ArrayList<UUID> simpleDelayedTask = new ArrayList<>();
@@ -492,6 +488,10 @@ public class Server extends JavaPlugin implements Listener {
 		return skyblock;
 	}
 
+	public static ArrayList<String> getPrison() {
+		return prison;
+	}
+
 	public static ConfigurationManager getRamConfig() {
 		return ramConfig;
 	}
@@ -725,6 +725,8 @@ public class Server extends JavaPlugin implements Listener {
 			protoSupportListener.register();
 		}
 		voteListener = new Votifier_Listener();
+		if (Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false))
+			new BungeeCord_Listener().register();
 		Bukkit.getScheduler().runTask(this, new Runnable() {
 			@Override
 			public void run() {
@@ -948,6 +950,8 @@ public class Server extends JavaPlugin implements Listener {
 					array.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Creative", creative.size());
 				if ($.isMinigameEnabled(ServerMinigame.SKYBLOCK))
 					array.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Skyblock", skyblock.size());
+				if ($.isMinigameEnabled(ServerMinigame.PRISON))
+					array.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Prison", prison.size());
 				hubScoreboardTitleIndex.putIfAbsent(player.getUniqueId(), 0);
 				int index = hubScoreboardTitleIndex.get(player.getUniqueId());
 				if (message.length() <= 16) {

@@ -1,5 +1,7 @@
 package me.skorrloregaming.commands;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -86,6 +88,19 @@ public class ServerCmd implements CommandExecutor {
 				return true;
 			}
 			Server.getInstance().enterSkyblock(player, false, false);
+		} else if ("prison".startsWith(args[0].toLowerCase())) {
+			if (!$.isMinigameEnabled(ServerMinigame.PRISON)) {
+				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
+				return true;
+			}
+			if (Server.getPrison().contains(player.getUniqueId())) {
+				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
+				return true;
+			}
+			ByteArrayDataOutput out = ByteStreams.newDataOutput();
+			out.writeUTF("Connect");
+			out.writeUTF("prison");
+			player.sendPluginMessage(Server.getPlugin(), "BungeeCord", out.toByteArray());
 		} else {
 			player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
 			player.performCommand("servers");

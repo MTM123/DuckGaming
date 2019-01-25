@@ -36,4 +36,5 @@ settings:
     customJoinMessage: true
     customQuitMessage: true
     topVotersHttpServerPort: 2096
+    bungeecord: false
 config:

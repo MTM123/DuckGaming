@@ -20,6 +20,7 @@ public class ListCmd implements CommandExecutor {
 		StringBuilder skyfightArray = new StringBuilder();
 		StringBuilder creativeArray = new StringBuilder();
 		StringBuilder skyblockArray = new StringBuilder();
+		StringBuilder prisonArray = new StringBuilder();
 		StringBuilder hubArray = new StringBuilder();
 		int length = 0;
 		for (Player player : Bukkit.getOnlinePlayers()) {
@@ -41,6 +42,10 @@ public class ListCmd implements CommandExecutor {
 				hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
 			}
 		}
+		for (String playerName : Server.getPrison()) {
+			length++;
+			prisonArray.append(ChatColor.RED + playerName + ChatColor.GRAY + ", " + ChatColor.RED);
+		}
 		for (NpcPlayer player : Server.getNpcPlayers()) {
 			length++;
 			hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
@@ -51,6 +56,7 @@ public class ListCmd implements CommandExecutor {
 		String skyfightMsg = skyfightArray.toString();
 		String creativeMsg = creativeArray.toString();
 		String skyblockMsg = skyblockArray.toString();
+		String prisonMsg = skyblockArray.toString();
 		String hubMsg = hubArray.toString();
 		sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "There are currently " + ChatColor.RED + length + "/" + Bukkit.getMaxPlayers() + ChatColor.GRAY + " players online.");
 		if (kitpvpMsg.length() > 0) {
@@ -69,6 +75,9 @@ public class ListCmd implements CommandExecutor {
 			sender.sendMessage($.Creative.tag + ChatColor.RED + creativeMsg.substring(0, creativeMsg.lastIndexOf(", " + ChatColor.RED)));
 		}
 		if (skyblockMsg.length() > 0) {
+			sender.sendMessage($.Skyblock.tag + ChatColor.RED + skyblockMsg.substring(0, skyblockMsg.lastIndexOf(", " + ChatColor.RED)));
+		}
+		if (prisonMsg.length() > 0) {
 			sender.sendMessage($.Skyblock.tag + ChatColor.RED + skyblockMsg.substring(0, skyblockMsg.lastIndexOf(", " + ChatColor.RED)));
 		}
 		if (hubMsg.length() > 0) {

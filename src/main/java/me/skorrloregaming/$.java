@@ -62,7 +62,7 @@ public class $ {
 	public static String pricePrefix = ChatColor.RESET + "Purchase Price: " + ChatColor.RED + "$";
 	public static List<String> validRanks = Arrays.asList(new String[]{"default", "founder", "owner", "manager", "admin", "moderator", "helper", "developer", "builder"});
 	public static List<String> validDonorRanks = Arrays.asList(new String[]{"default", "youtube", "donator", "redstone", "obsidian", "bedrock"});
-	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock"});
+	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock", "prison"});
 	public static List<String> validStorageMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "creative", "skyblock"});
 	public static List<String> validEconomyMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "skyblock"});
 	public static List<String> validLocketteMinigames = Arrays.asList(new String[]{"skyblock", "factions"});
@@ -585,6 +585,9 @@ public class $ {
 			return true;
 		if (minigame == ServerMinigame.UNKNOWN)
 			return false;
+		if (minigame == ServerMinigame.PRISON)
+			if (!Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false))
+				return false;
 		if (minigame == ServerMinigame.FACTIONS) {
 			if (!$.isPluginEnabled("Factions"))
 				return false;
