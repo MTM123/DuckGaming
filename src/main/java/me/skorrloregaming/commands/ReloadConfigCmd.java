@@ -28,7 +28,6 @@ public class ReloadConfigCmd implements CommandExecutor {
 		Server.getMarriageHomesConfig().reloadData();
 		Server.getNpcConfig().reloadData();
 		Server.getSpawnerConfig().reloadData();
-		Server.getPlaytimeManager().reloadData();
 		Server.getUUIDCache().reloadData();
 		Server.getGeolocationCache().reloadData();
 		Server.getSessionManager().sessionConfig.reloadData();

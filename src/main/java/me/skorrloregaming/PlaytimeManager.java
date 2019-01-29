@@ -21,15 +21,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class PlaytimeManager implements Listener {
 	public ConcurrentMap<UUID, Long> playtimeTracker = new ConcurrentHashMap<>();
-	private ConfigurationManager playtimeConfig;
-
-	public ConfigurationManager getPlaytimeConfig() {
-		return playtimeConfig;
-	}
 
 	public PlaytimeManager() {
-		playtimeConfig = new ConfigurationManager();
-		playtimeConfig.setup(new File(Server.getPlugin().getDataFolder(), "playtime.yml"));
 		Server.getPlugin().getServer().getPluginManager().registerEvents(this, Server.getPlugin());
 		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
 			@Override
@@ -53,10 +46,8 @@ public class PlaytimeManager implements Listener {
 						if (!(newCalendar.get(Calendar.YEAR) == calendar.get(Calendar.YEAR))) {
 							handle_QuitEvent(player);
 							for (int day = 0; day <= 365; day++) {
-								if (playtimeConfig.getData().contains(player.getUniqueId().toString() + ".dayOfYear." + day)) {
-									playtimeConfig.getData().set(player.getUniqueId().toString() + ".dayOfYear." + day, null);
-								}
-								playtimeConfig.saveData();
+								if (Server.getSqlDatabase().contains("playtime.dayOfYear." + day, player.getUniqueId().toString()))
+									Server.getSqlDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), null);
 							}
 							handle_JoinEvent(player);
 						}
@@ -66,29 +57,17 @@ public class PlaytimeManager implements Listener {
 		}, 20L, 20L);
 	}
 
-	public void reloadData() {
-		playtimeConfig.reloadData();
-	}
-
 	public long getStoredPlayerPlaytime(OfflinePlayer player) {
-		if (playtimeConfig.getData().contains(player.getUniqueId().toString() + ".total")) {
-			return playtimeConfig.getData().getLong(player.getUniqueId().toString() + ".total");
+		if (Server.getSqlDatabase().contains("playtime.total", player.getUniqueId().toString())) {
+			return Long.parseLong(Server.getSqlDatabase().getString("playtime.total", player.getUniqueId().toString()));
 		} else {
 			return 0;
 		}
 	}
 
 	public long getStoredPlayerPlaytime(OfflinePlayer player, int dayOfYear) {
-		if (playtimeConfig.getData().contains(player.getUniqueId().toString() + ".dayOfYear." + dayOfYear)) {
-			return playtimeConfig.getData().getLong(player.getUniqueId().toString() + ".dayOfYear." + dayOfYear);
-		} else {
-			return 0;
-		}
-	}
-
-	public int getTotalStoredPlayerPlaytime(OfflinePlayer player) {
-		if (playtimeConfig.getData().contains(player.getUniqueId().toString() + ".total")) {
-			return playtimeConfig.getData().getInt(player.getUniqueId().toString() + ".total");
+		if (Server.getSqlDatabase().contains("playtime.dayOfYear." + dayOfYear, player.getUniqueId().toString())) {
+			return Long.parseLong(Server.getSqlDatabase().getString("playtime.dayOfYear." + dayOfYear, player.getUniqueId().toString()));
 		} else {
 			return 0;
 		}
@@ -103,8 +82,8 @@ public class PlaytimeManager implements Listener {
 	}
 
 	public int getLastKnownDayOfYear(OfflinePlayer player) {
-		if (playtimeConfig.getData().contains(player.getUniqueId().toString() + ".lastKnownDayOfYear")) {
-			return playtimeConfig.getData().getInt(player.getUniqueId().toString() + ".lastKnownDayOfYear");
+		if (Server.getSqlDatabase().contains("playtime.lastKnownDayOfYear", player.getUniqueId().toString())) {
+			return Integer.parseInt(Server.getSqlDatabase().getString("playtime.lastKnownDayOfYear", player.getUniqueId().toString()));
 		} else {
 			return 0;
 		}
@@ -122,17 +101,14 @@ public class PlaytimeManager implements Listener {
 		int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
 		if (dayOfYear < getLastKnownDayOfYear(player)) {
 			for (int day = 0; day <= 365; day++) {
-				if (playtimeConfig.getData().contains(player.getUniqueId().toString() + ".dayOfYear." + day)) {
-					playtimeConfig.getData().set(player.getUniqueId().toString() + ".dayOfYear." + day, null);
-				}
-				playtimeConfig.saveData();
+				if (Server.getSqlDatabase().contains("playtime.dayOfYear." + day, player.getUniqueId().toString()))
+					Server.getSqlDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), null);
 			}
 		}
-		if (!playtimeConfig.getData().contains(player.getUniqueId().toString())) {
-			playtimeConfig.getData().set(player.getUniqueId().toString() + ".total", (long) CraftGo.Player.getLegacyMinecraftPlaytime(player));
+		if (!Server.getSqlDatabase().contains("playtime.total", player.getUniqueId().toString())) {
+			Server.getSqlDatabase().set("playtime.total", player.getUniqueId().toString(), CraftGo.Player.getLegacyMinecraftPlaytime(player) + "");
 		}
-		playtimeConfig.getData().set(player.getUniqueId().toString() + ".lastKnownDayOfYear", dayOfYear);
-		playtimeConfig.saveData();
+		Server.getSqlDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), dayOfYear + "");
 		playtimeTracker.put(player.getUniqueId(), seconds);
 	}
 
@@ -147,11 +123,10 @@ public class PlaytimeManager implements Listener {
 			long secondsPassed = (System.currentTimeMillis() / 1000l) - playtimeTracker.get(player.getUniqueId()).longValue();
 			playtimeTracker.remove(player.getUniqueId());
 			long currentTimeInSeconds = getStoredPlayerPlaytime(player);
-			playtimeConfig.getData().set(player.getUniqueId().toString() + ".total", currentTimeInSeconds + secondsPassed);
+			Server.getSqlDatabase().set("playtime.total", player.getUniqueId().toString(), currentTimeInSeconds + secondsPassed + "");
 			long currentTimeInSecondsDay = getStoredPlayerPlaytime(player, dayOfYear);
-			playtimeConfig.getData().set(player.getUniqueId().toString() + ".dayOfYear." + dayOfYear, currentTimeInSecondsDay + secondsPassed);
-			playtimeConfig.getData().set(player.getUniqueId().toString() + ".lastKnownDayOfYear", dayOfYear);
-			playtimeConfig.saveData();
+			Server.getSqlDatabase().set("playtime.dayOfYear." + dayOfYear, player.getUniqueId().toString(), currentTimeInSecondsDay + secondsPassed + "");
+			Server.getSqlDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), dayOfYear + "");
 		}
 	}
 
