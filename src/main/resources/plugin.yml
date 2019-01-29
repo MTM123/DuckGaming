@@ -32,15 +32,6 @@ commands:
     ignore:
         description: Ignore the specified player until the next server update
         alaises: ig
-    logger:
-        description: Enable or disable in-game anticheat logging
-        aliases: logging
-    desync:
-        description: Unlink your alternative account from your primary account
-        aliases: [unsync, desync-account, desyncaccount, unsync-account, unsyncaccount, unsynca, desynca, delink, delink-account, delinka, unlinka, unlink, unlink-account]
-    sync:
-        description: Link your alternative account with your primary account
-        aliases: [sync-account, syncaccount, synca, link-account, linkaccount, link, linka]
     spoof-vote:
         description: Spoof a number of votes for the specified player
         aliases: [spoofvote, sv]
@@ -72,9 +63,6 @@ commands:
         aliases: s
     discord:
         description: Sends the url of our discord to the sender
-    playtime-report:
-        description: Gets the range of stored playtime information for a player
-        aliases: [playtime-report, ptreport, ptr]
     address:
         description: Displays the server ip address to the sender
         aliases: ip
@@ -108,8 +96,6 @@ commands:
     effect:
         description: Enable or disable effects for your account
         aliases: [effects, particle, particles]
-    debug:
-        description: Enable or disable debugging of this plugin
     website:
         description: Link to our minecraft server website
         aliases: [store, forums, forum, apply]
@@ -136,9 +122,6 @@ commands:
     skull:
         description: Give yourself a skull based on player name
         aliases: head
-    playtime:
-        description: Retrieves the play time for a given player
-        aliases: pt
     who:
         description: Retrieves information about a given player
         aliases: whois

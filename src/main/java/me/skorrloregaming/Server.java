@@ -150,7 +150,6 @@ public class Server extends JavaPlugin implements Listener {
 
 	private static AuthMe_Listener authListener = null;
 	private static Factions_Listener factionsListener = null;
-	private static ProtocolSupport_Listener protoSupportListener = null;
 	private static ProtocolSupportPocketStuff_Listener protoSupportPocketApi = null;
 	private static Votifier_Listener voteListener = null;
 	private static mcMMO_Listener mcmmoListener = null;
@@ -164,10 +163,6 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static Factions_Listener getFactionsListener() {
 		return factionsListener;
-	}
-
-	public static ProtocolSupport_Listener getProtoSupportListener() {
-		return protoSupportListener;
 	}
 
 	public static ProtocolSupportPocketStuff_Listener getProtoSupportPocketApi() {
@@ -662,10 +657,6 @@ public class Server extends JavaPlugin implements Listener {
 			authListener = new AuthMe_Listener();
 			authListener.register();
 		}
-		if (Link$.isPluginEnabled("ProtocolSupport")) {
-			protoSupportListener = new ProtocolSupport_Listener();
-			protoSupportListener.register();
-		}
 		if (Link$.isPluginEnabled("Votifier")) {
 			voteListener = new Votifier_Listener();
 			voteListener.register();
@@ -688,9 +679,6 @@ public class Server extends JavaPlugin implements Listener {
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					player.performCommand("hub");
 					$.getLinkServer().getPlaytimeManager().handle_JoinEvent(player);
-				}
-				if (!(protoSupportListener == null)) {
-					protoSupportListener.disableProtocolVersions();
 				}
 				List<Entity> entity = new LinkedList<Entity>($.getZoneLocation("creative").getWorld().getEntities());
 				for (Entity e : entity) {
@@ -722,8 +710,6 @@ public class Server extends JavaPlugin implements Listener {
 		getCommand("fly").setExecutor(new FlyCmd());
 		getCommand("printblockstate").setExecutor(new PrintBlockStateCmd());
 		getCommand("ignore").setExecutor(new IgnoreCmd());
-		getCommand("desync").setExecutor(new DesyncCmd());
-		getCommand("sync").setExecutor(new SyncCmd());
 		getCommand("spoof-vote").setExecutor(new SpoofVoteCmd());
 		getCommand("buy").setExecutor(new BuyCmd());
 		getCommand("playertime").setExecutor(new PlayertimeCmd());
@@ -736,7 +722,6 @@ public class Server extends JavaPlugin implements Listener {
 		getCommand("update-skin").setExecutor(new UpdateSkinCmd());
 		getCommand("spectate").setExecutor(new SpectateCmd());
 		getCommand("discord").setExecutor(new DiscordCmd());
-		getCommand("playtime-report").setExecutor(new PlaytimeReportCmd());
 		getCommand("address").setExecutor(new AddressCmd());
 		getCommand("rollback").setExecutor(new RollbackCmd());
 		getCommand("setsuffixrank").setExecutor(new SetSuffixRankCmd());
@@ -758,7 +743,6 @@ public class Server extends JavaPlugin implements Listener {
 		getCommand("autologin").setExecutor(new AutoLoginCmd());
 		getCommand("reset").setExecutor(new ResetCmd());
 		getCommand("skull").setExecutor(new SkullCmd());
-		getCommand("playtime").setExecutor(new PlaytimeCmd());
 		getCommand("who").setExecutor(new WhoisCmd());
 		getCommand("list").setExecutor(new ListCmd());
 		getCommand("build-time").setExecutor(new BuildTimeCmd());
