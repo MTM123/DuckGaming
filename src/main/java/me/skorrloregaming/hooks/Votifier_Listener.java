@@ -2,8 +2,8 @@ package me.skorrloregaming.hooks;
 
 import java.util.Calendar;
 
-import com.vexsoftware.votifier.bungee.events.VotifierEvent;
 import com.vexsoftware.votifier.model.Vote;
+import com.vexsoftware.votifier.model.VotifierEvent;
 import me.skorrloregaming.discord.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
