@@ -42,6 +42,7 @@
 									<include>org.apache.commons:commons-collections4</include>
 									<include>net.sf.trove4j:trove4j</include>
 									<include>mysql:mysql-connector-java</include>
+									<include>com.github.SkorrloreGaming:SQLDatabase</include>
 								</includes>
 							</artifactSet>
 						</configuration>
@@ -214,6 +215,11 @@
 			<groupId>com.vexsoftware</groupId>
 			<artifactId>nuvotifier-universal</artifactId>
 			<version>2.3.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.SkorrloreGaming</groupId>
+			<artifactId>SQLDatabase</artifactId>
+			<version>d50858d951</version>
 		</dependency>
 	</dependencies>
 </project>
