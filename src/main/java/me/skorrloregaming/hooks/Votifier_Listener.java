@@ -2,12 +2,14 @@ package me.skorrloregaming.hooks;
 
 import java.util.Calendar;
 
+import com.vexsoftware.votifier.bungee.events.VotifierEvent;
+import com.vexsoftware.votifier.model.Vote;
 import me.skorrloregaming.discord.Channel;
-import me.skorrloregaming.discord.DiscordBot;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.skorrloregaming.$;
@@ -15,9 +17,7 @@ import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.EconManager;
 import me.skorrloregaming.Logger;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.VotifierSession;
 import me.skorrloregaming.impl.ServerMinigame;
-import me.skorrloregaming.impl.Vote;
 
 public class Votifier_Listener implements Listener {
 
@@ -36,7 +36,17 @@ public class Votifier_Listener implements Listener {
 		Server.getMonthlyVoteConfig().saveData();
 	}
 
-	public void onVote(Vote vote, VotifierSession.ProtocolVersion protocol, boolean doJackpots) {
+	public void register() {
+		Server.getPlugin().getServer().getPluginManager().registerEvents(this, Server.getPlugin());
+	}
+
+	@EventHandler
+	public void onVote(VotifierEvent event) {
+		onVote(event, true);
+	}
+
+	public void onVote(VotifierEvent event, boolean doJackpots) {
+		Vote vote = event.getVote();
 		String username = vote.getUsername();
 		OfflinePlayer player = CraftGo.Player.getOfflinePlayer(username);
 		Logger.info("Votifier has received a vote for player " + username + ".", true);
