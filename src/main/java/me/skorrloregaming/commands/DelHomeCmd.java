@@ -1,14 +1,14 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.$;
+import me.skorrloregaming.ConfigurationManager;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.ConfigurationManager;
-import me.skorrloregaming.Server;
 
 import java.util.Set;
 
@@ -61,7 +61,7 @@ public class DelHomeCmd implements CommandExecutor {
 				homesString = homes.toString();
 			}
 			player.sendMessage($.getMinigameTag(player) + ChatColor.GRAY + "Homes: " + homesString);
-			player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <name>");
+			player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <name>");
 			return true;
 		}
 		String home = args[0];

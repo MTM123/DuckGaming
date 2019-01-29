@@ -1,23 +1,17 @@
 package me.skorrloregaming.scoreboard.boards;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-
 import me.skorrloregaming.$;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.impl.Switches;
 import me.skorrloregaming.impl.Switches.SwitchIntString;
 import me.skorrloregaming.scoreboard.DisposableScoreboard;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class Kitpvp_LeaderboardScoreboard implements DisposableScoreboard {
 	Comparator<Switches.SwitchIntString> myComparator = new Comparator<Switches.SwitchIntString>() {

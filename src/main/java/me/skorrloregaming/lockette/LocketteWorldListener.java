@@ -1,7 +1,7 @@
 package me.skorrloregaming.lockette;
 
-import java.util.List;
-
+import me.skorrloregaming.$;
+import me.skorrloregaming.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
@@ -10,8 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.plugin.PluginManager;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
+import java.util.List;
 
 public class LocketteWorldListener implements Listener {
 	public LocketteWorldListener(Lockette instance) {

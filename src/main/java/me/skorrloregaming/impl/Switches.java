@@ -1,9 +1,9 @@
 package me.skorrloregaming.impl;
 
-import java.util.UUID;
-
 import me.skorrloregaming.scoreboard.DisplayType;
 import me.skorrloregaming.scoreboard.DisposableScoreboard;
+
+import java.util.UUID;
 
 public class Switches {
 	public static class SwitchIntBoolean {

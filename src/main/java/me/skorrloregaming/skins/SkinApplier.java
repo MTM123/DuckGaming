@@ -16,17 +16,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.plugin.Plugin;
-import protocolsupport.protocol.utils.authlib.UUIDTypeAdapter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.UUID;
 
-import static com.comphenix.protocol.PacketType.Play.Server.PLAYER_INFO;
-import static com.comphenix.protocol.PacketType.Play.Server.POSITION;
-import static com.comphenix.protocol.PacketType.Play.Server.RESPAWN;
+import static com.comphenix.protocol.PacketType.Play.Server.*;
 
 public class SkinApplier implements Runnable {
 
@@ -55,7 +50,8 @@ public class SkinApplier implements Runnable {
 	}
 
 	public void applySkin() {
-		applyInstantUpdate();
+		if (!Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false))
+			applyInstantUpdate();
 	}
 
 	public void applyInstantUpdate() {

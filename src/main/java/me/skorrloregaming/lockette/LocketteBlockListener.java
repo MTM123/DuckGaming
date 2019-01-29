@@ -1,7 +1,9 @@
 package me.skorrloregaming.lockette;
 
-import java.util.List;
-
+import me.skorrloregaming.$;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Logger;
+import me.skorrloregaming.Server;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,20 +13,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.material.Door;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.TrapDoor;
 import org.bukkit.plugin.PluginManager;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.Logger;
-import me.skorrloregaming.Server;
+import java.util.List;
 
 public class LocketteBlockListener implements Listener {
 	private static Lockette plugin;
@@ -568,7 +563,7 @@ public class LocketteBlockListener implements Listener {
 					} else
 						continue;
 					if (Lockette.findBlockOwner(checkBlock[x], block, true) == null) {
-						face = $.getBlockFaceFromId(BlockUtil.faceList[x]);
+						face = Link$.getBlockFaceFromId(BlockUtil.faceList[x]);
 						type = lastType;
 						break;
 					} else {
@@ -724,7 +719,7 @@ public class LocketteBlockListener implements Listener {
 					if (signBlock != null) {
 						sign = (Sign) signBlock.getState();
 						if (Lockette.isOwner(sign, player)) {
-							face = $.getBlockFaceFromId(BlockUtil.faceList[x]);
+							face = Link$.getBlockFaceFromId(BlockUtil.faceList[x]);
 							break;
 						}
 					}

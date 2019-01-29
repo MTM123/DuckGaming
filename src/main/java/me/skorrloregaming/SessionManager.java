@@ -1,11 +1,6 @@
 package me.skorrloregaming;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
+import me.skorrloregaming.impl.IpLocationQuery;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,7 +9,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.skorrloregaming.impl.IpLocationQuery;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class SessionManager {
 	public ConfigurationManager sessionConfig;
@@ -27,7 +26,7 @@ public class SessionManager {
 
 	public boolean verifySession(Player player) {
 		String ipAddress = player.getAddress().getAddress().getHostAddress();
-		String key = encodeHex(ipAddress);
+		String key = LinkSessionManager.encodeHex(ipAddress);
 		if (sessionConfig.getData().contains(player.getUniqueId().toString() + "." + key + ".lastAccessed")) {
 			long lastAccessed = sessionConfig.getData().getLong(player.getUniqueId().toString() + "." + key + ".lastAccessed");
 			Session session = new Session(key.toCharArray(), player, lastAccessed);
@@ -42,7 +41,7 @@ public class SessionManager {
 	}
 
 	public void updateSession(OfflinePlayer player, Session session) {
-		if (!sessionConfig.getData().contains(player.getUniqueId().toString() + "." + new String(session.key) + ".firstAccessed") || (sessionConfig.getData().contains(player.getUniqueId().toString()) && getStoredSession(player, new String(decodeHex(session.getKey()))).requiresLogin())) {
+		if (!sessionConfig.getData().contains(player.getUniqueId().toString() + "." + new String(session.key) + ".firstAccessed") || (sessionConfig.getData().contains(player.getUniqueId().toString()) && getStoredSession(player, new String(LinkSessionManager.decodeHex(session.getKey()))).requiresLogin())) {
 			sessionConfig.getData().set(player.getUniqueId().toString() + "." + new String(session.key) + ".firstAccessed", session.getLastAccessed());
 		}
 		sessionConfig.getData().set(player.getUniqueId().toString() + "." + new String(session.key) + ".lastAccessed", session.getLastAccessed());
@@ -58,46 +57,8 @@ public class SessionManager {
 			sessionConfig.getData().set(player.getUniqueId().toString() + "." + sessionKey + ".discarded", true);
 			sessionConfig.saveData();
 		}
-		if (player.isOnline() && player.getPlayer().getAddress().getAddress().getHostAddress().equals(new String(decodeHex(sessionKey.toCharArray()))))
+		if (player.isOnline() && player.getPlayer().getAddress().getAddress().getHostAddress().equals(new String(LinkSessionManager.decodeHex(sessionKey.toCharArray()))))
 			player.getPlayer().kickPlayer("Your session on the server has been invalidated." + '\n' + "You will need to login again to use this account." + '\n' + '\n' + "Issued by " + issuedBy + " at " + new Date().toString() + ".");
-	}
-
-	private static final char[] DIGITS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-
-	public static char[] encodeHex(byte[] data) {
-		int l = data.length;
-		char[] out = new char[l << 1];
-		for (int i = 0, j = 0; i < l; i++) {
-			out[j++] = DIGITS[(0xF0 & data[i]) >>> 4];
-			out[j++] = DIGITS[0x0F & data[i]];
-		}
-		return out;
-	}
-
-	public static byte[] decodeHex(char[] data) {
-		try {
-			int len = data.length;
-			byte[] out = new byte[len >> 1];
-			for (int i = 0, j = 0; j < len; i++) {
-				int f = toDigit(data[j], j) << 4;
-				j++;
-				f = f | toDigit(data[j], j);
-				j++;
-				out[i] = (byte) (f & 0xFF);
-			}
-			return out;
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return null;
-		}
-	}
-
-	protected static int toDigit(char ch, int index) {
-		return Character.digit(ch, 16);
-	}
-
-	public static String encodeHex(String str) {
-		return new String(encodeHex(str.getBytes()));
 	}
 
 	public Session[] getAllStoredSessions(OfflinePlayer player) {
@@ -109,7 +70,7 @@ public class SessionManager {
 	}
 
 	public Session getStoredSession(OfflinePlayer player, String hostAddr) {
-		String key = encodeHex(hostAddr);
+		String key = LinkSessionManager.encodeHex(hostAddr);
 		if (sessionConfig.getData().contains(player.getUniqueId().toString() + "." + key)) {
 			return new Session(key.toCharArray(), player, sessionConfig.getData().getLong(player.getUniqueId().toString() + "." + key + ".lastAccessed"));
 		} else {
@@ -131,13 +92,13 @@ public class SessionManager {
 			calendarFirstAcc.setTimeInMillis(session.getFirstAccessedFromConfig());
 			Calendar calendarLastAcc = Calendar.getInstance();
 			calendarLastAcc.setTimeInMillis(session.getLastAccessed());
-			byte[] decoded = decodeHex(session.key);
+			byte[] decoded = LinkSessionManager.decodeHex(session.key);
 			List<String> lore = new ArrayList<String>();
 			lore.add(ChatColor.RESET + "Session created : " + calendarFirstAcc.getTime().toString());
 			lore.add(ChatColor.RESET + "Last accessed : " + calendarLastAcc.getTime().toString());
 			String remoteAddr = new String(decoded);
 			IpLocationQuery query = CraftGo.Player.queryIpLocation(remoteAddr);
-			if (player.getName().equals(tp.getName()) || player.isOp() || $.getRankId(player) > 1) {
+			if (player.getName().equals(tp.getName()) || player.isOp() || Link$.getRankId(player) > 1) {
 				lore.add(ChatColor.RESET + "Remote address : " + query.getEndpoint());
 				lore.add(ChatColor.RESET + "Geo-location : " + query.getCity() + ", " + query.getState() + " (" + query.getCountry() + ")");
 				lore.add(ChatColor.RESET + "Internet provider : " + query.getIsp());
@@ -172,7 +133,7 @@ public class SessionManager {
 				if (line.length() > 65)
 					lore.set(io, line.substring(0, 65));
 			}
-			ItemStack item = $.createMaterial(skullType, 1, ChatColor.RESET + "" + ChatColor.BOLD + new String(session.getKey()), (short) 0, lore);
+			ItemStack item = Link$.createMaterial(skullType, 1, ChatColor.RESET + "" + ChatColor.BOLD + new String(session.getKey()), (short) 0, lore);
 			inventory.setItem(i, item);
 		}
 		player.openInventory(inventory);

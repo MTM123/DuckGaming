@@ -1,5 +1,9 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.$;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.VanishedInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
@@ -8,10 +12,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.impl.VanishedInfo;
 
 public class VanishCmd implements CommandExecutor {
 
@@ -30,12 +30,12 @@ public class VanishCmd implements CommandExecutor {
 			}
 			if (player.hasPotionEffect(PotionEffectType.INVISIBILITY))
 				player.removePotionEffect(PotionEffectType.INVISIBILITY);
-			player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are no longer vanished.");
+			player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are no longer vanished.");
 			return true;
 		}
-		if (player.isOp() || $.getRankId(player) > 1) {
+		if (player.isOp() || Link$.getRankId(player) > 1) {
 			if (!Server.getModeratingPlayers().containsKey(player.getUniqueId())) {
-				player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not currently moderating the server.");
+				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not currently moderating the server.");
 				return true;
 			}
 			Server.getVanishedPlayers().put(player.getUniqueId(), new VanishedInfo(player.getInventory().getContents(), player.getGameMode()));
@@ -47,9 +47,9 @@ public class VanishCmd implements CommandExecutor {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 72000, 0));
 			player.setGameMode(GameMode.SPECTATOR);
 			$.clearPlayer(player);
-			player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are now vanished.");
+			player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are now vanished.");
 		} else {
-			$.playLackPermissionMessage(player);
+			Link$.playLackPermissionMessage(player);
 			return true;
 		}
 		return true;

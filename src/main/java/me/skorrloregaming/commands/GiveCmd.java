@@ -1,5 +1,9 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.$;
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.impl.ServerMinigame;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -9,10 +13,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.impl.ServerMinigame;
 
 public class GiveCmd implements CommandExecutor {
 
@@ -24,9 +24,9 @@ public class GiveCmd implements CommandExecutor {
 		if (player.isOp() || $.getCurrentMinigame(player) == ServerMinigame.CREATIVE) {
 			if (args.length < 1) {
 				if (player.isOp()) {
-					player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " [player] <id> <amount>");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " [player] <id> <amount>");
 				} else {
-					player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <id> <amount>");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <id> <amount>");
 				}
 			} else {
 				int arg = 0;
@@ -34,7 +34,7 @@ public class GiveCmd implements CommandExecutor {
 				if (!(Bukkit.getPlayer(args[0]) == null) && player.isOp()) {
 					targetPlayer = Bukkit.getPlayer(args[0]);
 					if (targetPlayer == null) {
-						player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
+						player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 						return true;
 					}
 					arg++;
@@ -48,7 +48,7 @@ public class GiveCmd implements CommandExecutor {
 					successTimes[0] = 0;
 				}
 				if ((successTimes[0] == 0 && successTimes[1] == 0) || type == null || type == Material.AIR || type == Material.END_PORTAL || type == Material.NETHER_PORTAL) {
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified material could not be found.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified material could not be found.");
 					return true;
 				}
 				short data = 0;
@@ -62,10 +62,10 @@ public class GiveCmd implements CommandExecutor {
 					itm = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), amount);
 				targetPlayer.getInventory().addItem(itm);
 				targetPlayer.playSound(targetPlayer.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1, 1);
-				player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have been given " + ChatColor.RED + $.formatMaterial(type) + ":" + data + " x" + amount);
+				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have been given " + ChatColor.RED + Link$.formatMaterial(type) + ":" + data + " x" + amount);
 			}
 		} else {
-			$.playLackPermissionMessage(player);
+			Link$.playLackPermissionMessage(player);
 			return true;
 		}
 		return true;

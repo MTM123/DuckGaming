@@ -1,16 +1,15 @@
 package me.skorrloregaming.commands;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.SolidStorage;
 import me.skorrloregaming.impl.Switches.SwitchUUIDString;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class TransferDenyCmd implements CommandExecutor {
 

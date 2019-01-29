@@ -1,43 +1,22 @@
 package me.skorrloregaming.listeners;
 
-import java.util.Random;
-
+import me.skorrloregaming.*;
+import me.skorrloregaming.impl.ServerMinigame;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Enderman;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.IronGolem;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Phantom;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Wither;
-import org.bukkit.entity.Zombie;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.event.entity.EntityTeleportEvent;
-import org.bukkit.event.entity.ItemDespawnEvent;
-import org.bukkit.event.entity.ItemMergeEvent;
-import org.bukkit.event.entity.SpawnerSpawnEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftExplosion;
-import me.skorrloregaming.Logger;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.impl.ServerMinigame;
+import java.util.Random;
 
 public class EntityEventHandler implements Listener {
 
@@ -61,7 +40,7 @@ public class EntityEventHandler implements Listener {
 				if (hits > 1500) {
 					hits = 0;
 					Location loc = event.getLocation();
-					Logger.info($.italicGray + "Lag generator detected in " + loc.getWorld().getName() + " at {x: " + loc.getBlockX() + ", y: " + loc.getBlockY() + ", z: " + loc.getBlockZ() + "}");
+					Logger.info(Link$.italicGray + "Lag generator detected in " + loc.getWorld().getName() + " at {x: " + loc.getBlockX() + ", y: " + loc.getBlockY() + ", z: " + loc.getBlockZ() + "}");
 				}
 			}
 		}
@@ -72,11 +51,11 @@ public class EntityEventHandler implements Listener {
 		ItemStack item = event.getEntity().getItemStack();
 		if (item.hasItemMeta() && $.isRawRepairable(item)) {
 			ItemMeta meta = item.getItemMeta();
-			ItemStack book = $.createMaterial(Material.ENCHANTED_BOOK);
+			ItemStack book = Link$.createMaterial(Material.ENCHANTED_BOOK);
 			int foundEnchants = 0;
 			for (Enchantment enchant : meta.getEnchants().keySet().toArray(new Enchantment[0])) {
 				int multiplier = meta.getEnchants().get(enchant);
-				$.addBookEnchantment(book, enchant, multiplier);
+				Link$.addBookEnchantment(book, enchant, multiplier);
 				foundEnchants = foundEnchants + 1;
 			}
 			if (foundEnchants > 0) {
@@ -151,12 +130,12 @@ public class EntityEventHandler implements Listener {
 			event.getDrops().clear();
 			Random ran = new Random();
 			if (ran.nextInt(90) == 0) {
-				event.getDrops().add($.createMaterial(Material.WITHER_SKELETON_SKULL));
+				event.getDrops().add(Link$.createMaterial(Material.WITHER_SKELETON_SKULL));
 			}
 			int boneAmount = ran.nextInt(3);
 			if (boneAmount == 0)
 				boneAmount = 1;
-			event.getDrops().add($.createMaterial(Material.BONE, boneAmount));
+			event.getDrops().add(Link$.createMaterial(Material.BONE, boneAmount));
 			lavaSkeleton = true;
 		}
 		if (!lavaSkeleton && event.getEntity() instanceof Skeleton) {
@@ -165,21 +144,21 @@ public class EntityEventHandler implements Listener {
 			int boneAmount = ran.nextInt(4);
 			if (boneAmount == 0)
 				boneAmount = 1;
-			event.getDrops().add($.createMaterial(Material.BONE, boneAmount));
+			event.getDrops().add(Link$.createMaterial(Material.BONE, boneAmount));
 		} else if (event.getEntity() instanceof Zombie) {
 			event.getDrops().clear();
 			Random ran = new Random();
 			int fleshAmount = ran.nextInt(3);
 			if (fleshAmount == 0)
 				fleshAmount = 1;
-			event.getDrops().add($.createMaterial(Material.ROTTEN_FLESH, fleshAmount));
+			event.getDrops().add(Link$.createMaterial(Material.ROTTEN_FLESH, fleshAmount));
 		} else if (event.getEntity() instanceof IronGolem) {
 			event.getDrops().clear();
 			Random ran = new Random();
 			int ironAmount = ran.nextInt(6);
 			if (ironAmount == 0)
 				ironAmount = 1;
-			event.getDrops().add($.createMaterial(Material.IRON_INGOT, ironAmount));
+			event.getDrops().add(Link$.createMaterial(Material.IRON_INGOT, ironAmount));
 		}
 	}
 

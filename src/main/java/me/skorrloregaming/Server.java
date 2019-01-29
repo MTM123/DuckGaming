@@ -1,33 +1,28 @@
 package me.skorrloregaming;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
+import me.skorrloregaming.auction.Auctioneer;
 import me.skorrloregaming.commands.*;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
-import me.skorrloregaming.auction.Auctioneer;
 import me.skorrloregaming.hooks.*;
-import me.skorrloregaming.mysql.SQLDatabase;
-import me.skorrloregaming.shop.LaShoppe;
 import me.skorrloregaming.impl.*;
+import me.skorrloregaming.impl.Switches.SwitchIntDouble;
+import me.skorrloregaming.impl.Switches.SwitchUUIDString;
+import me.skorrloregaming.listeners.BlockEventHandler;
+import me.skorrloregaming.listeners.EntityEventHandler;
+import me.skorrloregaming.listeners.PlayerEventHandler;
+import me.skorrloregaming.lockette.Lockette;
+import me.skorrloregaming.mysql.SQLDatabase;
+import me.skorrloregaming.ping.PingInjector;
+import me.skorrloregaming.runnable.DelayedTeleport;
+import me.skorrloregaming.runnable.GCandAutoDemotion;
+import me.skorrloregaming.scoreboard.DisplayType;
+import me.skorrloregaming.scoreboard.boards.Kitpvp_LeaderboardScoreboard;
+import me.skorrloregaming.scoreboard.boards.Kitpvp_StatisticsScoreboard;
+import me.skorrloregaming.shop.LaShoppe;
+import me.skorrloregaming.skins.SkinStorage;
 import org.apache.commons.io.FileUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -41,21 +36,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.DisplaySlot;
 
-import me.skorrloregaming.CraftGo.BarApi;
-import me.skorrloregaming.impl.Switches.SwitchIntDouble;
-import me.skorrloregaming.impl.Switches.SwitchUUIDString;
-import me.skorrloregaming.listeners.BlockEventHandler;
-import me.skorrloregaming.listeners.EntityEventHandler;
-import me.skorrloregaming.listeners.PlayerEventHandler;
-import me.skorrloregaming.lockette.Lockette;
-import me.skorrloregaming.ping.PingInjector;
-import me.skorrloregaming.runnable.AutoBroadcaster;
-import me.skorrloregaming.runnable.DelayedTeleport;
-import me.skorrloregaming.runnable.GCandAutoDemotion;
-import me.skorrloregaming.scoreboard.DisplayType;
-import me.skorrloregaming.scoreboard.boards.Kitpvp_LeaderboardScoreboard;
-import me.skorrloregaming.scoreboard.boards.Kitpvp_StatisticsScoreboard;
-import me.skorrloregaming.skins.SkinStorage;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class Server extends JavaPlugin implements Listener {
 
@@ -76,8 +62,6 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConfigurationManager npcConfig;
 	private static ConfigurationManager spawnerConfig;
 	private static ConfigurationManager banConfig;
-	private static ConfigurationManager uuidCacheConfig;
-	private static ConfigurationManager geolCacheConfig;
 	private static ConfigurationManager monthlyVoteConfig;
 	private static ConfigurationManager locketteConfig;
 	private static ConfigurationManager chatItemConfig;
@@ -86,10 +70,7 @@ public class Server extends JavaPlugin implements Listener {
 
 	private static Plugin plugin;
 	private static Server instance;
-	private static AntiCheat anticheat = null;
 	private static SkinStorage skinStorage = null;
-	private static PlaytimeManager playtimeManager = null;
-	private static BarApi barApi = null;
 	private static SessionManager sessionManager = null;
 	private static Auctioneer auctioneer = null;
 	private static LaShoppe shoppe = null;
@@ -165,7 +146,6 @@ public class Server extends JavaPlugin implements Listener {
 	private static final boolean USE_FACTIONS_AS_HUB = false;
 
 	private static ConcurrentMap<UUID, Integer> hubScoreboardTitleIndex = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, Integer> barApiTitleIndex = new ConcurrentHashMap<>();
 	private static ConcurrentMap<Integer, Long> hideLoginMessage = new ConcurrentHashMap<>();
 
 	private static AuthMe_Listener authListener = null;
@@ -204,10 +184,6 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static ConcurrentMap<UUID, Integer> getHubScoreboardTitleIndex() {
 		return hubScoreboardTitleIndex;
-	}
-
-	public static ConcurrentMap<UUID, Integer> getBarApiTitleIndex() {
-		return barApiTitleIndex;
 	}
 
 	public static ConcurrentMap<Integer, Long> getHideLoginMessage() {
@@ -526,14 +502,6 @@ public class Server extends JavaPlugin implements Listener {
 		return banConfig;
 	}
 
-	public static ConfigurationManager getUUIDCache() {
-		return uuidCacheConfig;
-	}
-
-	public static ConfigurationManager getGeolocationCache() {
-		return geolCacheConfig;
-	}
-
 	public static ConfigurationManager getMonthlyVoteConfig() {
 		return monthlyVoteConfig;
 	}
@@ -554,20 +522,8 @@ public class Server extends JavaPlugin implements Listener {
 		return discordVerifyConfig;
 	}
 
-	public static AntiCheat getAntiCheat() {
-		return anticheat;
-	}
-
 	public static SkinStorage getSkinStorage() {
 		return skinStorage;
-	}
-
-	public static PlaytimeManager getPlaytimeManager() {
-		return playtimeManager;
-	}
-
-	public static BarApi getBarApi() {
-		return barApi;
 	}
 
 	public static Auctioneer getAuctioneer() {
@@ -598,13 +554,12 @@ public class Server extends JavaPlugin implements Listener {
 	public void onLoad() {
 		serverStartTime = System.currentTimeMillis();
 		pluginName = this.getDescription().getName();
-		pluginLabel = $.Legacy.tag;
+		pluginLabel = Link$.Legacy.tag;
 		plugin = this;
 		instance = this;
 		String lineOne = ChatColor.RED + pluginName + ChatColor.GRAY + " has been running since late 2013.";
 		String lineTwo = ChatColor.GRAY + "Server has been updated to support 1.13 clients.";
 		serverMotd = lineOne + '\n' + lineTwo;
-		anticheat = new AntiCheat();
 		ramConfig = new ConfigurationManager();
 		warpConfig = new ConfigurationManager();
 		signConfig = new ConfigurationManager();
@@ -615,14 +570,11 @@ public class Server extends JavaPlugin implements Listener {
 		npcConfig = new ConfigurationManager();
 		spawnerConfig = new ConfigurationManager();
 		marriageHomesConfig = new ConfigurationManager();
-		uuidCacheConfig = new ConfigurationManager();
-		geolCacheConfig = new ConfigurationManager();
 		monthlyVoteConfig = new ConfigurationManager();
 		locketteConfig = new ConfigurationManager();
 		chatItemConfig = new ConfigurationManager();
 		chestShopConfig = new ConfigurationManager();
 		discordVerifyConfig = new ConfigurationManager();
-		barApi = new BarApi();
 		skinStorage = new SkinStorage();
 		$.createDataFolder();
 		warpConfig.setup(new File(this.getDataFolder(), "warps.yml"));
@@ -633,8 +585,6 @@ public class Server extends JavaPlugin implements Listener {
 		npcConfig.setup(new File(this.getDataFolder(), "npc_storage.yml"));
 		spawnerConfig.setup(new File(this.getDataFolder(), "spawners.yml"));
 		marriageHomesConfig.setup(new File(this.getDataFolder(), "marriage_homes.yml"));
-		uuidCacheConfig.setup(new File(this.getDataFolder(), "uuid_cache.yml"));
-		geolCacheConfig.setup(new File(this.getDataFolder(), "geolocation_cache.yml"));
 		monthlyVoteConfig.setup(new File(this.getDataFolder(), "monthly_votes.yml"));
 		locketteConfig.setup(new File(this.getDataFolder(), "lockette_config.yml"));
 		shoppeConfig.setup(new File(this.getDataFolder(), "shoppe_config.yml"));
@@ -658,7 +608,7 @@ public class Server extends JavaPlugin implements Listener {
 		spawnerPrices.put(6, 4500);
 		spawnerPrices.put(7, 3000);
 		spawnerPrices.put(8, 3000);
-		if (!$.isPluginLoaded("ploader") && !CraftGo.Minecraft.getPackageVersion().startsWith("v1_13")) {
+		if (!Link$.isPluginLoaded("ploader") && !CraftGo.Minecraft.getPackageVersion().startsWith("v1_13")) {
 			perWorldPlugins = new PerWorldPlugin();
 			perWorldPlugins.onLoad();
 		}
@@ -692,31 +642,31 @@ public class Server extends JavaPlugin implements Listener {
 			pingInjector.register();
 		}
 		lastKnownHubWorld = $.getZoneLocation("hub").getWorld().getName().toString();
-		if ($.isPluginEnabled("Vault")) {
+		if (Link$.isPluginEnabled("Vault")) {
 			new VaultEconomy().setupVault();
 		}
 		if (!getConfig().contains("settings.topVotersHttpServerPort")) {
 			getConfig().set("settings.topVotersHttpServerPort", 2095);
 		}
-		if ($.isPluginEnabled("mcMMO")) {
+		if (Link$.isPluginEnabled("mcMMO")) {
 			mcmmoListener = new mcMMO_Listener();
 			mcmmoListener.register();
 		}
-		if ($.isPluginEnabled("ProtocolSupportPocketStuff") && $.isPluginEnabled("AuthMe")) {
+		if (Link$.isPluginEnabled("ProtocolSupportPocketStuff") && Link$.isPluginEnabled("AuthMe")) {
 			protoSupportPocketApi = new ProtocolSupportPocketStuff_Listener();
 			protoSupportPocketApi.bakeModals();
 			protoSupportPocketApi.bakeCallbacks();
 			protoSupportPocketApi.register();
 		}
-		if ($.isPluginEnabled("AuthMe")) {
+		if (Link$.isPluginEnabled("AuthMe")) {
 			authListener = new AuthMe_Listener();
 			authListener.register();
 		}
-		if ($.isPluginEnabled("ProtocolSupport")) {
+		if (Link$.isPluginEnabled("ProtocolSupport")) {
 			protoSupportListener = new ProtocolSupport_Listener();
 			protoSupportListener.register();
 		}
-		if ($.isPluginEnabled("Votifier")) {
+		if (Link$.isPluginEnabled("Votifier")) {
 			voteListener = new Votifier_Listener();
 			voteListener.register();
 		}
@@ -725,19 +675,19 @@ public class Server extends JavaPlugin implements Listener {
 		Bukkit.getScheduler().runTask(this, new Runnable() {
 			@Override
 			public void run() {
-				if ($.isPluginEnabled("Factions")) {
+				if (Link$.isPluginEnabled("Factions")) {
 					factionsListener = new Factions_Listener();
 					factionsListener.register();
 				}
-				if (!$.isPluginLoaded("ploader") && !CraftGo.Minecraft.getPackageVersion().equals("v1_13_R1")) {
+				if (!Link$.isPluginLoaded("ploader") && !CraftGo.Minecraft.getPackageVersion().equals("v1_13_R1")) {
 					if (perWorldPlugins != null)
 						perWorldPlugins.onEnable();
 				}
 				for (Player player : Bukkit.getOnlinePlayers())
-					player.sendMessage($.modernMsgPrefix + "Psst, did you know the server finished updating?");
+					player.sendMessage(Link$.modernMsgPrefix + "Psst, did you know the server finished updating?");
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					player.performCommand("hub");
-					playtimeManager.handle_JoinEvent(player);
+					$.getLinkServer().getPlaytimeManager().handle_JoinEvent(player);
 				}
 				if (!(protoSupportListener == null)) {
 					protoSupportListener.disableProtocolVersions();
@@ -749,8 +699,6 @@ public class Server extends JavaPlugin implements Listener {
 				}
 			}
 		});
-		anticheat.register();
-		playtimeManager = new PlaytimeManager();
 		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
 			@Override
 			public void run() {
@@ -763,21 +711,17 @@ public class Server extends JavaPlugin implements Listener {
 				}
 			}
 		}, 0L, 6000L);
-		Bukkit.getScheduler().runTaskTimer(this, new AutoBroadcaster(), 6000L, 12000L);
 		Bukkit.getScheduler().runTaskTimer(this, garbageCollector, 0L, 36000L);
 		reload();
-		barApi.onEnable();
 		sessionManager = new SessionManager();
 		sessionManager.setup();
 		topVotersHttpServer = new TopVotersHttpServer(getConfig().getInt("settings.topVotersHttpServerPort", 2096));
 		CustomRecipes.loadRecipes();
-		getCommand("unsubscribe").setExecutor(new UnsubscribeCmd());
 		getCommand("verify").setExecutor(new VerifyCmd());
 		getCommand("feed").setExecutor(new FeedCmd());
 		getCommand("fly").setExecutor(new FlyCmd());
 		getCommand("printblockstate").setExecutor(new PrintBlockStateCmd());
 		getCommand("ignore").setExecutor(new IgnoreCmd());
-		getCommand("logger").setExecutor(new LoggerCmd());
 		getCommand("desync").setExecutor(new DesyncCmd());
 		getCommand("sync").setExecutor(new SyncCmd());
 		getCommand("spoof-vote").setExecutor(new SpoofVoteCmd());
@@ -805,7 +749,6 @@ public class Server extends JavaPlugin implements Listener {
 		getCommand("staffchat").setExecutor(new StaffChatCmd());
 		getCommand("vote").setExecutor(new VoteCmd());
 		getCommand("effect").setExecutor(new EffectCmd());
-		getCommand("debug").setExecutor(new DebugCmd());
 		getCommand("website").setExecutor(new WebsiteCmd());
 		getCommand("trails").setExecutor(new TrailsCmd());
 		getCommand("clear").setExecutor(new ClearCmd());
@@ -874,7 +817,6 @@ public class Server extends JavaPlugin implements Listener {
 	public void onDisable() {
 		running = false;
 		plugin.saveConfig();
-		barApi.onDisable();
 		sqlDatabase.close();
 		discordBot.broadcast(":octagonal_sign: **Server has stopped**", Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 		discordBot.unregister();
@@ -890,7 +832,7 @@ public class Server extends JavaPlugin implements Listener {
 		}
 		topVotersHttpServer.stop();
 		for (Player player : Bukkit.getOnlinePlayers())
-			player.sendMessage($.modernMsgPrefix + "Psst, the server is now updating; please be patient.");
+			player.sendMessage(Link$.modernMsgPrefix + "Psst, the server is now updating; please be patient.");
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			this.performBuggedLeave(player, false, false);
 			if (USE_FACTIONS_AS_HUB) {
@@ -900,7 +842,7 @@ public class Server extends JavaPlugin implements Listener {
 				if (!hub.contains(player.getUniqueId()))
 					hub.add(player.getUniqueId());
 				fetchLobby(player);
-				playtimeManager.handle_QuitEvent(player);
+				$.getLinkServer().getPlaytimeManager().handle_QuitEvent(player);
 			}
 		}
 	}
@@ -916,7 +858,7 @@ public class Server extends JavaPlugin implements Listener {
 				boolean isNothing = player.getInventory().getItem(0) == null;
 				if (isNothing || !(player.getInventory().getItem(0).getType() == Material.COMPASS)) {
 					$.clearPlayer(player);
-					ItemStack compass = $.createMaterial(Material.COMPASS, ChatColor.LIGHT_PURPLE + "Server Selector");
+					ItemStack compass = Link$.createMaterial(Material.COMPASS, ChatColor.LIGHT_PURPLE + "Server Selector");
 					player.setTotalExperience(0);
 					player.getInventory().addItem(compass);
 					player.getInventory().setHeldItemSlot(8);
@@ -1386,23 +1328,23 @@ public class Server extends JavaPlugin implements Listener {
 		player.setAllowFlight(true);
 		Random random = new Random();
 		int ran = random.nextInt(4);
-		ItemStack sword = $.createMaterial(Material.STONE_SWORD, ChatColor.GOLD + "The Forbidding Katana");
-		ItemStack bow = $.createMaterial(Material.BOW, ChatColor.GOLD + "The Forbidding Bow");
-		ItemStack arrow = $.createMaterial(Material.ARROW, 1, ChatColor.GOLD + "The Forbidding Darts");
-		ItemStack helmet = $.createMaterial(Material.LEATHER_HELMET, 1, ChatColor.GOLD + "The Forbidding Helmet");
-		ItemStack chestplate = $.createMaterial(Material.LEATHER_CHESTPLATE, ChatColor.GOLD + "The Forbidding Chestpeice");
-		ItemStack leggings = $.createMaterial(Material.LEATHER_LEGGINGS, ChatColor.GOLD + "The Forbidding Leggings");
-		ItemStack boots = $.createMaterial(Material.LEATHER_BOOTS, ChatColor.GOLD + "The Forbidding Boots");
-		bow = $.addEnchant(bow, new EnchantInfo(Enchantment.ARROW_KNOCKBACK, 5));
-		bow = $.addEnchant(bow, new EnchantInfo(Enchantment.ARROW_INFINITE, 1));
-		bow = $.addEnchant(bow, new EnchantInfo(Enchantment.KNOCKBACK, 5));
-		bow = $.setUnbreakable(bow, true);
-		sword = $.addEnchant(sword, new EnchantInfo(Enchantment.KNOCKBACK, 5));
-		sword = $.setUnbreakable(sword, true);
-		helmet = $.setUnbreakable(helmet, true);
-		chestplate = $.setUnbreakable(chestplate, true);
-		leggings = $.setUnbreakable(leggings, true);
-		boots = $.setUnbreakable(boots, true);
+		ItemStack sword = Link$.createMaterial(Material.STONE_SWORD, ChatColor.GOLD + "The Forbidding Katana");
+		ItemStack bow = Link$.createMaterial(Material.BOW, ChatColor.GOLD + "The Forbidding Bow");
+		ItemStack arrow = Link$.createMaterial(Material.ARROW, 1, ChatColor.GOLD + "The Forbidding Darts");
+		ItemStack helmet = Link$.createMaterial(Material.LEATHER_HELMET, 1, ChatColor.GOLD + "The Forbidding Helmet");
+		ItemStack chestplate = Link$.createMaterial(Material.LEATHER_CHESTPLATE, ChatColor.GOLD + "The Forbidding Chestpeice");
+		ItemStack leggings = Link$.createMaterial(Material.LEATHER_LEGGINGS, ChatColor.GOLD + "The Forbidding Leggings");
+		ItemStack boots = Link$.createMaterial(Material.LEATHER_BOOTS, ChatColor.GOLD + "The Forbidding Boots");
+		bow = Link$.addEnchant(bow, new EnchantInfo(Enchantment.ARROW_KNOCKBACK, 5));
+		bow = Link$.addEnchant(bow, new EnchantInfo(Enchantment.ARROW_INFINITE, 1));
+		bow = Link$.addEnchant(bow, new EnchantInfo(Enchantment.KNOCKBACK, 5));
+		bow = Link$.setUnbreakable(bow, true);
+		sword = Link$.addEnchant(sword, new EnchantInfo(Enchantment.KNOCKBACK, 5));
+		sword = Link$.setUnbreakable(sword, true);
+		helmet = Link$.setUnbreakable(helmet, true);
+		chestplate = Link$.setUnbreakable(chestplate, true);
+		leggings = Link$.setUnbreakable(leggings, true);
+		boots = Link$.setUnbreakable(boots, true);
 		Color leatherColor = null;
 		if (sfPlayer.getTeamValue() == $.Skyfight.Team.BLUE)
 			leatherColor = Color.BLUE;
@@ -1414,10 +1356,10 @@ public class Server extends JavaPlugin implements Listener {
 			leatherColor = Color.YELLOW;
 		if (sfPlayer.getTeamValue() == $.Skyfight.Team.PINK)
 			leatherColor = Color.fromRGB(255, 105, 180);
-		helmet = $.addLeatherColor(helmet, leatherColor);
-		chestplate = $.addLeatherColor(chestplate, leatherColor);
-		leggings = $.addLeatherColor(leggings, leatherColor);
-		boots = $.addLeatherColor(boots, leatherColor);
+		helmet = Link$.addLeatherColor(helmet, leatherColor);
+		chestplate = Link$.addLeatherColor(chestplate, leatherColor);
+		leggings = Link$.addLeatherColor(leggings, leatherColor);
+		boots = Link$.addLeatherColor(boots, leatherColor);
 		$.clearPlayer(player);
 		player.getInventory().setItem(0, sword);
 		player.getInventory().setItem(1, bow);
@@ -1556,7 +1498,7 @@ public class Server extends JavaPlugin implements Listener {
 						player.addAttachment(plugin, "plots.permpack.basic", true);
 						player.addAttachment(plugin, "plots.plot.1", true);
 						player.addAttachment(plugin, "plots.visit.other", true);
-						if ($.getDonorRankId(player) < -1 || $.getRankId(player) > -1) {
+						if (Link$.getDonorRankId(player) < -1 || Link$.getRankId(player) > -1) {
 							for (String permission : Directory.basicWorldEditPermissions) {
 								player.addAttachment(plugin, permission, true);
 							}
@@ -1598,7 +1540,7 @@ public class Server extends JavaPlugin implements Listener {
 				player.addAttachment(this, "plots.permpack.basic", false);
 				player.addAttachment(this, "plots.plot.1", false);
 				player.addAttachment(this, "plots.visit.other", false);
-				if ($.getDonorRankId(player) < -1 || $.getRankId(player) > -1) {
+				if (Link$.getDonorRankId(player) < -1 || Link$.getRankId(player) > -1) {
 					for (String permission : Directory.basicWorldEditPermissions) {
 						player.addAttachment(plugin, permission, false);
 					}

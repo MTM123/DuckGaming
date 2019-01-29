@@ -2,6 +2,7 @@ package me.skorrloregaming.commands;
 
 import com.massivecraft.factions.FPlayers;
 import me.skorrloregaming.$;
+import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -24,7 +25,7 @@ public class FlyCmd implements CommandExecutor {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
-		if ($.getDonorRankId(player) < -3) {
+		if (Link$.getDonorRankId(player) < -3) {
 			if (FPlayers.getInstance().getByPlayer(player).isInOwnTerritory()) {
 				if (Server.getFactionFlyPlayers().contains(player.getUniqueId())) {
 					Server.getFactionFlyPlayers().remove(player.getUniqueId());

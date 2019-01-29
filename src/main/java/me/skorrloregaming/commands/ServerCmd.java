@@ -2,15 +2,14 @@ package me.skorrloregaming.commands;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import me.skorrloregaming.$;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.ServerMinigame;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.impl.ServerMinigame;
 
 public class ServerCmd implements CommandExecutor {
 

@@ -1,16 +1,16 @@
 package me.skorrloregaming.discord.listeners;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Logger;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.*;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -54,8 +54,8 @@ public class MessageListener extends ListenerAdapter {
 						event.getGuild().getController().setNickname(event.getMember(), event.getMember().getUser().getName()).complete();
 						return;
 					}
-					rawMessage = Server.getAntiCheat().processAntiSwear(op, rawMessage, false, true);
-					String displayName = $.getFlashPlayerDisplayName(memberName);
+					rawMessage = $.getLinkServer().getAntiCheat().processAntiSwear(op, rawMessage, false, true);
+					String displayName = Link$.getFlashPlayerDisplayName(memberName);
 					String username = event.getMember().getUser().getName() + "#" + event.getMember().getUser().getDiscriminator();
 					TextComponent newLine = new TextComponent(ComponentSerializer.parse("{text: \"\n\"}"));
 					BaseComponent[] nameAndDiscriminator;

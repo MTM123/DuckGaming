@@ -1,7 +1,9 @@
 package me.skorrloregaming.commands;
 
-import java.text.DecimalFormat;
-
+import me.skorrloregaming.$;
+import me.skorrloregaming.EconManager;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -9,16 +11,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.EconManager;
-import me.skorrloregaming.Server;
+import java.text.DecimalFormat;
 
 public class PayCmd implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		String subDomain = "";
-		String tag = $.Legacy.tag;
+		String tag = Link$.Legacy.tag;
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			if (!Server.getKitpvp().contains(player.getUniqueId()) && !Server.getFactions().contains(player.getUniqueId()) && !Server.getSkyblock().contains(player.getUniqueId())) {

@@ -1,7 +1,10 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.$;
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
 import me.skorrloregaming.discord.Channel;
-import me.skorrloregaming.discord.DiscordBot;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,17 +15,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Server;
-
 public class SayCmd implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender.isOp()) {
 			if (args.length < 2 || !(args[0].charAt(0) == '/')) {
-				sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <id> <message>");
+				sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <id> <message>");
 				return true;
 			} else {
 				StringBuilder sb = new StringBuilder();
@@ -30,7 +29,7 @@ public class SayCmd implements CommandExecutor {
 					sb.append(args[i] + " ");
 				}
 				if (args[0].split("/")[1].equals(".")) {
-					if ($.isPrefixedRankingEnabled()) {
+					if (Link$.isPrefixedRankingEnabled()) {
 						Bukkit.broadcastMessage(ChatColor.GRAY + "[" + ChatColor.WHITE + Server.getLastKnownHubWorld() + ChatColor.GRAY + "] " + ChatColor.WHITE + $.consoleTag + "Server" + ChatColor.WHITE + " " + '\u00BB' + " " + sb.toString());
 						Server.getDiscordBot().broadcast(
 								"**Console** Server " + '\u00BB' + " " + sb.toString()
@@ -52,7 +51,7 @@ public class SayCmd implements CommandExecutor {
 						world = checkPlayer.getWorld().getName();
 					}
 					if (!op.hasPlayedBefore() && !op.isOnline()) {
-						sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
+						sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 						return true;
 					} else {
 						if (message.startsWith("/") && op.isOnline()) {
@@ -61,19 +60,19 @@ public class SayCmd implements CommandExecutor {
 							if (!commandEvent.isCancelled())
 								op.getPlayer().performCommand(message.substring(1));
 						} else {
-							String rankName = WordUtils.capitalize($.toRankDisplayName($.getRank(op.getUniqueId())));
+							String rankName = WordUtils.capitalize(Link$.toRankDisplayName(Link$.getRank(op.getUniqueId())));
 							if (rankName.equals("Youtube"))
 								rankName = "YouTube";
-							if ($.isPrefixedRankingEnabled()) {
-								Bukkit.broadcastMessage(ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.WHITE + $.getFlashPlayerDisplayName(op) + ChatColor.WHITE + " " + '\u00BB' + " " + message);
+							if (Link$.isPrefixedRankingEnabled()) {
+								Bukkit.broadcastMessage(ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.WHITE + Link$.getFlashPlayerDisplayName(op) + ChatColor.WHITE + " " + '\u00BB' + " " + message);
 								Server.getDiscordBot().broadcast(
-										"**" + rankName + "** " + op.getName() + " " + '\u00BB' + " " + Server.getAntiCheat().processAntiSwear(op, message)
+										"**" + rankName + "** " + op.getName() + " " + '\u00BB' + " " + $.getLinkServer().getAntiCheat().processAntiSwear(op, message)
 										, Channel.SERVER_CHAT
 								);
 							} else {
 								Bukkit.broadcastMessage(ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.WHITE + op.getName() + ChatColor.WHITE + " " + '\u00BB' + " " + message);
 								Server.getDiscordBot().broadcast(
-										"**" + op.getName() + "** " + '\u00BB' + " " + Server.getAntiCheat().processAntiSwear(op, message)
+										"**" + op.getName() + "** " + '\u00BB' + " " + $.getLinkServer().getAntiCheat().processAntiSwear(op, message)
 										, Channel.SERVER_CHAT
 								);
 							}
@@ -82,7 +81,7 @@ public class SayCmd implements CommandExecutor {
 				}
 			}
 		} else {
-			$.playLackPermissionMessage(sender);
+			Link$.playLackPermissionMessage(sender);
 			return true;
 		}
 		return true;

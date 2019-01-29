@@ -1,19 +1,14 @@
 package me.skorrloregaming;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.List;
+import me.skorrloregaming.impl.Switches;
+import me.skorrloregaming.impl.Switches.SwitchIntString;
 
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
-
-import me.skorrloregaming.impl.Switches;
-import me.skorrloregaming.impl.Switches.SwitchIntString;
+import java.io.File;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.*;
 
 public class TopVotersHttpServer implements Runnable {
 	public SSLServerSocket server = null;

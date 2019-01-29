@@ -1,11 +1,10 @@
 package me.skorrloregaming.runnable;
 
+import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.Switches.SwitchIntDouble;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import me.skorrloregaming.Server;
-import me.skorrloregaming.impl.Switches.SwitchIntDouble;
 
 public class CombatTimer extends BukkitRunnable {
 	private final Player player;

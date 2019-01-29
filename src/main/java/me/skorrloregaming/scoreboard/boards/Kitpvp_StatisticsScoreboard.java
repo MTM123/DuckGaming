@@ -1,14 +1,13 @@
 package me.skorrloregaming.scoreboard.boards;
 
-import java.text.DecimalFormat;
-import java.util.Hashtable;
-
-import org.bukkit.entity.Player;
-
 import me.skorrloregaming.$;
 import me.skorrloregaming.EconManager;
 import me.skorrloregaming.scoreboard.DisposableScoreboard;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.entity.Player;
+
+import java.text.DecimalFormat;
+import java.util.Hashtable;
 
 public class Kitpvp_StatisticsScoreboard implements DisposableScoreboard {
 	@Override

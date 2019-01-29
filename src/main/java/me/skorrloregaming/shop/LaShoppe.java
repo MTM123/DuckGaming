@@ -1,9 +1,6 @@
 package me.skorrloregaming.shop;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.AnvilGUI;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
 import me.skorrloregaming.impl.ServerMinigame;
 import me.skorrloregaming.shop.events.enchant.CreateEnchantTypeEventHandler;
 import me.skorrloregaming.shop.events.item.CreateItemTypeEventHandler;
@@ -84,7 +81,7 @@ public class LaShoppe {
 				Inventory inventory = null;
 				if (player.isOp()) {
 					inventory = Bukkit.createInventory(null, 36, "La Shoppe, page " + page);
-					ItemStack removeItemModeItem = $.createMaterial(Material.ROSE_RED, "Remove items from shop");
+					ItemStack removeItemModeItem = Link$.createMaterial(Material.ROSE_RED, "Remove items from shop");
 					if (removeMode) {
 						if (CraftGo.Player.getProtocolVersion(player) > 314) {
 							removeItemModeItem.addUnsafeEnchantment(Enchantment.BINDING_CURSE, 1);
@@ -93,14 +90,14 @@ public class LaShoppe {
 						}
 					}
 					inventory.setItem(0, removeItemModeItem);
-					inventory.setItem(7, $.createMaterial(Material.LAPIS_LAZULI, "Add new shop enchant"));
-					inventory.setItem(8, $.createMaterial(Material.CACTUS_GREEN, "Add new shop item"));
+					inventory.setItem(7, Link$.createMaterial(Material.LAPIS_LAZULI, "Add new shop enchant"));
+					inventory.setItem(8, Link$.createMaterial(Material.CACTUS_GREEN, "Add new shop item"));
 					startIndex = 9;
 				} else {
 					inventory = Bukkit.createInventory(null, 27, "La Shoppe, page " + page);
 				}
-				ItemStack viewPrevious = $.createMaterial(Material.EMERALD, "View previous page");
-				ItemStack viewFollowing = $.createMaterial(Material.EMERALD, "View following page");
+				ItemStack viewPrevious = Link$.createMaterial(Material.EMERALD, "View previous page");
+				ItemStack viewFollowing = Link$.createMaterial(Material.EMERALD, "View following page");
 				if (player.isOp()) {
 					inventory.setItem(18, viewPrevious);
 					inventory.setItem(26, viewFollowing);

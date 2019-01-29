@@ -1,40 +1,28 @@
 package me.skorrloregaming;
 
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Random;
-import java.util.UUID;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
-
+import com.massivecraft.factions.Board;
+import com.massivecraft.factions.FLocation;
+import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.Faction;
+import me.skorrloregaming.impl.MarriageGender;
+import me.skorrloregaming.impl.ServerMinigame;
+import me.skorrloregaming.impl.Switches.SwitchStringMinigame;
+import me.skorrloregaming.scoreboard.DisposableScoreboard;
 import me.skorrloregaming.scoreboard.boards.*;
+import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.*;
 import org.bukkit.FireworkEffect.Type;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -43,25 +31,20 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import com.massivecraft.factions.Board;
-import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.Faction;
-
-import me.skorrloregaming.impl.EnchantInfo;
-import me.skorrloregaming.impl.MarriageGender;
-import me.skorrloregaming.impl.ServerMinigame;
-import me.skorrloregaming.impl.Switches.SwitchStringMinigame;
-import me.skorrloregaming.scoreboard.DisposableScoreboard;
-import net.md_5.bungee.api.ChatColor;
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 public class $ {
-	public static String italicGray = ChatColor.GRAY + "" + ChatColor.ITALIC;
-	public static String modernMsgPrefix = ChatColor.BOLD + "\u00BB" + " ";
 	public static String consoleTag = ChatColor.RED + "[" + ChatColor.GRAY + "Console" + ChatColor.RED + "] " + ChatColor.RED;
 	public static String pricePrefix = ChatColor.RESET + "Purchase Price: " + ChatColor.RED + "$";
-	public static List<String> validRanks = Arrays.asList(new String[]{"default", "founder", "owner", "manager", "admin", "moderator", "helper", "developer", "builder"});
-	public static List<String> validDonorRanks = Arrays.asList(new String[]{"default", "youtube", "donator", "redstone", "obsidian", "bedrock"});
 	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock", "prison", "dated"});
 	public static List<String> validStorageMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "creative", "skyblock"});
 	public static List<String> validEconomyMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "skyblock"});
@@ -91,26 +74,6 @@ public class $ {
 		}
 	}
 
-	public static boolean isPluginLoaded(String pluginName) {
-		Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
-		if (plugin == null)
-			return false;
-		return true;
-	}
-
-	public static boolean isPluginEnabled(String pluginName) {
-		Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
-		if (plugin == null)
-			return false;
-		if (plugin.isEnabled())
-			return true;
-		return false;
-	}
-
-	public static void playLackPermissionMessage(CommandSender player) {
-		player.sendMessage($.Legacy.tag + ChatColor.RED + "You do not have permission to use this command.");
-	}
-
 	public static void playForbiddenTeleportMessage(CommandSender player, ServerMinigame minigame) {
 		player.sendMessage("Sorry, teleportation was cancelled, please contact an admin.");
 		player.sendMessage("Most likely the teleport destination is forbidden in " + WordUtils.capitalize(minigame.toString().toLowerCase()) + ".");
@@ -126,359 +89,6 @@ public class $ {
 			}
 		}
 		return false;
-	}
-
-	public static String toDonorRankTag(String rank) {
-		return toRankTag(rank).substring(0, toRankTag(rank).lastIndexOf(" ")) + ChatColor.RESET;
-	}
-
-	public static String toRankTag(String rank) {
-		if (rank.equals("default"))
-			return ChatColor.DARK_GRAY + "[" + ChatColor.GRAY + "Member" + ChatColor.DARK_GRAY + "] " + ChatColor.GRAY;
-		if (rank.equals("helper"))
-			return ChatColor.RED + "[" + ChatColor.GRAY + "Helper" + ChatColor.RED + "] ";
-		if (rank.equals("developer"))
-			return ChatColor.DARK_PURPLE + "[" + ChatColor.LIGHT_PURPLE + "Developer" + ChatColor.DARK_PURPLE + "] " + ChatColor.LIGHT_PURPLE;
-		if (rank.equals("builder"))
-			return ChatColor.GRAY + "[" + ChatColor.WHITE + "Builder" + ChatColor.GRAY + "] " + ChatColor.WHITE;
-		if (rank.equals("moderator"))
-			return ChatColor.RED + "[" + ChatColor.GRAY + "Moderator" + ChatColor.RED + "] ";
-		if (rank.equals("admin"))
-			return ChatColor.RED + "[" + ChatColor.GRAY + "Admin" + ChatColor.RED + "] ";
-		if (rank.equals("manager"))
-			return ChatColor.RED + "[" + ChatColor.GRAY + "Manager" + ChatColor.RED + "] ";
-		if (rank.equals("owner"))
-			return ChatColor.RED + "[" + ChatColor.GRAY + "Owner" + ChatColor.RED + "] ";
-		if (rank.equals("founder"))
-			return ChatColor.RED + "[" + ChatColor.GRAY + "Founder" + ChatColor.RED + "] ";
-		if (rank.equals("donator"))
-			return ChatColor.DARK_GREEN + "[" + ChatColor.GREEN + "Donator" + ChatColor.DARK_GREEN + "] " + ChatColor.GRAY;
-		if (rank.equals("youtube"))
-			return ChatColor.GRAY + "[" + ChatColor.RED + "You" + ChatColor.WHITE + "Tube" + ChatColor.GRAY + "] " + ChatColor.RESET;
-		if (rank.equals("redstone"))
-			return ChatColor.DARK_GREEN + "[" + ChatColor.GREEN + "Redstone" + ChatColor.DARK_GREEN + "] " + ChatColor.GRAY;
-		if (rank.equals("obsidian"))
-			return ChatColor.DARK_GREEN + "[" + ChatColor.GREEN + "Obsidian" + ChatColor.DARK_GREEN + "] " + ChatColor.GRAY;
-		if (rank.equals("bedrock"))
-			return ChatColor.DARK_GREEN + "[" + ChatColor.GREEN + "Bedrock" + ChatColor.DARK_GREEN + "] " + ChatColor.GRAY;
-		return "";
-	}
-
-	public static String toRankDisplayName(String rank) {
-		if (rank.equals("default"))
-			return "member";
-		if (rank.equals("helper"))
-			return "helper";
-		if (rank.equals("developer"))
-			return "developer";
-		if (rank.equals("builder"))
-			return "builder";
-		if (rank.equals("moderator"))
-			return "moderator";
-		if (rank.equals("admin"))
-			return "admin";
-		if (rank.equals("manager"))
-			return "manager";
-		if (rank.equals("owner"))
-			return "owner";
-		if (rank.equals("founder"))
-			return "founder";
-		if (rank.equals("donator"))
-			return "donator";
-		if (rank.equals("youtube"))
-			return "youtube";
-		if (rank.equals("redstone"))
-			return "redstone";
-		if (rank.equals("obsidian"))
-			return "obsidian";
-		if (rank.equals("bedrock"))
-			return "bedrock";
-		return "";
-	}
-
-	public static String getRank(UUID id) {
-		if (isRankingEnabled()) {
-			if (Server.getSqlDatabase().contains("rank", id.toString())) {
-				return Server.getSqlDatabase().getString("rank", id.toString());
-			} else {
-				Server.getSqlDatabase().set("rank", id.toString(), validRanks.get(0));
-				return validRanks.get(0);
-			}
-		} else {
-			return validRanks.get(0);
-		}
-	}
-
-	public static String getRank(Player player) {
-		return getRank(player.getUniqueId());
-	}
-
-	public static String getDonorRank(UUID id) {
-		if (isRankingEnabled()) {
-			if (Server.getSqlDatabase().contains("donorRank", id.toString())) {
-				return Server.getSqlDatabase().getString("donorRank", id.toString());
-			} else {
-				Server.getSqlDatabase().set("donorRank", id.toString(), validDonorRanks.get(0));
-				return validDonorRanks.get(0);
-			}
-		} else {
-			return validDonorRanks.get(0);
-		}
-	}
-
-	public static String getDonorRank(Player player) {
-		return getDonorRank(player.getUniqueId());
-	}
-
-	public static int getRankId(UUID id) {
-		String rank = getRank(id);
-		if (rank.equals("default") || !isRankingEnabled())
-			return -1;
-		if (rank.equals("helper") || rank.equals("developer") || rank.equals("builder"))
-			return 0;
-		if (rank.equals("moderator"))
-			return 1;
-		if (rank.equals("admin") || rank.equals("manager"))
-			return 2;
-		if (rank.equals("founder") || rank.equals("owner"))
-			return 3;
-		return -100;
-	}
-
-	public static int getRankId(Player player) {
-		return getRankId(player.getUniqueId());
-	}
-
-	public static int getDonorRankId(UUID id) {
-		String rank = getDonorRank(id);
-		if (rank.equals("default") || rank.equals("youtube") || !isRankingEnabled())
-			return -1;
-		if (rank.equals("bedrock"))
-			return -5;
-		if (rank.equals("obsidian"))
-			return -4;
-		if (rank.equals("redstone"))
-			return -3;
-		if (rank.equals("donator"))
-			return -2;
-		return -100;
-	}
-
-	public static int getDonorRankId(Player player) {
-		return getDonorRankId(player.getUniqueId());
-	}
-
-	public static String formatMonthId(int month) {
-		switch (month % 12) {
-			case 0:
-				return "January";
-			case 1:
-				return "February";
-			case 2:
-				return "March";
-			case 3:
-				return "April";
-			case 4:
-				return "May";
-			case 5:
-				return "June";
-			case 6:
-				return "July";
-			case 7:
-				return "August";
-			case 8:
-				return "September";
-			case 9:
-				return "October";
-			case 10:
-				return "November";
-			case 11:
-				return "December";
-			default:
-				return null;
-		}
-	}
-
-	public static String formatMonthIdAbbrev(int month) {
-		switch (month % 12) {
-			case 0:
-				return "Jan.";
-			case 1:
-				return "Feb.";
-			case 2:
-				return "Mar.";
-			case 3:
-				return "Apr.";
-			case 4:
-				return "May";
-			case 5:
-				return "June";
-			case 6:
-				return "July";
-			case 7:
-				return "Aug.";
-			case 8:
-				return "Sept.";
-			case 9:
-				return "Oct.";
-			case 10:
-				return "Nov.";
-			case 11:
-				return "Dec.";
-			default:
-				return null;
-		}
-	}
-
-	public static String formatDayOfMonthSuffix(int dayOfMonth) {
-		if (dayOfMonth > 10 && dayOfMonth < 21)
-			return "th";
-		if (dayOfMonth % 10 == 1)
-			return "st";
-		if (dayOfMonth % 10 == 2)
-			return "nd";
-		if (dayOfMonth % 10 == 3)
-			return "rd";
-		return "th";
-	}
-
-	public static int retrieveMonthId(String month) {
-		switch (month) {
-			case "January":
-				return 0;
-			case "February":
-				return 1;
-			case "March":
-				return 2;
-			case "April":
-				return 3;
-			case "May":
-				return 4;
-			case "June":
-				return 5;
-			case "July":
-				return 6;
-			case "August":
-				return 7;
-			case "September":
-				return 8;
-			case "October":
-				return 9;
-			case "November":
-				return 10;
-			case "December":
-				return 11;
-			default:
-				return -1;
-		}
-	}
-
-	public static boolean isOld(long timestamp, long timespan) {
-		if (timestamp + timespan <= System.currentTimeMillis()) {
-			return true;
-		}
-		return false;
-	}
-
-	public static String basicFormatCalendarTime(Calendar cal) {
-		return formatMonthId(cal.get(Calendar.MONTH)) + " " + cal.get(Calendar.DAY_OF_MONTH) + ", " + cal.get(Calendar.YEAR);
-	}
-
-	public static void flashPlayerDisplayName(Player player) {
-		String rank = getRank(player);
-		String donorRank = getDonorRank(player);
-		if (donorRank.equals("default")) {
-			player.setDisplayName(toRankTag(rank) + player.getName() + ChatColor.RESET);
-		} else {
-			if (rank.equals("default")) {
-				player.setDisplayName(toRankTag(donorRank) + player.getName() + ChatColor.RESET);
-			} else {
-				player.setDisplayName(toRankTag(rank) + player.getName() + " " + toDonorRankTag(donorRank) + ChatColor.RESET);
-			}
-		}
-		player.setPlayerListName(player.getDisplayName());
-	}
-
-	public static String getFlashPlayerDisplayName(OfflinePlayer player) {
-		String rank = getRank(player.getUniqueId());
-		String donorRank = getDonorRank(player.getUniqueId());
-		if (donorRank.equals("default")) {
-			return toRankTag(rank) + player.getName() + ChatColor.RESET;
-		} else {
-			if (rank.equals("default")) {
-				return toRankTag(donorRank) + player.getName() + ChatColor.RESET;
-			} else {
-				return toRankTag(rank) + player.getName() + " " + toDonorRankTag(donorRank) + ChatColor.RESET;
-			}
-		}
-	}
-
-	public static String getFlashPlayerDisplayName(String playerName) {
-		UUID id = UUID.nameUUIDFromBytes(("OfflinePlayer:" + playerName).getBytes());
-		if (Bukkit.getOnlineMode())
-			id = UUID.fromString(CraftGo.Player.getUUID(playerName, true));
-		String rank = getRank(id);
-		String donorRank = getDonorRank(id);
-		if (donorRank.equals("default")) {
-			return toRankTag(rank) + playerName + ChatColor.RESET;
-		} else {
-			if (rank.equals("default")) {
-				return toRankTag(donorRank) + playerName + ChatColor.RESET;
-			} else {
-				return toRankTag(rank) + playerName + " " + toDonorRankTag(donorRank) + ChatColor.RESET;
-			}
-		}
-	}
-
-	public static String formatTime(long seconds) {
-		if (seconds < 60) {
-			return seconds + "s";
-		}
-		long minutes = seconds / 60;
-		long s = 60 * minutes;
-		long secondsLeft = seconds - s;
-		if (minutes < 60) {
-			if (secondsLeft > 0) {
-				return String.valueOf(minutes + "m " + secondsLeft + "s");
-			}
-			return String.valueOf(minutes + "m");
-		}
-		if (minutes < 1440) {
-			String time = "";
-			long hours = minutes / 60;
-			time = hours + "h";
-			long inMins = 60 * hours;
-			long leftOver = minutes - inMins;
-			if (leftOver >= 1) {
-				time = time + " " + leftOver + "m";
-			}
-			if (secondsLeft > 0) {
-				time = time + " " + secondsLeft + "s";
-			}
-			return time;
-		}
-		String time = "";
-		long days = minutes / 1440;
-		time = days + "d";
-		long inMins = 1440 * days;
-		long leftOver = minutes - inMins;
-		if (leftOver >= 1) {
-			if (leftOver < 60) {
-				time = time + " " + leftOver + "m";
-			} else {
-				long hours = leftOver / 60;
-				time = time + " " + hours + "h";
-				long hoursInMins = 60 * hours;
-				long minsLeft = leftOver - hoursInMins;
-				if (leftOver >= 1) {
-					time = time + " " + minsLeft + "m";
-				}
-			}
-		}
-		if (secondsLeft > 0) {
-			time = time + " " + secondsLeft + "s";
-		}
-		return time;
 	}
 
 	public static void setEnableEffects(Player player, boolean value) {
@@ -550,10 +160,6 @@ public class $ {
 		fw.setFireworkMeta(fwm);
 	}
 
-	public static String formatPackageVersion(String version) {
-		return version.replace("_", ".").substring(0, version.lastIndexOf("R") - 1).substring(1);
-	}
-
 	public static String scanStringArrayAndSplitBy(String[] array, char[] split) {
 		for (String string : array) {
 			if (!(string.indexOf(new String(split)) == -1)) {
@@ -572,8 +178,16 @@ public class $ {
 		return -1;
 	}
 
+	public static LinkServer getLinkServer() {
+		if (!Link$.isPluginEnabled("SkorrloreGamingLink")) {
+			return null;
+		} else {
+			return (LinkServer) Bukkit.getPluginManager().getPlugin("SkorrloreGamingLink");
+		}
+	}
+
 	public static Object getAuthenticationSuite() {
-		if (!$.isPluginEnabled("AuthMe")) {
+		if (!Link$.isPluginEnabled("AuthMe")) {
 			return null;
 		} else {
 			return fr.xephi.authme.api.v3.AuthMeApi.getInstance();
@@ -592,7 +206,7 @@ public class $ {
 			if (!Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false))
 				return false;
 		if (minigame == ServerMinigame.FACTIONS) {
-			if (!$.isPluginEnabled("Factions"))
+			if (!Link$.isPluginEnabled("Factions"))
 				return false;
 		}
 		if (Server.getPlugin().getConfig().contains("settings.enable." + minigame.toString().toLowerCase())) {
@@ -602,26 +216,8 @@ public class $ {
 		}
 	}
 
-	public static boolean isRankingEnabled() {
-		if (Server.getPlugin().getConfig().contains("settings.ranking.enable")) {
-			return Server.getPlugin().getConfig().getBoolean("settings.ranking.enable");
-		} else {
-			return true;
-		}
-	}
-
 	public static void teleport(Entity entity, Location loc) {
 		entity.teleportAsync(loc);
-	}
-
-	public static boolean isPrefixedRankingEnabled() {
-		if (!isRankingEnabled())
-			return false;
-		if (Server.getPlugin().getConfig().contains("settings.ranking.prefix")) {
-			return Server.getPlugin().getConfig().getBoolean("settings.ranking.prefix");
-		} else {
-			return true;
-		}
 	}
 
 	public static boolean isWelcomeMessageEnabled() {
@@ -737,47 +333,6 @@ public class $ {
 		return item == null || item.getType() == Material.AIR;
 	}
 
-	public static ItemStack createMaterial(Material material) {
-		return createMaterial(material, 1, "unspecified", (short) 0, new String[0]);
-	}
-
-	public static ItemStack createMaterial(Material material, int amount) {
-		return createMaterial(material, amount, "unspecified", (short) 0, new String[0]);
-	}
-
-	public static ItemStack createMaterial(Material material, int amount, short durability) {
-		return createMaterial(material, amount, "unspecified", durability, new String[0]);
-	}
-
-	public static ItemStack createMaterial(Material material, int amount, String displayName) {
-		return createMaterial(material, amount, displayName, (short) 0, new String[0]);
-	}
-
-	public static ItemStack createMaterial(Material material, String displayName) {
-		return createMaterial(material, 1, displayName, (short) 0, new String[0]);
-	}
-
-	public static ItemStack createMaterial(Material material, int amount, String displayName, short durability, List<String> lore) {
-		return createMaterial(material, amount, displayName, durability, lore.toArray(new String[0]));
-	}
-
-	public static ItemStack createMaterial(Material material, int amount, String displayName, short durability, String[] lore) {
-		try {
-			ItemStack itemStack = new ItemStack(material, amount, durability);
-			if (displayName.equals("unspecified"))
-				return itemStack;
-			ItemMeta meta = itemStack.getItemMeta();
-			meta.setDisplayName(displayName);
-			if (lore.length > 0)
-				meta.setLore(Arrays.asList(lore));
-			itemStack.setItemMeta(meta);
-			return itemStack;
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return createMaterial(Material.AIR);
-		}
-	}
-
 	public static boolean isStringNumeric(String string) {
 		for (char c : string.toCharArray()) {
 			if (c < '0' || c > '9') {
@@ -794,125 +349,6 @@ public class $ {
 
 	public static long getSinglePricing(double shopAmount, double shopPrice) {
 		return Math.round(shopPrice / shopAmount);
-	}
-
-	public static ItemStack addLore(ItemStack stack, String[] lore) {
-		ItemStack item = stack.clone();
-		ItemMeta itemMeta = item.getItemMeta();
-		itemMeta.setLore(Arrays.asList(lore));
-		item.setItemMeta(itemMeta);
-		return item;
-	}
-
-	public static ItemStack appendLore(ItemStack stack, String[] lore) {
-		ItemStack item = stack.clone();
-		ItemMeta itemMeta = item.getItemMeta();
-		List<String> currLore = new ArrayList<String>();
-		if (itemMeta.hasLore())
-			currLore = itemMeta.getLore();
-		for (String append : lore)
-			currLore.add(append);
-		itemMeta.setLore(currLore);
-		item.setItemMeta(itemMeta);
-		return item;
-	}
-
-	public static ItemStack appendLore(ItemStack stack, String lore) {
-		return $.appendLore(stack, new String[]{lore});
-	}
-
-	public static ItemStack addEnchant(ItemStack stack, EnchantInfo enchantment) {
-		ItemStack item = stack;
-		ItemMeta itemMeta = item.getItemMeta();
-		itemMeta.addEnchant(enchantment.enchant, enchantment.power, true);
-		item.setItemMeta(itemMeta);
-		return item;
-	}
-
-	public static ItemStack addDamage(ItemStack stack, int damage) {
-		ItemStack item = new ItemStack(stack.getType(), stack.getAmount(), (short) damage);
-		return item;
-	}
-
-	public static ItemStack addLeatherColor(ItemStack stack, Color color) {
-		if (color == null)
-			return stack;
-		ItemStack itm = stack;
-		LeatherArmorMeta im = (LeatherArmorMeta) itm.getItemMeta();
-		im.setColor(color);
-		itm.setItemMeta(im);
-		return itm;
-	}
-
-	public static Color getLeatherColor(ItemStack stack) {
-		ItemStack itm = stack;
-		LeatherArmorMeta im = (LeatherArmorMeta) itm.getItemMeta();
-		return im.getColor();
-	}
-
-	public static ItemStack addBookEnchantment(ItemStack item, Enchantment enchantment, int level) {
-		EnchantmentStorageMeta meta = (EnchantmentStorageMeta) item.getItemMeta();
-		meta.addStoredEnchant(enchantment, level, true);
-		item.setItemMeta(meta);
-		return item;
-	}
-
-	public static ItemStack setUnbreakable(ItemStack stack, boolean value) {
-		ItemMeta meta = stack.getItemMeta();
-		meta.setUnbreakable(value);
-		stack.setItemMeta(meta);
-		return stack;
-	}
-
-	public static boolean isShulkerBox(ItemStack stack) {
-		if (stack.getType() == Material.BLACK_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.BLUE_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.BROWN_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.CYAN_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.GREEN_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.GRAY_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.LIGHT_BLUE_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.LIME_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.MAGENTA_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.ORANGE_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.PINK_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.PURPLE_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.RED_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.LIGHT_GRAY_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.WHITE_SHULKER_BOX)
-			return true;
-		if (stack.getType() == Material.YELLOW_SHULKER_BOX)
-			return true;
-		return false;
-	}
-
-	public static BlockFace getBlockFaceFromId(byte id) {
-		switch (id) {
-			case 2:
-				return BlockFace.NORTH;
-			case 5:
-				return BlockFace.SOUTH;
-			case 3:
-				return BlockFace.WEST;
-			case 4:
-				return BlockFace.EAST;
-			default:
-				return null;
-		}
 	}
 
 	public static ChatColor getRainbowColor(int rainboxIndex) {
@@ -1173,10 +609,10 @@ public class $ {
 
 	public static void clearPlayer(Player player) {
 		player.getInventory().clear();
-		player.getInventory().setHelmet(createMaterial(Material.AIR));
-		player.getInventory().setChestplate(createMaterial(Material.AIR));
-		player.getInventory().setLeggings(createMaterial(Material.AIR));
-		player.getInventory().setBoots(createMaterial(Material.AIR));
+		player.getInventory().setHelmet(Link$.createMaterial(Material.AIR));
+		player.getInventory().setChestplate(Link$.createMaterial(Material.AIR));
+		player.getInventory().setLeggings(Link$.createMaterial(Material.AIR));
+		player.getInventory().setBoots(Link$.createMaterial(Material.AIR));
 		player.updateInventory();
 		for (PotionEffect effect : player.getActivePotionEffects()) {
 			player.removePotionEffect(effect.getType());
@@ -1221,7 +657,7 @@ public class $ {
 	public static Player[] getStaffOnline(Plugin plugin, Player ignorePlayer) {
 		ArrayList<Player> players = new ArrayList<>();
 		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-			if (getRankId(player.getUniqueId()) > -1)
+			if (Link$.getRankId(player.getUniqueId()) > -1)
 				if (ignorePlayer == null || !ignorePlayer.getName().equals(player.getName()))
 					players.add(player);
 		}
@@ -1242,106 +678,6 @@ public class $ {
 	public static void setNickname(Player player, String nickname) {
 		String path = "config." + player.getUniqueId().toString();
 		Server.getPlugin().getConfig().set(path + ".nickname", nickname);
-	}
-
-	public static String formatEnchantPower(int power) {
-		if (power > 10) {
-			return "STATE_UNKNOWN_POWER";
-		} else if (power == 10) {
-			return "X";
-		} else if (power == 9) {
-			return "IX";
-		} else if (power == 8) {
-			return "VIII";
-		} else if (power == 7) {
-			return "VII";
-		} else if (power == 6) {
-			return "VI";
-		} else if (power == 5) {
-			return "V";
-		} else if (power == 4) {
-			return "IV";
-		} else if (power == 3) {
-			return "III";
-		} else if (power == 2) {
-			return "II";
-		} else if (power == 1) {
-			return "I";
-		} else {
-			return "";
-		}
-	}
-
-	public static String formatEnchantment(String enchantmentID, int enchantPower) {
-		String power = formatEnchantPower(enchantPower);
-		if (power.length() > 0)
-			power = " " + power;
-		if (enchantmentID.equals("PROTECTION_ENVIRONMENTAL")) {
-			return "Protection" + power;
-		} else if (enchantmentID.equals("PROTECTION_FALL")) {
-			return "Feather Falling" + power;
-		} else if (enchantmentID.equals("DIG_SPEED")) {
-			return "Efficiency" + power;
-		} else if (enchantmentID.equals("DAMAGE_ALL")) {
-			return "Sharpness" + power;
-		} else if (enchantmentID.equals("ARROW_DAMAGE")) {
-			return "Power" + power;
-		} else if (enchantmentID.equals("ARROW_KNOCKBACK")) {
-			return "Punch" + power;
-		} else if (enchantmentID.equals("ARROW_FIRE")) {
-			return "Flame" + power;
-		} else if (enchantmentID.equals("DURABILITY")) {
-			return "Unbreaking" + power;
-		} else if (enchantmentID.equals("LOOT_BONUS_BLOCKS")) {
-			return "Fortune" + power;
-		} else if (enchantmentID.equals("LOOT_BONUS_MOBS")) {
-			return "Looting" + power;
-		} else {
-			return capitalizeAll(enchantmentID, "_") + " " + power;
-		}
-	}
-
-	public static String unformatEnchantment(String enchantment) {
-		if (enchantment.equalsIgnoreCase("Protection")) {
-			return "PROTECTION_ENVIRONMENTAL";
-		} else if (enchantment.equalsIgnoreCase("Feather Falling")) {
-			return "PROTECTION_FALL";
-		} else if (enchantment.equalsIgnoreCase("Efficiency")) {
-			return "DIG_SPEED";
-		} else if (enchantment.equalsIgnoreCase("Sharpness")) {
-			return "DAMAGE_ALL";
-		} else if (enchantment.equalsIgnoreCase("Power")) {
-			return "ARROW_DAMAGE";
-		} else if (enchantment.equalsIgnoreCase("Punch")) {
-			return "ARROW_KNOCKBACK";
-		} else if (enchantment.equalsIgnoreCase("Flame")) {
-			return "ARROW_FIRE";
-		} else if (enchantment.equalsIgnoreCase("Unbreaking")) {
-			return "DURABILITY";
-		} else if (enchantment.equalsIgnoreCase("Fortune")) {
-			return "LOOT_BONUS_BLOCKS";
-		} else if (enchantment.equalsIgnoreCase("Looting")) {
-			return "LOOT_BONUS_MOBS";
-		} else {
-			return enchantment.toUpperCase().replace(" ", "_");
-		}
-	}
-
-	public static String formatMaterial(Material mat) {
-		return capitalizeAll(mat.toString(), "_");
-	}
-
-	public static String capitalizeAll(String str) {
-		return capitalizeAll(str, " ");
-	}
-
-	public static String capitalizeAll(String str, String var) {
-		String[] arr = str.split(var);
-		StringBuilder sb = new StringBuilder();
-		for (String s : arr) {
-			sb.append(WordUtils.capitalize(s.toLowerCase()) + " ");
-		}
-		return sb.toString().trim();
 	}
 
 	public static double roundDouble(double value, int places) {
@@ -1656,10 +992,6 @@ public class $ {
 		}
 	}
 
-	public static class Legacy {
-		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "Minecraft" + ChatColor.GRAY + "] " + ChatColor.RESET;
-	}
-
 	public static class Lobby {
 		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "hub" + ChatColor.GRAY + "] " + ChatColor.RESET;
 	}
@@ -1800,11 +1132,11 @@ public class $ {
 	public static class Factions {
 		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "factions" + ChatColor.GRAY + "] " + ChatColor.RESET;
 		public static String[] validKits = new String[]{"recruit", "donator", "redstone", "obsidian", "bedrock"};
-		public static ItemStack[] kitRecruit = new ItemStack[]{$.createMaterial(Material.STONE_SWORD), $.createMaterial(Material.STONE_PICKAXE), $.createMaterial(Material.STONE_AXE), $.createMaterial(Material.STONE_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 8), $.createMaterial(Material.LEATHER_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.LEATHER_BOOTS)};
-		public static ItemStack[] kitDonator = new ItemStack[]{$.createMaterial(Material.IRON_SWORD), $.createMaterial(Material.IRON_PICKAXE), $.createMaterial(Material.IRON_AXE), $.createMaterial(Material.IRON_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 16), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
-		public static ItemStack[] kitRedstone = new ItemStack[]{$.createMaterial(Material.IRON_SWORD), $.createMaterial(Material.DIAMOND_PICKAXE), $.createMaterial(Material.IRON_AXE), $.createMaterial(Material.IRON_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
-		public static ItemStack[] kitObsidian = new ItemStack[]{$.createMaterial(Material.DIAMOND_SWORD), $.createMaterial(Material.DIAMOND_PICKAXE), $.createMaterial(Material.DIAMOND_AXE), $.createMaterial(Material.DIAMOND_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 32), $.createMaterial(Material.DIAMOND_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.DIAMOND_BOOTS)};
-		public static ItemStack[] kitBedrock = new ItemStack[]{$.createMaterial(Material.DIAMOND_SWORD), $.createMaterial(Material.DIAMOND_PICKAXE), $.createMaterial(Material.DIAMOND_AXE), $.createMaterial(Material.DIAMOND_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 48), $.createMaterial(Material.DIAMOND_HELMET), $.createMaterial(Material.DIAMOND_CHESTPLATE), $.createMaterial(Material.DIAMOND_LEGGINGS), $.createMaterial(Material.DIAMOND_BOOTS)};
+		public static ItemStack[] kitRecruit = new ItemStack[]{Link$.createMaterial(Material.STONE_SWORD), Link$.createMaterial(Material.STONE_PICKAXE), Link$.createMaterial(Material.STONE_AXE), Link$.createMaterial(Material.STONE_SHOVEL), Link$.createMaterial(Material.COOKED_BEEF, 8), Link$.createMaterial(Material.LEATHER_HELMET), Link$.createMaterial(Material.LEATHER_CHESTPLATE), Link$.createMaterial(Material.LEATHER_LEGGINGS), Link$.createMaterial(Material.LEATHER_BOOTS)};
+		public static ItemStack[] kitDonator = new ItemStack[]{Link$.createMaterial(Material.IRON_SWORD), Link$.createMaterial(Material.IRON_PICKAXE), Link$.createMaterial(Material.IRON_AXE), Link$.createMaterial(Material.IRON_SHOVEL), Link$.createMaterial(Material.COOKED_BEEF, 16), Link$.createMaterial(Material.IRON_HELMET), Link$.createMaterial(Material.LEATHER_CHESTPLATE), Link$.createMaterial(Material.LEATHER_LEGGINGS), Link$.createMaterial(Material.IRON_BOOTS)};
+		public static ItemStack[] kitRedstone = new ItemStack[]{Link$.createMaterial(Material.IRON_SWORD), Link$.createMaterial(Material.DIAMOND_PICKAXE), Link$.createMaterial(Material.IRON_AXE), Link$.createMaterial(Material.IRON_SHOVEL), Link$.createMaterial(Material.COOKED_BEEF, 24), Link$.createMaterial(Material.IRON_HELMET), Link$.createMaterial(Material.IRON_CHESTPLATE), Link$.createMaterial(Material.IRON_LEGGINGS), Link$.createMaterial(Material.IRON_BOOTS)};
+		public static ItemStack[] kitObsidian = new ItemStack[]{Link$.createMaterial(Material.DIAMOND_SWORD), Link$.createMaterial(Material.DIAMOND_PICKAXE), Link$.createMaterial(Material.DIAMOND_AXE), Link$.createMaterial(Material.DIAMOND_SHOVEL), Link$.createMaterial(Material.COOKED_BEEF, 32), Link$.createMaterial(Material.DIAMOND_HELMET), Link$.createMaterial(Material.IRON_CHESTPLATE), Link$.createMaterial(Material.IRON_LEGGINGS), Link$.createMaterial(Material.DIAMOND_BOOTS)};
+		public static ItemStack[] kitBedrock = new ItemStack[]{Link$.createMaterial(Material.DIAMOND_SWORD), Link$.createMaterial(Material.DIAMOND_PICKAXE), Link$.createMaterial(Material.DIAMOND_AXE), Link$.createMaterial(Material.DIAMOND_SHOVEL), Link$.createMaterial(Material.COOKED_BEEF, 48), Link$.createMaterial(Material.DIAMOND_HELMET), Link$.createMaterial(Material.DIAMOND_CHESTPLATE), Link$.createMaterial(Material.DIAMOND_LEGGINGS), Link$.createMaterial(Material.DIAMOND_BOOTS)};
 
 		public static int getPlayerKills(Player player) {
 			String path = "config." + player.getUniqueId().toString() + ".factions";
@@ -1838,24 +1170,24 @@ public class $ {
 	public static class Survival {
 		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "survival" + ChatColor.GRAY + "] " + ChatColor.RESET;
 		public static String[] validKits = new String[]{"recruit"};
-		public static ItemStack[] kitRecruit = new ItemStack[]{$.createMaterial(Material.STONE_SWORD), $.createMaterial(Material.STONE_PICKAXE), $.createMaterial(Material.STONE_AXE), $.createMaterial(Material.STONE_SHOVEL), $.createMaterial(Material.COOKED_BEEF, 16), $.createMaterial(Material.LEATHER_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.LEATHER_BOOTS), $.createMaterial(Material.GOLDEN_SHOVEL)};
+		public static ItemStack[] kitRecruit = new ItemStack[]{Link$.createMaterial(Material.STONE_SWORD), Link$.createMaterial(Material.STONE_PICKAXE), Link$.createMaterial(Material.STONE_AXE), Link$.createMaterial(Material.STONE_SHOVEL), Link$.createMaterial(Material.COOKED_BEEF, 16), Link$.createMaterial(Material.LEATHER_HELMET), Link$.createMaterial(Material.LEATHER_CHESTPLATE), Link$.createMaterial(Material.LEATHER_LEGGINGS), Link$.createMaterial(Material.LEATHER_BOOTS), Link$.createMaterial(Material.GOLDEN_SHOVEL)};
 	}
 
 	public static class Kitpvp {
 		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "kitpvp" + ChatColor.GRAY + "] " + ChatColor.RESET;
 		public static String[] validKits = new String[]{"starter", "potions"};
-		public static ItemStack kitStarter1_Weapon = $.createMaterial(Material.STONE_AXE);
-		public static ItemStack kitStarter2_4_Weapon = $.createMaterial(Material.IRON_AXE);
-		public static ItemStack kitStarter5_8_Weapon = $.createMaterial(Material.DIAMOND_AXE);
-		public static ItemStack[] kitStarter1_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.LEATHER_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.LEATHER_BOOTS)};
-		public static ItemStack[] kitStarter2_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.LEATHER_CHESTPLATE), $.createMaterial(Material.LEATHER_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
-		public static ItemStack[] kitStarter3_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.CHAINMAIL_CHESTPLATE), $.createMaterial(Material.CHAINMAIL_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
-		public static ItemStack[] kitStarter4_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
-		public static ItemStack[] kitStarter5_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.IRON_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.IRON_BOOTS)};
-		public static ItemStack[] kitStarter6_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.DIAMOND_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.IRON_LEGGINGS), $.createMaterial(Material.DIAMOND_BOOTS), $.createMaterial(Material.GOLDEN_APPLE, 1)};
-		public static ItemStack[] kitStarter7_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.DIAMOND_HELMET), $.createMaterial(Material.IRON_CHESTPLATE), $.createMaterial(Material.DIAMOND_LEGGINGS), $.createMaterial(Material.DIAMOND_BOOTS), $.createMaterial(Material.GOLDEN_APPLE, 2)};
-		public static ItemStack[] kitStarter8_Items = new ItemStack[]{$.createMaterial(Material.BOW), $.createMaterial(Material.ARROW, 24), $.createMaterial(Material.DIAMOND_HELMET), $.createMaterial(Material.DIAMOND_CHESTPLATE), $.createMaterial(Material.DIAMOND_LEGGINGS), $.createMaterial(Material.DIAMOND_BOOTS), $.createMaterial(Material.GOLDEN_APPLE, 3)};
-		public static ItemStack[] kitPotions = new ItemStack[]{$.addLore($.createMaterial(Material.BLAZE_ROD, 1, ChatColor.LIGHT_PURPLE + "Enchanted Wand"), new String[]{"Using this wand, you will gain defined potion effects."})};
+		public static ItemStack kitStarter1_Weapon = Link$.createMaterial(Material.STONE_AXE);
+		public static ItemStack kitStarter2_4_Weapon = Link$.createMaterial(Material.IRON_AXE);
+		public static ItemStack kitStarter5_8_Weapon = Link$.createMaterial(Material.DIAMOND_AXE);
+		public static ItemStack[] kitStarter1_Items = new ItemStack[]{Link$.createMaterial(Material.BOW), Link$.createMaterial(Material.ARROW, 24), Link$.createMaterial(Material.LEATHER_HELMET), Link$.createMaterial(Material.LEATHER_CHESTPLATE), Link$.createMaterial(Material.LEATHER_LEGGINGS), Link$.createMaterial(Material.LEATHER_BOOTS)};
+		public static ItemStack[] kitStarter2_Items = new ItemStack[]{Link$.createMaterial(Material.BOW), Link$.createMaterial(Material.ARROW, 24), Link$.createMaterial(Material.IRON_HELMET), Link$.createMaterial(Material.LEATHER_CHESTPLATE), Link$.createMaterial(Material.LEATHER_LEGGINGS), Link$.createMaterial(Material.IRON_BOOTS)};
+		public static ItemStack[] kitStarter3_Items = new ItemStack[]{Link$.createMaterial(Material.BOW), Link$.createMaterial(Material.ARROW, 24), Link$.createMaterial(Material.IRON_HELMET), Link$.createMaterial(Material.CHAINMAIL_CHESTPLATE), Link$.createMaterial(Material.CHAINMAIL_LEGGINGS), Link$.createMaterial(Material.IRON_BOOTS)};
+		public static ItemStack[] kitStarter4_Items = new ItemStack[]{Link$.createMaterial(Material.BOW), Link$.createMaterial(Material.ARROW, 24), Link$.createMaterial(Material.IRON_HELMET), Link$.createMaterial(Material.IRON_CHESTPLATE), Link$.createMaterial(Material.IRON_LEGGINGS), Link$.createMaterial(Material.IRON_BOOTS)};
+		public static ItemStack[] kitStarter5_Items = new ItemStack[]{Link$.createMaterial(Material.BOW), Link$.createMaterial(Material.ARROW, 24), Link$.createMaterial(Material.IRON_HELMET), Link$.createMaterial(Material.IRON_CHESTPLATE), Link$.createMaterial(Material.IRON_LEGGINGS), Link$.createMaterial(Material.IRON_BOOTS)};
+		public static ItemStack[] kitStarter6_Items = new ItemStack[]{Link$.createMaterial(Material.BOW), Link$.createMaterial(Material.ARROW, 24), Link$.createMaterial(Material.DIAMOND_HELMET), Link$.createMaterial(Material.IRON_CHESTPLATE), Link$.createMaterial(Material.IRON_LEGGINGS), Link$.createMaterial(Material.DIAMOND_BOOTS), Link$.createMaterial(Material.GOLDEN_APPLE, 1)};
+		public static ItemStack[] kitStarter7_Items = new ItemStack[]{Link$.createMaterial(Material.BOW), Link$.createMaterial(Material.ARROW, 24), Link$.createMaterial(Material.DIAMOND_HELMET), Link$.createMaterial(Material.IRON_CHESTPLATE), Link$.createMaterial(Material.DIAMOND_LEGGINGS), Link$.createMaterial(Material.DIAMOND_BOOTS), Link$.createMaterial(Material.GOLDEN_APPLE, 2)};
+		public static ItemStack[] kitStarter8_Items = new ItemStack[]{Link$.createMaterial(Material.BOW), Link$.createMaterial(Material.ARROW, 24), Link$.createMaterial(Material.DIAMOND_HELMET), Link$.createMaterial(Material.DIAMOND_CHESTPLATE), Link$.createMaterial(Material.DIAMOND_LEGGINGS), Link$.createMaterial(Material.DIAMOND_BOOTS), Link$.createMaterial(Material.GOLDEN_APPLE, 3)};
+		public static ItemStack[] kitPotions = new ItemStack[]{Link$.addLore(Link$.createMaterial(Material.BLAZE_ROD, 1, ChatColor.LIGHT_PURPLE + "Enchanted Wand"), new String[]{"Using this wand, you will gain defined potion effects."})};
 		public static final int DONOR_MAX_UPGRADE_VALUE = 7;
 		public static final int DEFAULT_MAX_UPGRADE_VALUE = 3;
 		public static final int WEAPON_AXE = 0;
@@ -1966,9 +1298,9 @@ public class $ {
 				weapon = kitStarter5_8_Weapon.clone();
 			}
 			if (!axesOnly && swordType && weapon.getType() == Material.STONE_AXE)
-				weapon = $.createMaterial(Material.STONE_SWORD);
+				weapon = Link$.createMaterial(Material.STONE_SWORD);
 			if (!axesOnly && swordType && weapon.getType() == Material.IRON_AXE)
-				weapon = $.createMaterial(Material.IRON_SWORD);
+				weapon = Link$.createMaterial(Material.IRON_SWORD);
 			return weapon;
 		}
 
@@ -2009,11 +1341,11 @@ public class $ {
 				kitArray.add(i + 1, array[i]);
 			}
 			if (!axesOnly && swordType && kitArray.get(0).getType() == Material.STONE_AXE)
-				kitArray.set(0, $.createMaterial(Material.STONE_SWORD));
+				kitArray.set(0, Link$.createMaterial(Material.STONE_SWORD));
 			if (!axesOnly && swordType && kitArray.get(0).getType() == Material.IRON_AXE)
-				kitArray.set(0, $.createMaterial(Material.IRON_SWORD));
+				kitArray.set(0, Link$.createMaterial(Material.IRON_SWORD));
 			if (!axesOnly && swordType && kitArray.get(0).getType() == Material.DIAMOND_AXE)
-				kitArray.set(0, $.createMaterial(Material.DIAMOND_SWORD));
+				kitArray.set(0, Link$.createMaterial(Material.DIAMOND_SWORD));
 			return kitArray.toArray(new ItemStack[0]);
 		}
 	}

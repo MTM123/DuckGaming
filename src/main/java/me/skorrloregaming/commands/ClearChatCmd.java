@@ -1,17 +1,15 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.$;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
 import me.skorrloregaming.discord.Channel;
-import me.skorrloregaming.discord.DiscordBot;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
 
 public class ClearChatCmd implements CommandExecutor {
 
@@ -32,16 +30,16 @@ public class ClearChatCmd implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender.isOp() || sender instanceof Player) {
 			if (sender instanceof Player) {
-				if ($.getRankId((Player) sender) == 3) {
+				if (Link$.getRankId((Player) sender) == 3) {
 					clearChat(((Player) sender).getName());
 				} else {
-					$.playLackPermissionMessage(sender);
+					Link$.playLackPermissionMessage(sender);
 				}
 			} else {
 				clearChat("Console");
 			}
 		} else {
-			$.playLackPermissionMessage(sender);
+			Link$.playLackPermissionMessage(sender);
 		}
 		return true;
 	}

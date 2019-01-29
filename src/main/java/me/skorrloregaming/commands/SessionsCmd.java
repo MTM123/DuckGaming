@@ -1,15 +1,14 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Server;
 
 public class SessionsCmd implements CommandExecutor {
 
@@ -24,14 +23,14 @@ public class SessionsCmd implements CommandExecutor {
 			return true;
 		} else {
 			OfflinePlayer op = CraftGo.Player.getOfflinePlayer(args[0]);
-			if (player.getName().equals(op.getName()) || player.isOp() || $.getRankId(player) > 1) {
+			if (player.getName().equals(op.getName()) || player.isOp() || Link$.getRankId(player) > 1) {
 				if (op.isOnline() || op.hasPlayedBefore()) {
 					Server.getSessionManager().openComplexInventory(player, op);
 				} else {
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 				}
 			} else {
-				player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are only allowed to view your own sessions.");
+				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are only allowed to view your own sessions.");
 			}
 			return true;
 		}

@@ -4,7 +4,9 @@ import me.skorrloregaming.discord.listeners.MessageListener;
 import me.skorrloregaming.discord.listeners.ReadyListener;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
 
 import java.util.concurrent.TimeUnit;

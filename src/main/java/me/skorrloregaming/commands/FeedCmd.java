@@ -1,8 +1,7 @@
 package me.skorrloregaming.commands;
 
-import com.massivecraft.factions.FPlayers;
 import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.Link$;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,7 +15,7 @@ public class FeedCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if ($.getDonorRankId(player) < -1) {
+		if (Link$.getDonorRankId(player) < -1) {
 			player.setFoodLevel(20);
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Your food level has been saturated.");
 		} else {

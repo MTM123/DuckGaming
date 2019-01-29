@@ -1,5 +1,9 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.$;
+import me.skorrloregaming.ConfigurationManager;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.runnable.DelayedTeleport;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -8,13 +12,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.ConfigurationManager;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.runnable.DelayedTeleport;
-
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class HomeCmd implements CommandExecutor {

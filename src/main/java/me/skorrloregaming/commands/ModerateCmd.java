@@ -1,14 +1,14 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.$;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.ServerMinigame;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.impl.ServerMinigame;
 
 public class ModerateCmd implements CommandExecutor {
 
@@ -40,17 +40,17 @@ public class ModerateCmd implements CommandExecutor {
 			} else if (minigame == ServerMinigame.HUB || minigame == ServerMinigame.UNKNOWN) {
 				player.performCommand("hub");
 			}
-			player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are no longer moderating the server.");
+			player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are no longer moderating the server.");
 		} else {
-			int rankID = $.getRankId(player);
+			int rankID = Link$.getRankId(player);
 			if (rankID > 0 || player.isOp()) {
 				ServerMinigame minigame = $.getCurrentMinigame(player);
 				Server.getInstance().performBuggedLeave(player, false, true);
 				player.performCommand("hub");
 				Server.getModeratingPlayers().put(player.getUniqueId(), minigame);
-				player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are now moderating the server.");
+				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are now moderating the server.");
 			} else {
-				$.playLackPermissionMessage(player);
+				Link$.playLackPermissionMessage(player);
 				return true;
 			}
 		}

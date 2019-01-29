@@ -1,7 +1,9 @@
 package me.skorrloregaming.commands;
 
-import java.util.Date;
-
+import me.skorrloregaming.$;
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -10,37 +12,35 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Server;
+import java.util.Date;
 
 public class WarningCmd implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!sender.isOp() && (!(sender instanceof Player) || (sender instanceof Player && !($.getRankId((Player) sender) > 1)))) {
-			$.playLackPermissionMessage(sender);
+		if (!sender.isOp() && (!(sender instanceof Player) || (sender instanceof Player && !(Link$.getRankId((Player) sender) > 1)))) {
+			Link$.playLackPermissionMessage(sender);
 			return true;
 		}
 		if (args.length < 2) {
-			sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player> <amount> [message]");
+			sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player> <amount> [message]");
 			return true;
 		} else {
 			int id = 0;
 			try {
 				id = Integer.parseInt(args[1]);
 			} catch (Exception ex) {
-				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You must enter a valid numerical warning value.");
+				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You must enter a valid numerical warning value.");
 				return true;
 			}
 			OfflinePlayer op = CraftGo.Player.getOfflinePlayer(args[0]);
 			if (!op.hasPlayedBefore() && !op.isOnline()) {
-				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
+				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 				return true;
 			}
 			String path = "config." + op.getUniqueId().toString();
 			if (!Server.getPlugin().getConfig().contains(path + ".ip")) {
-				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
+				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 				return true;
 			}
 			String ipAddress = Server.getPlugin().getConfig().getString(path + ".ip");
@@ -52,14 +52,14 @@ public class WarningCmd implements CommandExecutor {
 			int newWarningCount = oldWarningCount + id;
 			int rankId = 3;
 			if (sender instanceof Player)
-				rankId = $.getRankId((Player) sender);
-			int targetPlayerRankId = $.getRankId(op.getUniqueId());
+				rankId = Link$.getRankId((Player) sender);
+			int targetPlayerRankId = Link$.getRankId(op.getUniqueId());
 			if (sender instanceof Player && rankId < targetPlayerRankId) {
-				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot warn staff ranked higher then you.");
+				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot warn staff ranked higher then you.");
 				return true;
 			}
 			if (newWarningCount < oldWarningCount && rankId < 3) {
-				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not allowed to retract warnings.");
+				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not allowed to retract warnings.");
 				return true;
 			}
 			if (newWarningCount < 0)
@@ -75,11 +75,11 @@ public class WarningCmd implements CommandExecutor {
 				String msg = "You have been warned for disrespecting the server rules." + '\n' + "\"" + sb.toString() + "\"" + '\n' + "You are now at warning value " + newWarningCount + " out of 5." + '\n' + '\n' + "Issued by " + sender.getName() + " at " + new Date().toString();
 				if (op.isOnline() && id > 0)
 					op.getPlayer().kickPlayer(msg);
-				sender.sendMessage($.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5) '" + sb.toString().trim() + "'");
+				sender.sendMessage(Link$.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5) '" + sb.toString().trim() + "'");
 				for (Player pl : Server.getPlugin().getServer().getOnlinePlayers()) {
 					if (pl.getName().equals(sender.getName()))
 						continue;
-					pl.sendMessage($.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5) '" + sb.toString().trim() + "'");
+					pl.sendMessage(Link$.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5) '" + sb.toString().trim() + "'");
 				}
 				if (id > 0) {
 					for (int i = oldWarningCount + 1; i < newWarningCount + 1; i++) {
@@ -94,11 +94,11 @@ public class WarningCmd implements CommandExecutor {
 				String msg = "You have been warned for disrespecting the server rules." + '\n' + "You are now at warning value " + newWarningCount + " out of 5." + '\n' + '\n' + "Issued by " + sender.getName() + " at " + new Date().toString();
 				if (op.isOnline() && id > 0)
 					op.getPlayer().kickPlayer(msg);
-				sender.sendMessage($.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5)");
+				sender.sendMessage(Link$.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5)");
 				for (Player pl : Server.getPlugin().getServer().getOnlinePlayers()) {
 					if (pl.getName().equals(sender.getName()))
 						continue;
-					pl.sendMessage($.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5)");
+					pl.sendMessage(Link$.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5)");
 				}
 				if (id > 0) {
 					for (int i = oldWarningCount + 1; i < newWarningCount + 1; i++) {

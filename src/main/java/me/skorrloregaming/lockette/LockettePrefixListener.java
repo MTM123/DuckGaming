@@ -1,5 +1,8 @@
 package me.skorrloregaming.lockette;
 
+import me.skorrloregaming.$;
+import me.skorrloregaming.Logger;
+import me.skorrloregaming.Server;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -10,10 +13,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.plugin.PluginManager;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.Logger;
-import me.skorrloregaming.Server;
 
 public class LockettePrefixListener implements Listener {
 	public LockettePrefixListener(Lockette instance) {

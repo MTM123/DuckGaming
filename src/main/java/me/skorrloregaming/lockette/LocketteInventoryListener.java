@@ -1,7 +1,6 @@
 package me.skorrloregaming.lockette;
 
-import java.util.UUID;
-
+import me.skorrloregaming.Server;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -13,7 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.PluginManager;
 
-import me.skorrloregaming.Server;
+import java.util.UUID;
 
 public class LocketteInventoryListener implements Listener {
 	public LocketteInventoryListener(Lockette instance) {

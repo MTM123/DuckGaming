@@ -1,7 +1,7 @@
 package me.skorrloregaming.lockette;
 
-import java.util.Iterator;
-
+import me.skorrloregaming.$;
+import me.skorrloregaming.Server;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -9,8 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.plugin.PluginManager;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
+import java.util.Iterator;
 
 public class LocketteEntityListener implements Listener {
 	public LocketteEntityListener(Lockette instance) {

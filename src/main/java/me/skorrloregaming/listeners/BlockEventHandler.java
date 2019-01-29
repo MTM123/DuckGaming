@@ -1,17 +1,9 @@
 package me.skorrloregaming.listeners;
 
-import java.text.DecimalFormat;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import me.skorrloregaming.*;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.runnable.TreeCutter;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
@@ -29,11 +21,10 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Directory;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.runnable.TreeCutter;
+import java.text.DecimalFormat;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 public class BlockEventHandler implements Listener {
 
@@ -81,15 +72,15 @@ public class BlockEventHandler implements Listener {
 						if (Material.getMaterial(materialName) == null) {
 							Material legacyMaterial;
 							if (!((legacyMaterial = Material.matchMaterial(materialName, true)) == null)) {
-								event.setLine(1, $.formatMaterial(legacyMaterial));
+								event.setLine(1, Link$.formatMaterial(legacyMaterial));
 							}
 						}
 					}
-					player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Successfully processed shop " + ChatColor.RED + code + ChatColor.GRAY + ".");
-					player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Type: " + ChatColor.RED + tl[0] + " Shop");
-					player.sendMessage($.Legacy.tag + ChatColor.GRAY + "ID: " + ChatColor.RED + tl[1]);
-					player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Price: " + "$" + ChatColor.RED + tl[2]);
-					player.sendMessage($.Legacy.tag + ChatColor.GRAY + ": " + ChatColor.RED + tl[3]);
+					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Successfully processed shop " + ChatColor.RED + code + ChatColor.GRAY + ".");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Type: " + ChatColor.RED + tl[0] + " Shop");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "ID: " + ChatColor.RED + tl[1]);
+					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Price: " + "$" + ChatColor.RED + tl[2]);
+					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + ": " + ChatColor.RED + tl[3]);
 					event.setLine(0, ChatColor.DARK_BLUE + s[0]);
 					event.setLine(2, "\"" + s[2]);
 					event.setLine(3, s[3] + "\"");
@@ -101,19 +92,19 @@ public class BlockEventHandler implements Listener {
 			}
 			if (s[0].equals("Buy") || s[0].equals("Sell") || s[0].equals("Enchant") || s[0].equals("Repair") || s[1].equals("Kit")) {
 				if (!player.isOp()) {
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "You do not have permission to activate this shop.");
-					$.playLackPermissionMessage(player);
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "You do not have permission to activate this shop.");
+					Link$.playLackPermissionMessage(player);
 					return;
 				}
 				DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 				String code = blockLoc.getWorld().getName() + String.valueOf(blockLoc.getBlockX()) + String.valueOf(blockLoc.getBlockY()) + String.valueOf(blockLoc.getBlockZ());
 				Server.getSignConfig().getData().set("signs." + code, 1);
 				Server.getSignConfig().saveData();
-				player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Successfully processed shop " + ChatColor.RED + code + ChatColor.GRAY + ".");
-				player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Type: " + ChatColor.RED + s[0] + " Shop");
-				player.sendMessage($.Legacy.tag + ChatColor.GRAY + "ID: " + ChatColor.RED + s[1]);
-				player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Price: " + "$" + ChatColor.RED + s[2]);
-				player.sendMessage($.Legacy.tag + ChatColor.GRAY + ": " + ChatColor.RED + s[3]);
+				player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Successfully processed shop " + ChatColor.RED + code + ChatColor.GRAY + ".");
+				player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Type: " + ChatColor.RED + s[0] + " Shop");
+				player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "ID: " + ChatColor.RED + s[1]);
+				player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Price: " + "$" + ChatColor.RED + s[2]);
+				player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + ": " + ChatColor.RED + s[3]);
 				if (s[1].equals("Kit")) {
 					event.setLine(1, ChatColor.DARK_BLUE + s[1]);
 				} else {
@@ -124,8 +115,8 @@ public class BlockEventHandler implements Listener {
 				}
 				return;
 			}
-			int rank = $.getRankId(player);
-			int donorRank = $.getDonorRankId(player);
+			int rank = Link$.getRankId(player);
+			int donorRank = Link$.getDonorRankId(player);
 			if (player.isOp() || rank > -1 || donorRank < -2) {
 				for (int i = 0; i < s.length; i++) {
 					event.setLine(i, ChatColor.translateAlternateColorCodes('&', s[i]));
@@ -138,7 +129,7 @@ public class BlockEventHandler implements Listener {
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
 		if (!event.isCancelled())
-			event.setCancelled(Server.getAntiCheat().onBlockPlace(event.getBlock(), player));
+			event.setCancelled($.getLinkServer().getAntiCheat().onBlockPlace(event.getBlock(), player));
 		if (event.isCancelled())
 			return;
 		if (Server.getSkyblock().contains(player.getUniqueId())) {
@@ -175,7 +166,7 @@ public class BlockEventHandler implements Listener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		if (!event.isCancelled())
-			event.setCancelled(Server.getAntiCheat().onBlockBreak(event.getBlock(), player));
+			event.setCancelled($.getLinkServer().getAntiCheat().onBlockBreak(event.getBlock(), player));
 		if (event.isCancelled())
 			return;
 		Block block = event.getBlock();
@@ -195,7 +186,7 @@ public class BlockEventHandler implements Listener {
 					orbb.setExperience(3);
 					block.setType(Material.AIR);
 					block.getState().update();
-					player.getWorld().dropItem(block.getLocation().add(0.5, 0.5, 0.5), $.createMaterial(Material.COBBLESTONE));
+					player.getWorld().dropItem(block.getLocation().add(0.5, 0.5, 0.5), Link$.createMaterial(Material.COBBLESTONE));
 					item.setDurability((short) (item.getDurability() + 1));
 					if (item.getType().getMaxDurability() == item.getDurability()) {
 						player.getInventory().setItemInMainHand(null);
@@ -222,7 +213,7 @@ public class BlockEventHandler implements Listener {
 						} else if (coal == 0) {
 							dropItemType = Material.COAL;
 						}
-						player.getWorld().dropItem(block.getLocation().add(0.5, 0.5, 0.5), $.createMaterial(dropItemType));
+						player.getWorld().dropItem(block.getLocation().add(0.5, 0.5, 0.5), Link$.createMaterial(dropItemType));
 						player.playSound(blockLoc, Sound.BLOCK_LAVA_POP, 1, 1);
 					}
 					break;
@@ -266,7 +257,7 @@ public class BlockEventHandler implements Listener {
 									selectedUpgrade = Integer.parseInt(Server.getSpawnerConfig().getData().getString(code + ".selectedUpgrade"));
 								Server.getSpawnerConfig().getData().set(code, null);
 								Server.getSpawnerConfig().saveData();
-								stack = $.appendLore(stack, new String[] { ChatColor.RESET + "Upgrade: " + upgrade, ChatColor.RESET + "Selected Upgrade: " + selectedUpgrade });
+								stack = Link$.appendLore(stack, new String[] { ChatColor.RESET + "Upgrade: " + upgrade, ChatColor.RESET + "Selected Upgrade: " + selectedUpgrade });
 								event.setCancelled(true);
 								block.setType(Material.AIR);
 								block.getState().update();
@@ -309,19 +300,19 @@ public class BlockEventHandler implements Listener {
 										dropItemAmount = 1;
 								}
 								if (block.getType() == Material.IRON_ORE)
-									dropItem = $.createMaterial(Material.IRON_INGOT, dropItemAmount);
+									dropItem = Link$.createMaterial(Material.IRON_INGOT, dropItemAmount);
 								if (block.getType() == Material.GOLD_ORE)
-									dropItem = $.createMaterial(Material.GOLD_INGOT, dropItemAmount);
+									dropItem = Link$.createMaterial(Material.GOLD_INGOT, dropItemAmount);
 								if (block.getType() == Material.GLASS || block.getType() == Material.GLASS_PANE)
-									dropItem = $.createMaterial(block.getType());
+									dropItem = Link$.createMaterial(block.getType());
 								boolean stainedGlassPane = false;
 								if ($.isBlockStainedGlass(block) || (stainedGlassPane = $.isBlockStainedGlassPane(block))) {
 									Colorable stainedGlass = (Colorable) block.getState().getData();
 									DyeColor stainedGlassColor = stainedGlass.getColor();
 									if (stainedGlassPane) {
-										dropItem = $.createMaterial(Material.getMaterial(stainedGlassColor.toString() + "_STAINED_GLASS_PANE"));
+										dropItem = Link$.createMaterial(Material.getMaterial(stainedGlassColor.toString() + "_STAINED_GLASS_PANE"));
 									} else {
-										dropItem = $.createMaterial(Material.getMaterial(stainedGlassColor.toString() + "_STAINED_GLASS"));
+										dropItem = Link$.createMaterial(Material.getMaterial(stainedGlassColor.toString() + "_STAINED_GLASS"));
 									}
 								}
 								if (!(dropItem == null)) {
@@ -350,8 +341,8 @@ public class BlockEventHandler implements Listener {
 				String code = blockLoc.getWorld().getName() + String.valueOf(blockLoc.getBlockX()) + String.valueOf(blockLoc.getBlockY()) + String.valueOf(blockLoc.getBlockZ());
 				if (Server.getSignConfig().getData().contains("signs." + code)) {
 					if (!event.getPlayer().isOp()) {
-						player.sendMessage($.Legacy.tag + ChatColor.RED + "You do not have permission to deactivate this shop.");
-						$.playLackPermissionMessage(player);
+						player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "You do not have permission to deactivate this shop.");
+						Link$.playLackPermissionMessage(player);
 						event.setCancelled(true);
 						return;
 					}
@@ -364,7 +355,7 @@ public class BlockEventHandler implements Listener {
 						sign.setLine(0, s[0]);
 						sign.update();
 					}
-					player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Successfully cleared shop " + ChatColor.RED + code + ChatColor.GRAY + ".");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Successfully cleared shop " + ChatColor.RED + code + ChatColor.GRAY + ".");
 					event.setCancelled(true);
 				}
 			}

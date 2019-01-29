@@ -1,6 +1,6 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
+import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -19,7 +19,7 @@ public class VerifyCmd implements CommandExecutor {
 		Player player = (Player) sender;
 		int code = new Random(UUID.randomUUID().hashCode()).nextInt(900) + 100;
 		Server.getDiscordVerifyPlayers().put(code, player.getUniqueId());
-		player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Type " + ChatColor.RED + "?verify " + code + ChatColor.GRAY + " in the verify channel in our discord server to link your account. Doing this allows you to talk to people on the minecraft server from discord.");
+		player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Type " + ChatColor.RED + "?verify " + code + ChatColor.GRAY + " in the verify channel in our discord server to link your account. Doing this allows you to talk to people on the minecraft server from discord.");
 		return true;
 	}
 }

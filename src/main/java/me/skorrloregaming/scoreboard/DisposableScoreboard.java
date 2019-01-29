@@ -1,12 +1,11 @@
 package me.skorrloregaming.scoreboard;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
+import me.skorrloregaming.Server;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import me.skorrloregaming.Server;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public interface DisposableScoreboard {
 	public ConcurrentMap<Player, ScoreboardTask> taskIdentifiers = new ConcurrentHashMap<>();

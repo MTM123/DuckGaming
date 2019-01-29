@@ -1,14 +1,13 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.$;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.ServerMinigame;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.impl.ServerMinigame;
 
 public class ServersCmd implements CommandExecutor {
 

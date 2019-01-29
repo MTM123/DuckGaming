@@ -1,25 +1,25 @@
 package me.skorrloregaming.scoreboard.boards;
 
-import java.text.DecimalFormat;
-import java.util.Hashtable;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import me.skorrloregaming.$;
 import me.skorrloregaming.EconManager;
+import me.skorrloregaming.Link$;
 import me.skorrloregaming.scoreboard.DisposableScoreboard;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import us.talabrek.ultimateskyblock.api.uSkyBlockAPI;
+
+import java.text.DecimalFormat;
+import java.util.Hashtable;
 
 public class Skyblock_StatisticsScoreboard implements DisposableScoreboard {
 	@Override
 	public void refreshScoreboard(Player player, boolean clearValues) {
-		if (!$.isPluginEnabled("uSkyBlock")) {
+		if (!Link$.isPluginEnabled("uSkyBlock")) {
 			return;
 		}
 		uSkyBlockAPI api = (uSkyBlockAPI) Bukkit.getPluginManager().getPlugin("uSkyBlock");
-		if ($.isPluginEnabled("mcMMO")) {
+		if (Link$.isPluginEnabled("mcMMO")) {
 			if (com.gmail.nossr50.util.scoreboards.ScoreboardManager.isBoardShown(player.getName()))
 				return;
 		}

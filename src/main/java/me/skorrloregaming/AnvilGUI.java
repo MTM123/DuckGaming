@@ -103,7 +103,7 @@ public class AnvilGUI {
 	}
 
 	public AnvilGUI setInputName(String name) {
-		return setSlot(AnvilSlot.INPUT_LEFT, $.createMaterial(Material.PAPER, name));
+		return setSlot(AnvilSlot.INPUT_LEFT, Link$.createMaterial(Material.PAPER, name));
 	}
 
 	public AnvilGUI setSlot(AnvilSlot slot, ItemStack item) {

@@ -1,11 +1,10 @@
 package me.skorrloregaming.impl;
 
+import me.skorrloregaming.Server;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-
-import me.skorrloregaming.Server;
 
 public class CustomNpc {
 	public ArmorStand entity;

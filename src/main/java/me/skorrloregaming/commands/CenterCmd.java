@@ -1,13 +1,12 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.Link$;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.$;
 
 public class CenterCmd implements CommandExecutor {
 
@@ -30,7 +29,7 @@ public class CenterCmd implements CommandExecutor {
 			} catch (Exception ex) {
 			}
 		}
-		player.sendMessage($.Legacy.tag + ChatColor.GRAY + "You can also do " + ChatColor.RED + "/" + label + " [yaw] [pitch]");
+		player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "You can also do " + ChatColor.RED + "/" + label + " [yaw] [pitch]");
 		Location teleportLocation = player.getLocation().getBlock().getLocation().add(0.5, 0.0, 0.5);
 		teleportLocation.setYaw(yaw);
 		teleportLocation.setPitch(pitch);

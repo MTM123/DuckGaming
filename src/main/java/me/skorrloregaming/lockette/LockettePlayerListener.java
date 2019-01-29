@@ -1,8 +1,8 @@
 package me.skorrloregaming.lockette;
 
-import java.util.List;
-import java.util.Set;
-
+import me.skorrloregaming.$;
+import me.skorrloregaming.Logger;
+import me.skorrloregaming.Server;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,9 +20,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.Logger;
-import me.skorrloregaming.Server;
+import java.util.List;
+import java.util.Set;
 
 public class LockettePlayerListener implements Listener {
 	private static Lockette plugin;

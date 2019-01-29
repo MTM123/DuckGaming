@@ -1,9 +1,8 @@
 package me.skorrloregaming.runnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import me.skorrloregaming.$;
+import me.skorrloregaming.Directory;
+import me.skorrloregaming.Server;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -16,9 +15,9 @@ import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.Directory;
-import me.skorrloregaming.Server;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public final class TreeCutter extends BukkitRunnable {
 	private Player player;

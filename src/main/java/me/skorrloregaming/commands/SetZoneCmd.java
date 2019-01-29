@@ -1,13 +1,12 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
 
 public class SetZoneCmd implements CommandExecutor {
 
@@ -17,11 +16,11 @@ public class SetZoneCmd implements CommandExecutor {
 			return true;
 		Player player = ((Player) sender);
 		if (!player.isOp()) {
-			$.playLackPermissionMessage(player);
+			Link$.playLackPermissionMessage(player);
 			return true;
 		}
 		if (args.length == 0) {
-			player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <name>");
+			player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <name>");
 		} else {
 			Server.getWarpConfig().getData().set(args[0].toLowerCase() + ".world", player.getWorld().getName());
 			Server.getWarpConfig().getData().set(args[0].toLowerCase() + ".x", player.getLocation().getX());
@@ -30,7 +29,7 @@ public class SetZoneCmd implements CommandExecutor {
 			Server.getWarpConfig().getData().set(args[0].toLowerCase() + ".yaw", player.getLocation().getYaw());
 			Server.getWarpConfig().getData().set(args[0].toLowerCase() + ".pitch", player.getLocation().getPitch());
 			Server.getWarpConfig().saveData();
-			player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Zone successfully created named : " + ChatColor.RED + args[0].toLowerCase());
+			player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Zone successfully created named : " + ChatColor.RED + args[0].toLowerCase());
 		}
 		return true;
 	}

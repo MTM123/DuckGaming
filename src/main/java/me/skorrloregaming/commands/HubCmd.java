@@ -1,15 +1,14 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.$;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.ServerMinigame;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.impl.ServerMinigame;
 
 public class HubCmd implements CommandExecutor {
 

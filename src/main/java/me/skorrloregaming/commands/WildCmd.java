@@ -1,21 +1,13 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.$;
+import me.skorrloregaming.Server;
 import me.skorrloregaming.runnable.AsyncRandomTeleport;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World.Environment;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.runnable.DelayedTeleport;
-
-import java.util.Random;
-import java.util.UUID;
 
 public class WildCmd implements CommandExecutor {
 

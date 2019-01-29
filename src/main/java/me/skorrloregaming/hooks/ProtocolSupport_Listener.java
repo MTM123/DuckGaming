@@ -1,21 +1,13 @@
 package me.skorrloregaming.hooks;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Function;
-
-import me.skorrloregaming.Logger;
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Server;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Chest;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Server;
 import protocolsupport.api.MaterialAPI;
 import protocolsupport.api.ProtocolSupportAPI;
 import protocolsupport.api.ProtocolVersion;
@@ -24,6 +16,11 @@ import protocolsupport.api.events.PlayerLoginStartEvent;
 import protocolsupport.api.events.PlayerProfileCompleteEvent;
 import protocolsupport.api.remapper.BlockRemapperControl;
 import protocolsupport.protocol.utils.ProtocolVersionsHelper;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Function;
 
 public class ProtocolSupport_Listener implements Listener {
 

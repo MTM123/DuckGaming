@@ -1,9 +1,6 @@
 package me.skorrloregaming;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.UUID;
-
+import me.skorrloregaming.impl.TitleSubtitle;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -14,7 +11,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import me.skorrloregaming.impl.TitleSubtitle;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class SignShop {
 	public static void playShopTitlePopup(Player player, Block block) {
@@ -97,7 +96,7 @@ public class SignShop {
 							}
 						}
 						EconManager.withdrawCash(player, price, subDomain);
-						String materialName = $.formatMaterial(itm.getType());
+						String materialName = Link$.formatMaterial(itm.getType());
 						itm.setDurability((short) 0);
 						player.getInventory().setItemInMainHand(itm);
 						player.updateInventory();
@@ -121,7 +120,7 @@ public class SignShop {
 				int amount = Integer.parseInt(String.valueOf(lines[3]));
 				int price = Integer.parseInt(String.valueOf(lines[2]).replace("$", "").replace(",", ""));
 				int data = 0;
-				String materialName = $.formatMaterial(material);
+				String materialName = Link$.formatMaterial(material);
 				try {
 					data = Integer.parseInt(String.valueOf(lines[1]).split(":")[1]);
 				} catch (Exception ig) {
@@ -157,7 +156,7 @@ public class SignShop {
 				int amount = Integer.parseInt(String.valueOf(lines[3]));
 				int price = Integer.parseInt(String.valueOf(lines[2]).replace("$", "").replace(",", ""));
 				int data = 0;
-				String materialName = $.formatMaterial(material);
+				String materialName = Link$.formatMaterial(material);
 				try {
 					data = Integer.parseInt(String.valueOf(lines[1]).split(":")[1]);
 				} catch (Exception ig) {
@@ -204,10 +203,10 @@ public class SignShop {
 			}
 		} else if (lines[0].equals("Enchant")) {
 			try {
-				Enchantment enchant = Enchantment.getByName($.unformatEnchantment(String.valueOf(lines[1]).trim()));
+				Enchantment enchant = Enchantment.getByName(Link$.unformatEnchantment(String.valueOf(lines[1]).trim()));
 				int amount = Integer.parseInt(String.valueOf(lines[3]));
 				int price = Integer.parseInt(String.valueOf(lines[2]).replace("$", "").replace(",", ""));
-				String enchantName = $.formatEnchantment(String.valueOf(enchant.getKey().getKey().trim()), amount);
+				String enchantName = Link$.formatEnchantment(String.valueOf(enchant.getKey().getKey().trim()), amount);
 				if (cash >= price) {
 					ItemStack currentItem = player.getInventory().getItemInMainHand();
 					if (currentItem.getType() == Material.AIR || currentItem == null || currentItem.getType() == null) {

@@ -1,18 +1,17 @@
 package me.skorrloregaming.commands;
 
-import java.util.Set;
-import java.util.UUID;
-
+import me.skorrloregaming.$;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.SolidStorage;
+import me.skorrloregaming.impl.Switches.SwitchUUIDString;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.SolidStorage;
-import me.skorrloregaming.impl.Switches.SwitchUUIDString;
+import java.util.Set;
+import java.util.UUID;
 
 public class TransferAcceptCmd implements CommandExecutor {
 
