@@ -12,7 +12,6 @@ import me.skorrloregaming.listeners.BlockEventHandler;
 import me.skorrloregaming.listeners.EntityEventHandler;
 import me.skorrloregaming.listeners.PlayerEventHandler;
 import me.skorrloregaming.lockette.Lockette;
-import me.skorrloregaming.mysql.SQLDatabase;
 import me.skorrloregaming.ping.PingInjector;
 import me.skorrloregaming.runnable.DelayedTeleport;
 import me.skorrloregaming.runnable.GCandAutoDemotion;
@@ -155,7 +154,6 @@ public class Server extends JavaPlugin implements Listener {
 	private static mcMMO_Listener mcmmoListener = null;
 
 	private static DiscordBot discordBot;
-	private static SQLDatabase sqlDatabase;
 
 	public static AuthMe_Listener getAuthListener() {
 		return authListener;
@@ -541,10 +539,6 @@ public class Server extends JavaPlugin implements Listener {
 		return discordBot;
 	}
 
-	public static SQLDatabase getSqlDatabase() {
-		return sqlDatabase;
-	}
-
 	@Override
 	public void onLoad() {
 		serverStartTime = System.currentTimeMillis();
@@ -615,9 +609,6 @@ public class Server extends JavaPlugin implements Listener {
 		saveConfig();
 		discordBot = new DiscordBot(getPluginName(), getConfig().getString("settings.discordBot.token", "TOKEN"));
 		discordBot.register();
-		String dbUsername = getConfig().getString("settings.database.username", "username");
-		String dbPassword = getConfig().getString("settings.database.password", "password");
-		sqlDatabase = new SQLDatabase("localhost", dbUsername, dbPassword);
 		lockette = new Lockette();
 		lockette.onEnable();
 		auctioneer = new Auctioneer();
@@ -801,7 +792,6 @@ public class Server extends JavaPlugin implements Listener {
 	public void onDisable() {
 		running = false;
 		plugin.saveConfig();
-		sqlDatabase.close();
 		discordBot.broadcast(":octagonal_sign: **Server has stopped**", Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 		discordBot.unregister();
 		if (!(lockette == null))

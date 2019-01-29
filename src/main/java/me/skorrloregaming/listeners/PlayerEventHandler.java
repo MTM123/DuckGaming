@@ -1336,8 +1336,8 @@ public class PlayerEventHandler implements Listener {
 		Server.getSessionManager().updateSession(player, new Session(LinkSessionManager.encodeHex(ipAddress.replace("x", ".")).toCharArray(), player, System.currentTimeMillis()));
 		if (!Server.getPlugin().getConfig().contains(path)) {
 			Server.getPlugin().getConfig().set(path + ".username", displayName);
-			Server.getSqlDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
-			Server.getSqlDatabase().set("donorRank", player.getUniqueId().toString(), Link$.validDonorRanks.get(0));
+			$.getLinkServer().getSqlDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
+			$.getLinkServer().getSqlDatabase().set("donorRank", player.getUniqueId().toString(), Link$.validDonorRanks.get(0));
 			Server.getPlugin().getConfig().set(path + ".marry.marriedTo", "0");
 			Server.getPlugin().getConfig().set(path + ".marry.marriageId", "0");
 			Server.getPlugin().getConfig().set(path + ".marry.marriedPvp", "true");
@@ -1447,23 +1447,23 @@ public class PlayerEventHandler implements Listener {
 				String uuid = offlineUUID.toString();
 				if (!Bukkit.getOnlineMode())
 					uuid = onlineUUID;
-				if (Server.getSqlDatabase().contains("playtime.total", uuid)) {
+				if ($.getLinkServer().getSqlDatabase().contains("playtime.total", uuid)) {
 					for (int day = 0; day <= 365; day++) {
-						if (Server.getSqlDatabase().contains("playtime.dayOfYear." + day, uuid)) {
-							String value = Server.getSqlDatabase().getString("playtime.dayOfYear." + day, uuid);
-							Server.getSqlDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
-							Server.getSqlDatabase().set("playtime.dayOfYear." + day, uuid, null);
+						if ($.getLinkServer().getSqlDatabase().contains("playtime.dayOfYear." + day, uuid)) {
+							String value = $.getLinkServer().getSqlDatabase().getString("playtime.dayOfYear." + day, uuid);
+							$.getLinkServer().getSqlDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
+							$.getLinkServer().getSqlDatabase().set("playtime.dayOfYear." + day, uuid, null);
 						}
 					}
 					{
-						String value = Server.getSqlDatabase().getString("playtime.total", uuid);
-						Server.getSqlDatabase().set("playtime.total", player.getUniqueId().toString(), value);
-						Server.getSqlDatabase().set("playtime.total", uuid, null);
+						String value = $.getLinkServer().getSqlDatabase().getString("playtime.total", uuid);
+						$.getLinkServer().getSqlDatabase().set("playtime.total", player.getUniqueId().toString(), value);
+						$.getLinkServer().getSqlDatabase().set("playtime.total", uuid, null);
 					}
 					{
-						String value = Server.getSqlDatabase().getString("playtime.lastKnownDayOfYear", uuid);
-						Server.getSqlDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
-						Server.getSqlDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
+						String value = $.getLinkServer().getSqlDatabase().getString("playtime.lastKnownDayOfYear", uuid);
+						$.getLinkServer().getSqlDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
+						$.getLinkServer().getSqlDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
 					}
 				}
 				if (Server.getSurvivalConfig().getData().contains("homes." + uuid)) {

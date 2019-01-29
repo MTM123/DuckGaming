@@ -43,7 +43,7 @@ public class SetDonorRankCmd implements CommandExecutor {
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 			} else {
 				if (Link$.validDonorRanks.contains(args[1].toLowerCase())) {
-					Server.getSqlDatabase().set("donorRank", targetPlayer.getUniqueId().toString(), args[1].toLowerCase());
+					$.getLinkServer().getSqlDatabase().set("donorRank", targetPlayer.getUniqueId().toString(), args[1].toLowerCase());
 					if (Link$.isPrefixedRankingEnabled() && targetPlayer.isOnline()) {
 						Link$.flashPlayerDisplayName(targetPlayer.getPlayer());
 					}

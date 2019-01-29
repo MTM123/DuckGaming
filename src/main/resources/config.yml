@@ -1,9 +1,6 @@
 settings:
     discordBot:
         token: TOKEN
-    database:
-        username: 'username'
-        password: 'password'
     enable:
         factions: true
         survival: true

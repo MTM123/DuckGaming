@@ -45,7 +45,7 @@ public class SetRankCmd implements CommandExecutor {
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Sorry. " + ChatColor.GRAY + "You are not allowed to modify his/her rank.");
 			} else {
 				if (Link$.validRanks.contains(args[1].toLowerCase())) {
-					Server.getSqlDatabase().set("rank", targetPlayer.getUniqueId().toString(), args[1].toLowerCase());
+					$.getLinkServer().getSqlDatabase().set("rank", targetPlayer.getUniqueId().toString(), args[1].toLowerCase());
 					if (Link$.isPrefixedRankingEnabled() && targetPlayer.isOnline()) {
 						Link$.flashPlayerDisplayName(targetPlayer.getPlayer());
 					}

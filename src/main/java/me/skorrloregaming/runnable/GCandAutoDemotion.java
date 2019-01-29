@@ -85,7 +85,7 @@ public class GCandAutoDemotion implements Runnable {
 						if (totalPlaytime > managerPlaytimeRequirement) {
 							if (Link$.validRanks.contains("manager")) {
 								Logger.info("Auto-promotion of " + player.getName() + " to Manager");
-								Server.getSqlDatabase().set("rank", player.getUniqueId().toString(), "manager");
+								$.getLinkServer().getSqlDatabase().set("rank", player.getUniqueId().toString(), "manager");
 								if (Link$.isPrefixedRankingEnabled() && player.isOnline()) {
 									Link$.flashPlayerDisplayName(player.getPlayer());
 								}
@@ -97,7 +97,7 @@ public class GCandAutoDemotion implements Runnable {
 						playtimeRequirementPerWeek /= 2;
 					if (totalTimePlayedInSeconds < playtimeRequirementPerWeek) {
 						Logger.info("Auto-demotion of " + player.getName() + " to " + Link$.validRanks.get(0));
-						Server.getSqlDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
+						$.getLinkServer().getSqlDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
 						if (Link$.isPrefixedRankingEnabled() && player.isOnline()) {
 							Link$.flashPlayerDisplayName(player.getPlayer());
 						}
