@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -23,7 +24,7 @@ public class SpoofVoteCmd implements CommandExecutor {
 			return true;
 		}
 		if (args.length < 2) {
-			sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player> <count> [minigame] [doJackpots]");
+			sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player> <count> [minigame]");
 			return true;
 		} else {
 			OfflinePlayer targetPlayer = CraftGo.Player.getOfflinePlayer(args[0]);
@@ -39,12 +40,10 @@ public class SpoofVoteCmd implements CommandExecutor {
 					minigame = args[2].toLowerCase();
 					serviceName = "Spoofed:" + minigame;
 				}
-				if (args.length >= 4) {
-					doJackpots = Boolean.parseBoolean(args[3].toLowerCase());
-				}
 				for (int i = 0; i < count; i++) {
 					Vote vote = new Vote(serviceName, targetPlayer.getName(), "0.0.0.0", new Date().toString());
-					Server.getVoteListener().onVote(new VotifierEvent(vote), doJackpots);
+					VotifierEvent event = new VotifierEvent(vote);
+					Bukkit.getPluginManager().callEvent(event);
 				}
 				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + count + " votes have been spoofed.");
 				return true;
