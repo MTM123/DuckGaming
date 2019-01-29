@@ -1487,7 +1487,7 @@ public class PlayerEventHandler implements Listener {
 					Server.getFactionsConfig().saveData();
 				}
 				for (String storageMinigame : $.validStorageMinigames) {
-					if (Bukkit.getServer().getOnlineMode() || Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
+					if (Bukkit.getServer().getOnlineMode()) {
 						if (SolidStorage.dataOfflineModeToOnlineMode(player, storageMinigame)) {
 							Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
 								@Override
