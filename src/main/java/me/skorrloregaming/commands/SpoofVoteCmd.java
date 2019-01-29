@@ -2,6 +2,8 @@ package me.skorrloregaming.commands;
 
 import java.util.Date;
 
+import com.vexsoftware.votifier.bungee.events.VotifierEvent;
+import com.vexsoftware.votifier.model.Vote;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -11,8 +13,6 @@ import org.bukkit.command.CommandSender;
 import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.VotifierSession.ProtocolVersion;
-import me.skorrloregaming.impl.Vote;
 
 public class SpoofVoteCmd implements CommandExecutor {
 
@@ -43,7 +43,8 @@ public class SpoofVoteCmd implements CommandExecutor {
 					doJackpots = Boolean.parseBoolean(args[3].toLowerCase());
 				}
 				for (int i = 0; i < count; i++) {
-					Server.getVoteListener().onVote(new Vote(serviceName, targetPlayer.getName(), "0.0.0.0", new Date().toString(), System.currentTimeMillis()), ProtocolVersion.TWO, doJackpots);
+					Vote vote = new Vote(serviceName, targetPlayer.getName(), "0.0.0.0", new Date().toString());
+					Server.getVoteListener().onVote(new VotifierEvent(vote), doJackpots);
 				}
 				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + count + " votes have been spoofed.");
 				return true;

@@ -60,7 +60,6 @@ import me.skorrloregaming.skins.SkinStorage;
 public class Server extends JavaPlugin implements Listener {
 
 	public PerWorldPlugin perWorldPlugins;
-	public Votifier nuVotifier;
 	public TopVotersHttpServer topVotersHttpServer = null;
 	public PingInjector pingInjector;
 	public Lockette lockette = null;
@@ -676,8 +675,6 @@ public class Server extends JavaPlugin implements Listener {
 		sqlDatabase = new SQLDatabase("localhost", dbUsername, dbPassword);
 		lockette = new Lockette();
 		lockette.onEnable();
-		nuVotifier = new Votifier();
-		nuVotifier.onEnable();
 		auctioneer = new Auctioneer();
 		shoppe = new LaShoppe();
 		garbageCollector = new GCandAutoDemotion();
@@ -719,7 +716,10 @@ public class Server extends JavaPlugin implements Listener {
 			protoSupportListener = new ProtocolSupport_Listener();
 			protoSupportListener.register();
 		}
-		voteListener = new Votifier_Listener();
+		if ($.isPluginEnabled("Votifier")) {
+			voteListener = new Votifier_Listener();
+			voteListener.register();
+		}
 		if (Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false))
 			new BungeeCord_Listener().register();
 		Bukkit.getScheduler().runTask(this, new Runnable() {
@@ -875,7 +875,6 @@ public class Server extends JavaPlugin implements Listener {
 		running = false;
 		plugin.saveConfig();
 		barApi.onDisable();
-		nuVotifier.onDisable();
 		sqlDatabase.close();
 		discordBot.broadcast(":octagonal_sign: **Server has stopped**", Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 		discordBot.unregister();
