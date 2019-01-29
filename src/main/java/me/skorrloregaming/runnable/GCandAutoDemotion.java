@@ -82,7 +82,7 @@ public class GCandAutoDemotion implements Runnable {
 				String rank = $.getRank(player.getUniqueId());
 				int rankId = $.getRankId(player.getUniqueId());
 				if (rankId > -1 && rankId < 3) {
-					int totalPlaytime = Server.getPlaytimeManager().getTotalStoredPlayerPlaytime(player);
+					long totalPlaytime = Server.getPlaytimeManager().getStoredPlayerPlaytime(player);
 					long[] range = Server.getPlaytimeManager().getRangeOfStoredPlayerPlaytime(player, dayOfYear - 6, dayOfYear + 1);
 					long totalTimePlayedInSeconds = 0L;
 					for (int i = 0; i < range.length; i++)

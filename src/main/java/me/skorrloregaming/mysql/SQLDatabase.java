@@ -17,7 +17,7 @@ public class SQLDatabase {
 
 	public int createTable(String table) {
 		try {
-			String sql = "CREATE TABLE " + table + "(sql_key VARCHAR(255), sql_value VARCHAR(255))";
+			String sql = "CREATE TABLE `" + table + "`(sql_key VARCHAR(255), sql_value VARCHAR(255))";
 			return connection.prepareStatement(sql).executeUpdate();
 		} catch (Exception e) {
 			return -1;
@@ -26,7 +26,7 @@ public class SQLDatabase {
 
 	public int dropTable(String table) {
 		try {
-			String sql = "DROP TABLE " + table;
+			String sql = "DROP TABLE `" + table + "`";
 			return connection.prepareStatement(sql).executeUpdate();
 		} catch (Exception e) {
 			return -1;
@@ -35,7 +35,7 @@ public class SQLDatabase {
 
 	public boolean tableExists(String table) {
 		try {
-			String sql = "SELECT 1 FROM " + table + " LIMIT 1";
+			String sql = "SELECT 1 FROM `" + table + "` LIMIT 1";
 			connection.prepareStatement(sql).executeQuery();
 			return true;
 		} catch (Exception e) {
@@ -49,12 +49,17 @@ public class SQLDatabase {
 
 	private int set(String table, String key, String value, boolean loopback) {
 		try {
-			if (contains(table, key)) {
-				String sql = "DELETE FROM " + table + " WHERE sql_key = '" + key + "'";
-				connection.prepareStatement(sql).executeUpdate();
+			if (value == null) {
+				String sql = "DELETE FROM `" + table + "` WHERE sql_key = '" + key + "'";
+				return connection.prepareStatement(sql).executeUpdate();
+			} else {
+				if (contains(table, key)) {
+					String sql = "DELETE FROM `" + table + "` WHERE sql_key = '" + key + "'";
+					connection.prepareStatement(sql).executeUpdate();
+				}
+				String sql = "INSERT INTO `" + table + "`(sql_key, sql_value) VALUES('" + key + "', '" + value + "')";
+				return connection.prepareStatement(sql).executeUpdate();
 			}
-			String sql = "INSERT INTO " + table + "(sql_key, sql_value) VALUES('" + key + "', '" + value + "')";
-			return connection.prepareStatement(sql).executeUpdate();
 		} catch (Exception e) {
 			if (loopback) {
 				if (createTable(table) == -1)
@@ -71,7 +76,7 @@ public class SQLDatabase {
 
 	private String getString(String table, String key, boolean loopback) {
 		try {
-			String query = "SELECT * FROM " + table;
+			String query = "SELECT * FROM `" + table + "`";
 			PreparedStatement pst = connection.prepareStatement(query);
 			ResultSet rs = pst.executeQuery();
 			while (rs.next()) {

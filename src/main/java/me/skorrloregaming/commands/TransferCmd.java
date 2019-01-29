@@ -50,15 +50,24 @@ public class TransferCmd implements CommandExecutor {
 					String oldValuePath = "config." + uuid + "." + value;
 					Server.getPlugin().getConfig().set(valuePath, Server.getPlugin().getConfig().get(oldValuePath));
 				}
-				if (Server.getPlaytimeManager().getPlaytimeConfig().getData().contains(uuid)) {
-					Set<String> array1 = Server.getPlaytimeManager().getPlaytimeConfig().getData().getConfigurationSection(uuid).getKeys(true);
-					for (String value : array1) {
-						String valuePath = player.getUniqueId().toString() + "." + value;
-						String oldValuePath = uuid + "." + value;
-						Server.getPlaytimeManager().getPlaytimeConfig().getData().set(valuePath, Server.getPlaytimeManager().getPlaytimeConfig().getData().get(oldValuePath));
+				if (Server.getSqlDatabase().contains("playtime.total", uuid)) {
+					for (int day = 0; day <= 365; day++) {
+						if (Server.getSqlDatabase().contains("playtime.dayOfYear." + day, uuid)) {
+							String value = Server.getSqlDatabase().getString("playtime.dayOfYear." + day, uuid);
+							Server.getSqlDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
+							Server.getSqlDatabase().set("playtime.dayOfYear." + day, uuid, null);
+						}
 					}
-					Server.getPlaytimeManager().getPlaytimeConfig().getData().set(uuid, null);
-					Server.getPlaytimeManager().getPlaytimeConfig().saveData();
+					{
+						String value = Server.getSqlDatabase().getString("playtime.total", uuid);
+						Server.getSqlDatabase().set("playtime.total", player.getUniqueId().toString(), value);
+						Server.getSqlDatabase().set("playtime.total", uuid, null);
+					}
+					{
+						String value = Server.getSqlDatabase().getString("playtime.lastKnownDayOfYear", uuid);
+						Server.getSqlDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
+						Server.getSqlDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
+					}
 				}
 				if (Server.getSurvivalConfig().getData().contains("homes." + uuid)) {
 					Set<String> array1 = Server.getSurvivalConfig().getData().getConfigurationSection("homes." + uuid).getKeys(true);
