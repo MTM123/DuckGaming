@@ -93,13 +93,18 @@ public class ServerCmd implements CommandExecutor {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
 				return true;
 			}
-			if (Server.getPrison().contains(player.getUniqueId())) {
-				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
+			ByteArrayDataOutput out = ByteStreams.newDataOutput();
+			out.writeUTF("Connect");
+			out.writeUTF("prison");
+			player.sendPluginMessage(Server.getPlugin(), "BungeeCord", out.toByteArray());
+		} else if ("dated".startsWith(args[0].toLowerCase())) {
+			if (!$.isMinigameEnabled(ServerMinigame.DATED)) {
+				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
 				return true;
 			}
 			ByteArrayDataOutput out = ByteStreams.newDataOutput();
 			out.writeUTF("Connect");
-			out.writeUTF("prison");
+			out.writeUTF("dated");
 			player.sendPluginMessage(Server.getPlugin(), "BungeeCord", out.toByteArray());
 		} else {
 			player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");

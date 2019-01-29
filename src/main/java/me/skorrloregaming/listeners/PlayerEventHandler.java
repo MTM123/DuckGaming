@@ -110,12 +110,6 @@ public class PlayerEventHandler implements Listener {
 		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
-				if (Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
-					ByteArrayDataOutput out = ByteStreams.newDataOutput();
-					out.writeUTF("PlayerList");
-					out.writeUTF("prison");
-					Bukkit.getServer().sendPluginMessage(Server.getPlugin(), "BungeeCord", out.toByteArray());
-				}
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					if ($.isAuthenticated(player) && $.getCurrentMinigame(player) == ServerMinigame.HUB)
 						Server.getInstance().fetchLobby(player);
@@ -2836,6 +2830,15 @@ public class PlayerEventHandler implements Listener {
 														return;
 													}
 													break;
+												case "dated":
+													if ($.isMinigameEnabled(ServerMinigame.DATED)) {
+														ByteArrayDataOutput out = ByteStreams.newDataOutput();
+														out.writeUTF("Connect");
+														out.writeUTF("dated");
+														player.sendPluginMessage(Server.getPlugin(), "BungeeCord", out.toByteArray());
+														return;
+													}
+													break;
 												case "skyfight":
 													if ($.isMinigameEnabled(ServerMinigame.SKYFIGHT)) {
 														Server.getInstance().enterSkyfight(player, false, false);
@@ -3021,6 +3024,9 @@ public class PlayerEventHandler implements Listener {
 				event.setCancelled(true);
 			} else if (label.equalsIgnoreCase("/prison")) {
 				player.performCommand("server prison");
+				event.setCancelled(true);
+			} else if (label.equalsIgnoreCase("/dated")) {
+				player.performCommand("server dated");
 				event.setCancelled(true);
 			} else if (event.getMessage().equalsIgnoreCase("/f fly")) {
 				player.performCommand("fly");
