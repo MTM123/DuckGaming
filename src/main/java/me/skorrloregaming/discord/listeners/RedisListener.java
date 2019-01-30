@@ -3,6 +3,7 @@ package me.skorrloregaming.discord.listeners;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import me.skorrloregaming.$;
 import me.skorrloregaming.LinkServer;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.discord.Channel;
@@ -95,11 +96,9 @@ public class RedisListener extends JedisPubSub implements Listener {
 			JsonObject obj = gson.fromJson(request, JsonObject.class);
 			if (obj != null) {
 				String servername = obj.get("serverName").getAsString();
-				if (!servername.equalsIgnoreCase(serverID.toString())) {
-					String message = obj.get("message").getAsString();
-					String discordChannel = obj.get("discordChannel").getAsString();
-					Server.getDiscordBot().broadcast(message, Channel.valueOf(discordChannel));
-				}
+				String message = obj.get("message").getAsString();
+				String discordChannel = obj.get("discordChannel").getAsString();
+				Server.getDiscordBot().broadcast(message, Channel.valueOf(discordChannel));
 			}
 		}
 	}
