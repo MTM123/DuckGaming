@@ -24,8 +24,8 @@ public class ReloadConfigCmd implements CommandExecutor {
 		Server.getMarriageHomesConfig().reloadData();
 		Server.getNpcConfig().reloadData();
 		Server.getSpawnerConfig().reloadData();
-		$.getLinkServer().getUUIDCache().reloadData();
-		$.getLinkServer().getGeolocationCache().reloadData();
+		LinkServer.getInstance().getUUIDCache().reloadData();
+		LinkServer.getInstance().getGeolocationCache().reloadData();
 		Server.getSessionManager().sessionConfig.reloadData();
 		Server.getMonthlyVoteConfig().reloadData();
 		if (PerWorldPlugin.instance != null)

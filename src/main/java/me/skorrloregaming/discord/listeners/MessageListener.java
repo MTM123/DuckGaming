@@ -3,6 +3,8 @@ package me.skorrloregaming.discord.listeners;
 import me.skorrloregaming.*;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
+import me.skorrloregaming.redis.MapBuilder;
+import me.skorrloregaming.redis.RedisChannel;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -54,7 +56,7 @@ public class MessageListener extends ListenerAdapter {
 						event.getGuild().getController().setNickname(event.getMember(), event.getMember().getUser().getName()).complete();
 						return;
 					}
-					rawMessage = $.getLinkServer().getAntiCheat().processAntiSwear(op, rawMessage, false, true);
+					rawMessage = LinkServer.getInstance().getAntiCheat().processAntiSwear(op, rawMessage, false, true);
 					String displayName = Link$.getFlashPlayerDisplayName(memberName);
 					String username = event.getMember().getUser().getName() + "#" + event.getMember().getUser().getDiscriminator();
 					TextComponent newLine = new TextComponent(ComponentSerializer.parse("{text: \"\n\"}"));
@@ -73,9 +75,11 @@ public class MessageListener extends ListenerAdapter {
 							.append(displayName).color(ChatColor.RESET).event(hoverEvent).append(" " + '\u00BB' + " ")
 							.color(ChatColor.RESET).event(hoverEvent).append(rawMessage).event(hoverEvent).create();
 					Logger.info(new TextComponent(message).toPlainText(), true);
+					String json = ComponentSerializer.toString(message);
 					for (Player player : Bukkit.getOnlinePlayers()) {
-						CraftGo.Player.sendJson(player, ComponentSerializer.toString(message));
+						CraftGo.Player.sendJson(player, json);
 					}
+					LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(json).json(true).build());
 				} else if (event.getTextChannel().getName().equals(discordBot.getChannelName(Channel.SERVER_VERIFY))) {
 					String rawMessage = event.getMessage().getContentDisplay();
 					if (rawMessage.startsWith("?verify")) {

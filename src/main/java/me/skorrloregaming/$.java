@@ -178,14 +178,6 @@ public class $ {
 		return -1;
 	}
 
-	public static LinkServer getLinkServer() {
-		if (!Link$.isPluginEnabled("SkorrloreGamingLink")) {
-			return null;
-		} else {
-			return (LinkServer) Bukkit.getPluginManager().getPlugin("SkorrloreGamingLink");
-		}
-	}
-
 	public static Object getAuthenticationSuite() {
 		if (!Link$.isPluginEnabled("AuthMe")) {
 			return null;

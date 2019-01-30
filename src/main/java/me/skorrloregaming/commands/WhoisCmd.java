@@ -1,9 +1,6 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Link$;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
 import me.skorrloregaming.impl.IpLocationQuery;
 import me.skorrloregaming.impl.ServerMinigame;
 import org.apache.commons.lang.WordUtils;
@@ -30,7 +27,7 @@ public class WhoisCmd implements CommandExecutor {
 			int latency = CraftGo.Player.getConnectionLatency(player);
 			ServerMinigame minigame = $.getCurrentMinigame(player);
 			ServerMinigame worldMinigame = $.getMinigameFromWorld(player.getWorld());
-			String playtime = Link$.formatTime((int) $.getLinkServer().getPlaytimeManager().getStoredPlayerPlaytime(player));
+			String playtime = Link$.formatTime((int) LinkServer.getInstance().getPlaytimeManager().getStoredPlayerPlaytime(player));
 			String rank = WordUtils.capitalize(Link$.getRank(player));
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "/ Known information about " + ChatColor.RED + player.getName());
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Connection latency (ping): " + ChatColor.RED + latency);

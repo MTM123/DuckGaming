@@ -13,6 +13,8 @@ import me.skorrloregaming.listeners.EntityEventHandler;
 import me.skorrloregaming.listeners.PlayerEventHandler;
 import me.skorrloregaming.lockette.Lockette;
 import me.skorrloregaming.ping.PingInjector;
+import me.skorrloregaming.redis.MapBuilder;
+import me.skorrloregaming.redis.RedisChannel;
 import me.skorrloregaming.runnable.DelayedTeleport;
 import me.skorrloregaming.runnable.GCandAutoDemotion;
 import me.skorrloregaming.scoreboard.DisplayType;
@@ -669,7 +671,7 @@ public class Server extends JavaPlugin implements Listener {
 					player.sendMessage(Link$.modernMsgPrefix + "Psst, did you know the server finished updating?");
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					player.performCommand("hub");
-					$.getLinkServer().getPlaytimeManager().handle_JoinEvent(player);
+					LinkServer.getInstance().getPlaytimeManager().handle_JoinEvent(player);
 				}
 				List<Entity> entity = new LinkedList<Entity>($.getZoneLocation("creative").getWorld().getEntities());
 				for (Entity e : entity) {
@@ -702,30 +704,22 @@ public class Server extends JavaPlugin implements Listener {
 		getCommand("printblockstate").setExecutor(new PrintBlockStateCmd());
 		getCommand("ignore").setExecutor(new IgnoreCmd());
 		getCommand("spoof-vote").setExecutor(new SpoofVoteCmd());
-		getCommand("buy").setExecutor(new BuyCmd());
 		getCommand("playertime").setExecutor(new PlayertimeCmd());
 		getCommand("sessions").setExecutor(new SessionsCmd());
 		getCommand("transfer").setExecutor(new TransferCmd());
 		getCommand("transferaccept").setExecutor(new TransferAcceptCmd());
 		getCommand("transferdeny").setExecutor(new TransferDenyCmd());
 		getCommand("warnings").setExecutor(new WarningsCmd());
-		getCommand("vote").setExecutor(new VoteCmd());
 		getCommand("update-skin").setExecutor(new UpdateSkinCmd());
 		getCommand("spectate").setExecutor(new SpectateCmd());
-		getCommand("discord").setExecutor(new DiscordCmd());
-		getCommand("address").setExecutor(new AddressCmd());
 		getCommand("rollback").setExecutor(new RollbackCmd());
-		getCommand("setsuffixrank").setExecutor(new SetSuffixRankCmd());
 		getCommand("center").setExecutor(new CenterCmd());
 		getCommand("marrychat").setExecutor(new MarryCmd());
 		getCommand("marry").setExecutor(new MarryCmd());
 		getCommand("divorce").setExecutor(new DivorceCmd());
-		getCommand("modifications").setExecutor(new ModificationsCmd());
 		getCommand("spawner").setExecutor(new SpawnerCmd());
 		getCommand("staffchat").setExecutor(new StaffChatCmd());
-		getCommand("vote").setExecutor(new VoteCmd());
 		getCommand("effect").setExecutor(new EffectCmd());
-		getCommand("website").setExecutor(new WebsiteCmd());
 		getCommand("trails").setExecutor(new TrailsCmd());
 		getCommand("clear").setExecutor(new ClearCmd());
 		getCommand("upgrade-kit").setExecutor(new UpgradeKitCmd());
@@ -738,19 +732,15 @@ public class Server extends JavaPlugin implements Listener {
 		getCommand("list").setExecutor(new ListCmd());
 		getCommand("build-time").setExecutor(new BuildTimeCmd());
 		getCommand("moderate").setExecutor(new ModerateCmd());
-		getCommand("rules").setExecutor(new RulesCmd());
 		getCommand("motd").setExecutor(new MotdCmd());
 		getCommand("wild").setExecutor(new WildCmd());
 		getCommand("give").setExecutor(new GiveCmd());
 		getCommand("rename").setExecutor(new RenameCmd());
 		getCommand("opme").setExecutor(new OpmeCmd());
 		getCommand("vanish").setExecutor(new VanishCmd());
-		getCommand("workbench").setExecutor(new WorkbenchCmd());
-		getCommand("dispose").setExecutor(new DisposeCmd());
 		getCommand("sign-edit").setExecutor(new SignEditCmd());
 		getCommand("chest").setExecutor(new ChestCmd());
 		getCommand("inventorysee").setExecutor(new InventorySeeCmd());
-		getCommand("ping").setExecutor(new PingCmd());
 		getCommand("mute").setExecutor(new MuteCmd());
 		getCommand("warning").setExecutor(new WarningCmd());
 		getCommand("kick").setExecutor(new KickCmd());
@@ -816,7 +806,7 @@ public class Server extends JavaPlugin implements Listener {
 				if (!hub.contains(player.getUniqueId()))
 					hub.add(player.getUniqueId());
 				fetchLobby(player);
-				$.getLinkServer().getPlaytimeManager().handle_QuitEvent(player);
+				LinkServer.getInstance().getPlaytimeManager().handle_QuitEvent(player);
 			}
 		}
 	}
@@ -1039,7 +1029,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "KitPvP";
 				Bukkit.broadcastMessage(message);
-				$.getLinkServer().getRedisListener().broadcastMessage(message);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1068,7 +1058,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "KitPvP";
 				Bukkit.broadcastMessage(message);
-				$.getLinkServer().getRedisListener().broadcastMessage(message);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1131,7 +1121,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Factions";
 				Bukkit.broadcastMessage(message);
-				$.getLinkServer().getRedisListener().broadcastMessage(message);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1162,7 +1152,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Factions";
 				Bukkit.broadcastMessage(message);
-				$.getLinkServer().getRedisListener().broadcastMessage(message);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1225,7 +1215,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Survival";
 				Bukkit.broadcastMessage(message);
-				$.getLinkServer().getRedisListener().broadcastMessage(message);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1253,7 +1243,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Survival";
 				Bukkit.broadcastMessage(message);
-				$.getLinkServer().getRedisListener().broadcastMessage(message);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1293,7 +1283,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Skyfight";
 				Bukkit.broadcastMessage(message);
-				$.getLinkServer().getRedisListener().broadcastMessage(message);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1390,7 +1380,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Skyfight";
 				Bukkit.broadcastMessage(message);
-				$.getLinkServer().getRedisListener().broadcastMessage(message);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1463,7 +1453,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Creative";
 				Bukkit.broadcastMessage(message);
-				$.getLinkServer().getRedisListener().broadcastMessage(message);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1510,7 +1500,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Creative";
 				Bukkit.broadcastMessage(message);
-				$.getLinkServer().getRedisListener().broadcastMessage(message);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1582,7 +1572,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Skyblock";
 				Bukkit.broadcastMessage(message);
-				$.getLinkServer().getRedisListener().broadcastMessage(message);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1611,7 +1601,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Skyblock";
 				Bukkit.broadcastMessage(message);
-				$.getLinkServer().getRedisListener().broadcastMessage(message);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))

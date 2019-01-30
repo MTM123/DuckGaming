@@ -1,9 +1,6 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.SolidStorage;
+import me.skorrloregaming.*;
 import me.skorrloregaming.impl.Switches.SwitchUUIDString;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -29,13 +26,13 @@ public class TransferDenyCmd implements CommandExecutor {
 				SolidStorage.clearPlayerSave(CraftGo.Player.getOfflinePlayer(uuid), domain);
 			Server.getPlugin().getConfig().set("config." + uuid, null);
 			Server.getPlugin().getConfig().set("denyDataTransfer." + uuid, true);
-			if ($.getLinkServer().getSqlDatabase().contains("playtime.total", uuid)) {
+			if (LinkServer.getInstance().getSqlDatabase().contains("playtime.total", uuid)) {
 				for (int day = 0; day <= 365; day++) {
-					if ($.getLinkServer().getSqlDatabase().contains("playtime.dayOfYear." + day, uuid))
-						$.getLinkServer().getSqlDatabase().set("playtime.dayOfYear." + day, uuid, null);
+					if (LinkServer.getInstance().getSqlDatabase().contains("playtime.dayOfYear." + day, uuid))
+						LinkServer.getInstance().getSqlDatabase().set("playtime.dayOfYear." + day, uuid, null);
 				}
-				$.getLinkServer().getSqlDatabase().set("playtime.total", uuid, null);
-				$.getLinkServer().getSqlDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
+				LinkServer.getInstance().getSqlDatabase().set("playtime.total", uuid, null);
+				LinkServer.getInstance().getSqlDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
 			}
 			Server.getSurvivalConfig().getData().set("homes." + uuid, null);
 			Server.getSurvivalConfig().saveData();

@@ -5,6 +5,8 @@ import com.vexsoftware.votifier.model.VotifierEvent;
 import me.skorrloregaming.*;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.impl.ServerMinigame;
+import me.skorrloregaming.redis.MapBuilder;
+import me.skorrloregaming.redis.RedisChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -62,6 +64,7 @@ public class Votifier_Listener implements Listener {
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT
 				);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			} else {
 				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted for the server.";
 				Bukkit.broadcastMessage(message);
@@ -69,6 +72,7 @@ public class Votifier_Listener implements Listener {
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT
 				);
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			}
 			int balance2 = EconManager.retrieveCash(player.getUniqueId(), "kitpvp");
 			int ceil2 = (int) Math.ceil(balance2 / 25);

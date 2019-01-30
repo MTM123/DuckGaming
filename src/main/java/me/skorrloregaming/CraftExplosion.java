@@ -100,7 +100,7 @@ public class CraftExplosion {
 						}
 						block.breakNaturally(Link$.createMaterial(Material.AIR));
 						block.getState().update();
-						$.getLinkServer().getAntiCheat().onBlockBreak(block, null);
+						LinkServer.getInstance().getAntiCheat().onBlockBreak(block, null);
 					}
 				}
 			}
@@ -111,7 +111,7 @@ public class CraftExplosion {
 		for (Block block : blocks) {
 			block.breakNaturally(Link$.createMaterial(Material.AIR));
 			block.getState().update();
-			$.getLinkServer().getAntiCheat().onBlockBreak(block, null);
+			LinkServer.getInstance().getAntiCheat().onBlockBreak(block, null);
 		}
 	}
 

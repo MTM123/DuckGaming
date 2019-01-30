@@ -1,10 +1,9 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Link$;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
 import me.skorrloregaming.discord.Channel;
+import me.skorrloregaming.redis.MapBuilder;
+import me.skorrloregaming.redis.RedisChannel;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -45,13 +44,13 @@ public class SetRankCmd implements CommandExecutor {
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Sorry. " + ChatColor.GRAY + "You are not allowed to modify his/her rank.");
 			} else {
 				if (Link$.validRanks.contains(args[1].toLowerCase())) {
-					$.getLinkServer().getSqlDatabase().set("rank", targetPlayer.getUniqueId().toString(), args[1].toLowerCase());
+					LinkServer.getInstance().getSqlDatabase().set("rank", targetPlayer.getUniqueId().toString(), args[1].toLowerCase());
 					if (Link$.isPrefixedRankingEnabled() && targetPlayer.isOnline()) {
 						Link$.flashPlayerDisplayName(targetPlayer.getPlayer());
 					}
 					String message = Server.getPluginLabel() + ChatColor.RED + targetPlayer.getName() + ChatColor.GRAY + " has been given rank " + ChatColor.RED + WordUtils.capitalize(args[1].toLowerCase());
 					Bukkit.broadcastMessage(message);
-					$.getLinkServer().getRedisListener().broadcastMessage(message);
+					LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 					message = message.substring(message.indexOf(ChatColor.RED + ""));
 					Server.getDiscordBot().broadcast(
 							ChatColor.stripColor(message.replace(targetPlayer.getName(), "**" + targetPlayer.getName() + "**"))

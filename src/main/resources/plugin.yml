@@ -35,9 +35,6 @@ commands:
     spoof-vote:
         description: Spoof a number of votes for the specified player
         aliases: [spoofvote, sv]
-    buy:
-        description: Access the buycraft store
-        aliases: [store, purchase, donate]
     playertime:
         description: Set the time of day of your own player
         aliases: ptime
@@ -69,9 +66,6 @@ commands:
     rollback:
         description: Restore someone to their last player data save
         aliases: restore
-    setsuffixrank:
-        description: About the same as set rank but with suffixes instead
-        aliases: setsuffix
     center:
         description: Center yourself in the block your standing on
     marrychat:
@@ -82,23 +76,15 @@ commands:
         aliases: wedding
     divorce:
         description: Break up with you married partner
-    modifications:
-        description: Link to our vanilla modifications wiki
-        aliases: mods
     spawner:
         description: Purchase a spawner containing a specific monster
         aliases: spawners
     staffchat:
         description: Enter or leave the private staff chat
         aliases: sc
-    vote:
-        description: View a list of available vote portals
     effect:
         description: Enable or disable effects for your account
         aliases: [effects, particle, particles]
-    website:
-        description: Link to our minecraft server website
-        aliases: [store, forums, forum, apply]
     trails:
         description: Select or purchase a trail to use
         aliases: trail
@@ -132,8 +118,6 @@ commands:
     moderate:
         description: Toggle the administrative moderation mode
         aliases: mod
-    rules:
-        description: View the servers' defined rules
     motd:
         description: Temporarily change the MOTD for the server
     wild:
@@ -150,12 +134,6 @@ commands:
     vanish:
         description: Hide yourself from other players
         aliases: v
-    workbench:
-        description: Your virtual crafting table
-        aliases: [wb, craft]
-    dispose:
-        description: Trash your most useless items
-        aliases: trash
     sign-edit:
         description: Edit specific lines on a sign
     chest:
@@ -164,9 +142,6 @@ commands:
     inventorysee:
         description: View someone's legacy inventory
         aliases: invsee
-    ping:
-        description: Find your connection latency
-        aliases: latency
     mute:
         description: Mute the specified player
     warning:

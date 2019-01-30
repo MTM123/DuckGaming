@@ -1,10 +1,9 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Link$;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
 import me.skorrloregaming.discord.Channel;
+import me.skorrloregaming.redis.MapBuilder;
+import me.skorrloregaming.redis.RedisChannel;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,17 +29,21 @@ public class SayCmd implements CommandExecutor {
 				}
 				if (args[0].split("/")[1].equals(".")) {
 					if (Link$.isPrefixedRankingEnabled()) {
-						Bukkit.broadcastMessage(ChatColor.GRAY + "[" + ChatColor.WHITE + Server.getLastKnownHubWorld() + ChatColor.GRAY + "] " + ChatColor.WHITE + $.consoleTag + "Server" + ChatColor.WHITE + " " + '\u00BB' + " " + sb.toString());
+						String processedMessage = ChatColor.GRAY + "[" + ChatColor.WHITE + Server.getLastKnownHubWorld() + ChatColor.GRAY + "] " + ChatColor.WHITE + $.consoleTag + "Server" + ChatColor.WHITE + " " + '\u00BB' + " " + sb.toString();
+						Bukkit.broadcastMessage(processedMessage);
 						Server.getDiscordBot().broadcast(
 								"**Console** Server " + '\u00BB' + " " + sb.toString()
 								, Channel.SERVER_CHAT
 						);
+						LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(processedMessage).build());
 					} else {
-						Bukkit.broadcastMessage(ChatColor.GRAY + "[" + ChatColor.WHITE + Server.getLastKnownHubWorld() + ChatColor.GRAY + "] " + ChatColor.RED + "Server" + ChatColor.WHITE + " " + '\u00BB' + " " + sb.toString());
+						String processedMessage = ChatColor.GRAY + "[" + ChatColor.WHITE + Server.getLastKnownHubWorld() + ChatColor.GRAY + "] " + ChatColor.RED + "Server" + ChatColor.WHITE + " " + '\u00BB' + " " + sb.toString();
+						Bukkit.broadcastMessage(processedMessage);
 						Server.getDiscordBot().broadcast(
 								"**Server** " + '\u00BB' + " " + sb.toString()
 								, Channel.SERVER_CHAT
 						);
+						LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(processedMessage).build());
 					}
 				} else {
 					OfflinePlayer op = CraftGo.Player.getOfflinePlayer(args[0].split("/")[1]);
@@ -64,17 +67,21 @@ public class SayCmd implements CommandExecutor {
 							if (rankName.equals("Youtube"))
 								rankName = "YouTube";
 							if (Link$.isPrefixedRankingEnabled()) {
-								Bukkit.broadcastMessage(ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.WHITE + Link$.getFlashPlayerDisplayName(op) + ChatColor.WHITE + " " + '\u00BB' + " " + message);
+								String processedMessage = ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.WHITE + Link$.getFlashPlayerDisplayName(op) + ChatColor.WHITE + " " + '\u00BB' + " " + message;
+								Bukkit.broadcastMessage(processedMessage);
 								Server.getDiscordBot().broadcast(
-										"**" + rankName + "** " + op.getName() + " " + '\u00BB' + " " + $.getLinkServer().getAntiCheat().processAntiSwear(op, message)
+										"**" + rankName + "** " + op.getName() + " " + '\u00BB' + " " + LinkServer.getInstance().getAntiCheat().processAntiSwear(op, message)
 										, Channel.SERVER_CHAT
 								);
+								LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(processedMessage).build());
 							} else {
-								Bukkit.broadcastMessage(ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.WHITE + op.getName() + ChatColor.WHITE + " " + '\u00BB' + " " + message);
+								String processedMessage = ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.WHITE + op.getName() + ChatColor.WHITE + " " + '\u00BB' + " " + message;
+								Bukkit.broadcastMessage(processedMessage);
 								Server.getDiscordBot().broadcast(
-										"**" + op.getName() + "** " + '\u00BB' + " " + $.getLinkServer().getAntiCheat().processAntiSwear(op, message)
+										"**" + op.getName() + "** " + '\u00BB' + " " + LinkServer.getInstance().getAntiCheat().processAntiSwear(op, message)
 										, Channel.SERVER_CHAT
 								);
+								LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(processedMessage).build());
 							}
 						}
 					}

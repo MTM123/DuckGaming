@@ -7,7 +7,6 @@ import me.skorrloregaming.$;
 import me.skorrloregaming.LinkServer;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.discord.Channel;
-import me.skorrloregaming.hooks.Redis_Listener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;

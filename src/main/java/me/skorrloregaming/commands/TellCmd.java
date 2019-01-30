@@ -2,6 +2,7 @@ package me.skorrloregaming.commands;
 
 import me.skorrloregaming.$;
 import me.skorrloregaming.Link$;
+import me.skorrloregaming.LinkServer;
 import me.skorrloregaming.Server;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -37,7 +38,7 @@ public class TellCmd implements CommandExecutor {
 				if (player.isOp() || rank > -1 || donorRank < -2) {
 					message = ChatColor.translateAlternateColorCodes('&', message);
 				}
-				message = $.getLinkServer().getAntiCheat().processAntiSwear(player, message);
+				message = LinkServer.getInstance().getAntiCheat().processAntiSwear(player, message);
 				player.sendMessage(ChatColor.WHITE + "[" + ChatColor.RED + "me" + ChatColor.WHITE + " " + '\u00BB' + " " + ChatColor.RED + targetPlayer.getName() + ChatColor.WHITE + "] " + message);
 				if (Server.getIgnoredPlayers().containsKey(targetPlayer.getUniqueId())) {
 					Player existingIgnore = Bukkit.getPlayer(Server.getIgnoredPlayers().get(targetPlayer.getUniqueId()));

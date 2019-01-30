@@ -72,8 +72,8 @@ public class GCandAutoDemotion implements Runnable {
 				String rank = Link$.getRank(player.getUniqueId());
 				int rankId = Link$.getRankId(player.getUniqueId());
 				if (rankId > -1 && rankId < 3) {
-					long totalPlaytime = $.getLinkServer().getPlaytimeManager().getStoredPlayerPlaytime(player);
-					long[] range = $.getLinkServer().getPlaytimeManager().getRangeOfStoredPlayerPlaytime(player, dayOfYear - 6, dayOfYear + 1);
+					long totalPlaytime = LinkServer.getInstance().getPlaytimeManager().getStoredPlayerPlaytime(player);
+					long[] range = LinkServer.getInstance().getPlaytimeManager().getRangeOfStoredPlayerPlaytime(player, dayOfYear - 6, dayOfYear + 1);
 					long totalTimePlayedInSeconds = 0L;
 					for (int i = 0; i < range.length; i++)
 						totalTimePlayedInSeconds += range[i];
@@ -85,7 +85,7 @@ public class GCandAutoDemotion implements Runnable {
 						if (totalPlaytime > managerPlaytimeRequirement) {
 							if (Link$.validRanks.contains("manager")) {
 								Logger.info("Auto-promotion of " + player.getName() + " to Manager");
-								$.getLinkServer().getSqlDatabase().set("rank", player.getUniqueId().toString(), "manager");
+								LinkServer.getInstance().getSqlDatabase().set("rank", player.getUniqueId().toString(), "manager");
 								if (Link$.isPrefixedRankingEnabled() && player.isOnline()) {
 									Link$.flashPlayerDisplayName(player.getPlayer());
 								}
@@ -97,7 +97,7 @@ public class GCandAutoDemotion implements Runnable {
 						playtimeRequirementPerWeek /= 2;
 					if (totalTimePlayedInSeconds < playtimeRequirementPerWeek) {
 						Logger.info("Auto-demotion of " + player.getName() + " to " + Link$.validRanks.get(0));
-						$.getLinkServer().getSqlDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
+						LinkServer.getInstance().getSqlDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
 						if (Link$.isPrefixedRankingEnabled() && player.isOnline()) {
 							Link$.flashPlayerDisplayName(player.getPlayer());
 						}
