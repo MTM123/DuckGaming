@@ -3,8 +3,10 @@ package me.skorrloregaming.discord.listeners;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import me.skorrloregaming.LinkServer;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.discord.Channel;
+import me.skorrloregaming.hooks.Redis_Listener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import redis.clients.jedis.Jedis;
@@ -29,8 +31,11 @@ public class RedisListener extends JedisPubSub implements Listener {
 	 */
 	private final UUID serverID = UUID.randomUUID();
 
+	private RedisListener instance;
+
 	private boolean connectToRedis() {
-		Server.getPlugin().getLogger().info("Connecting to redis..");
+		instance = this;
+		Server.getPlugin().getLogger().info("Connecting to Redis..");
 		String hostname = Server.getPlugin().getConfig().getString("settings.redis.hostname", "localhost");
 		int port = Server.getPlugin().getConfig().getInt("settings.redis.port", 6379);
 		String password = Server.getPlugin().getConfig().getString("settings.redis.password");
@@ -42,6 +47,10 @@ public class RedisListener extends JedisPubSub implements Listener {
 			jedisPool = Optional.ofNullable(new JedisPool(poolConfig, hostname, port, 0, password));
 		}
 		return jedisPool.isPresent();
+	}
+
+	private RedisListener getInstance() {
+		return instance;
 	}
 
 	private boolean close() {
@@ -61,10 +70,17 @@ public class RedisListener extends JedisPubSub implements Listener {
 
 	public void register() {
 		connectToRedis();
-		getPool().ifPresent((pool) -> {
-			try (Jedis jedis = pool.getResource()) {
-				jedis.subscribe(this, "slgn:discord");
-			} catch (Exception ex) {
+		Server.getPlugin().getLogger().info("Connected to Redis!");
+		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
+
+			@Override
+			public void run() {
+				getPool().ifPresent((pool) -> {
+					try (Jedis jedis = pool.getResource()) {
+						jedis.subscribe(getInstance(), "slgn:chat");
+					} catch (Exception ex) {
+					}
+				});
 			}
 		});
 	}
