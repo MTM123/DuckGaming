@@ -1,9 +1,9 @@
 package me.skorrloregaming.commands;
 
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.UUID;
-
+import me.skorrloregaming.$;
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.EconManager;
+import me.skorrloregaming.Server;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -12,10 +12,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.EconManager;
-import me.skorrloregaming.Server;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class BalanceTopCmd implements CommandExecutor {
 

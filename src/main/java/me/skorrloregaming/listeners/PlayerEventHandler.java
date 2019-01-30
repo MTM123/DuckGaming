@@ -1,56 +1,36 @@
 package me.skorrloregaming.listeners;
 
-import java.text.DecimalFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
-import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import io.netty.buffer.Unpooled;
+import me.skorrloregaming.*;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.SessionManager.Session;
+import me.skorrloregaming.commands.TrailsCmd;
+import me.skorrloregaming.commands.UpgradeKitCmd;
 import me.skorrloregaming.discord.Channel;
+import me.skorrloregaming.events.PlayerAuthenticateEvent;
+import me.skorrloregaming.impl.*;
+import me.skorrloregaming.impl.Switches.SwitchIntDouble;
+import me.skorrloregaming.impl.Switches.SwitchUUIDString;
+import me.skorrloregaming.runnable.CombatTimer;
+import me.skorrloregaming.scoreboard.DisplayType;
+import me.skorrloregaming.scoreboard.DisposableScoreboard;
+import me.skorrloregaming.scoreboard.boards.Kitpvp_LeaderboardScoreboard;
+import me.skorrloregaming.scoreboard.boards.Kitpvp_StatisticsScoreboard;
 import me.skorrloregaming.shop.LaShoppeEnchant;
 import me.skorrloregaming.shop.LaShoppeFrame;
 import me.skorrloregaming.shop.LaShoppeItem;
-import me.skorrloregaming.impl.*;
 import me.skorrloregaming.skins.model.SkinModel;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.World.Environment;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.CreatureSpawner;
-import org.bukkit.block.Sign;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
+import org.bukkit.block.*;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EnderPearl;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.IronGolem;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.SmallFireball;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -76,28 +56,13 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.util.Vector;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.ComplexParticle;
-import me.skorrloregaming.CraftExplosion;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Directory;
-import me.skorrloregaming.EconManager;
-import me.skorrloregaming.Logger;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.SessionManager;
-import me.skorrloregaming.SessionManager.Session;
-import me.skorrloregaming.SignShop;
-import me.skorrloregaming.SolidStorage;
-import me.skorrloregaming.commands.TrailsCmd;
-import me.skorrloregaming.commands.UpgradeKitCmd;
-import me.skorrloregaming.events.PlayerAuthenticateEvent;
-import me.skorrloregaming.impl.Switches.SwitchIntDouble;
-import me.skorrloregaming.impl.Switches.SwitchUUIDString;
-import me.skorrloregaming.runnable.CombatTimer;
-import me.skorrloregaming.scoreboard.DisplayType;
-import me.skorrloregaming.scoreboard.DisposableScoreboard;
-import me.skorrloregaming.scoreboard.boards.Kitpvp_LeaderboardScoreboard;
-import me.skorrloregaming.scoreboard.boards.Kitpvp_StatisticsScoreboard;
+import java.text.DecimalFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class PlayerEventHandler implements Listener {
 
@@ -113,32 +78,6 @@ public class PlayerEventHandler implements Listener {
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					if ($.isAuthenticated(player) && $.getCurrentMinigame(player) == ServerMinigame.HUB)
 						Server.getInstance().fetchLobby(player);
-					String path = "config." + player.getUniqueId().toString();
-					boolean subscribed = Boolean.parseBoolean(Server.getPlugin().getConfig().getString(path + ".subscribed", "true"));
-					if (subscribed) {
-						String message = "   Thank you for playing on the server, please invite your friends. ";
-						message += message.substring(0, 32);
-						Server.getBarApiTitleIndex().putIfAbsent(player.getUniqueId(), 0);
-						int index = Server.getBarApiTitleIndex().get(player.getUniqueId());
-						if (message.length() <= 32) {
-							Server.getBarApi().setMessage(player, message, BarColor.RED, BarStyle.SOLID);
-						} else {
-							int finalIndex = index + 32;
-							if (index < message.length() && finalIndex < message.length()) {
-								Server.getBarApi().setMessage(player, message.substring(index, finalIndex), BarColor.RED, BarStyle.SOLID);
-								Server.getBarApiTitleIndex().put(player.getUniqueId(), index + 1);
-							} else {
-								Server.getBarApiTitleIndex().put(player.getUniqueId(), 0);
-							}
-						}
-					}
-				}
-			}
-		}, 7L, 7L);
-		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
-			@Override
-			public void run() {
-				for (Player player : Bukkit.getOnlinePlayers()) {
 					ServerMinigame minigame = $.getCurrentMinigame(player);
 					DisposableScoreboard scoreboard = $.getPrimaryScoreboard(minigame);
 					if (!(scoreboard == null)) {
@@ -170,12 +109,12 @@ public class PlayerEventHandler implements Listener {
 		Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
-				ItemStack factions = $.createMaterial(Material.DIAMOND_SWORD, 1, ChatColor.LIGHT_PURPLE + "Factions");
-				ItemStack survival = $.createMaterial(Material.STONE_PICKAXE, 1, ChatColor.LIGHT_PURPLE + "Survival");
+				ItemStack factions = Link$.createMaterial(Material.DIAMOND_SWORD, 1, ChatColor.LIGHT_PURPLE + "Factions");
+				ItemStack survival = Link$.createMaterial(Material.STONE_PICKAXE, 1, ChatColor.LIGHT_PURPLE + "Survival");
 				survival = CraftGo.ItemStack.removeAttributes(survival);
 				factions = CraftGo.ItemStack.removeAttributes(factions);
-				survival = $.addLore(survival, new String[]{ChatColor.GOLD + "/server survival"});
-				factions = $.addLore(factions, new String[]{ChatColor.GOLD + "/server factions"});
+				survival = Link$.addLore(survival, new String[]{ChatColor.GOLD + "/server survival"});
+				factions = Link$.addLore(factions, new String[]{ChatColor.GOLD + "/server factions"});
 				int invSize = 9;
 				if (CraftGo.Player.isPocketPlayer(player))
 					invSize = 27;
@@ -215,7 +154,7 @@ public class PlayerEventHandler implements Listener {
 			if (requiredAmount > 4800)
 				requiredAmount = 4800;
 			String prefix = ChatColor.RESET + "" + ChatColor.BOLD;
-			ItemStack performUpgradeItem = $.createMaterial(Material.REDSTONE, prefix + "Perform Upgrade (" + ChatColor.RED + "$" + requiredAmount + prefix + ")");
+			ItemStack performUpgradeItem = Link$.createMaterial(Material.REDSTONE, prefix + "Perform Upgrade (" + ChatColor.RED + "$" + requiredAmount + prefix + ")");
 			ItemStack spawnerItem = CraftGo.MobSpawner.newSpawnerItem(spawner.getSpawnedType(), 1);
 			List<String> spawnerItemLore = new ArrayList<String>();
 			spawnerItemLore.add("");
@@ -224,7 +163,7 @@ public class PlayerEventHandler implements Listener {
 			spawnerItemLore.add(ChatColor.RESET + "x: " + spawner.getX());
 			spawnerItemLore.add(ChatColor.RESET + "y: " + spawner.getY());
 			spawnerItemLore.add(ChatColor.RESET + "z: " + spawner.getZ());
-			spawnerItem = $.appendLore(spawnerItem, spawnerItemLore.toArray(new String[0]));
+			spawnerItem = Link$.appendLore(spawnerItem, spawnerItemLore.toArray(new String[0]));
 			inventory.setItem(0, spawnerItem);
 			inventory.setItem(4, performUpgradeItem);
 			int passes = -1;
@@ -233,7 +172,7 @@ public class PlayerEventHandler implements Listener {
 				List<String> lore = new ArrayList<String>();
 				ItemStack item;
 				if (upgradeCount >= passes) {
-					item = $.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select spawner upgrade #" + passes);
+					item = Link$.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select spawner upgrade #" + passes);
 					if (passes == selectedUpgrade) {
 						if (CraftGo.Player.getProtocolVersion(player) > 314) {
 							item.addUnsafeEnchantment(Enchantment.BINDING_CURSE, 1);
@@ -243,11 +182,11 @@ public class PlayerEventHandler implements Listener {
 						lore.add(ChatColor.RESET + "This is already your preferred upgrade.");
 					}
 				} else {
-					item = $.createMaterial(Material.IRON_BARS, prefix + "This spawner upgrade is locked :(");
+					item = Link$.createMaterial(Material.IRON_BARS, prefix + "This spawner upgrade is locked :(");
 				}
 				lore.add(ChatColor.GREEN + "Spawning rate " + ChatColor.RED + "+" + (passes * 15) + "%");
 				if (lore.size() > 0)
-					item = $.addLore(item, lore.toArray(new String[0]));
+					item = Link$.addLore(item, lore.toArray(new String[0]));
 				inventory.setItem(i, item);
 			}
 			player.openInventory(inventory);
@@ -263,59 +202,59 @@ public class PlayerEventHandler implements Listener {
 			invSize = 27;
 		Inventory inventory = Bukkit.createInventory(null, invSize, "Select your preferred team.");
 		String prefix = ChatColor.RESET + "" + ChatColor.BOLD;
-		ItemStack a = $.createMaterial(Material.REDSTONE, prefix + "Select the " + ChatColor.ITALIC + "No Team " + prefix + "team.");
+		ItemStack a = Link$.createMaterial(Material.REDSTONE, prefix + "Select the " + ChatColor.ITALIC + "No Team " + prefix + "team.");
 		if (sfPlayer.getTeamValue() == $.Skyfight.Team.NO_TEAM) {
 			if (CraftGo.Player.getProtocolVersion(player) > 314) {
-				a = $.addEnchant(a, new EnchantInfo(Enchantment.BINDING_CURSE, 1));
+				a = Link$.addEnchant(a, new EnchantInfo(Enchantment.BINDING_CURSE, 1));
 			} else {
-				a = $.addEnchant(a, new EnchantInfo(Enchantment.PROTECTION_ENVIRONMENTAL, 1));
+				a = Link$.addEnchant(a, new EnchantInfo(Enchantment.PROTECTION_ENVIRONMENTAL, 1));
 			}
-			a = $.addLore(a, new String[]{ChatColor.RESET + "This is already your preferred team."});
+			a = Link$.addLore(a, new String[]{ChatColor.RESET + "This is already your preferred team."});
 		}
-		ItemStack b = $.addLeatherColor($.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select the " + ChatColor.BLUE + "Blue " + prefix + "team."), Color.BLUE);
+		ItemStack b = Link$.addLeatherColor(Link$.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select the " + ChatColor.BLUE + "Blue " + prefix + "team."), Color.BLUE);
 		if (sfPlayer.getTeamValue() == $.Skyfight.Team.BLUE) {
 			if (CraftGo.Player.getProtocolVersion(player) > 314) {
-				b = $.addEnchant(b, new EnchantInfo(Enchantment.BINDING_CURSE, 1));
+				b = Link$.addEnchant(b, new EnchantInfo(Enchantment.BINDING_CURSE, 1));
 			} else {
-				b = $.addEnchant(b, new EnchantInfo(Enchantment.PROTECTION_ENVIRONMENTAL, 1));
+				b = Link$.addEnchant(b, new EnchantInfo(Enchantment.PROTECTION_ENVIRONMENTAL, 1));
 			}
-			b = $.addLore(b, new String[]{ChatColor.RESET + "This is already your preferred team."});
+			b = Link$.addLore(b, new String[]{ChatColor.RESET + "This is already your preferred team."});
 		}
-		ItemStack c = $.addLeatherColor($.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select the " + ChatColor.RED + "Red " + prefix + "team."), Color.RED);
+		ItemStack c = Link$.addLeatherColor(Link$.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select the " + ChatColor.RED + "Red " + prefix + "team."), Color.RED);
 		if (sfPlayer.getTeamValue() == $.Skyfight.Team.RED) {
 			if (CraftGo.Player.getProtocolVersion(player) > 314) {
-				c = $.addEnchant(c, new EnchantInfo(Enchantment.BINDING_CURSE, 1));
+				c = Link$.addEnchant(c, new EnchantInfo(Enchantment.BINDING_CURSE, 1));
 			} else {
-				c = $.addEnchant(c, new EnchantInfo(Enchantment.PROTECTION_ENVIRONMENTAL, 1));
+				c = Link$.addEnchant(c, new EnchantInfo(Enchantment.PROTECTION_ENVIRONMENTAL, 1));
 			}
-			c = $.addLore(c, new String[]{ChatColor.RESET + "This is already your preferred team."});
+			c = Link$.addLore(c, new String[]{ChatColor.RESET + "This is already your preferred team."});
 		}
-		ItemStack d = $.addLeatherColor($.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select the " + ChatColor.GREEN + "Green " + prefix + "team."), Color.GREEN);
+		ItemStack d = Link$.addLeatherColor(Link$.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select the " + ChatColor.GREEN + "Green " + prefix + "team."), Color.GREEN);
 		if (sfPlayer.getTeamValue() == $.Skyfight.Team.GREEN) {
 			if (CraftGo.Player.getProtocolVersion(player) > 314) {
-				d = $.addEnchant(d, new EnchantInfo(Enchantment.BINDING_CURSE, 1));
+				d = Link$.addEnchant(d, new EnchantInfo(Enchantment.BINDING_CURSE, 1));
 			} else {
-				d = $.addEnchant(d, new EnchantInfo(Enchantment.PROTECTION_ENVIRONMENTAL, 1));
+				d = Link$.addEnchant(d, new EnchantInfo(Enchantment.PROTECTION_ENVIRONMENTAL, 1));
 			}
-			d = $.addLore(d, new String[]{ChatColor.RESET + "This is already your preferred team."});
+			d = Link$.addLore(d, new String[]{ChatColor.RESET + "This is already your preferred team."});
 		}
-		ItemStack e = $.addLeatherColor($.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select the " + ChatColor.YELLOW + "Yellow " + prefix + "team."), Color.YELLOW);
+		ItemStack e = Link$.addLeatherColor(Link$.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select the " + ChatColor.YELLOW + "Yellow " + prefix + "team."), Color.YELLOW);
 		if (sfPlayer.getTeamValue() == $.Skyfight.Team.YELLOW) {
 			if (CraftGo.Player.getProtocolVersion(player) > 314) {
-				e = $.addEnchant(e, new EnchantInfo(Enchantment.BINDING_CURSE, 1));
+				e = Link$.addEnchant(e, new EnchantInfo(Enchantment.BINDING_CURSE, 1));
 			} else {
-				e = $.addEnchant(e, new EnchantInfo(Enchantment.PROTECTION_ENVIRONMENTAL, 1));
+				e = Link$.addEnchant(e, new EnchantInfo(Enchantment.PROTECTION_ENVIRONMENTAL, 1));
 			}
-			e = $.addLore(e, new String[]{ChatColor.RESET + "This is already your preferred team."});
+			e = Link$.addLore(e, new String[]{ChatColor.RESET + "This is already your preferred team."});
 		}
-		ItemStack f = $.addLeatherColor($.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select the " + ChatColor.LIGHT_PURPLE + "Pink " + prefix + "team."), Color.fromRGB(255, 105, 180));
+		ItemStack f = Link$.addLeatherColor(Link$.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select the " + ChatColor.LIGHT_PURPLE + "Pink " + prefix + "team."), Color.fromRGB(255, 105, 180));
 		if (sfPlayer.getTeamValue() == $.Skyfight.Team.PINK) {
 			if (CraftGo.Player.getProtocolVersion(player) > 314) {
-				f = $.addEnchant(f, new EnchantInfo(Enchantment.BINDING_CURSE, 1));
+				f = Link$.addEnchant(f, new EnchantInfo(Enchantment.BINDING_CURSE, 1));
 			} else {
-				f = $.addEnchant(f, new EnchantInfo(Enchantment.PROTECTION_ENVIRONMENTAL, 1));
+				f = Link$.addEnchant(f, new EnchantInfo(Enchantment.PROTECTION_ENVIRONMENTAL, 1));
 			}
-			f = $.addLore(f, new String[]{ChatColor.RESET + "This is already your preferred team."});
+			f = Link$.addLore(f, new String[]{ChatColor.RESET + "This is already your preferred team."});
 		}
 		inventory.setItem(4, a);
 		inventory.setItem(9, b);
@@ -360,7 +299,7 @@ public class PlayerEventHandler implements Listener {
 					Server.getNpcConfig().getData().set("npc." + entity.getUniqueId().toString(), null);
 					Server.getNpcConfig().saveData();
 					entity.remove();
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The custom npc has been removed.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The custom npc has been removed.");
 					event.setCancelled(true);
 				}
 			} else if (Server.getNpcConfig().getData().contains("npc." + entity.getUniqueId().toString())) {
@@ -386,14 +325,14 @@ public class PlayerEventHandler implements Listener {
 									Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "spoof-vote " + player.getName() + " 1");
 									Server.getPlugin().getConfig().set(path + ".parkour.timestamp", System.currentTimeMillis());
 									Server.getPlugin().saveConfig();
-									player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have collected your daily reward.");
+									player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have collected your daily reward.");
 								} else {
 									long secondsToWait = (43200000L - diff) / 1000L;
-									player.sendMessage($.Legacy.tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + $.formatTime(secondsToWait) + ChatColor.GRAY + " before using this again.");
+									player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + Link$.formatTime(secondsToWait) + ChatColor.GRAY + " before using this again.");
 								}
 							default:
 								if (player.isOp())
-									player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Invalid data was assigned to this npc.");
+									player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Invalid data was assigned to this npc.");
 								return;
 						}
 					}
@@ -437,7 +376,7 @@ public class PlayerEventHandler implements Listener {
 							}, 20L);
 							if (player.getGameMode() == GameMode.SURVIVAL) {
 								if (itm.getAmount() < 2) {
-									player.getInventory().setItemInMainHand($.createMaterial(Material.AIR));
+									player.getInventory().setItemInMainHand(Link$.createMaterial(Material.AIR));
 								} else {
 									itm.setAmount(itm.getAmount() - 1);
 									player.getInventory().setItemInMainHand(itm);
@@ -458,12 +397,6 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if (Server.getAntiCheat().antiafk.lastPlayerLocation.containsKey(player.getUniqueId()) && Server.getAntiCheat().antiafk.lastPlayerLocation.get(player.getUniqueId()).getWorld().getName().equals(player.getWorld().getName())) {
-			if (!player.isInsideVehicle() && Server.getAntiCheat().antiafk.lastPlayerLocation.get(player.getUniqueId()).distance(player.getLocation()) > 1.25) {
-				if (Server.getAntiCheat().antiafk.lackingActivityMinutes.containsKey(player.getUniqueId()))
-					Server.getAntiCheat().antiafk.lackingActivityMinutes.remove(player.getUniqueId());
-			}
-		}
 		if (event.getHand() == EquipmentSlot.OFF_HAND) {
 			return;
 		}
@@ -488,8 +421,8 @@ public class PlayerEventHandler implements Listener {
 						}
 						if (s[0].equals("Buy") || s[0].equals("Sell") || s[0].equals("Enchant") || s[0].equals("Repair") || s[1].equals("Kit")) {
 							if (!player.isOp()) {
-								player.sendMessage($.Legacy.tag + ChatColor.RED + "You do not have permission to activate this shop.");
-								$.playLackPermissionMessage(player);
+								player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "You do not have permission to activate this shop.");
+								Link$.playLackPermissionMessage(player);
 								event.setCancelled(true);
 								return;
 							}
@@ -497,11 +430,11 @@ public class PlayerEventHandler implements Listener {
 							String code = blockLoc.getWorld().getName() + String.valueOf(blockLoc.getBlockX()) + String.valueOf(blockLoc.getBlockY()) + String.valueOf(blockLoc.getBlockZ());
 							Server.getSignConfig().getData().set("signs." + code, 1);
 							Server.getSignConfig().saveData();
-							player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Successfully processed shop " + ChatColor.RED + code + ChatColor.GRAY + ".");
-							player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Type: " + ChatColor.RED + s[0] + " Shop");
-							player.sendMessage($.Legacy.tag + ChatColor.GRAY + "ID: " + ChatColor.RED + s[1]);
-							player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Price: " + ChatColor.RED + "$" + s[2]);
-							player.sendMessage($.Legacy.tag + ChatColor.GRAY + ": " + ChatColor.RED + s[3]);
+							player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Successfully processed shop " + ChatColor.RED + code + ChatColor.GRAY + ".");
+							player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Type: " + ChatColor.RED + s[0] + " Shop");
+							player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "ID: " + ChatColor.RED + s[1]);
+							player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Price: " + ChatColor.RED + "$" + s[2]);
+							player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + ": " + ChatColor.RED + s[3]);
 							if (ChatColor.stripColor(s[1]).equals("Kit")) {
 								sign.setLine(1, ChatColor.DARK_BLUE + s[1]);
 								sign.update();
@@ -514,7 +447,7 @@ public class PlayerEventHandler implements Listener {
 								if (Material.getMaterial(materialName) == null) {
 									Material legacyMaterial;
 									if (!((legacyMaterial = Material.matchMaterial(materialName, true)) == null)) {
-										sign.setLine(1, $.formatMaterial(legacyMaterial));
+										sign.setLine(1, Link$.formatMaterial(legacyMaterial));
 										sign.update();
 									}
 								}
@@ -529,8 +462,8 @@ public class PlayerEventHandler implements Listener {
 				}
 				if (Server.getSignEditParam().containsKey(player)) {
 					SignInfo info = Server.getSignEditParam().get(player);
-					int rank = $.getRankId(player);
-					int donorRank = $.getDonorRankId(player);
+					int rank = Link$.getRankId(player);
+					int donorRank = Link$.getDonorRankId(player);
 					if (player.isOp() || rank > -1 || donorRank < -2) {
 						info.setText(ChatColor.translateAlternateColorCodes('&', info.getText()));
 					}
@@ -665,23 +598,23 @@ public class PlayerEventHandler implements Listener {
 				}
 			} else if (Server.getHub().contains(player.getUniqueId()) && itm.getItemMeta().hasDisplayName()) {
 				if (itm.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Server Selector")) {
-					ItemStack skyfight = $.createMaterial(Material.BOW, 1, ChatColor.LIGHT_PURPLE + "SkyFight");
-					ItemStack kitpvp = $.createMaterial(Material.IRON_SWORD, 1, ChatColor.LIGHT_PURPLE + "KitPvP");
-					ItemStack survivalFactions = $.createMaterial(Material.STONE_PICKAXE, 1, ChatColor.LIGHT_PURPLE + "Survival / Factions");
-					ItemStack creative = $.createMaterial(Material.GRASS_BLOCK, 1, ChatColor.LIGHT_PURPLE + "Creative");
-					ItemStack skyblock = $.createMaterial(Material.OAK_SAPLING, 1, ChatColor.LIGHT_PURPLE + "Skyblock");
+					ItemStack skyfight = Link$.createMaterial(Material.BOW, 1, ChatColor.LIGHT_PURPLE + "SkyFight");
+					ItemStack kitpvp = Link$.createMaterial(Material.IRON_SWORD, 1, ChatColor.LIGHT_PURPLE + "KitPvP");
+					ItemStack survivalFactions = Link$.createMaterial(Material.STONE_PICKAXE, 1, ChatColor.LIGHT_PURPLE + "Survival / Factions");
+					ItemStack creative = Link$.createMaterial(Material.GRASS_BLOCK, 1, ChatColor.LIGHT_PURPLE + "Creative");
+					ItemStack skyblock = Link$.createMaterial(Material.OAK_SAPLING, 1, ChatColor.LIGHT_PURPLE + "Skyblock");
 					kitpvp = CraftGo.ItemStack.removeAttributes(kitpvp);
 					survivalFactions = CraftGo.ItemStack.removeAttributes(survivalFactions);
-					skyfight = $.addLore(skyfight, new String[]{ChatColor.GOLD + "/server skyfight"});
-					kitpvp = $.addLore(kitpvp, new String[]{ChatColor.GOLD + "/server kitpvp"});
-					creative = $.addLore(creative, new String[]{ChatColor.GOLD + "/server creative"});
-					skyblock = $.addLore(skyblock, new String[]{ChatColor.GOLD + "/server skyblock"});
-					ItemStack factions = $.createMaterial(Material.DIAMOND_SWORD, 1, ChatColor.LIGHT_PURPLE + "Factions");
-					ItemStack survival = $.createMaterial(Material.STONE_PICKAXE, 1, ChatColor.LIGHT_PURPLE + "Survival");
+					skyfight = Link$.addLore(skyfight, new String[]{ChatColor.GOLD + "/server skyfight"});
+					kitpvp = Link$.addLore(kitpvp, new String[]{ChatColor.GOLD + "/server kitpvp"});
+					creative = Link$.addLore(creative, new String[]{ChatColor.GOLD + "/server creative"});
+					skyblock = Link$.addLore(skyblock, new String[]{ChatColor.GOLD + "/server skyblock"});
+					ItemStack factions = Link$.createMaterial(Material.DIAMOND_SWORD, 1, ChatColor.LIGHT_PURPLE + "Factions");
+					ItemStack survival = Link$.createMaterial(Material.STONE_PICKAXE, 1, ChatColor.LIGHT_PURPLE + "Survival");
 					survival = CraftGo.ItemStack.removeAttributes(survival);
 					factions = CraftGo.ItemStack.removeAttributes(factions);
-					survival = $.addLore(survival, new String[]{ChatColor.GOLD + "/server survival"});
-					factions = $.addLore(factions, new String[]{ChatColor.GOLD + "/server factions"});
+					survival = Link$.addLore(survival, new String[]{ChatColor.GOLD + "/server survival"});
+					factions = Link$.addLore(factions, new String[]{ChatColor.GOLD + "/server factions"});
 					int invSize = 9;
 					if (CraftGo.Player.isPocketPlayer(player))
 						invSize = 27;
@@ -739,7 +672,7 @@ public class PlayerEventHandler implements Listener {
 							}, 20L);
 							event.setCancelled(true);
 							if (itm.getAmount() < 2) {
-								player.getInventory().setItemInMainHand($.createMaterial(Material.AIR));
+								player.getInventory().setItemInMainHand(Link$.createMaterial(Material.AIR));
 							} else {
 								itm.setAmount(itm.getAmount() - 1);
 								player.getInventory().setItemInMainHand(itm);
@@ -793,7 +726,7 @@ public class PlayerEventHandler implements Listener {
 									}
 								}, 20L);
 								if (itm.getAmount() < 2) {
-									player.getInventory().setItemInMainHand($.createMaterial(Material.AIR));
+									player.getInventory().setItemInMainHand(Link$.createMaterial(Material.AIR));
 								} else {
 									itm.setAmount(itm.getAmount() - 1);
 									player.getInventory().setItemInMainHand(itm);
@@ -801,20 +734,20 @@ public class PlayerEventHandler implements Listener {
 								player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
 								CraftExplosion explosion = new CraftExplosion(player.getLocation(), 0.4F, false);
 								explosion.explodeNaturally();
-								Server.getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(5.0));
+								$.getLinkServer().getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(5.0));
 							}
 						}
 						return;
 					} else {
 						if (player.getGameMode() == GameMode.SURVIVAL && !Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
 							if (itm.getAmount() < 2) {
-								player.getInventory().setItemInMainHand($.createMaterial(Material.AIR));
+								player.getInventory().setItemInMainHand(Link$.createMaterial(Material.AIR));
 							} else {
 								itm.setAmount(itm.getAmount() - 1);
 								player.getInventory().setItemInMainHand(itm);
 							}
 							player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
-							Server.getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(2.5));
+							$.getLinkServer().getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(2.5));
 						}
 						return;
 					}
@@ -823,7 +756,7 @@ public class PlayerEventHandler implements Listener {
 					String[] lore = itm.getItemMeta().getLore().toArray(new String[0]);
 					if (lore[0].equals("Using this wand, you will gain defined potion effects.")) {
 						if (itm.getAmount() <= 1) {
-							player.getInventory().setItemInMainHand($.createMaterial(Material.AIR));
+							player.getInventory().setItemInMainHand(Link$.createMaterial(Material.AIR));
 						} else {
 							ItemStack old = new ItemStack(itm.getType(), itm.getAmount() - 1);
 							player.getInventory().setItemInMainHand(old);
@@ -864,7 +797,7 @@ public class PlayerEventHandler implements Listener {
 								entityName = entityName.substring(0, entityName.indexOf(" "));
 								if (player.getGameMode() == GameMode.SURVIVAL) {
 									if (itm.getAmount() < 2) {
-										player.getInventory().setItemInMainHand($.createMaterial(Material.AIR));
+										player.getInventory().setItemInMainHand(Link$.createMaterial(Material.AIR));
 									} else {
 										itm.setAmount(itm.getAmount() - 1);
 										player.getInventory().setItemInMainHand(itm);
@@ -929,9 +862,7 @@ public class PlayerEventHandler implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		if (Server.getAntiCheat().antiafk.lackingActivityMinutes.containsKey(player.getUniqueId()))
-			Server.getAntiCheat().antiafk.lackingActivityMinutes.remove(player.getUniqueId());
-		if ($.getRankId(player) > -1 && Server.getStaffChatPlayers().contains(player.getUniqueId())) {
+		if (Link$.getRankId(player) > -1 && Server.getStaffChatPlayers().contains(player.getUniqueId())) {
 			Logger.info("[sc] " + ChatColor.stripColor(player.getDisplayName()) + ": " + event.getMessage());
 			event.setCancelled(true);
 			return;
@@ -939,7 +870,7 @@ public class PlayerEventHandler implements Listener {
 		if (Server.getMarriageChatPlayers().contains(player.getUniqueId()) && $.Marriage.getPlayerMarriageId(player) > 0) {
 			String message = "[mc] " + player.getDisplayName().replace(player.getName(), ChatColor.LIGHT_PURPLE + player.getName()) + ChatColor.DARK_GRAY + ": " + ChatColor.RESET + event.getMessage();
 			if ($.Marriage.getPlayerSwearFilter(player))
-				message = Server.getAntiCheat().processAntiSwear(player, message);
+				message = $.getLinkServer().getAntiCheat().processAntiSwear(player, message);
 			message = ChatColor.translateAlternateColorCodes('&', message);
 			OfflinePlayer targetPlayer = $.Marriage.getMarriedOfflinePlayer(player);
 			if (targetPlayer.isOnline()) {
@@ -952,7 +883,7 @@ public class PlayerEventHandler implements Listener {
 					targetPlayer.getPlayer().sendMessage(message);
 				}
 				player.sendMessage(message);
-				Logger.info($.italicGray + ChatColor.stripColor(message));
+				Logger.info(Link$.italicGray + ChatColor.stripColor(message));
 			} else {
 				player.sendMessage("Target player is not online to chat right now.");
 				player.performCommand("marry chat");
@@ -962,7 +893,7 @@ public class PlayerEventHandler implements Listener {
 		}
 		for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 			if (!onlinePlayer.getName().equals(player.getName())) {
-				int rankID = $.getRankId(onlinePlayer);
+				int rankID = Link$.getRankId(onlinePlayer);
 				if (onlinePlayer.isOp() || rankID > -1) {
 					onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.ENTITY_CHICKEN_EGG, 1, 1);
 				} else if (event.getMessage().contains(onlinePlayer.getName())) {
@@ -973,12 +904,12 @@ public class PlayerEventHandler implements Listener {
 		String world = player.getWorld().getName();
 		String msg = ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.RESET + player.getDisplayName() + ChatColor.RESET + " " + '\u00BB' + " " + event.getMessage();
 		if (Server.getMutedPlayers().contains(player.getUniqueId())) {
-			player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot chat while you are muted.");
-			msg = ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.RESET + player.getDisplayName() + ChatColor.RESET + " " + '\u00BB' + " " + $.italicGray + event.getMessage();
+			player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot chat while you are muted.");
+			msg = ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.RESET + player.getDisplayName() + ChatColor.RESET + " " + '\u00BB' + " " + Link$.italicGray + event.getMessage();
 		}
-		msg = Server.getAntiCheat().processAntiSwear(player, msg);
-		int rank = $.getRankId(player);
-		int donorRank = $.getDonorRankId(player);
+		msg = $.getLinkServer().getAntiCheat().processAntiSwear(player, msg);
+		int rank = Link$.getRankId(player);
+		int donorRank = Link$.getDonorRankId(player);
 		if (player.isOp() || rank > -1 || donorRank < -2) {
 			msg = ChatColor.translateAlternateColorCodes('&', msg);
 		}
@@ -988,22 +919,23 @@ public class PlayerEventHandler implements Listener {
 		if (!isCancelled) {
 			boolean muted = Server.getMutedPlayers().contains(player.getUniqueId());
 			if (!muted) {
-				String rankName = WordUtils.capitalize($.toRankDisplayName($.getRank(player)));
+				String rankName = WordUtils.capitalize(Link$.toRankDisplayName(Link$.getRank(player)));
 				if (rankName.equals("Youtube"))
 					rankName = "YouTube";
-				if ($.isPrefixedRankingEnabled()) {
+				if (Link$.isPrefixedRankingEnabled()) {
 					Server.getDiscordBot().broadcast(
-							"**" + rankName + "** " + player.getName() + " " + '\u00BB' + " " + Server.getAntiCheat().processAntiSwear(player, event.getMessage(), false, true)
+							"**" + rankName + "** " + player.getName() + " " + '\u00BB' + " " + $.getLinkServer().getAntiCheat().processAntiSwear(player, event.getMessage(), false, true)
 							, Channel.SERVER_CHAT);
 				} else {
 					Server.getDiscordBot().broadcast(
-							"**" + player.getName() + "** " + '\u00BB' + " " + Server.getAntiCheat().processAntiSwear(player, event.getMessage(), false, true)
+							"**" + player.getName() + "** " + '\u00BB' + " " + $.getLinkServer().getAntiCheat().processAntiSwear(player, event.getMessage(), false, true)
 							, Channel.SERVER_CHAT);
 				}
+				$.getLinkServer().getRedisListener().broadcastMessage(msg);
 			}
 			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 				if (muted) {
-					int rankID = $.getRankId(onlinePlayer);
+					int rankID = Link$.getRankId(onlinePlayer);
 					if (onlinePlayer.isOp() || rankID > -1) {
 						onlinePlayer.sendMessage(msg);
 					}
@@ -1099,7 +1031,7 @@ public class PlayerEventHandler implements Listener {
 			if (ld.isAfter(LocalDate.now())) {
 				String disallowMsg = disallowMessage.toString();
 				event.disallow(PlayerLoginEvent.Result.KICK_OTHER, disallowMsg);
-				Logger.info($.italicGray + "Server: Disallow " + event.getPlayer().getName() + " '" + disallowMsg + "'", false);
+				Logger.info(Link$.italicGray + "Server: Disallow " + event.getPlayer().getName() + " '" + disallowMsg + "'", false);
 			}
 		}
 	}
@@ -1162,7 +1094,7 @@ public class PlayerEventHandler implements Listener {
 			} else {
 				Server.getHideLoginMessage().put(Integer.valueOf(uuidHash), Long.valueOf(Instant.now().getEpochSecond()) + 30);
 			}
-			Logger.info($.italicGray + "Server: Disallow " + event.getName() + " '" + kickMessage + "'", consoleOnly);
+			Logger.info(Link$.italicGray + "Server: Disallow " + event.getName() + " '" + kickMessage + "'", consoleOnly);
 		} else {
 			if (Server.getHideLoginMessage().containsKey(Integer.valueOf(uuidHash)))
 				Server.getHideLoginMessage().remove(Integer.valueOf(uuidHash));
@@ -1270,13 +1202,14 @@ public class PlayerEventHandler implements Listener {
 			ex.printStackTrace();
 		}
 		if (CraftGo.Player.getUUID(player.getName(), false) == null) {
-			String message = $.italicGray + "Player " + player.getName() + " is using an offline/cracked account";
-			Logger.info(message);
+			String message = Link$.italicGray + "Player " + player.getName() + " is using an offline/cracked account";
+			Bukkit.broadcastMessage(message);
+			$.getLinkServer().getRedisListener().broadcastMessage(message);
 			Server.getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 					, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 		}
-		if (!$.isPluginEnabled("AuthMe")) {
+		if (!Link$.isPluginEnabled("AuthMe")) {
 			String joinMessage = Server.getDefaultJoinMessage().replace("{player}", player.getName());
 			PlayerAuthenticateEvent authEvent = new PlayerAuthenticateEvent(player, joinMessage);
 			Bukkit.getPluginManager().callEvent(authEvent);
@@ -1314,14 +1247,15 @@ public class PlayerEventHandler implements Listener {
 								int year = cal.get(Calendar.YEAR);
 								int month = cal.get(Calendar.MONTH);
 								int day = cal.get(Calendar.DAY_OF_MONTH);
-								String message = $.italicGray + "Player " + player.getName() + " previously logged in on " + $.formatMonthIdAbbrev(month) + " " + day + $.formatDayOfMonthSuffix(day) + " " + year;
+								String message = Link$.italicGray + "Player " + player.getName() + " previously logged in on " + Link$.formatMonthIdAbbrev(month) + " " + day + Link$.formatDayOfMonthSuffix(day) + " " + year;
 								Bukkit.broadcastMessage(message);
+								$.getLinkServer().getRedisListener().broadcastMessage(message);
 								Server.getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 										, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 								if (Server.getSessionManager().verifySession(player) && dailyAuth) {
 									if (session.isDiscarded()) {
-										player.sendMessage($.italicGray + "Your session was invalidated, please login to your account again.");
+										player.sendMessage(Link$.italicGray + "Your session was invalidated, please login to your account again.");
 									} else {
 										try {
 											if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
@@ -1337,15 +1271,17 @@ public class PlayerEventHandler implements Listener {
 								}
 							}
 							if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString())) {
-								String message = $.italicGray + "Player " + player.getName() + " has yet to register for the server";
+								String message = Link$.italicGray + "Player " + player.getName() + " has yet to register for the server";
 								Bukkit.broadcastMessage(message);
+								$.getLinkServer().getRedisListener().broadcastMessage(message);
 								Server.getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 										, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
 							}
 							if (Server.getSessionManager().getStoredSession(player, hostAddr) == null) {
-								String message = $.italicGray + "Player " + player.getName() + " has yet to register new session";
+								String message = Link$.italicGray + "Player " + player.getName() + " has yet to register new session";
 								Bukkit.broadcastMessage(message);
+								$.getLinkServer().getRedisListener().broadcastMessage(message);
 								Server.getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 										, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
@@ -1402,11 +1338,11 @@ public class PlayerEventHandler implements Listener {
 		String displayName = player.getDisplayName();
 		String path = "config." + player.getUniqueId().toString();
 		String ipAddress = player.getAddress().getAddress().getHostAddress().replace(".", "x");
-		Server.getSessionManager().updateSession(player, new Session(SessionManager.encodeHex(ipAddress.replace("x", ".")).toCharArray(), player, System.currentTimeMillis()));
+		Server.getSessionManager().updateSession(player, new Session(LinkSessionManager.encodeHex(ipAddress.replace("x", ".")).toCharArray(), player, System.currentTimeMillis()));
 		if (!Server.getPlugin().getConfig().contains(path)) {
 			Server.getPlugin().getConfig().set(path + ".username", displayName);
-			Server.getSqlDatabase().set("rank", player.getUniqueId().toString(), $.validRanks.get(0));
-			Server.getSqlDatabase().set("donorRank", player.getUniqueId().toString(), $.validDonorRanks.get(0));
+			$.getLinkServer().getSqlDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
+			$.getLinkServer().getSqlDatabase().set("donorRank", player.getUniqueId().toString(), Link$.validDonorRanks.get(0));
 			Server.getPlugin().getConfig().set(path + ".marry.marriedTo", "0");
 			Server.getPlugin().getConfig().set(path + ".marry.marriageId", "0");
 			Server.getPlugin().getConfig().set(path + ".marry.marriedPvp", "true");
@@ -1438,11 +1374,12 @@ public class PlayerEventHandler implements Listener {
 			Server.getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 					, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+			$.getLinkServer().getRedisListener().broadcastMessage(message);
 		}
 		Server.getPlugin().getConfig().set(path + ".ip", ipAddress);
 		Server.getPlugin().getConfig().set("address." + ipAddress + "." + player.getUniqueId().toString(), "0");
-		if ($.isPrefixedRankingEnabled())
-			$.flashPlayerDisplayName(player);
+		if (Link$.isPrefixedRankingEnabled())
+			Link$.flashPlayerDisplayName(player);
 		if ($.isWelcomeMessageEnabled()) {
 			player.sendMessage(ChatColor.GRAY + "/ Welcome to the server " + ChatColor.RED + player.getName());
 			player.sendMessage(ChatColor.GRAY + "/ Type " + ChatColor.RED + "/help" + ChatColor.GRAY + " for a list of authentic commands.");
@@ -1455,12 +1392,12 @@ public class PlayerEventHandler implements Listener {
 				long timeTillExpire = (timestamp + Server.getSkinStorage().TIME_EXPIRE_MILLISECOND) - System.currentTimeMillis();
 				if (timeTillExpire < 0)
 					timeTillExpire = Server.getSkinStorage().TIME_EXPIRE_MILLISECOND;
-				player.sendMessage("► Your skin cache will naturally expire in " + $.formatTime((int) (timeTillExpire / 1000)) + ".");
+				player.sendMessage("► Your skin cache will naturally expire in " + Link$.formatTime((int) (timeTillExpire / 1000)) + ".");
 				player.sendMessage("If you want to update your skin now, simply use /updateskin.");
 			}
 		}
 		if (Server.getModeratingPlayers().containsKey(player.getUniqueId())) {
-			int rankID = $.getRankId(player);
+			int rankID = Link$.getRankId(player);
 			if (rankID > 0 || player.isOp()) {
 				player.sendMessage(ChatColor.RED + "Notice. " + ChatColor.GRAY + "You are currently still moderating the server.");
 			} else {
@@ -1516,23 +1453,23 @@ public class PlayerEventHandler implements Listener {
 				String uuid = offlineUUID.toString();
 				if (!Bukkit.getOnlineMode())
 					uuid = onlineUUID;
-				if (Server.getSqlDatabase().contains("playtime.total", uuid)) {
+				if ($.getLinkServer().getSqlDatabase().contains("playtime.total", uuid)) {
 					for (int day = 0; day <= 365; day++) {
-						if (Server.getSqlDatabase().contains("playtime.dayOfYear." + day, uuid)) {
-							String value = Server.getSqlDatabase().getString("playtime.dayOfYear." + day, uuid);
-							Server.getSqlDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
-							Server.getSqlDatabase().set("playtime.dayOfYear." + day, uuid, null);
+						if ($.getLinkServer().getSqlDatabase().contains("playtime.dayOfYear." + day, uuid)) {
+							String value = $.getLinkServer().getSqlDatabase().getString("playtime.dayOfYear." + day, uuid);
+							$.getLinkServer().getSqlDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
+							$.getLinkServer().getSqlDatabase().set("playtime.dayOfYear." + day, uuid, null);
 						}
 					}
 					{
-						String value = Server.getSqlDatabase().getString("playtime.total", uuid);
-						Server.getSqlDatabase().set("playtime.total", player.getUniqueId().toString(), value);
-						Server.getSqlDatabase().set("playtime.total", uuid, null);
+						String value = $.getLinkServer().getSqlDatabase().getString("playtime.total", uuid);
+						$.getLinkServer().getSqlDatabase().set("playtime.total", player.getUniqueId().toString(), value);
+						$.getLinkServer().getSqlDatabase().set("playtime.total", uuid, null);
 					}
 					{
-						String value = Server.getSqlDatabase().getString("playtime.lastKnownDayOfYear", uuid);
-						Server.getSqlDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
-						Server.getSqlDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
+						String value = $.getLinkServer().getSqlDatabase().getString("playtime.lastKnownDayOfYear", uuid);
+						$.getLinkServer().getSqlDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
+						$.getLinkServer().getSqlDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
 					}
 				}
 				if (Server.getSurvivalConfig().getData().contains("homes." + uuid)) {
@@ -1592,7 +1529,7 @@ public class PlayerEventHandler implements Listener {
 								if (!username.equals(player.getName())) {
 									if (nameChangeHistory.contains(username)) {
 										Server.getTransferAcceptPlayers().put(player.getUniqueId(), new SwitchUUIDString(UUID.fromString(uuid2), username));
-										player.sendMessage($.modernMsgPrefix + "Data from your old username, " + username + ", is ready to be transferred into your current username. This will overwrite all data on your current username. If you changed your name since the last time you played, this is normal and won't damage anything if you accept. Type /tfaccept to accept and transfer the data under your old username, or type /tfdeny to clear the data under the old username and stop future notifications like this.");
+										player.sendMessage(Link$.modernMsgPrefix + "Data from your old username, " + username + ", is ready to be transferred into your current username. This will overwrite all data on your current username. If you changed your name since the last time you played, this is normal and won't damage anything if you accept. Type /tfaccept to accept and transfer the data under your old username, or type /tfdeny to clear the data under the old username and stop future notifications like this.");
 										break;
 									}
 								}
@@ -1602,19 +1539,18 @@ public class PlayerEventHandler implements Listener {
 				}
 			}
 		});
-		Server.getPlaytimeManager().handle_JoinEvent(player);
 		Server.getDiscordBot().broadcast(
 				":heavy_plus_sign:" + ChatColor.stripColor(
 						event.getJoinMessage().replace(player.getName(), "**" + player.getName() + "**")
 				)
 				, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
 		);
+		$.getLinkServer().getRedisListener().broadcastMessage(event.getJoinMessage());
 	}
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		Server.getPlaytimeManager().handle_QuitEvent(player);
 		for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 			if (!onlinePlayer.getName().equals(player.getName())) {
 				onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.ENTITY_CHICKEN_EGG, 1, 1);
@@ -1641,6 +1577,7 @@ public class PlayerEventHandler implements Listener {
 			player.setHealth(0.0);
 			String message = Server.getPluginLabel() + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged out during combat.";
 			Bukkit.broadcastMessage(message);
+			$.getLinkServer().getRedisListener().broadcastMessage(message);
 			message = message.substring(message.indexOf(ChatColor.RED + ""));
 			Server.getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1695,11 +1632,12 @@ public class PlayerEventHandler implements Listener {
 				)
 				, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
 		);
-		if ($.isPluginEnabled("AuthMe")) {
+		if (Link$.isPluginEnabled("AuthMe")) {
 			if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString()) || !$.isAuthenticated(player)) {
 				if (!Server.getOnlineMode().getOrDefault(player.getUniqueId(), false)) {
-					String message = $.italicGray + "Player " + player.getName() + " has left without registering for this server";
+					String message = Link$.italicGray + "Player " + player.getName() + " has left without registering for this server";
 					Bukkit.broadcastMessage(message);
+					$.getLinkServer().getRedisListener().broadcastMessage(message);
 					Server.getDiscordBot().broadcast(
 							ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 							, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
@@ -1708,13 +1646,12 @@ public class PlayerEventHandler implements Listener {
 		}
 		if (Server.getHubScoreboardTitleIndex().containsKey(player.getUniqueId()))
 			Server.getHubScoreboardTitleIndex().remove(player.getUniqueId());
-		if (Server.getBarApiTitleIndex().containsKey(player.getUniqueId()))
-			Server.getBarApiTitleIndex().remove(player.getUniqueId());
 		for (Player op : Bukkit.getOnlinePlayers())
 			if (Server.getSkyfight().containsKey(op.getUniqueId()))
 				$.skyfightScoreboard.schedule(op, true);
 		if (Server.getOnlineMode().containsKey(player.getUniqueId()))
 			Server.getOnlineMode().remove(player.getUniqueId());
+		$.getLinkServer().getRedisListener().broadcastMessage(event.getQuitMessage());
 	}
 
 	@EventHandler
@@ -1756,7 +1693,7 @@ public class PlayerEventHandler implements Listener {
 			String processedName = "unspecified";
 			String entityName = "unspecified";
 			for (EntityType ty : EntityType.values()) {
-				entityName = $.capitalizeAll(ty.toString().toLowerCase(), "_");
+				entityName = Link$.capitalizeAll(ty.toString().toLowerCase(), "_");
 				if (message.contains(entityName)) {
 					processedName = entityName;
 					break;
@@ -1828,9 +1765,9 @@ public class PlayerEventHandler implements Listener {
 						$.Factions.setPlayerDeaths(player, currentPlayerDeaths + 1);
 					}
 					int dpk = currentPlayerKills / 50;
-					if ($.getRankId(k) >= -1 && 6 + dpk > 15)
+					if (Link$.getRankId(k) >= -1 && 6 + dpk > 15)
 						dpk = 15 - 6;
-					if ($.getRankId(k) < -1 && 6 + dpk > 30)
+					if (Link$.getRankId(k) < -1 && 6 + dpk > 30)
 						dpk = 30 - 6;
 					supplyCash = 6 + dpk;
 				}
@@ -1870,8 +1807,8 @@ public class PlayerEventHandler implements Listener {
 			if (!Server.getDoubleJumpCandidates().contains(player.getUniqueId()))
 				return;
 			Server.getDoubleJumpCandidates().remove(player.getUniqueId());
-			Server.getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(2.5));
-			Server.getAntiCheat().handleVelocity(player, new Vector(player.getVelocity().getX(), 1.1D, player.getVelocity().getZ()), true);
+			$.getLinkServer().getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(2.5));
+			$.getLinkServer().getAntiCheat().handleVelocity(player, new Vector(player.getVelocity().getX(), 1.1D, player.getVelocity().getZ()), true);
 			player.playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 1, 1);
 		}
 	}
@@ -1882,7 +1819,7 @@ public class PlayerEventHandler implements Listener {
 		if (Server.getFactions().contains(player.getUniqueId()) || Server.getSurvival().contains(player.getUniqueId()) || Server.getSkyblock().contains(player.getUniqueId())) {
 			if (event.getInventory().getType() == InventoryType.ENCHANTING) {
 				EnchantingInventory inventory = (EnchantingInventory) event.getInventory();
-				inventory.setItem(1, $.createMaterial(Material.LAPIS_LAZULI, 32));
+				inventory.setItem(1, Link$.createMaterial(Material.LAPIS_LAZULI, 32));
 			}
 		}
 	}
@@ -1892,7 +1829,7 @@ public class PlayerEventHandler implements Listener {
 		Player player = (Player) event.getWhoClicked();
 		ServerMinigame minigame = $.getCurrentMinigame(player);
 		String path = "config." + player.getUniqueId().toString();
-		event.setCancelled(Server.getPlaytimeManager().onInventoryClick(event));
+		event.setCancelled($.getLinkServer().getPlaytimeManager().onInventoryClick(event));
 		if (!(event.getCurrentItem() == null) && event.getInventory().getName().startsWith(ChatColor.MAGIC + ""))
 			event.setCancelled(true);
 		if (!(event.getCurrentItem() == null) && event.getInventory().getName().startsWith(ChatColor.BOLD + "") && event.getInventory().getName().endsWith("warnings"))
@@ -2009,11 +1946,11 @@ public class PlayerEventHandler implements Listener {
 							if (event.isRightClick()) {
 								try {
 									DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-									String materialName = $.formatMaterial(event.getCurrentItem().getType());
+									String materialName = Link$.formatMaterial(event.getCurrentItem().getType());
 									String subDomain = $.getMinigameDomain(player);
 									int cash = EconManager.retrieveCash(player, subDomain);
 									String tag = $.getMinigameTag(player);
-									String enchantName = $.formatEnchantment(String.valueOf(enchant.getEnchantment().getKey().getKey().trim()), tier);
+									String enchantName = Link$.formatEnchantment(String.valueOf(enchant.getEnchantment().getKey().getKey().trim()), tier);
 									if (cash >= price) {
 										ItemStack currentItem = player.getInventory().getItemInMainHand();
 										if (currentItem.getType() == Material.AIR || currentItem == null || currentItem.getType() == null) {
@@ -2079,7 +2016,7 @@ public class PlayerEventHandler implements Listener {
 							} else if (event.isRightClick()) {
 								try {
 									DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-									String materialName = $.formatMaterial(event.getCurrentItem().getType());
+									String materialName = Link$.formatMaterial(event.getCurrentItem().getType());
 									String subDomain = $.getMinigameDomain(player);
 									int cash = EconManager.retrieveCash(player, subDomain);
 									String tag = $.getMinigameTag(player);
@@ -2118,8 +2055,8 @@ public class PlayerEventHandler implements Listener {
 			String sessionKey = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
 			String playerName = ChatColor.stripColor(event.getInventory().getName().substring(0, event.getInventory().getName().indexOf("'")));
 			OfflinePlayer op = CraftGo.Player.getOfflinePlayer(playerName);
-			if (op.getName().equals(player.getName()) || player.isOp() || $.getRankId(player) > 2) {
-				if (player.isOp() || $.getRankId(player) > 2) {
+			if (op.getName().equals(player.getName()) || player.isOp() || Link$.getRankId(player) > 2) {
+				if (player.isOp() || Link$.getRankId(player) > 2) {
 					Server.getSessionManager().invalidateSession(player.getName(), op, sessionKey, true);
 				} else {
 					Server.getSessionManager().invalidateSession(player.getName(), op, sessionKey, false);
@@ -2252,7 +2189,7 @@ public class PlayerEventHandler implements Listener {
 						int currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
 						if (upgradeCount + 1 <= $.Kitpvp.DONOR_MAX_UPGRADE_VALUE) {
 							if (upgradeCount + 1 > $.Kitpvp.DEFAULT_MAX_UPGRADE_VALUE) {
-								if ($.getDonorRankId(player) > -2) {
+								if (Link$.getDonorRankId(player) > -2) {
 									player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
 									player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you need a donor rank to buy this upgrade.");
 									player.performCommand("store");
@@ -2316,7 +2253,7 @@ public class PlayerEventHandler implements Listener {
 			if (event.getCurrentItem() == null)
 				return;
 			Material material = Material.SPAWNER;
-			String materialName = $.formatMaterial(material);
+			String materialName = Link$.formatMaterial(material);
 			String domain = $.getMinigameDomain(player);
 			String tag = $.getMinigameTag(player);
 			EntityType entityType = CraftGo.MobSpawner.getStoredSpawnerItemEntityType(event.getCurrentItem());
@@ -2438,7 +2375,7 @@ public class PlayerEventHandler implements Listener {
 		ServerMinigame minigame = $.getCurrentMinigame(player);
 		if (event.getInventory().getType() == InventoryType.ENCHANTING) {
 			EnchantingInventory inventory = (EnchantingInventory) event.getInventory();
-			inventory.setItem(1, $.createMaterial(Material.AIR));
+			inventory.setItem(1, Link$.createMaterial(Material.AIR));
 			return;
 		}
 		if (event.getInventory().getName().startsWith("Select your preferred team.")) {
@@ -2488,7 +2425,7 @@ public class PlayerEventHandler implements Listener {
 			DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 			int singleAmount = 1;
 			int singlePrice = (int) $.getSinglePricing(amount, price);
-			String materialName = $.formatMaterial(material);
+			String materialName = Link$.formatMaterial(material);
 			ItemStack item = new ItemStack(material, singleAmount, (short) data);
 			if (material == Material.SPAWNER)
 				item = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), singleAmount);
@@ -2552,8 +2489,6 @@ public class PlayerEventHandler implements Listener {
 				if (damager.getWorld().getEnvironment() == Environment.NETHER)
 					event.setCancelled(false);
 			}
-			if (Server.getAntiCheat().antiafk.lackingActivityMinutes.containsKey(damager.getUniqueId()))
-				Server.getAntiCheat().antiafk.lackingActivityMinutes.remove(damager.getUniqueId());
 		}
 		if (event.getEntity() instanceof Player) {
 			Player player = (Player) event.getEntity();
@@ -2754,7 +2689,7 @@ public class PlayerEventHandler implements Listener {
 				Material faceDownType2 = event.getFrom().getBlock().getRelative(BlockFace.DOWN).getType();
 				if (!(faceDownType1 == faceDownType2)) {
 					if (faceDownType1 == Material.GLOWSTONE && event.getTo().clone().subtract(0, 2, 0).getBlock().getType() == Material.LAPIS_BLOCK && !(player.getGameMode() == GameMode.CREATIVE)) {
-						Server.getAntiCheat().handleVelocity(player, player.getVelocity().add(new Vector(0, 1.5, 0)));
+						$.getLinkServer().getAntiCheat().handleVelocity(player, player.getVelocity().add(new Vector(0, 1.5, 0)));
 					}
 				}
 			}
@@ -2933,7 +2868,7 @@ public class PlayerEventHandler implements Listener {
 					if (player.getLocation().getY() > 256 * 1.2)
 						vec.setY(-0.5);
 					if (blocksUntilGround > 5 || blocksUntilGround < 0) {
-						Server.getAntiCheat().handleVelocity(player, vec);
+						$.getLinkServer().getAntiCheat().handleVelocity(player, vec);
 					}
 				}
 				return;
@@ -2945,8 +2880,8 @@ public class PlayerEventHandler implements Listener {
 	public void onPreprocessCommand(PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();
 		String world = event.getPlayer().getWorld().getName();
-		if (Server.getAntiCheat().antiafk.lackingActivityMinutes.containsKey(player.getUniqueId()))
-			Server.getAntiCheat().antiafk.lackingActivityMinutes.remove(player.getUniqueId());
+		if ($.getLinkServer().getAntiCheat().antiafk.lackingActivityMinutes.containsKey(player.getUniqueId()))
+			$.getLinkServer().getAntiCheat().antiafk.lackingActivityMinutes.remove(player.getUniqueId());
 		String formattedAlertMessage = ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.RESET + player.getDisplayName() + ChatColor.RESET + " " + '\u00BB' + " " + ChatColor.GRAY + "" + ChatColor.ITALIC + event.getMessage();
 		String label = event.getMessage().split(" ")[0];
 		if (label.contains(":") && !player.isOp()) {
@@ -2960,9 +2895,9 @@ public class PlayerEventHandler implements Listener {
 		}
 		label = event.getMessage().split(" ")[0];
 		for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
-			int rankID = $.getRankId(otherPlayer);
+			int rankID = Link$.getRankId(otherPlayer);
 			if (otherPlayer.isOp() || rankID > -1) {
-				if (!Server.getSpectatingPlayers().contains(player.getUniqueId()) || (Server.getSpectatingPlayers().contains(player.getUniqueId()) && rankID > $.getRankId(player))) {
+				if (!Server.getSpectatingPlayers().contains(player.getUniqueId()) || (Server.getSpectatingPlayers().contains(player.getUniqueId()) && rankID > Link$.getRankId(player))) {
 					if (!$.isAuthenticationCommand(label)) {
 						otherPlayer.sendMessage(formattedAlertMessage);
 					}
@@ -2974,30 +2909,30 @@ public class PlayerEventHandler implements Listener {
 		}
 		if ($.isAuthenticationCommand(label) && !label.equalsIgnoreCase("/login")) {
 			if (player.getName().equalsIgnoreCase("Player")) {
-				player.sendMessage($.Legacy.tag + "You are not allowed to modify account information.");
+				player.sendMessage(Link$.Legacy.tag + "You are not allowed to modify account information.");
 				event.setCancelled(true);
 			}
 		}
 		if (label.equalsIgnoreCase("/version") || label.equalsIgnoreCase("/ver") || label.equalsIgnoreCase("/icanhasbukkit")) {
-			player.sendMessage($.Legacy.tag + "This server is running CraftBukkit version " + Bukkit.getVersion() + " (Implementing API version " + Bukkit.getBukkitVersion() + ")");
+			player.sendMessage(Link$.Legacy.tag + "This server is running CraftBukkit version " + Bukkit.getVersion() + " (Implementing API version " + Bukkit.getBukkitVersion() + ")");
 			event.setCancelled(true);
 		} else if (label.equalsIgnoreCase("/buy")) {
-			player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Our buycraft: " + ChatColor.RED + "https://shop.skorrloregaming.com/");
+			player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Our buycraft: " + ChatColor.RED + "https://shop.skorrloregaming.com/");
 			event.setCancelled(true);
 		} else if (label.equalsIgnoreCase("/plugins") || label.equalsIgnoreCase("/pl")) {
 			List<Plugin> plugins = new LinkedList<Plugin>(Arrays.asList(Bukkit.getPluginManager().getPlugins()));
-			if (!player.hasPermission("bukkit.command.plugins") || $.getRankId(player) < 0) {
+			if (!player.hasPermission("bukkit.command.plugins") || Link$.getRankId(player) < 0) {
 				if (CraftGo.Player.getOnlineMode(player))
-					if ($.isPluginEnabled("AuthMe"))
+					if (Link$.isPluginEnabled("AuthMe"))
 						for (int i = 0; i < plugins.size(); i++)
 							if (plugins.get(i).getName().equals("AuthMe"))
 								plugins.remove(i);
-				if ($.isPluginEnabled("JPanel"))
+				if (Link$.isPluginEnabled("JPanel"))
 					for (int i = 0; i < plugins.size(); i++)
 						if (plugins.get(i).getName().equals("JPanel"))
 							plugins.remove(i);
 			}
-			StringBuilder sb = new StringBuilder($.Legacy.tag + "Plugins (" + plugins.size() + "): ");
+			StringBuilder sb = new StringBuilder(Link$.Legacy.tag + "Plugins (" + plugins.size() + "): ");
 			for (Plugin plugin : plugins) {
 				if (plugin.isEnabled()) {
 					sb.append(ChatColor.GREEN + plugin.getName() + ChatColor.WHITE + ", ");
@@ -3058,7 +2993,7 @@ public class PlayerEventHandler implements Listener {
 				event.setMessage($.replaceCommandLabelInCommand(event.getMessage(), "/gamemode 0"));
 			} else if (label.equalsIgnoreCase("/me")) {
 				event.setCancelled(true);
-				$.playLackPermissionMessage(player);
+				Link$.playLackPermissionMessage(player);
 			} else if (label.equalsIgnoreCase("/f")) {
 				if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
 					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
@@ -3070,7 +3005,7 @@ public class PlayerEventHandler implements Listener {
 				}
 			} else if (label.equalsIgnoreCase("/partytalk") || label.equalsIgnoreCase("ptalk") || label.equalsIgnoreCase("ptk") || label.equalsIgnoreCase("/islandtalk") || label.equalsIgnoreCase("/istalk") || label.equalsIgnoreCase("/it")) {
 				event.setCancelled(true);
-				$.playLackPermissionMessage(player);
+				Link$.playLackPermissionMessage(player);
 			} else if (label.equalsIgnoreCase("/is") || label.equalsIgnoreCase("/island") || label.equalsIgnoreCase("/c") || label.equalsIgnoreCase("/challenges") || label.equalsIgnoreCase("/usb")) {
 				if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
 					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");

@@ -1,12 +1,11 @@
 package me.skorrloregaming;
 
-import java.util.UUID;
-
+import me.skorrloregaming.impl.ServerMinigame;
+import me.skorrloregaming.scoreboard.DisposableScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import me.skorrloregaming.impl.ServerMinigame;
-import me.skorrloregaming.scoreboard.DisposableScoreboard;
+import java.util.UUID;
 
 public class EconManager {
 	public static final int MAX_CASH = 1_000_000_000;

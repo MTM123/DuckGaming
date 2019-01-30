@@ -1,6 +1,6 @@
 package me.skorrloregaming.shop;
 
-import me.skorrloregaming.$;
+import me.skorrloregaming.Link$;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -43,14 +43,14 @@ public class LaShoppeEnchant {
 	}
 
 	public ItemStack toItemStack() {
-		ItemStack itemStack = $.createMaterial(Material.ENCHANTED_BOOK, $.formatEnchantment(enchantment.getName(), tier));
+		ItemStack itemStack = Link$.createMaterial(Material.ENCHANTED_BOOK, Link$.formatEnchantment(enchantment.getName(), tier));
 		List<String> lore = new ArrayList<String>();
 		lore.add(ChatColor.RESET + "Index: " + index);
 		lore.add(ChatColor.RESET + "Price: $" + price);
 		lore.add(ChatColor.RESET + "Tier: " + tier);
 		lore.add("");
 		lore.add(ChatColor.RESET + "Use RIGHT click to BUY this enchant");
-		return $.addLore(itemStack, lore.toArray(new String[0]));
+		return Link$.addLore(itemStack, lore.toArray(new String[0]));
 	}
 
 }

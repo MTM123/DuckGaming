@@ -1,10 +1,10 @@
 package me.skorrloregaming.hooks;
 
-import java.util.Calendar;
-
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
+import me.skorrloregaming.*;
 import me.skorrloregaming.discord.Channel;
+import me.skorrloregaming.impl.ServerMinigame;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -12,12 +12,7 @@ import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.EconManager;
-import me.skorrloregaming.Logger;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.impl.ServerMinigame;
+import java.util.Calendar;
 
 public class Votifier_Listener implements Listener {
 
@@ -101,7 +96,7 @@ public class Votifier_Listener implements Listener {
 				amountEarned2 = 0;
 				amountEarned3 = 0;
 			}
-			switch ($.getDonorRankId(player.getUniqueId())) {
+			switch (Link$.getDonorRankId(player.getUniqueId())) {
 				case -5:
 					amountEarned1 *= 5;
 					amountEarned2 *= 5;

@@ -1,16 +1,15 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.$;
 import me.skorrloregaming.ConfigurationManager;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.impl.ServerMinigame;
 
 import java.util.Set;
 
@@ -46,7 +45,7 @@ public class SetHomeCmd implements CommandExecutor {
 		}
 		if (config.getData().contains(base))
 			count--;
-		int rankId = $.getDonorRankId(player);
+		int rankId = Link$.getDonorRankId(player);
 		switch (count) {
 			case 0:
 				break;

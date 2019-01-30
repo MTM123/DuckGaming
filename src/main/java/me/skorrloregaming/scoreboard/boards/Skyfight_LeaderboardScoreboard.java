@@ -1,16 +1,15 @@
 package me.skorrloregaming.scoreboard.boards;
 
-import java.util.Hashtable;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import me.skorrloregaming.$;
 import me.skorrloregaming.$.Skyfight;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.scoreboard.DisposableScoreboard;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import java.util.Hashtable;
+import java.util.UUID;
 
 public class Skyfight_LeaderboardScoreboard implements DisposableScoreboard {
 	@Override

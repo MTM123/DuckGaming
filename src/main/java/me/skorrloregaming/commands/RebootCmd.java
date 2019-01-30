@@ -1,7 +1,9 @@
 package me.skorrloregaming.commands;
 
-import java.util.UUID;
-
+import me.skorrloregaming.$;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Logger;
+import me.skorrloregaming.Server;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -9,9 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.Logger;
-import me.skorrloregaming.Server;
+import java.util.UUID;
 
 public class RebootCmd implements CommandExecutor {
 
@@ -51,7 +51,7 @@ public class RebootCmd implements CommandExecutor {
 				}, 20L, 20L);
 			}
 		} else {
-			$.playLackPermissionMessage(sender);
+			Link$.playLackPermissionMessage(sender);
 			return true;
 		}
 		return true;

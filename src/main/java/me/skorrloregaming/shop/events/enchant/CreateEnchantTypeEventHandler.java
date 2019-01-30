@@ -2,6 +2,7 @@ package me.skorrloregaming.shop.events.enchant;
 
 import me.skorrloregaming.$;
 import me.skorrloregaming.AnvilGUI;
+import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.shop.LaShoppe;
 import org.bukkit.Bukkit;
@@ -22,7 +23,7 @@ public class CreateEnchantTypeEventHandler implements AnvilGUI.AnvilClickEventHa
 		String enchantmentName = event.getName().toUpperCase().replace(" ", "_");
 		Enchantment enchantment = null;
 		try {
-			enchantment = Enchantment.getByName($.unformatEnchantment(enchantmentName));
+			enchantment = Enchantment.getByName(Link$.unformatEnchantment(enchantmentName));
 		} catch (Exception ex) {
 			event.getPlayer().sendMessage("Sorry, that's not a valid enchant name.");
 			return;

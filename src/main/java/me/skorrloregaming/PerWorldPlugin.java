@@ -1,68 +1,37 @@
 package me.skorrloregaming;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
-
+import me.skorrloregaming.impl.ServerMinigame;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Warning;
 import org.bukkit.Warning.WarningState;
 import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginIdentifiableCommand;
-import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventException;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
+import org.bukkit.event.*;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.hanging.HangingEvent;
 import org.bukkit.event.inventory.InventoryEvent;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerEvent;
 import org.bukkit.event.vehicle.VehicleEvent;
 import org.bukkit.event.weather.WeatherEvent;
 import org.bukkit.event.world.WorldEvent;
-import org.bukkit.plugin.AuthorNagException;
-import org.bukkit.plugin.EventExecutor;
-import org.bukkit.plugin.InvalidDescriptionException;
-import org.bukkit.plugin.InvalidPluginException;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredListener;
-import org.bukkit.plugin.TimedRegisteredListener;
-import org.bukkit.plugin.UnknownDependencyException;
+import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 
-import me.skorrloregaming.impl.ServerMinigame;
+import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("deprecation")
 public class PerWorldPlugin {
@@ -158,7 +127,7 @@ public class PerWorldPlugin {
 
 	public void reload() {
 		pluginNameToWorlds.clear();
-		if ($.isPluginEnabled("GriefPrevention")) {
+		if (Link$.isPluginEnabled("GriefPrevention")) {
 			Set<String> griefPrevention = fillMinigameToWorlds(ServerMinigame.SURVIVAL);
 			Server.getPlugin().getLogger().info("GriefPrevention " + "\u00BB" + " " + Arrays.toString(griefPrevention.toArray(new String[0])));
 			pluginNameToWorlds.put("GriefPrevention", griefPrevention);
@@ -336,7 +305,7 @@ public class PerWorldPlugin {
 							plugin = t.getPlugin();
 					}
 					if (target.getClass().getSimpleName().equals("MCoreBukkitCommand")) {
-						if ($.isPluginEnabled("MassiveCore"))
+						if (Link$.isPluginEnabled("MassiveCore"))
 							plugin = Bukkit.getPluginManager().getPlugin("MassiveCore");
 					}
 					if (!PerWorldPlugin.instance.checkWorld(plugin, p.getWorld())) {

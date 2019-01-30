@@ -1,15 +1,13 @@
 package me.skorrloregaming.hooks;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-
 import com.gmail.nossr50.datatypes.skills.AbilityType;
 import com.gmail.nossr50.events.skills.abilities.McMMOPlayerAbilityActivateEvent;
-
 import me.skorrloregaming.$;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.impl.ServerMinigame;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 public class mcMMO_Listener implements Listener {
 

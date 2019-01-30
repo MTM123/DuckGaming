@@ -1,16 +1,16 @@
 package me.skorrloregaming.hooks;
 
+import fr.xephi.authme.events.LoginEvent;
+import fr.xephi.authme.events.LogoutEvent;
 import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.LinkSessionManager;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.SessionManager;
+import me.skorrloregaming.events.PlayerAuthenticateEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
-import fr.xephi.authme.events.LoginEvent;
-import fr.xephi.authme.events.LogoutEvent;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.SessionManager;
-import me.skorrloregaming.events.PlayerAuthenticateEvent;
 
 public class AuthMe_Listener implements Listener {
 	
@@ -37,6 +37,6 @@ public class AuthMe_Listener implements Listener {
 	public void onPlayerLogout(LogoutEvent event) {
 		Player player = event.getPlayer();
 		String remoteAddr = player.getAddress().getHostName();
-		Server.getSessionManager().invalidateSession(player.getName(), player, SessionManager.encodeHex(remoteAddr), false);
+		Server.getSessionManager().invalidateSession(player.getName(), player, LinkSessionManager.encodeHex(remoteAddr), false);
 	}
 }

@@ -1,14 +1,13 @@
 package me.skorrloregaming.lockette;
 
+import me.skorrloregaming.Server;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
-
-import org.bukkit.World;
-import org.bukkit.block.Block;
-
-import me.skorrloregaming.Server;
 
 public class LocketteDoorCloser implements Runnable {
 	private static int doorTask = -1;

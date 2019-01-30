@@ -1,14 +1,14 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.$;
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Server;
 
 public class PardonCmd implements CommandExecutor {
 
@@ -16,7 +16,7 @@ public class PardonCmd implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender.isOp()) {
 			if (args.length == 0) {
-				sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player/ip>");
+				sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player/ip>");
 				return true;
 			}
 			OfflinePlayer offlinePlayer = CraftGo.Player.getOfflinePlayer(args[0]);
@@ -26,7 +26,7 @@ public class PardonCmd implements CommandExecutor {
 				ipAddress = Server.getPlugin().getConfig().getString(path + ".ip");
 			} else {
 				if (!$.isValidAddress(args[0])) {
-					sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The provided data does not match any player.");
+					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The provided data does not match any player.");
 					return true;
 				} else {
 					ipAddress = args[0].replace(".", "x");
@@ -37,13 +37,13 @@ public class PardonCmd implements CommandExecutor {
 					Server.getBanConfig().getData().set(ipAddress, null);
 					Server.getBanConfig().saveData();
 					Server.getPlugin().getConfig().set("warning." + ipAddress, null);
-					sender.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The address should no longer be banned.");
+					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The address should no longer be banned.");
 				} else {
-					sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The address is not banned from the server.");
+					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The address is not banned from the server.");
 				}
 			}
 		} else {
-			$.playLackPermissionMessage(sender);
+			Link$.playLackPermissionMessage(sender);
 			return true;
 		}
 		return true;

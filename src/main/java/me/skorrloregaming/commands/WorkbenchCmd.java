@@ -1,11 +1,10 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.Server;
 
 public class WorkbenchCmd implements CommandExecutor {
 

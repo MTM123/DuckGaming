@@ -1,7 +1,7 @@
 package me.skorrloregaming.shop;
 
-import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Link$;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -54,10 +54,10 @@ public class LaShoppeItem {
 		ItemStack itemStack = null;
 		if (material == Material.SPAWNER) {
 			String entityName = CraftGo.MobSpawner.convertEntityIdToEntityType(data).toString().toLowerCase();
-			String displayName = ChatColor.RESET + $.capitalizeAll(WordUtils.capitalize(entityName) + " Spawner", "_");
-			itemStack = $.createMaterial(material, displayName);
+			String displayName = ChatColor.RESET + Link$.capitalizeAll(WordUtils.capitalize(entityName) + " Spawner", "_");
+			itemStack = Link$.createMaterial(material, displayName);
 		} else {
-			itemStack = $.createMaterial(material);
+			itemStack = Link$.createMaterial(material);
 		}
 		List<String> lore = new ArrayList<String>();
 		lore.add(ChatColor.RESET + "Index: " + index);
@@ -67,7 +67,7 @@ public class LaShoppeItem {
 		lore.add("");
 		lore.add(ChatColor.RESET + "Use LEFT click to SELL this item");
 		lore.add(ChatColor.RESET + "Use RIGHT click to BUY this item");
-		return $.addLore(itemStack, lore.toArray(new String[0]));
+		return Link$.addLore(itemStack, lore.toArray(new String[0]));
 	}
 
 }

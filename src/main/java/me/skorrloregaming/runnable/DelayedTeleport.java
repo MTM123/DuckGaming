@@ -1,8 +1,9 @@
 package me.skorrloregaming.runnable;
 
-import java.util.concurrent.Callable;
-
 import me.skorrloregaming.$;
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.TitleSubtitle;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -11,9 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.impl.TitleSubtitle;
+import java.util.concurrent.Callable;
 
 public class DelayedTeleport extends BukkitRunnable {
 	public double remainingSeconds;

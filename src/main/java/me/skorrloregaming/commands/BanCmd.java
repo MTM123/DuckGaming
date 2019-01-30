@@ -1,7 +1,6 @@
 package me.skorrloregaming.commands;
 
-import java.util.UUID;
-
+import me.skorrloregaming.*;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -9,10 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Logger;
-import me.skorrloregaming.Server;
+import java.util.UUID;
 
 public class BanCmd implements CommandExecutor {
 
@@ -25,7 +21,7 @@ public class BanCmd implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender.isOp()) {
 			if (args.length < 2) {
-				sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player /ip> <msg>");
+				sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player /ip> <msg>");
 				return true;
 			}
 			StringBuilder sb = new StringBuilder();
@@ -40,7 +36,7 @@ public class BanCmd implements CommandExecutor {
 			} else if ($.isValidAddress(args[0])) {
 				ipAddress = args[0].replace(".", "x");
 			} else {
-				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The provided data does not match any player.");
+				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The provided data does not match any player.");
 			}
 			if (!ipAddress.equals("/unspecified")) {
 				if (Server.getPlugin().getConfig().contains("address." + ipAddress)) {
@@ -49,8 +45,8 @@ public class BanCmd implements CommandExecutor {
 						String msg = ChatColor.translateAlternateColorCodes('&', sb.toString().trim());
 						if (bannedPlayer.isOnline())
 							bannedPlayer.getPlayer().kickPlayer(msg);
-						String message0 = $.italicGray + "Server: Banned <unknown> '" + sb.toString().trim() + "'";
-						String message1 = $.italicGray + "Server: Banned " + bannedPlayer.getName() + " '" + sb.toString().trim() + "'";
+						String message0 = Link$.italicGray + "Server: Banned <unknown> '" + sb.toString().trim() + "'";
+						String message1 = Link$.italicGray + "Server: Banned " + bannedPlayer.getName() + " '" + sb.toString().trim() + "'";
 						if (!bannedPlayer.hasPlayedBefore() && !bannedPlayer.isOnline()) {
 							Logger.info(message0, true);
 						} else {
@@ -66,10 +62,10 @@ public class BanCmd implements CommandExecutor {
 					}
 				}
 				ban(ipAddress, sb.toString().trim());
-				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The address should now be banned.");
+				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The address should now be banned.");
 			}
 		} else {
-			$.playLackPermissionMessage(sender);
+			Link$.playLackPermissionMessage(sender);
 			return true;
 		}
 		return true;

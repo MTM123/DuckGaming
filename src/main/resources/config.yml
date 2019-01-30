@@ -1,9 +1,6 @@
 settings:
     discordBot:
         token: TOKEN
-    database:
-        username: 'username'
-        password: 'password'
     enable:
         factions: true
         survival: true
@@ -37,4 +34,8 @@ settings:
     customQuitMessage: true
     topVotersHttpServerPort: 2096
     bungeecord: false
+    redis:
+        hostname: 'localhost'
+        port: 6379
+        password: ''
 config:

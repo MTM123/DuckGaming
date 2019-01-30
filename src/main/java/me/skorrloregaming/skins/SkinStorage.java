@@ -1,16 +1,15 @@
 package me.skorrloregaming.skins;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
-import me.skorrloregaming.*;
+import me.skorrloregaming.ConfigurationManager;
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
 import me.skorrloregaming.skins.model.SkinModel;
 import org.bukkit.entity.Player;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+
+import java.io.File;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class SkinStorage {
 	public final long TIME_EXPIRE_MILLISECOND;
@@ -38,9 +37,9 @@ public class SkinStorage {
 				encoded = skinFileData.getData().getString("encoded");
 				model = Optional.of(SkinModel.createSkinFromEncoded(signature, encoded));
 			}
-			if (!noUpdate && (!skinFile.exists() || $.isOld(Long.valueOf(timestamp), TIME_EXPIRE_MILLISECOND))) {
+			if (!noUpdate && (!skinFile.exists() || Link$.isOld(Long.valueOf(timestamp), TIME_EXPIRE_MILLISECOND))) {
 				String uid = CraftGo.Player.getUUID(name, false);
-				Optional<SkinModel> skin = CraftGo.Player.getSkinProperty(uid);
+				Optional<SkinModel> skin = getSkinProperty(uid);
 				if (skin.isPresent()) {
 					setSkinData(player, skin.get());
 					model = skin;
@@ -54,11 +53,29 @@ public class SkinStorage {
 		return Optional.empty();
 	}
 
+	public static Optional<SkinModel> getSkinProperty(String uuid) {
+		if (uuid == null || uuid.equals("null"))
+			return Optional.empty();
+		String skinurl = "https://sessionserver.mojang.com/session/minecraft/profile/";
+		String output = null;
+		try {
+			output = CraftGo.Player.readURL(skinurl + uuid + "?unsigned=false");
+			String signature = output.substring(output.indexOf("\"signature\":\"") + "\"signature\":\"".length());
+			signature = signature.substring(0, signature.indexOf("\""));
+			String value = output.substring(output.indexOf("\"value\":\"") + "\"value\":\"".length());
+			value = value.substring(0, value.indexOf("\""));
+			return Optional.of(SkinModel.createSkinFromEncoded(value, signature));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Optional.empty();
+	}
+
 	public Optional<SkinModel> forceSkinUpdate(Player player) {
 		String name = player.getName().toLowerCase();
 		try {
 			String uid = CraftGo.Player.getUUID(name, false);
-			Optional<SkinModel> model = CraftGo.Player.getSkinProperty(uid);
+			Optional<SkinModel> model = getSkinProperty(uid);
 			if (model.isPresent())
 				setSkinData(player, model.get());
 			return model;

@@ -1,13 +1,10 @@
 package me.skorrloregaming.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import me.skorrloregaming.$;
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,9 +14,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Server;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UpgradeKitCmd implements CommandExecutor {
 
@@ -31,11 +27,11 @@ public class UpgradeKitCmd implements CommandExecutor {
 		int preferredWeaponType = $.Kitpvp.getPreferredWeaponType(player);
 		ItemStack[] weapons = new ItemStack[]{$.Kitpvp.getUpgradeClassWeapon(player, $.Kitpvp.getPreferredUpgrade(player), true), null};
 		if (weapons[0].getType() == Material.STONE_AXE) {
-			weapons[1] = $.createMaterial(Material.STONE_SWORD);
+			weapons[1] = Link$.createMaterial(Material.STONE_SWORD);
 		} else if (weapons[0].getType() == Material.IRON_AXE) {
-			weapons[1] = $.createMaterial(Material.IRON_SWORD);
+			weapons[1] = Link$.createMaterial(Material.IRON_SWORD);
 		} else if (weapons[0].getType() == Material.IRON_AXE) {
-			weapons[1] = $.createMaterial(Material.DIAMOND_SWORD);
+			weapons[1] = Link$.createMaterial(Material.DIAMOND_SWORD);
 		}
 		ItemMeta axeMeta = weapons[0].getItemMeta();
 		axeMeta.setDisplayName(prefix + "Select preferred weapon #1");
@@ -60,12 +56,12 @@ public class UpgradeKitCmd implements CommandExecutor {
 		}
 		preferredWeaponLore.add(ChatColor.RESET + "This is already your preferred weapon.");
 		if (preferredWeaponLore.size() > 0)
-			weapons[weaponPreference] = $.addLore(weapons[weaponPreference], preferredWeaponLore.toArray(new String[0]));
+			weapons[weaponPreference] = Link$.addLore(weapons[weaponPreference], preferredWeaponLore.toArray(new String[0]));
 		for (Enchantment enchant : weapons[altWeaponPreference].getEnchantments().keySet()) {
 			weapons[altWeaponPreference].removeEnchantment(enchant);
 		}
 		inventory.setItem(2, weapons[0]);
-		inventory.setItem(4, $.createMaterial(Material.REDSTONE, prefix + "Perform Upgrade (" + ChatColor.RED + "$" + requiredAmount + prefix + ")"));
+		inventory.setItem(4, Link$.createMaterial(Material.REDSTONE, prefix + "Perform Upgrade (" + ChatColor.RED + "$" + requiredAmount + prefix + ")"));
 		inventory.setItem(6, weapons[1]);
 		int passes = 0;
 		for (int i = 10; i < 26; i += 2) {
@@ -75,9 +71,9 @@ public class UpgradeKitCmd implements CommandExecutor {
 			List<String> lore = new ArrayList<String>();
 			ItemStack item;
 			if (upgradeCount >= passes - 1) {
-				item = $.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select kit upgrade #" + passes);
+				item = Link$.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select kit upgrade #" + passes);
 				if (i > 17)
-					item = $.addLeatherColor(item, Color.YELLOW);
+					item = Link$.addLeatherColor(item, Color.YELLOW);
 				if (passes == $.Kitpvp.getPreferredUpgrade(player) + 1) {
 					if (CraftGo.Player.getProtocolVersion(player) > 314) {
 						item.addUnsafeEnchantment(Enchantment.BINDING_CURSE, 1);
@@ -87,13 +83,13 @@ public class UpgradeKitCmd implements CommandExecutor {
 					lore.add(ChatColor.RESET + "This kit is already your preferred kit.");
 				}
 			} else {
-				item = $.createMaterial(Material.IRON_BARS, prefix + "This kit upgrade is locked :(");
+				item = Link$.createMaterial(Material.IRON_BARS, prefix + "This kit upgrade is locked :(");
 			}
 			for (ItemStack kitItem : $.Kitpvp.getUpgradeClass(player, passes - 1, false)) {
-				lore.add(ChatColor.GREEN + $.formatMaterial(kitItem.getType()) + ChatColor.RED + " x" + kitItem.getAmount());
+				lore.add(ChatColor.GREEN + Link$.formatMaterial(kitItem.getType()) + ChatColor.RED + " x" + kitItem.getAmount());
 			}
 			if (lore.size() > 0)
-				item = $.addLore(item, lore.toArray(new String[0]));
+				item = Link$.addLore(item, lore.toArray(new String[0]));
 			inventory.setItem(i, item);
 		}
 		player.openInventory(inventory);

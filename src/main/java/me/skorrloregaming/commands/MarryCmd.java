@@ -1,24 +1,20 @@
 package me.skorrloregaming.commands;
 
-import java.util.Map;
-import java.util.UUID;
-
+import me.skorrloregaming.$;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.MarriageGender;
+import me.skorrloregaming.impl.ServerMinigame;
+import me.skorrloregaming.runnable.DelayedTeleport;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.impl.MarriageGender;
-import me.skorrloregaming.impl.ServerMinigame;
-import me.skorrloregaming.runnable.DelayedTeleport;
+import java.util.Map;
+import java.util.UUID;
 
 public class MarryCmd implements CommandExecutor {
 
@@ -53,15 +49,15 @@ public class MarryCmd implements CommandExecutor {
 				player.performCommand("marry divorce");
 				int marriageId = $.Marriage.setPlayerMarriedPlayer(player, targetPlayer);
 				$.Marriage.setPlayerMarriedPlayer(targetPlayer, player, marriageId);
-				player.sendMessage($.Legacy.tag + "Marriage request accepted.");
-				targetPlayer.sendMessage($.Legacy.tag + "You are now married to " + ChatColor.YELLOW + targetPlayer.getName());
-				targetPlayer.sendMessage($.Legacy.tag + ChatColor.YELLOW + player.getName() + ChatColor.RESET + " has accepted your proposal.");
-				targetPlayer.sendMessage($.Legacy.tag + "You are now married to " + ChatColor.YELLOW + player.getName());
+				player.sendMessage(Link$.Legacy.tag + "Marriage request accepted.");
+				targetPlayer.sendMessage(Link$.Legacy.tag + "You are now married to " + ChatColor.YELLOW + targetPlayer.getName());
+				targetPlayer.sendMessage(Link$.Legacy.tag + ChatColor.YELLOW + player.getName() + ChatColor.RESET + " has accepted your proposal.");
+				targetPlayer.sendMessage(Link$.Legacy.tag + "You are now married to " + ChatColor.YELLOW + player.getName());
 			} else {
 				Server.getMarriageRequests().put(player.getUniqueId(), targetPlayer.getUniqueId());
-				player.sendMessage($.Legacy.tag + "Marriage proposal sent to " + ChatColor.YELLOW + targetPlayer.getName() + ChatColor.RESET + ".");
-				targetPlayer.sendMessage($.Legacy.tag + "Marriage proposal received from " + ChatColor.YELLOW + player.getName() + ChatColor.RESET + ".");
-				targetPlayer.sendMessage($.Legacy.tag + "To accept, type " + ChatColor.YELLOW + "/marry " + player.getName() + ChatColor.RESET + " in chat.");
+				player.sendMessage(Link$.Legacy.tag + "Marriage proposal sent to " + ChatColor.YELLOW + targetPlayer.getName() + ChatColor.RESET + ".");
+				targetPlayer.sendMessage(Link$.Legacy.tag + "Marriage proposal received from " + ChatColor.YELLOW + player.getName() + ChatColor.RESET + ".");
+				targetPlayer.sendMessage(Link$.Legacy.tag + "To accept, type " + ChatColor.YELLOW + "/marry " + player.getName() + ChatColor.RESET + " in chat.");
 			}
 		} else {
 			if (args[0].equalsIgnoreCase("help")) {
@@ -78,53 +74,53 @@ public class MarryCmd implements CommandExecutor {
 			} else if (args[0].equalsIgnoreCase("gender") && args.length > 1) {
 				int marriageId = $.Marriage.getPlayerMarriageId(player);
 				if (marriageId > 0) {
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot change gender while married.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot change gender while married.");
 					return true;
 				}
 				String gender = args[1].toLowerCase();
 				if (gender.equals("male") || gender.equals("boy") || gender.equals("man")) {
 					$.Marriage.setPlayerGender(player, MarriageGender.MALE);
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are now considered " + ChatColor.RED + "Male" + ChatColor.GRAY + ".");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are now considered " + ChatColor.RED + "Male" + ChatColor.GRAY + ".");
 				} else if (gender.equals("female") || gender.equals("girl") || gender.equals("woman")) {
 					$.Marriage.setPlayerGender(player, MarriageGender.FEMALE);
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are now considered " + ChatColor.RED + "Female" + ChatColor.GRAY + ".");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are now considered " + ChatColor.RED + "Female" + ChatColor.GRAY + ".");
 				} else {
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Please specify either " + ChatColor.RED + "Male" + ChatColor.GRAY + " or " + ChatColor.RED + "Female" + ChatColor.GRAY + ".");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Please specify either " + ChatColor.RED + "Male" + ChatColor.GRAY + " or " + ChatColor.RED + "Female" + ChatColor.GRAY + ".");
 				}
 			} else if (args[0].equalsIgnoreCase("filter") && args.length > 1) {
 				String value = args[1].toLowerCase();
 				if (value.equals("enable") || value.equals("on")) {
 					$.Marriage.setPlayerSwearFilter(player, true);
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You can no longer bypass the filter.");
-					player.sendMessage($.Legacy.tag + ChatColor.GRAY + "This filter setting applies only to marry chat.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You can no longer bypass the filter.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "This filter setting applies only to marry chat.");
 				} else if (value.equals("disable") || value.equals("off")) {
 					$.Marriage.setPlayerSwearFilter(player, false);
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You can now bypass the filter.");
-					player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Just please remember the age rating of this game.");
-					player.sendMessage($.Legacy.tag + ChatColor.GRAY + "This filter setting applies only to marry chat.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You can now bypass the filter.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Just please remember the age rating of this game.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "This filter setting applies only to marry chat.");
 				} else {
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Please specify either " + ChatColor.RED + "on" + ChatColor.GRAY + " or " + ChatColor.RED + "off" + ChatColor.GRAY + ".");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Please specify either " + ChatColor.RED + "on" + ChatColor.GRAY + " or " + ChatColor.RED + "off" + ChatColor.GRAY + ".");
 				}
 			} else if (args[0].equalsIgnoreCase("pvp") && args.length > 1) {
 				String value = args[1].toLowerCase();
 				if (value.equals("enable") || value.equals("on")) {
 					$.Marriage.setPlayerMarriedPvp(player, true);
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You can now attack your partner.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You can now attack your partner.");
 				} else if (value.equals("disable") || value.equals("off")) {
 					$.Marriage.setPlayerMarriedPvp(player, true);
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You can no longer attack your partner.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You can no longer attack your partner.");
 				} else {
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Please specify either " + ChatColor.RED + "on" + ChatColor.GRAY + " or " + ChatColor.RED + "off" + ChatColor.GRAY + ".");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Please specify either " + ChatColor.RED + "on" + ChatColor.GRAY + " or " + ChatColor.RED + "off" + ChatColor.GRAY + ".");
 				}
 			} else if (args[0].equalsIgnoreCase("sethome")) {
 				int marriageId = $.Marriage.getPlayerMarriageId(player);
 				if (marriageId == 0) {
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are currently not married to anyone.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are currently not married to anyone.");
 					return true;
 				}
 				ServerMinigame minigame = $.getMinigameFromWorld(player.getWorld());
 				if (minigame == ServerMinigame.HUB || minigame == ServerMinigame.SKYFIGHT || minigame == ServerMinigame.UNKNOWN) {
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.WHITE + "You cannot set a home in this minigame.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.WHITE + "You cannot set a home in this minigame.");
 					return true;
 				}
 				String base = "homes." + marriageId;
@@ -139,7 +135,7 @@ public class MarryCmd implements CommandExecutor {
 			} else if (args[0].equalsIgnoreCase("home")) {
 				int marriageId = $.Marriage.getPlayerMarriageId(player);
 				if (marriageId == 0) {
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are currently not married to anyone.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are currently not married to anyone.");
 					return true;
 				}
 				String base = "homes." + marriageId;
@@ -154,45 +150,45 @@ public class MarryCmd implements CommandExecutor {
 					DelayedTeleport dt = new DelayedTeleport(player, Server.getTeleportationDelay(), homeLocation, false);
 					dt.runTaskTimer(Server.getPlugin(), 4, 4);
 				} else {
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.WHITE + "The definied home is in another minigame.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.WHITE + "The definied home is in another minigame.");
 				}
 			} else if (args[0].equalsIgnoreCase("chat")) {
 				if (Server.getMarriageChatPlayers().contains(player.getUniqueId())) {
 					Server.getMarriageChatPlayers().remove(player.getUniqueId());
-					sender.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have left the marriage chat.");
+					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have left the marriage chat.");
 				} else {
 					Server.getMarriageChatPlayers().add(player.getUniqueId());
-					sender.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have entered the marriage chat.");
+					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have entered the marriage chat.");
 				}
 			} else if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("list")) {
 				int marriageId = $.Marriage.getPlayerMarriageId(player);
 				if (marriageId == 0) {
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are currently not married to anyone.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are currently not married to anyone.");
 					return true;
 				}
 				OfflinePlayer marriagePartner = $.Marriage.getMarriedOfflinePlayer(player);
-				player.sendMessage($.Legacy.tag + "/ Marriage for player " + ChatColor.YELLOW + player.getName());
-				player.sendMessage($.Legacy.tag + "Marriage Id: " + ChatColor.YELLOW + marriageId);
-				player.sendMessage($.Legacy.tag + "Marriage Partner: " + ChatColor.YELLOW + marriagePartner.getName());
-				player.sendMessage($.Legacy.tag + "Partner Gender: " + ChatColor.YELLOW + WordUtils.capitalize($.Marriage.getPlayerGender(marriagePartner).toString().toLowerCase()));
-				player.sendMessage($.Legacy.tag + "Your Gender: " + ChatColor.YELLOW + WordUtils.capitalize($.Marriage.getPlayerGender(player).toString().toLowerCase()));
+				player.sendMessage(Link$.Legacy.tag + "/ Marriage for player " + ChatColor.YELLOW + player.getName());
+				player.sendMessage(Link$.Legacy.tag + "Marriage Id: " + ChatColor.YELLOW + marriageId);
+				player.sendMessage(Link$.Legacy.tag + "Marriage Partner: " + ChatColor.YELLOW + marriagePartner.getName());
+				player.sendMessage(Link$.Legacy.tag + "Partner Gender: " + ChatColor.YELLOW + WordUtils.capitalize($.Marriage.getPlayerGender(marriagePartner).toString().toLowerCase()));
+				player.sendMessage(Link$.Legacy.tag + "Your Gender: " + ChatColor.YELLOW + WordUtils.capitalize($.Marriage.getPlayerGender(player).toString().toLowerCase()));
 			} else if (args[0].equalsIgnoreCase("divorce")) {
 				int marriageId = $.Marriage.getPlayerMarriageId(player);
 				if (marriageId == 0) {
-					player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are currently not married to anyone.");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are currently not married to anyone.");
 					return true;
 				}
 				OfflinePlayer marriedPlayer = $.Marriage.getMarriedOfflinePlayer(player);
 				if (marriedPlayer.isOnline()) {
-					marriedPlayer.getPlayer().sendMessage($.Legacy.tag + ChatColor.YELLOW + player.getName() + ChatColor.RESET + " has broke up with you.");
+					marriedPlayer.getPlayer().sendMessage(Link$.Legacy.tag + ChatColor.YELLOW + player.getName() + ChatColor.RESET + " has broke up with you.");
 				}
 				$.Marriage.setPlayerMarriedPlayer(marriedPlayer, null);
 				$.Marriage.setPlayerMarriedPlayer(player, null);
 				Server.getMarriageHomesConfig().getData().set("homes." + marriageId, null);
-				player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have broke up with your partner.");
+				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have broke up with your partner.");
 			} else {
-				sender.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "That marriage command could not be found.");
-				sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " help");
+				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "That marriage command could not be found.");
+				sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " help");
 			}
 		}
 		return true;

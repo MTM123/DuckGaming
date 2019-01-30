@@ -1,21 +1,17 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.ChatItem;
-import me.skorrloregaming.PerWorldPlugin;
-import me.skorrloregaming.Server;
 
 public class ReloadConfigCmd implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!sender.isOp()) {
-			$.playLackPermissionMessage(sender);
+			Link$.playLackPermissionMessage(sender);
 			return true;
 		}
 		Server.getDiscordVerifyConfig().reloadData();
@@ -28,8 +24,8 @@ public class ReloadConfigCmd implements CommandExecutor {
 		Server.getMarriageHomesConfig().reloadData();
 		Server.getNpcConfig().reloadData();
 		Server.getSpawnerConfig().reloadData();
-		Server.getUUIDCache().reloadData();
-		Server.getGeolocationCache().reloadData();
+		$.getLinkServer().getUUIDCache().reloadData();
+		$.getLinkServer().getGeolocationCache().reloadData();
 		Server.getSessionManager().sessionConfig.reloadData();
 		Server.getMonthlyVoteConfig().reloadData();
 		if (PerWorldPlugin.instance != null)
@@ -38,7 +34,7 @@ public class ReloadConfigCmd implements CommandExecutor {
 			ChatItem.reload(null);
 		Server.getInstance().garbageCollector.run();
 		Server.getInstance().reload();
-		sender.sendMessage($.Legacy.tag + ChatColor.GRAY + "Server configuration successfully reloaded.");
+		sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Server configuration successfully reloaded.");
 		return true;
 	}
 

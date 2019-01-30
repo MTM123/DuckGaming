@@ -1,20 +1,10 @@
 package me.skorrloregaming.runnable;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Set;
-import java.util.UUID;
-
+import me.skorrloregaming.*;
 import org.bukkit.OfflinePlayer;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.ConfigurationManager;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Logger;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.SolidStorage;
+import java.io.File;
+import java.util.*;
 
 public class GCandAutoDemotion implements Runnable {
 
@@ -79,11 +69,11 @@ public class GCandAutoDemotion implements Runnable {
 				int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
 				if (dayOfYear - 7 < 0)
 					return;
-				String rank = $.getRank(player.getUniqueId());
-				int rankId = $.getRankId(player.getUniqueId());
+				String rank = Link$.getRank(player.getUniqueId());
+				int rankId = Link$.getRankId(player.getUniqueId());
 				if (rankId > -1 && rankId < 3) {
-					long totalPlaytime = Server.getPlaytimeManager().getStoredPlayerPlaytime(player);
-					long[] range = Server.getPlaytimeManager().getRangeOfStoredPlayerPlaytime(player, dayOfYear - 6, dayOfYear + 1);
+					long totalPlaytime = $.getLinkServer().getPlaytimeManager().getStoredPlayerPlaytime(player);
+					long[] range = $.getLinkServer().getPlaytimeManager().getRangeOfStoredPlayerPlaytime(player, dayOfYear - 6, dayOfYear + 1);
 					long totalTimePlayedInSeconds = 0L;
 					for (int i = 0; i < range.length; i++)
 						totalTimePlayedInSeconds += range[i];
@@ -93,11 +83,11 @@ public class GCandAutoDemotion implements Runnable {
 					int managerPlaytimeRequirement = 60 * 60 * 24 * 4;
 					if (rank.equals("admin")) {
 						if (totalPlaytime > managerPlaytimeRequirement) {
-							if ($.validRanks.contains("manager")) {
+							if (Link$.validRanks.contains("manager")) {
 								Logger.info("Auto-promotion of " + player.getName() + " to Manager");
-								Server.getSqlDatabase().set("rank", player.getUniqueId().toString(), "manager");
-								if ($.isPrefixedRankingEnabled() && player.isOnline()) {
-									$.flashPlayerDisplayName(player.getPlayer());
+								$.getLinkServer().getSqlDatabase().set("rank", player.getUniqueId().toString(), "manager");
+								if (Link$.isPrefixedRankingEnabled() && player.isOnline()) {
+									Link$.flashPlayerDisplayName(player.getPlayer());
 								}
 							} else {
 								Logger.debug("An unexpected error occured during the auto-promotion task of promoting " + player.getName() + " to Manager.");
@@ -106,10 +96,10 @@ public class GCandAutoDemotion implements Runnable {
 					} else if (rank.equals("manager") || rank.equals("builder"))
 						playtimeRequirementPerWeek /= 2;
 					if (totalTimePlayedInSeconds < playtimeRequirementPerWeek) {
-						Logger.info("Auto-demotion of " + player.getName() + " to " + $.validRanks.get(0));
-						Server.getSqlDatabase().set("rank", player.getUniqueId().toString(), $.validRanks.get(0));
-						if ($.isPrefixedRankingEnabled() && player.isOnline()) {
-							$.flashPlayerDisplayName(player.getPlayer());
+						Logger.info("Auto-demotion of " + player.getName() + " to " + Link$.validRanks.get(0));
+						$.getLinkServer().getSqlDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
+						if (Link$.isPrefixedRankingEnabled() && player.isOnline()) {
+							Link$.flashPlayerDisplayName(player.getPlayer());
 						}
 					}
 				}
@@ -140,7 +130,7 @@ public class GCandAutoDemotion implements Runnable {
 				}
 			}
 			uuidConfig.saveData();
-			if ($.isPluginEnabled("uSkyBlock"))
+			if (Link$.isPluginEnabled("uSkyBlock"))
 				Server.getPlugin().getServer().dispatchCommand(Server.getPlugin().getServer().getConsoleSender(), "usb reload");
 		} else {
 		}

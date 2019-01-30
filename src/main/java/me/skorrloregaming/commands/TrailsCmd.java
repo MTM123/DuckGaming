@@ -1,15 +1,11 @@
 package me.skorrloregaming.commands;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import me.skorrloregaming.$;
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,14 +15,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Server;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrailsCmd implements CommandExecutor {
 
 	public static void openTrailManagementInventory(Player player) {
-		if ($.getDonorRankId(player) > -2) {
+		if (Link$.getDonorRankId(player) > -2) {
 			player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
 			player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you need a donor rank to use cosmetics.");
 			player.performCommand("store");
@@ -44,14 +39,14 @@ public class TrailsCmd implements CommandExecutor {
 		} else {
 			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", "-1");
 		}
-		ItemStack disableTrails = $.createMaterial(Material.REDSTONE, prefix + "Disable Trails");
+		ItemStack disableTrails = Link$.createMaterial(Material.REDSTONE, prefix + "Disable Trails");
 		if (selectedTrail == -1) {
 			if (CraftGo.Player.getProtocolVersion(player) > 314) {
 				disableTrails.addUnsafeEnchantment(Enchantment.BINDING_CURSE, 1);
 			} else {
 				disableTrails.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
 			}
-			disableTrails = $.addLore(disableTrails, new String[]{ChatColor.RESET + "This is already your preferred trail."});
+			disableTrails = Link$.addLore(disableTrails, new String[]{ChatColor.RESET + "This is already your preferred trail."});
 		}
 		inventory.setItem(4, disableTrails);
 		for (int i = 10; i < 17; i += 2) {
@@ -70,16 +65,16 @@ public class TrailsCmd implements CommandExecutor {
 				trail = "enchanting";
 				trailItemColor = ChatColor.LIGHT_PURPLE;
 			}
-			ItemStack trailItem = $.createMaterial(Material.LEATHER_BOOTS, prefix + "Select the " + trailItemColor + WordUtils.capitalize(trail) + prefix + " trail");
+			ItemStack trailItem = Link$.createMaterial(Material.LEATHER_BOOTS, prefix + "Select the " + trailItemColor + WordUtils.capitalize(trail) + prefix + " trail");
 			if (trailItem.getType() == Material.LEATHER_BOOTS) {
 				if (i == 10) {
-					trailItem = $.addLeatherColor(trailItem, Color.GRAY);
+					trailItem = Link$.addLeatherColor(trailItem, Color.GRAY);
 				} else if (i == 12) {
-					trailItem = $.addLeatherColor(trailItem, Color.GREEN);
+					trailItem = Link$.addLeatherColor(trailItem, Color.GREEN);
 				} else if (i == 14) {
-					trailItem = $.addLeatherColor(trailItem, Color.RED);
+					trailItem = Link$.addLeatherColor(trailItem, Color.RED);
 				} else if (i == 16) {
-					trailItem = $.addLeatherColor(trailItem, Color.PURPLE);
+					trailItem = Link$.addLeatherColor(trailItem, Color.PURPLE);
 				}
 			}
 			if (selectedTrail == (i - 10) / 2) {
@@ -108,7 +103,7 @@ public class TrailsCmd implements CommandExecutor {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
-		if ($.getDonorRankId(player) > -2) {
+		if (Link$.getDonorRankId(player) > -2) {
 			player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
 			player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you need a donor rank to use cosmetics.");
 			player.performCommand("store");

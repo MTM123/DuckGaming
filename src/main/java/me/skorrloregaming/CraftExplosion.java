@@ -1,13 +1,13 @@
 package me.skorrloregaming;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 public class CraftExplosion {
 	private Location location;
@@ -91,16 +91,16 @@ public class CraftExplosion {
 					if (block.getType() == Material.GRAVEL) {
 						block.setType(Material.AIR);
 						block.getState().update();
-						block.getWorld().dropItemNaturally(block.getLocation(), $.createMaterial(Material.FLINT));
+						block.getWorld().dropItemNaturally(block.getLocation(), Link$.createMaterial(Material.FLINT));
 					} else {
 						if (!isDropsDestructable(block)) {
 							for (ItemStack drop : block.getDrops()) {
 								block.getWorld().dropItemNaturally(block.getLocation(), drop);
 							}
 						}
-						block.breakNaturally($.createMaterial(Material.AIR));
+						block.breakNaturally(Link$.createMaterial(Material.AIR));
 						block.getState().update();
-						Server.getAntiCheat().onBlockBreak(block, null);
+						$.getLinkServer().getAntiCheat().onBlockBreak(block, null);
 					}
 				}
 			}
@@ -109,9 +109,9 @@ public class CraftExplosion {
 
 	public void explode() {
 		for (Block block : blocks) {
-			block.breakNaturally($.createMaterial(Material.AIR));
+			block.breakNaturally(Link$.createMaterial(Material.AIR));
 			block.getState().update();
-			Server.getAntiCheat().onBlockBreak(block, null);
+			$.getLinkServer().getAntiCheat().onBlockBreak(block, null);
 		}
 	}
 

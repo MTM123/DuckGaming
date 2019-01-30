@@ -1,18 +1,17 @@
 package me.skorrloregaming.commands;
 
-import java.util.Set;
-import java.util.UUID;
-
+import me.skorrloregaming.$;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.SolidStorage;
+import me.skorrloregaming.impl.Switches.SwitchUUIDString;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.SolidStorage;
-import me.skorrloregaming.impl.Switches.SwitchUUIDString;
+import java.util.Set;
+import java.util.UUID;
 
 public class TransferAcceptCmd implements CommandExecutor {
 
@@ -36,23 +35,23 @@ public class TransferAcceptCmd implements CommandExecutor {
 				String oldValuePath = "config." + uuid + "." + value;
 				Server.getPlugin().getConfig().set(valuePath, Server.getPlugin().getConfig().get(oldValuePath));
 			}
-			if (Server.getSqlDatabase().contains("playtime.total", uuid)) {
+			if ($.getLinkServer().getSqlDatabase().contains("playtime.total", uuid)) {
 				for (int day = 0; day <= 365; day++) {
-					if (Server.getSqlDatabase().contains("playtime.dayOfYear." + day, uuid)) {
-						String value = Server.getSqlDatabase().getString("playtime.dayOfYear." + day, uuid);
-						Server.getSqlDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
-						Server.getSqlDatabase().set("playtime.dayOfYear." + day, uuid, null);
+					if ($.getLinkServer().getSqlDatabase().contains("playtime.dayOfYear." + day, uuid)) {
+						String value = $.getLinkServer().getSqlDatabase().getString("playtime.dayOfYear." + day, uuid);
+						$.getLinkServer().getSqlDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
+						$.getLinkServer().getSqlDatabase().set("playtime.dayOfYear." + day, uuid, null);
 					}
 				}
 				{
-					String value = Server.getSqlDatabase().getString("playtime.total", uuid);
-					Server.getSqlDatabase().set("playtime.total", player.getUniqueId().toString(), value);
-					Server.getSqlDatabase().set("playtime.total", uuid, null);
+					String value = $.getLinkServer().getSqlDatabase().getString("playtime.total", uuid);
+					$.getLinkServer().getSqlDatabase().set("playtime.total", player.getUniqueId().toString(), value);
+					$.getLinkServer().getSqlDatabase().set("playtime.total", uuid, null);
 				}
 				{
-					String value = Server.getSqlDatabase().getString("playtime.lastKnownDayOfYear", uuid);
-					Server.getSqlDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
-					Server.getSqlDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
+					String value = $.getLinkServer().getSqlDatabase().getString("playtime.lastKnownDayOfYear", uuid);
+					$.getLinkServer().getSqlDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
+					$.getLinkServer().getSqlDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
 				}
 			}
 			if (Server.getSurvivalConfig().getData().contains("homes." + uuid)) {

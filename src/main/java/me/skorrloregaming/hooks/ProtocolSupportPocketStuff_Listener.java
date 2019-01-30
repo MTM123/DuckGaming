@@ -1,14 +1,13 @@
 package me.skorrloregaming.hooks;
 
+import fr.xephi.authme.events.FailedLoginEvent;
+import me.skorrloregaming.$;
+import me.skorrloregaming.Server;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-
-import fr.xephi.authme.events.FailedLoginEvent;
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
 import protocolsupportpocketstuff.api.modals.ComplexForm;
 import protocolsupportpocketstuff.api.modals.ModalCallback;
 import protocolsupportpocketstuff.api.modals.elements.ElementResponse;

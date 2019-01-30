@@ -1,12 +1,11 @@
 package me.skorrloregaming.ping;
 
-import java.net.InetSocketAddress;
-import java.util.List;
-
+import io.netty.channel.ChannelHandlerContext;
 import org.bukkit.Bukkit;
 import org.bukkit.util.CachedServerIcon;
 
-import io.netty.channel.ChannelHandlerContext;
+import java.net.InetSocketAddress;
+import java.util.List;
 
 public class PingReply {
 	private String motd;

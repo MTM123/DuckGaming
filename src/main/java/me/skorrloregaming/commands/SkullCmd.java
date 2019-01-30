@@ -1,5 +1,8 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,10 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Server;
-
 public class SkullCmd implements CommandExecutor {
 
 	@Override
@@ -25,13 +24,13 @@ public class SkullCmd implements CommandExecutor {
 		if (player.isOp() || Server.getCreative().contains(player.getUniqueId())) {
 			if (args.length < 1) {
 				if (player.isOp()) {
-					player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " [player] <skullOwner>");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " [player] <skullOwner>");
 				} else {
-					player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <skullOwner>");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <skullOwner>");
 				}
 				return true;
 			} else {
-				ItemStack skull = $.createMaterial(Material.PLAYER_HEAD);
+				ItemStack skull = Link$.createMaterial(Material.PLAYER_HEAD);
 				SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
 				skull.setDurability((short) 3);
 				int argValue = 0;
@@ -47,18 +46,18 @@ public class SkullCmd implements CommandExecutor {
 				if (argValue == 1) {
 					Player targetPlayer = Bukkit.getPlayer(args[0]);
 					if (targetPlayer == null) {
-						player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
+						player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 						return true;
 					}
 					targetPlayer.getInventory().addItem(skull);
 				} else {
 					player.getInventory().addItem(skull);
 				}
-				player.sendMessage($.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have been given " + ChatColor.RED + $.formatMaterial(skull.getType()) + " x1");
+				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have been given " + ChatColor.RED + Link$.formatMaterial(skull.getType()) + " x1");
 				return true;
 			}
 		} else {
-			$.playLackPermissionMessage(player);
+			Link$.playLackPermissionMessage(player);
 			return true;
 		}
 	}

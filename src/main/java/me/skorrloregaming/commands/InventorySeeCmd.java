@@ -1,5 +1,8 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.$;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.Server;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -8,9 +11,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.Server;
 
 public class InventorySeeCmd implements CommandExecutor {
 
@@ -24,11 +24,11 @@ public class InventorySeeCmd implements CommandExecutor {
 			return true;
 		}
 		if (args.length == 0) {
-			player.sendMessage($.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player>");
+			player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player>");
 		} else {
 			Player tp = Bukkit.getPlayer(args[0]);
 			if (tp == null) {
-				player.sendMessage($.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
+				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 			} else {
 				String name = ChatColor.BOLD + "Temporary Inventory";
 				if (player.isOp()) {

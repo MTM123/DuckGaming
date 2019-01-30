@@ -1,10 +1,9 @@
 package me.skorrloregaming.commands;
 
+import me.skorrloregaming.ChatItem;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import me.skorrloregaming.ChatItem;
 
 public class ChatItemReloadCmd implements CommandExecutor {
 

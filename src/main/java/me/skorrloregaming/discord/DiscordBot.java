@@ -2,9 +2,12 @@ package me.skorrloregaming.discord;
 
 import me.skorrloregaming.discord.listeners.MessageListener;
 import me.skorrloregaming.discord.listeners.ReadyListener;
+import me.skorrloregaming.discord.listeners.RedisListener;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
 
 import java.util.concurrent.TimeUnit;
@@ -16,6 +19,7 @@ public class DiscordBot {
 
 	private JDA bot;
 
+	private RedisListener redisListener;
 	private ReadyListener readyListener;
 	private MessageListener messageListener;
 
@@ -30,6 +34,8 @@ public class DiscordBot {
 					.addEventListener(readyListener)
 					.build();
 			messageListener = new MessageListener(this);
+			redisListener = new RedisListener();
+			redisListener.register();
 			bot.addEventListener(messageListener);
 			bot.getPresence().setGame(Game.of(Game.GameType.DEFAULT, "Minecraft"));
 		} catch (Exception ex) {
@@ -41,6 +47,7 @@ public class DiscordBot {
 		bot.removeEventListener(messageListener);
 		bot.removeEventListener(readyListener);
 		bot.shutdown();
+		redisListener.unregister();
 	}
 
 	public JDA getBot() {
@@ -55,7 +62,7 @@ public class DiscordBot {
 		broadcast(message, 0L, channels);
 	}
 
-	public void broadcast(String message, long deleteAfter,  Channel... channels) {
+	public void broadcast(String message, long deleteAfter, Channel... channels) {
 		for (Channel channel : channels)
 			try {
 				MessageAction messageAction = getTextChannel(getChannelName(channel)).sendMessage(message);

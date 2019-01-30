@@ -1,20 +1,18 @@
 package me.skorrloregaming.ping;
 
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Reflection;
+import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.NpcPlayer;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-
-import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPromise;
-import me.skorrloregaming.Reflection;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.impl.NpcPlayer;
 
 public class DuplexHandler extends ChannelDuplexHandler {
 

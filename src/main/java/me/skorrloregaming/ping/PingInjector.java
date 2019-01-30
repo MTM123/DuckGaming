@@ -1,5 +1,14 @@
 package me.skorrloregaming.ping;
 
+import io.netty.channel.Channel;
+import me.skorrloregaming.CraftGo;
+import me.skorrloregaming.Reflection;
+import me.skorrloregaming.Server;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerListPingEvent;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
@@ -7,18 +16,6 @@ import java.net.SocketAddress;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
-
-import me.skorrloregaming.CraftGo;
-import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.server.ServerListPingEvent;
-
-import io.netty.channel.Channel;
-import me.skorrloregaming.$;
-import me.skorrloregaming.Reflection;
-import me.skorrloregaming.Server;
 
 public class PingInjector implements Listener {
 
