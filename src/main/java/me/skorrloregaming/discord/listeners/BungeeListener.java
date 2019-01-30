@@ -16,12 +16,12 @@ import java.io.DataInputStream;
 public class BungeeListener implements PluginMessageListener {
 
 	public void register() {
-		Bukkit.getServer().getMessenger().registerIncomingPluginChannel(LinkServer.getPlugin(), "Discord", this);
+		Bukkit.getServer().getMessenger().registerIncomingPluginChannel(LinkServer.getPlugin(), "slgn:discord", this);
 		Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(LinkServer.getPlugin(), "BungeeCord");
 	}
 
 	public void unregister() {
-		Bukkit.getServer().getMessenger().unregisterIncomingPluginChannel(LinkServer.getPlugin(), "Discord", this);
+		Bukkit.getServer().getMessenger().unregisterIncomingPluginChannel(LinkServer.getPlugin(), "slgn:discord", this);
 		Bukkit.getServer().getMessenger().unregisterOutgoingPluginChannel(LinkServer.getPlugin(), "BungeeCord");
 	}
 

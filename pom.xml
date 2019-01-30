@@ -212,7 +212,7 @@
 		<dependency>
 			<groupId>com.github.SkorrloreGaming</groupId>
 			<artifactId>SkorrloreGamingLink</artifactId>
-			<version>9c5f4ee239</version>
+			<version>9a508be067</version>
 		</dependency>
 	</dependencies>
 </project>
