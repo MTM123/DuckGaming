@@ -9,6 +9,7 @@ import me.skorrloregaming.Server;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.hooks.Redis_Listener;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -87,7 +88,7 @@ public class RedisListener extends JedisPubSub implements Listener {
 		if (channel.equalsIgnoreCase("slgn:discord")) {
 			JsonObject obj = gson.fromJson(request, JsonObject.class);
 			if (obj != null) {
-				String message = obj.get("message").getAsString();
+				String message = ChatColor.stripColor(obj.get("message").getAsString());
 				String discordChannel = obj.get("discordChannel").getAsString();
 				Server.getDiscordBot().broadcast(message, Channel.valueOf(discordChannel));
 			}
