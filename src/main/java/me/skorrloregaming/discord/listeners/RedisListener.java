@@ -24,14 +24,6 @@ public class RedisListener extends JedisPubSub implements Listener {
 
 	private final Gson gson = new Gson();
 
-	/**
-	 * Just a random UUID as a placeholder for what could be a configurable
-	 * server ID which would allow other servers to identify where a message
-	 * came from. Currently this is just used to make sure messages are not
-	 * duped.
-	 */
-	private final UUID serverID = UUID.randomUUID();
-
 	private RedisListener instance;
 
 	private boolean connectToRedis() {
@@ -78,7 +70,7 @@ public class RedisListener extends JedisPubSub implements Listener {
 			public void run() {
 				getPool().ifPresent((pool) -> {
 					try (Jedis jedis = pool.getResource()) {
-						jedis.subscribe(getInstance(), "slgn:chat");
+						jedis.subscribe(getInstance(), "slgn:discord");
 					} catch (Exception ex) {
 					}
 				});
@@ -92,10 +84,9 @@ public class RedisListener extends JedisPubSub implements Listener {
 
 	@Override
 	public void onMessage(String channel, String request) {
-		if (channel.equalsIgnoreCase("slgn:chat")) {
+		if (channel.equalsIgnoreCase("slgn:discord")) {
 			JsonObject obj = gson.fromJson(request, JsonObject.class);
 			if (obj != null) {
-				String servername = obj.get("serverName").getAsString();
 				String message = obj.get("message").getAsString();
 				String discordChannel = obj.get("discordChannel").getAsString();
 				Server.getDiscordBot().broadcast(message, Channel.valueOf(discordChannel));
