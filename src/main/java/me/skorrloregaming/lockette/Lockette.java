@@ -277,20 +277,20 @@ public class Lockette {
 		if (!disabledPluginList.isEmpty()) {
 			Logger.debug("[" + Lockette.pluginName + "] Ignoring linked plugins: " + disabledPluginList.toString());
 		}
-		broadcastSnoopTarget = Server.getLocketteConfig().getData().getString("broadcast-snoop-target");
+		broadcastSnoopTarget = Server.getLocketteConfig().getData().getString("broadcastMessage-snoop-target");
 		if (broadcastSnoopTarget == null) {
 			broadcastSnoopTarget = "[Everyone]";
-			Server.getLocketteConfig().getData().set("broadcast-snoop-target", broadcastSnoopTarget);
+			Server.getLocketteConfig().getData().set("broadcastMessage-snoop-target", broadcastSnoopTarget);
 		}
-		broadcastBreakTarget = Server.getLocketteConfig().getData().getString("broadcast-break-target");
+		broadcastBreakTarget = Server.getLocketteConfig().getData().getString("broadcastMessage-break-target");
 		if (broadcastBreakTarget == null) {
 			broadcastBreakTarget = "[Everyone]";
-			Server.getLocketteConfig().getData().set("broadcast-break-target", broadcastBreakTarget);
+			Server.getLocketteConfig().getData().set("broadcastMessage-break-target", broadcastBreakTarget);
 		}
-		broadcastReloadTarget = Server.getLocketteConfig().getData().getString("broadcast-reload-target");
+		broadcastReloadTarget = Server.getLocketteConfig().getData().getString("broadcastMessage-reload-target");
 		if (broadcastReloadTarget == null) {
 			broadcastReloadTarget = "[Operators]";
-			Server.getLocketteConfig().getData().set("broadcast-reload-target", broadcastReloadTarget);
+			Server.getLocketteConfig().getData().set("broadcastMessage-reload-target", broadcastReloadTarget);
 		}
 		String stringsFileName = Server.getLocketteConfig().getData().getString("strings-file-name");
 		if ((stringsFileName == null) || stringsFileName.isEmpty()) {

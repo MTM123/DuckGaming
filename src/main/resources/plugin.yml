@@ -185,7 +185,7 @@ commands:
     reboot:
         description: Server restart command
     say:
-        description: Customized broadcast system
+        description: Customized broadcastMessage system
     activate-shop:
         description: Gives staff the activation wand
     reload-cfg:

@@ -51,7 +51,7 @@ public class SetRankCmd implements CommandExecutor {
 					}
 					String message = Server.getPluginLabel() + ChatColor.RED + targetPlayer.getName() + ChatColor.GRAY + " has been given rank " + ChatColor.RED + WordUtils.capitalize(args[1].toLowerCase());
 					Bukkit.broadcastMessage(message);
-					$.getLinkServer().getBungeeListener().broadcastMessage(message);
+					$.getLinkServer().getRedisListener().broadcastMessage(message);
 					message = message.substring(message.indexOf(ChatColor.RED + ""));
 					Server.getDiscordBot().broadcast(
 							ChatColor.stripColor(message.replace(targetPlayer.getName(), "**" + targetPlayer.getName() + "**"))
