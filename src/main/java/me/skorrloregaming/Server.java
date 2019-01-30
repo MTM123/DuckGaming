@@ -652,8 +652,6 @@ public class Server extends JavaPlugin implements Listener {
 			voteListener = new Votifier_Listener();
 			voteListener.register();
 		}
-		if (Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false))
-			new BungeeCord_Listener().register();
 		Bukkit.getScheduler().runTask(this, new Runnable() {
 			@Override
 			public void run() {
@@ -1039,6 +1037,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "KitPvP";
 				Bukkit.broadcastMessage(message);
+				$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1067,6 +1066,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "KitPvP";
 				Bukkit.broadcastMessage(message);
+				$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1129,6 +1129,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Factions";
 				Bukkit.broadcastMessage(message);
+				$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1159,6 +1160,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Factions";
 				Bukkit.broadcastMessage(message);
+				$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1221,6 +1223,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Survival";
 				Bukkit.broadcastMessage(message);
+				$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1248,6 +1251,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Survival";
 				Bukkit.broadcastMessage(message);
+				$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1287,6 +1291,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Skyfight";
 				Bukkit.broadcastMessage(message);
+				$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1383,6 +1388,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Skyfight";
 				Bukkit.broadcastMessage(message);
+				$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1455,6 +1461,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Creative";
 				Bukkit.broadcastMessage(message);
+				$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1501,6 +1508,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Creative";
 				Bukkit.broadcastMessage(message);
+				$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1572,6 +1580,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Skyblock";
 				Bukkit.broadcastMessage(message);
+				$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1600,6 +1609,7 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Skyblock";
 				Bukkit.broadcastMessage(message);
+				$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
 				Server.getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))

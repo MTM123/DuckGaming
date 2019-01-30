@@ -1,5 +1,6 @@
 package me.skorrloregaming.discord;
 
+import me.skorrloregaming.discord.listeners.BungeeListener;
 import me.skorrloregaming.discord.listeners.MessageListener;
 import me.skorrloregaming.discord.listeners.ReadyListener;
 import net.dv8tion.jda.core.JDA;
@@ -18,6 +19,7 @@ public class DiscordBot {
 
 	private JDA bot;
 
+	private BungeeListener bungeeListener;
 	private ReadyListener readyListener;
 	private MessageListener messageListener;
 
@@ -32,6 +34,8 @@ public class DiscordBot {
 					.addEventListener(readyListener)
 					.build();
 			messageListener = new MessageListener(this);
+			bungeeListener = new BungeeListener();
+			bungeeListener.register();
 			bot.addEventListener(messageListener);
 			bot.getPresence().setGame(Game.of(Game.GameType.DEFAULT, "Minecraft"));
 		} catch (Exception ex) {
@@ -43,6 +47,7 @@ public class DiscordBot {
 		bot.removeEventListener(messageListener);
 		bot.removeEventListener(readyListener);
 		bot.shutdown();
+		bungeeListener.unregister();
 	}
 
 	public JDA getBot() {

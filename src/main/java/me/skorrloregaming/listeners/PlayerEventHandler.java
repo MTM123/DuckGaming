@@ -931,6 +931,7 @@ public class PlayerEventHandler implements Listener {
 							"**" + player.getName() + "** " + '\u00BB' + " " + $.getLinkServer().getAntiCheat().processAntiSwear(player, event.getMessage(), false, true)
 							, Channel.SERVER_CHAT);
 				}
+				$.getLinkServer().getBungeeListener().broadcastMessage(player, msg);
 			}
 			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 				if (muted) {
@@ -1202,7 +1203,8 @@ public class PlayerEventHandler implements Listener {
 		}
 		if (CraftGo.Player.getUUID(player.getName(), false) == null) {
 			String message = Link$.italicGray + "Player " + player.getName() + " is using an offline/cracked account";
-			Logger.info(message);
+			Bukkit.broadcastMessage(message);
+			$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 			Server.getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 					, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
@@ -1247,6 +1249,7 @@ public class PlayerEventHandler implements Listener {
 								int day = cal.get(Calendar.DAY_OF_MONTH);
 								String message = Link$.italicGray + "Player " + player.getName() + " previously logged in on " + Link$.formatMonthIdAbbrev(month) + " " + day + Link$.formatDayOfMonthSuffix(day) + " " + year;
 								Bukkit.broadcastMessage(message);
+								$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 								Server.getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 										, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
@@ -1270,6 +1273,7 @@ public class PlayerEventHandler implements Listener {
 							if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString())) {
 								String message = Link$.italicGray + "Player " + player.getName() + " has yet to register for the server";
 								Bukkit.broadcastMessage(message);
+								$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 								Server.getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 										, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
@@ -1277,6 +1281,7 @@ public class PlayerEventHandler implements Listener {
 							if (Server.getSessionManager().getStoredSession(player, hostAddr) == null) {
 								String message = Link$.italicGray + "Player " + player.getName() + " has yet to register new session";
 								Bukkit.broadcastMessage(message);
+								$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 								Server.getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 										, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
@@ -1369,6 +1374,7 @@ public class PlayerEventHandler implements Listener {
 			Server.getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 					, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+			$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 		}
 		Server.getPlugin().getConfig().set(path + ".ip", ipAddress);
 		Server.getPlugin().getConfig().set("address." + ipAddress + "." + player.getUniqueId().toString(), "0");
@@ -1539,6 +1545,7 @@ public class PlayerEventHandler implements Listener {
 				)
 				, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
 		);
+		$.getLinkServer().getBungeeListener().broadcastMessage(player, event.getJoinMessage());
 	}
 
 	@EventHandler
@@ -1570,6 +1577,7 @@ public class PlayerEventHandler implements Listener {
 			player.setHealth(0.0);
 			String message = Server.getPluginLabel() + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged out during combat.";
 			Bukkit.broadcastMessage(message);
+			$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 			message = message.substring(message.indexOf(ChatColor.RED + ""));
 			Server.getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1629,6 +1637,7 @@ public class PlayerEventHandler implements Listener {
 				if (!Server.getOnlineMode().getOrDefault(player.getUniqueId(), false)) {
 					String message = Link$.italicGray + "Player " + player.getName() + " has left without registering for this server";
 					Bukkit.broadcastMessage(message);
+					$.getLinkServer().getBungeeListener().broadcastMessage(player, message);
 					Server.getDiscordBot().broadcast(
 							ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 							, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
@@ -1642,6 +1651,7 @@ public class PlayerEventHandler implements Listener {
 				$.skyfightScoreboard.schedule(op, true);
 		if (Server.getOnlineMode().containsKey(player.getUniqueId()))
 			Server.getOnlineMode().remove(player.getUniqueId());
+		$.getLinkServer().getBungeeListener().broadcastMessage(player, event.getQuitMessage());
 	}
 
 	@EventHandler
