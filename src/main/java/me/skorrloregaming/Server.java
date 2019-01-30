@@ -618,6 +618,8 @@ public class Server extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new BlockEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new PlayerEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new EntityEventHandler(), this);
+		if (getConfig().getBoolean("settings.bungeecord", false))
+			getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		pingInjector = new PingInjector();
 		chatitem = new ChatItem();
 		chatitem.onEnable();
