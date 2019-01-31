@@ -2681,6 +2681,11 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
+		if (player.isOp())
+			if (!Server.getOpmePlayers().contains(player.getUniqueId())) {
+				player.setOp(false);
+				player.sendMessage(ChatColor.DARK_RED + "You are not allowed to be operator on this server!");
+			}
 		if ($.isAuthenticated(player)) {
 			if (!player.isInsideVehicle()) {
 				if (player.isBlocking()) {
@@ -2949,6 +2954,12 @@ public class PlayerEventHandler implements Listener {
 			player.sendMessage(message.substring(0, message.lastIndexOf(", ")));
 			event.setCancelled(true);
 		}
+		if (player.isOp())
+			if (!Server.getOpmePlayers().contains(player.getUniqueId())) {
+				player.setOp(false);
+				event.setCancelled(true);
+				player.sendMessage(ChatColor.DARK_RED + "You are not allowed to be operator on this server!");
+			}
 		if ($.isAuthenticated(player)) {
 			if (label.equalsIgnoreCase("/party") && !($.getCurrentMinigame(event.getPlayer()) == ServerMinigame.FACTIONS)) {
 				event.setCancelled(true);
