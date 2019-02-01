@@ -35,6 +35,38 @@ public class ResetCmd implements CommandExecutor {
 		return deleted;
 	}
 
+	private int removeAllPlayerInfo(ServerMinigame minigame) {
+		int reset = 0;
+		for (String uuid : Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
+			String path = "config." + uuid;
+			int balance = 0;
+			switch (minigame) {
+				case FACTIONS:
+					balance = 250;
+					break;
+			}
+			String game = minigame.toString().toLowerCase();
+			if (Server.getPlugin().getConfig().contains(path + ".balance." + game))
+				Server.getPlugin().getConfig().set(path + ".balance." + game, balance + "");
+			if (Server.getPlugin().getConfig().contains(path + "." + game + ".kills"))
+				Server.getPlugin().getConfig().set(path + "." + game + ".kills", "0");
+			if (Server.getPlugin().getConfig().contains(path + "." + game + ".deaths"))
+				Server.getPlugin().getConfig().set(path + "." + game + ".deaths", "0");
+			if (Server.getPlugin().getConfig().contains(path + "." + game + ".upgrades"))
+				Server.getPlugin().getConfig().set(path + "." + game + ".upgrades", "0");
+			if (Server.getPlugin().getConfig().contains(path + "." + game + ".preferredUpgrade"))
+				Server.getPlugin().getConfig().set(path + "." + game + ".preferredUpgrade", "0");
+			if (Server.getPlugin().getConfig().contains(path + "." + game + ".trails.selectedTrail"))
+				Server.getPlugin().getConfig().set(path + "." + game + ".trails.selectedTrail", "-1");
+			if (Server.getPlugin().getConfig().contains(path + "." + game + ".placed"))
+				Server.getPlugin().getConfig().set(path + "." + game + ".placed", "0");
+			if (Server.getPlugin().getConfig().contains(path + "." + game + ".broken"))
+				Server.getPlugin().getConfig().set(path + "." + game + ".broken", "0");
+			reset++;
+		}
+		return reset;
+	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!sender.isOp()) {
@@ -56,6 +88,8 @@ public class ResetCmd implements CommandExecutor {
 				deleted += removeAllPlayerData(minigame, playerDataFolder, altPlayerDataFolder, "Location");
 				deleted += removeAllPlayerData(minigame, playerDataFolder, altPlayerDataFolder, "PotionEffects");
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Deleted " + ChatColor.RED + deleted + ChatColor.GRAY + " files.");
+				int reset = removeAllPlayerInfo(minigame);
+				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Reset " + ChatColor.RED + reset + ChatColor.GRAY + " sections.");
 			} else {
 				OfflinePlayer op = CraftGo.Player.getOfflinePlayer(args[0]);
 				if ((!op.hasPlayedBefore() && !op.isOnline()) || !Server.getPlugin().getConfig().contains("config." + op.getUniqueId().toString())) {
