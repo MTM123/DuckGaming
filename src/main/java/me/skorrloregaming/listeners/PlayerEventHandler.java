@@ -1343,8 +1343,8 @@ public class PlayerEventHandler implements Listener {
 		Server.getSessionManager().updateSession(player, new Session(LinkSessionManager.encodeHex(ipAddress.replace("x", ".")).toCharArray(), player, System.currentTimeMillis()));
 		if (!Server.getPlugin().getConfig().contains(path)) {
 			Server.getPlugin().getConfig().set(path + ".username", displayName);
-			LinkServer.getInstance().getSqlDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
-			LinkServer.getInstance().getSqlDatabase().set("donorRank", player.getUniqueId().toString(), Link$.validDonorRanks.get(0));
+			LinkServer.getInstance().getRedisDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
+			LinkServer.getInstance().getRedisDatabase().set("donorRank", player.getUniqueId().toString(), Link$.validDonorRanks.get(0));
 			Server.getPlugin().getConfig().set(path + ".marry.marriedTo", "0");
 			Server.getPlugin().getConfig().set(path + ".marry.marriageId", "0");
 			Server.getPlugin().getConfig().set(path + ".marry.marriedPvp", "true");
@@ -1455,23 +1455,23 @@ public class PlayerEventHandler implements Listener {
 				String uuid = offlineUUID.toString();
 				if (!Bukkit.getOnlineMode())
 					uuid = onlineUUID;
-				if (LinkServer.getInstance().getSqlDatabase().contains("playtime.total", uuid)) {
+				if (LinkServer.getInstance().getRedisDatabase().contains("playtime.total", uuid)) {
 					for (int day = 0; day <= 365; day++) {
-						if (LinkServer.getInstance().getSqlDatabase().contains("playtime.dayOfYear." + day, uuid)) {
-							String value = LinkServer.getInstance().getSqlDatabase().getString("playtime.dayOfYear." + day, uuid);
-							LinkServer.getInstance().getSqlDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
-							LinkServer.getInstance().getSqlDatabase().set("playtime.dayOfYear." + day, uuid, null);
+						if (LinkServer.getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, uuid)) {
+							String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.dayOfYear." + day, uuid);
+							LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
+							LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, uuid, null);
 						}
 					}
 					{
-						String value = LinkServer.getInstance().getSqlDatabase().getString("playtime.total", uuid);
-						LinkServer.getInstance().getSqlDatabase().set("playtime.total", player.getUniqueId().toString(), value);
-						LinkServer.getInstance().getSqlDatabase().set("playtime.total", uuid, null);
+						String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.total", uuid);
+						LinkServer.getInstance().getRedisDatabase().set("playtime.total", player.getUniqueId().toString(), value);
+						LinkServer.getInstance().getRedisDatabase().set("playtime.total", uuid, null);
 					}
 					{
-						String value = LinkServer.getInstance().getSqlDatabase().getString("playtime.lastKnownDayOfYear", uuid);
-						LinkServer.getInstance().getSqlDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
-						LinkServer.getInstance().getSqlDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
+						String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.lastKnownDayOfYear", uuid);
+						LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
+						LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
 					}
 				}
 				if (Server.getSurvivalConfig().getData().contains("homes." + uuid)) {

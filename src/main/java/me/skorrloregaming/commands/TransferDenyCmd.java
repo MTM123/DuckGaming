@@ -26,13 +26,13 @@ public class TransferDenyCmd implements CommandExecutor {
 				SolidStorage.clearPlayerSave(CraftGo.Player.getOfflinePlayer(uuid), domain);
 			Server.getPlugin().getConfig().set("config." + uuid, null);
 			Server.getPlugin().getConfig().set("denyDataTransfer." + uuid, true);
-			if (LinkServer.getInstance().getSqlDatabase().contains("playtime.total", uuid)) {
+			if (LinkServer.getInstance().getRedisDatabase().contains("playtime.total", uuid)) {
 				for (int day = 0; day <= 365; day++) {
-					if (LinkServer.getInstance().getSqlDatabase().contains("playtime.dayOfYear." + day, uuid))
-						LinkServer.getInstance().getSqlDatabase().set("playtime.dayOfYear." + day, uuid, null);
+					if (LinkServer.getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, uuid))
+						LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, uuid, null);
 				}
-				LinkServer.getInstance().getSqlDatabase().set("playtime.total", uuid, null);
-				LinkServer.getInstance().getSqlDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
+				LinkServer.getInstance().getRedisDatabase().set("playtime.total", uuid, null);
+				LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
 			}
 			Server.getSurvivalConfig().getData().set("homes." + uuid, null);
 			Server.getSurvivalConfig().saveData();

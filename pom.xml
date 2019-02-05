@@ -215,7 +215,7 @@
 		<dependency>
 			<groupId>com.github.SkorrloreGaming</groupId>
 			<artifactId>SkorrloreGamingLink</artifactId>
-			<version>2df949bde2</version>
+			<version>31bd7a20f1</version>
 		</dependency>
 		<dependency>
 			<groupId>redis.clients</groupId>
