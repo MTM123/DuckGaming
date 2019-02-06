@@ -858,7 +858,7 @@ public class PlayerEventHandler implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerChat(AsyncPlayerChatEvent event) {
+	public void onPlayerChat(PlayerChatEvent event) {
 		Player player = event.getPlayer();
 		if (!event.isCancelled() && !$.isAuthenticated(player)) {
 			event.setCancelled(true);
@@ -1380,8 +1380,14 @@ public class PlayerEventHandler implements Listener {
 		}
 		Server.getPlugin().getConfig().set(path + ".ip", ipAddress);
 		Server.getPlugin().getConfig().set("address." + ipAddress + "." + player.getUniqueId().toString(), "0");
-		if (Link$.isPrefixedRankingEnabled())
-			Link$.flashPlayerDisplayName(player);
+		Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
+
+			@Override
+			public void run() {
+				if (Link$.isPrefixedRankingEnabled())
+					Link$.flashPlayerDisplayName(player);
+			}
+		});
 		if ($.isWelcomeMessageEnabled()) {
 			player.sendMessage(ChatColor.GRAY + "/ Welcome to the server " + ChatColor.RED + player.getName());
 			player.sendMessage(ChatColor.GRAY + "/ Type " + ChatColor.RED + "/help" + ChatColor.GRAY + " for a list of authentic commands.");
@@ -1399,18 +1405,19 @@ public class PlayerEventHandler implements Listener {
 			}
 		}
 		if (Server.getModeratingPlayers().containsKey(player.getUniqueId())) {
-			int rankID = Link$.getRankId(player);
-			if (rankID > 0 || player.isOp()) {
-				player.sendMessage(ChatColor.RED + "Notice. " + ChatColor.GRAY + "You are currently still moderating the server.");
-			} else {
-				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
-					@Override
-					public void run() {
+			Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+
+				@Override
+				public void run() {
+					int rankID = Link$.getRankId(player);
+					if (rankID > 0 || player.isOp()) {
+						player.sendMessage(ChatColor.RED + "Notice. " + ChatColor.GRAY + "You are currently still moderating the server.");
+					} else {
 						if (!(player == null) && player.isOnGround())
 							player.performCommand("moderate");
 					}
-				}, 10L);
-			}
+				}
+			}, 10L);
 		}
 		player.addAttachment(Server.getPlugin(), "usb.social", true);
 		player.addAttachment(Server.getPlugin(), "usb.biome.*", true);
@@ -1423,7 +1430,7 @@ public class PlayerEventHandler implements Listener {
 		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
-				UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + player.getName()).getBytes());
+				final UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + player.getName()).getBytes());
 				String offlinePath = "config." + offlineUUID.toString();
 				String onlineUUID = null;
 				if (!Bukkit.getServer().getOnlineMode()) {
@@ -1431,6 +1438,7 @@ public class PlayerEventHandler implements Listener {
 					if (onlineUUID == null)
 						return;
 				}
+				final String fOnlineUUID = onlineUUID;
 				String onlinePath = null;
 				if (!(onlineUUID == null))
 					onlinePath = "config." + onlineUUID.toString();
@@ -1455,66 +1463,73 @@ public class PlayerEventHandler implements Listener {
 				String uuid = offlineUUID.toString();
 				if (!Bukkit.getOnlineMode())
 					uuid = onlineUUID;
-				if (LinkServer.getInstance().getRedisDatabase().contains("playtime.total", uuid)) {
-					for (int day = 0; day <= 365; day++) {
-						if (LinkServer.getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, uuid)) {
-							String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.dayOfYear." + day, uuid);
-							LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
-							LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, uuid, null);
-						}
-					}
-					{
-						String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.total", uuid);
-						LinkServer.getInstance().getRedisDatabase().set("playtime.total", player.getUniqueId().toString(), value);
-						LinkServer.getInstance().getRedisDatabase().set("playtime.total", uuid, null);
-					}
-					{
-						String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.lastKnownDayOfYear", uuid);
-						LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
-						LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
-					}
-				}
-				if (Server.getSurvivalConfig().getData().contains("homes." + uuid)) {
-					Set<String> array1 = Server.getSurvivalConfig().getData().getConfigurationSection("homes." + uuid).getKeys(true);
-					for (String value : array1) {
-						String valuePath = "homes." + player.getUniqueId().toString() + "." + value;
-						String oldValuePath = "homes." + uuid + "." + value;
-						Server.getSurvivalConfig().getData().set(valuePath, Server.getSurvivalConfig().getData().get(oldValuePath));
-					}
-					Server.getSurvivalConfig().getData().set("homes." + uuid, null);
-					Server.getSurvivalConfig().saveData();
-				}
-				if (Server.getFactionsConfig().getData().contains("homes." + uuid)) {
-					Set<String> array1 = Server.getFactionsConfig().getData().getConfigurationSection("homes." + uuid).getKeys(true);
-					for (String value : array1) {
-						String valuePath = "homes." + player.getUniqueId().toString() + "." + value;
-						String oldValuePath = "homes." + uuid + "." + value;
-						Server.getFactionsConfig().getData().set(valuePath, Server.getFactionsConfig().getData().get(oldValuePath));
-					}
-					Server.getFactionsConfig().getData().set("homes." + uuid, null);
-					Server.getFactionsConfig().saveData();
-				}
-				for (String storageMinigame : $.validStorageMinigames) {
-					if (Bukkit.getServer().getOnlineMode()) {
-						if (SolidStorage.dataOfflineModeToOnlineMode(player, storageMinigame)) {
-							Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
-								@Override
-								public void run() {
-									player.performCommand("hub -nosave");
+				final String fUUID = uuid;
+				Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
+
+					@Override
+					public void run() {
+						if (LinkServer.getInstance().getRedisDatabase().contains("playtime.total", fUUID)) {
+							for (int day = 0; day <= 365; day++) {
+								if (LinkServer.getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, fUUID)) {
+									String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.dayOfYear." + day, fUUID);
+									LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
+									LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, fUUID, null);
 								}
-							});
+							}
+							{
+								String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.total", fUUID);
+								LinkServer.getInstance().getRedisDatabase().set("playtime.total", player.getUniqueId().toString(), value);
+								LinkServer.getInstance().getRedisDatabase().set("playtime.total", fUUID, null);
+							}
+							{
+								String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.lastKnownDayOfYear", fUUID);
+								LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
+								LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", fUUID, null);
+							}
 						}
-					} else {
-						if (SolidStorage.dataOnlineModeToOfflineMode(player, storageMinigame, onlineUUID)) {
-							Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
-								@Override
-								public void run() {
-									player.performCommand("hub -nosave");
+						if (Server.getSurvivalConfig().getData().contains("homes." + fUUID)) {
+							Set<String> array1 = Server.getSurvivalConfig().getData().getConfigurationSection("homes." + fUUID).getKeys(true);
+							for (String value : array1) {
+								String valuePath = "homes." + player.getUniqueId().toString() + "." + value;
+								String oldValuePath = "homes." + fUUID + "." + value;
+								Server.getSurvivalConfig().getData().set(valuePath, Server.getSurvivalConfig().getData().get(oldValuePath));
+							}
+							Server.getSurvivalConfig().getData().set("homes." + fUUID, null);
+							Server.getSurvivalConfig().saveData();
+						}
+						if (Server.getFactionsConfig().getData().contains("homes." + fUUID)) {
+							Set<String> array1 = Server.getFactionsConfig().getData().getConfigurationSection("homes." + fUUID).getKeys(true);
+							for (String value : array1) {
+								String valuePath = "homes." + player.getUniqueId().toString() + "." + value;
+								String oldValuePath = "homes." + fUUID + "." + value;
+								Server.getFactionsConfig().getData().set(valuePath, Server.getFactionsConfig().getData().get(oldValuePath));
+							}
+							Server.getFactionsConfig().getData().set("homes." + fUUID, null);
+							Server.getFactionsConfig().saveData();
+						}
+						for (String storageMinigame : $.validStorageMinigames) {
+							if (Bukkit.getServer().getOnlineMode()) {
+								if (SolidStorage.dataOfflineModeToOnlineMode(player, storageMinigame)) {
+									Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
+										@Override
+										public void run() {
+											player.performCommand("hub -nosave");
+										}
+									});
 								}
-							});
+							} else {
+								if (SolidStorage.dataOnlineModeToOfflineMode(player, storageMinigame, fOnlineUUID)) {
+									Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
+										@Override
+										public void run() {
+											player.performCommand("hub -nosave");
+										}
+									});
+								}
+							}
 						}
 					}
-				}
+				});
 
 				String[] rawNameChanges = null;
 				if (Bukkit.getOnlineMode()) {
