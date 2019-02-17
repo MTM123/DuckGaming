@@ -657,6 +657,8 @@ public class PlayerEventHandler implements Listener {
 						return;
 					}
 					ItemStack item = player.getInventory().getItem(9);
+					if (item == null)
+						item = Link$.createMaterial(Material.AIR);
 					storedItem.put(player, item);
 					player.getInventory().setItem(9, new ItemStack(Material.ARROW, 1));
 					return;
