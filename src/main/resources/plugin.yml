@@ -29,9 +29,6 @@ commands:
             /<command> fix - Fixes an automatic door that is in the wrong position. Look at the door to edit.
             /<command> reload - Reloads the configuration files.  Operators only.
             /<command> version - Reports Lockette version string.
-    ignore:
-        description: Ignore the specified player until the next server update
-        alaises: ig
     spoof-vote:
         description: Spoof a number of votes for the specified player
         aliases: [spoofvote, sv]
@@ -201,12 +198,6 @@ commands:
         description: Retrieves a list of the valid servers
     server:
         description: Teleport to the specified server
-    reply:
-        description: Message the person you last messaged
-        aliases: r
-    tell:
-        description: Message a player on the server
-        aliases: [msg, message, w, pm]
     statistics:
         description: View the stats for the current minigame
         aliases: stats

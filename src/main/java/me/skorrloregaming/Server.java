@@ -105,7 +105,6 @@ public class Server extends JavaPlugin implements Listener {
 
 	private static ConcurrentMap<UUID, UUID> tpaRequests = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, UUID> marriageRequests = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, UUID> messageRequests = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, VanishedInfo> vanishedPlayers = new ConcurrentHashMap<>();
 	private static ConcurrentMap<Player, Player> savePersonalChest = new ConcurrentHashMap<>();
 	private static ConcurrentMap<Player, Player> saveOtherInventory = new ConcurrentHashMap<>();
@@ -127,7 +126,6 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConcurrentMap<UUID, DelayedTeleport> delayedTeleports = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, SwitchIntDouble> playersInCombat = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, ServerMinigame> moderatingPlayers = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, UUID> ignoredPlayers = new ConcurrentHashMap<>();
 
 	private static String defaultJoinMessage = null;
 	private static String defaultQuitMessage = null;
@@ -277,10 +275,6 @@ public class Server extends JavaPlugin implements Listener {
 		return moderatingPlayers;
 	}
 
-	public static ConcurrentMap<UUID, UUID> getIgnoredPlayers() {
-		return ignoredPlayers;
-	}
-
 	public static ArrayList<UUID> getDoubleJumpCandidates() {
 		return doubleJumpCandidates;
 	}
@@ -315,10 +309,6 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static ConcurrentMap<UUID, UUID> getMarriageRequests() {
 		return marriageRequests;
-	}
-
-	public static ConcurrentMap<UUID, UUID> getMessageRequests() {
-		return messageRequests;
 	}
 
 	public static ConcurrentMap<UUID, VanishedInfo> getVanishedPlayers() {
@@ -702,7 +692,6 @@ public class Server extends JavaPlugin implements Listener {
 		getCommand("feed").setExecutor(new FeedCmd());
 		getCommand("fly").setExecutor(new FlyCmd());
 		getCommand("printblockstate").setExecutor(new PrintBlockStateCmd());
-		getCommand("ignore").setExecutor(new IgnoreCmd());
 		getCommand("spoof-vote").setExecutor(new SpoofVoteCmd());
 		getCommand("playertime").setExecutor(new PlayertimeCmd());
 		getCommand("sessions").setExecutor(new SessionsCmd());
@@ -764,8 +753,6 @@ public class Server extends JavaPlugin implements Listener {
 		getCommand("enable-plugin").setExecutor(new EnablePluginCmd());
 		getCommand("servers").setExecutor(new ServersCmd());
 		getCommand("server").setExecutor(new ServerCmd());
-		getCommand("reply").setExecutor(new ReplyCmd());
-		getCommand("tell").setExecutor(new TellCmd());
 		getCommand("statistics").setExecutor(new StatisticsCmd());
 		getCommand("spawn").setExecutor(new SpawnCmd());
 		getCommand("kit").setExecutor(new KitCmd());

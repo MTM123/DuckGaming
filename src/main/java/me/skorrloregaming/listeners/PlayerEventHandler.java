@@ -881,8 +881,9 @@ public class PlayerEventHandler implements Listener {
 			message = ChatColor.translateAlternateColorCodes('&', message);
 			OfflinePlayer targetPlayer = $.Marriage.getMarriedOfflinePlayer(player);
 			if (targetPlayer.isOnline()) {
-				if (Server.getIgnoredPlayers().containsKey(targetPlayer.getUniqueId())) {
-					Player existingIgnore = Bukkit.getPlayer(Server.getIgnoredPlayers().get(targetPlayer.getUniqueId()));
+				UUID uid;
+				if ((uid = Link$.getIgnoredPlayer(targetPlayer.getUniqueId())) != null) {
+					Player existingIgnore = Bukkit.getPlayer(uid);
 					if (!existingIgnore.getName().toString().equals(player.getName().toString())) {
 						targetPlayer.getPlayer().sendMessage(message);
 					}
@@ -953,8 +954,9 @@ public class PlayerEventHandler implements Listener {
 						onlinePlayer.sendMessage(msg);
 					}
 				} else {
-					if (Server.getIgnoredPlayers().containsKey(onlinePlayer.getUniqueId())) {
-						Player existingIgnore = Bukkit.getPlayer(Server.getIgnoredPlayers().get(onlinePlayer.getUniqueId()));
+					UUID uid;
+					if ((uid = Link$.getIgnoredPlayer(onlinePlayer.getUniqueId())) != null) {
+						Player existingIgnore = Bukkit.getPlayer(uid);
 						if (!existingIgnore.getName().toString().equals(player.getName().toString())) {
 							onlinePlayer.sendMessage(msg);
 						}
@@ -1649,13 +1651,6 @@ public class PlayerEventHandler implements Listener {
 				$.teleport(player, hubLocation);
 				Server.getInstance().fetchLobby(player);
 				player.setAllowFlight(true);
-			}
-		}
-		if (Server.getMessageRequests().containsKey(player.getUniqueId()))
-			Server.getMessageRequests().remove(player.getUniqueId());
-		for (Map.Entry<UUID, UUID> id : Server.getMessageRequests().entrySet()) {
-			if (id.getValue().equals(player.getUniqueId())) {
-				Server.getMessageRequests().remove(id.getKey());
 			}
 		}
 		if (player.isInsideVehicle())
