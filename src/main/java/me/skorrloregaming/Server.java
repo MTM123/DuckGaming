@@ -760,8 +760,6 @@ public class Server extends JavaPlugin implements Listener {
 		getCommand("shop").setExecutor(new ShopCmd());
 		getCommand("setzone").setExecutor(new SetZoneCmd());
 		getCommand("warp").setExecutor(new WarpCmd());
-		getCommand("setrank").setExecutor(new SetRankCmd());
-		getCommand("setdonorrank").setExecutor(new SetDonorRankCmd());
 		getCommand("disable-plugin").setExecutor(new DisablePluginCmd());
 		getCommand("enable-plugin").setExecutor(new EnablePluginCmd());
 		getCommand("servers").setExecutor(new ServersCmd());

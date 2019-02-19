@@ -1361,6 +1361,7 @@ public class PlayerEventHandler implements Listener {
 			Server.getPlugin().getConfig().set(path + ".username", displayName);
 			LinkServer.getInstance().getRedisDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
 			LinkServer.getInstance().getRedisDatabase().set("donorRank", player.getUniqueId().toString(), Link$.validDonorRanks.get(0));
+			LinkServer.getInstance().getRedisMessenger().ping(RedisChannel.CHAT, "RANK_UPDATE", player.getName());
 			Server.getPlugin().getConfig().set(path + ".marry.marriedTo", "0");
 			Server.getPlugin().getConfig().set(path + ".marry.marriageId", "0");
 			Server.getPlugin().getConfig().set(path + ".marry.marriedPvp", "true");

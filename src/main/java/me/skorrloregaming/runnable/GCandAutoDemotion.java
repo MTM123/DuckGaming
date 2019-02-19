@@ -106,6 +106,7 @@ public class GCandAutoDemotion implements Runnable {
 								if (Link$.isPrefixedRankingEnabled() && player.isOnline()) {
 									Link$.flashPlayerDisplayName(player.getPlayer());
 								}
+								LinkServer.getInstance().getRedisMessenger().ping(RedisChannel.CHAT, "RANK_UPDATE", player.getName());
 							} else {
 								Logger.debug("An unexpected error occured during the auto-promotion task of promoting " + player.getName() + " to Manager.");
 							}
@@ -121,6 +122,7 @@ public class GCandAutoDemotion implements Runnable {
 						if (Link$.isPrefixedRankingEnabled() && player.isOnline()) {
 							Link$.flashPlayerDisplayName(player.getPlayer());
 						}
+						LinkServer.getInstance().getRedisMessenger().ping(RedisChannel.CHAT, "RANK_UPDATE", player.getName());
 					}
 				}
 			}
