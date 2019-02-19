@@ -657,9 +657,9 @@ public class PlayerEventHandler implements Listener {
 						return;
 					}
 					ItemStack item = player.getInventory().getItem(9);
-					if (item == null)
-						item = Link$.createMaterial(Material.AIR);
-					storedItem.put(player, item);
+					if (!(item == null || item.getType() == Material.AIR)) {
+						storedItem.put(player, item);
+					}
 					player.getInventory().setItem(9, new ItemStack(Material.ARROW, 1));
 					return;
 				}
@@ -867,7 +867,10 @@ public class PlayerEventHandler implements Listener {
 			return;
 		}
 		if (Link$.getRankId(player) > -1 && Server.getStaffChatPlayers().contains(player.getUniqueId())) {
-			Logger.info("[sc] " + ChatColor.stripColor(player.getDisplayName()) + ": " + event.getMessage());
+			String rawMessage = "[sc] " + ChatColor.stripColor(player.getDisplayName()) + ": " + event.getMessage();
+			Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
+			LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+			Logger.info(rawMessage);
 			event.setCancelled(true);
 			return;
 		}
@@ -887,10 +890,14 @@ public class PlayerEventHandler implements Listener {
 					targetPlayer.getPlayer().sendMessage(message);
 				}
 				player.sendMessage(message);
-				Logger.info(Link$.italicGray + ChatColor.stripColor(message));
+				String rawMessage = Link$.italicGray + ChatColor.stripColor(message);
+				Map<String, String> broadcastMessage = new MapBuilder().message(rawMessage).range(0).build();
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, broadcastMessage);
+				Logger.info(rawMessage);
 			} else {
-				player.sendMessage("Target player is not online to chat right now.");
-				player.performCommand("marry chat");
+				Map<String, String> broadcastMessage = new MapBuilder().message(message).playerName(targetPlayer.getName()).build();
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, broadcastMessage);
+				player.sendMessage(message);
 			}
 			event.setCancelled(true);
 			return;
@@ -917,6 +924,8 @@ public class PlayerEventHandler implements Listener {
 		if (player.isOp() || rank > -1 || donorRank < -2) {
 			msg = ChatColor.translateAlternateColorCodes('&', msg);
 		}
+		Map<String, String> message = new MapBuilder().message(msg).range(0).consoleOnly(true).build();
+		LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 		Logger.info(msg, true);
 		boolean isCancelled = event.isCancelled();
 		event.setCancelled(true);
@@ -991,17 +1000,6 @@ public class PlayerEventHandler implements Listener {
 		returnItem(event.getPlayer());
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void EntityShootBowEvent(EntityShootBowEvent event) {
-		if (event.getEntity() instanceof Player) {
-			Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
-				public void run() {
-					returnItem((Player) event.getEntity());
-				}
-			}, 5L);
-		}
-	}
-
 	private void returnItem(Player player) {
 		if (storedItem.containsKey(player.getPlayer())) {
 			player.getInventory().setItem(9, storedItem.get(player));
@@ -1035,7 +1033,10 @@ public class PlayerEventHandler implements Listener {
 			if (ld.isAfter(LocalDate.now())) {
 				String disallowMsg = disallowMessage.toString();
 				event.disallow(PlayerLoginEvent.Result.KICK_OTHER, disallowMsg);
-				Logger.info(Link$.italicGray + "Server: Disallow " + event.getPlayer().getName() + " '" + disallowMsg + "'", false);
+				String rawMessage = Link$.italicGray + "Server: Disallow " + event.getPlayer().getName() + " '" + disallowMsg + "'";
+				Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+				Logger.info(rawMessage);
 			}
 		}
 	}
@@ -1098,7 +1099,10 @@ public class PlayerEventHandler implements Listener {
 			} else {
 				Server.getHideLoginMessage().put(Integer.valueOf(uuidHash), Long.valueOf(Instant.now().getEpochSecond()) + 30);
 			}
-			Logger.info(Link$.italicGray + "Server: Disallow " + event.getName() + " '" + kickMessage + "'", consoleOnly);
+			String rawMessage = Link$.italicGray + "Server: Disallow " + event.getName() + " '" + kickMessage + "'";
+			Map<String, String> message = new MapBuilder().message(rawMessage).range(0).consoleOnly(consoleOnly).build();
+			LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+			Logger.info(rawMessage, consoleOnly);
 		} else {
 			if (Server.getHideLoginMessage().containsKey(Integer.valueOf(uuidHash)))
 				Server.getHideLoginMessage().remove(Integer.valueOf(uuidHash));
@@ -1114,8 +1118,18 @@ public class PlayerEventHandler implements Listener {
 			@Override
 			public void run() {
 				IpLocationQuery query = CraftGo.Player.queryIpLocation(player);
-				Logger.info("Defined country of " + player.getName() + ": " + query.getCountry(), true);
-				Logger.info("Defined geo-location of " + player.getName() + ": " + query.getCity() + ", " + query.getState(), true);
+				{
+					String rawMessage = "Defined country of " + player.getName() + ": " + query.getCountry();
+					Map<String, String> message = new MapBuilder().message(rawMessage).range(0).consoleOnly(true).build();
+					LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+					Logger.info(rawMessage, true);
+				}
+				{
+					String rawMessage = "Defined geo-location of " + player.getName() + ": " + query.getCity() + ", " + query.getState();
+					Map<String, String> message = new MapBuilder().message(rawMessage).range(0).consoleOnly(true).build();
+					LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+					Logger.info(rawMessage, true);
+				}
 			}
 		});
 		CraftGo.Player.getUUID(player.getName(), false, true);
@@ -2625,6 +2639,12 @@ public class PlayerEventHandler implements Listener {
 					}
 				}, 7L);
 			}
+		} else if (event.getProjectile() instanceof Arrow) {
+			Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+				public void run() {
+					returnItem(player);
+				}
+			}, 5L);
 		}
 	}
 

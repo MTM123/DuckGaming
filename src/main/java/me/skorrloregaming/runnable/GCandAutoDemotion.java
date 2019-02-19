@@ -1,6 +1,8 @@
 package me.skorrloregaming.runnable;
 
 import me.skorrloregaming.*;
+import me.skorrloregaming.redis.MapBuilder;
+import me.skorrloregaming.redis.RedisChannel;
 import org.bukkit.OfflinePlayer;
 
 import java.io.File;
@@ -20,7 +22,10 @@ public class GCandAutoDemotion implements Runnable {
 					if (!player2.hasPlayedBefore() && !player.isOnline()) {
 						Server.getPlugin().getConfig().set(configPath, null);
 						Server.getPlugin().getConfig().set("config." + player2.getUniqueId(), null);
-						Logger.info("Cleared old records (1) of " + username + ".");
+						String rawMessage = "Cleared old records (1) of " + username + ".";
+						Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
+						LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+						Logger.info(rawMessage);
 						for (String domain : $.validStorageMinigames)
 							SolidStorage.clearPlayerSave(player, domain);
 						for (String domain : $.validStorageMinigames)
@@ -30,14 +35,20 @@ public class GCandAutoDemotion implements Runnable {
 					}
 				} else {
 					Server.getPlugin().getConfig().set(configPath, null);
-					Logger.info("Cleared old records (1) of " + id + ".");
+					String rawMessage = "Cleared old records (1) of " + id + ".";
+					Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
+					LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+					Logger.info(rawMessage);
 					for (String domain : $.validStorageMinigames)
 						SolidStorage.clearPlayerSave(player, domain);
 				}
 			} else {
 				if (!Server.getPlugin().getConfig().contains(configPath + ".username")) {
 					Server.getPlugin().getConfig().set(configPath, null);
-					Logger.info("Cleared old records (1) of " + player.getName() + ".");
+					String rawMessage = "Cleared old records (1) of " + player.getName() + ".";
+					Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
+					LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+					Logger.info(rawMessage);
 					for (String domain : $.validStorageMinigames)
 						SolidStorage.clearPlayerSave(player, domain);
 				}
@@ -52,7 +63,10 @@ public class GCandAutoDemotion implements Runnable {
 					id = id.substring(0, id.indexOf("."));
 				if (!Server.getPlugin().getConfig().contains("config." + id)) {
 					new File("plugins/uSkyBlock/players", names.get(i)).delete();
-					Logger.info("Cleared skyblock records (1) of " + id + ".");
+					String rawMessage = "Cleared skyblock records (1) of " + id + ".";
+					Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
+					LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+					Logger.info(rawMessage);
 				}
 			}
 		} else {
@@ -84,7 +98,10 @@ public class GCandAutoDemotion implements Runnable {
 					if (rank.equals("admin")) {
 						if (totalPlaytime > managerPlaytimeRequirement) {
 							if (Link$.validRanks.contains("manager")) {
-								Logger.info("Auto-promotion of " + player.getName() + " to Manager");
+								String rawMessage = "Auto-promotion of " + player.getName() + " to Manager";
+								Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
+								LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+								Logger.info(rawMessage);
 								LinkServer.getInstance().getRedisDatabase().set("rank", player.getUniqueId().toString(), "manager");
 								if (Link$.isPrefixedRankingEnabled() && player.isOnline()) {
 									Link$.flashPlayerDisplayName(player.getPlayer());
@@ -96,7 +113,10 @@ public class GCandAutoDemotion implements Runnable {
 					} else if (rank.equals("manager") || rank.equals("builder"))
 						playtimeRequirementPerWeek /= 2;
 					if (totalTimePlayedInSeconds < playtimeRequirementPerWeek) {
-						Logger.info("Auto-demotion of " + player.getName() + " to " + Link$.validRanks.get(0));
+						String rawMessage = "Auto-demotion of " + player.getName() + " to " + Link$.validRanks.get(0);
+						Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
+						LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+						Logger.info(rawMessage);
 						LinkServer.getInstance().getRedisDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
 						if (Link$.isPrefixedRankingEnabled() && player.isOnline()) {
 							Link$.flashPlayerDisplayName(player.getPlayer());

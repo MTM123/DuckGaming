@@ -1,6 +1,8 @@
 package me.skorrloregaming.commands;
 
 import me.skorrloregaming.*;
+import me.skorrloregaming.redis.MapBuilder;
+import me.skorrloregaming.redis.RedisChannel;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -8,6 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class BanCmd implements CommandExecutor {
@@ -48,8 +51,12 @@ public class BanCmd implements CommandExecutor {
 						String message0 = Link$.italicGray + "Server: Banned <unknown> '" + sb.toString().trim() + "'";
 						String message1 = Link$.italicGray + "Server: Banned " + bannedPlayer.getName() + " '" + sb.toString().trim() + "'";
 						if (!bannedPlayer.hasPlayedBefore() && !bannedPlayer.isOnline()) {
+							Map<String, String> message = new MapBuilder().message(message0).range(0).consoleOnly(true).build();
+							LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 							Logger.info(message0, true);
 						} else {
+							Map<String, String> message = new MapBuilder().message(message1).range(0).consoleOnly(true).build();
+							LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 							Logger.info(message1, true);
 						}
 						for (Player otherPlayer : Server.getPlugin().getServer().getOnlinePlayers()) {

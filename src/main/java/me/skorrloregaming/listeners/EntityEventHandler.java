@@ -2,6 +2,8 @@ package me.skorrloregaming.listeners;
 
 import me.skorrloregaming.*;
 import me.skorrloregaming.impl.ServerMinigame;
+import me.skorrloregaming.redis.MapBuilder;
+import me.skorrloregaming.redis.RedisChannel;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -16,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Map;
 import java.util.Random;
 
 public class EntityEventHandler implements Listener {
@@ -40,7 +43,10 @@ public class EntityEventHandler implements Listener {
 				if (hits > 1500) {
 					hits = 0;
 					Location loc = event.getLocation();
-					Logger.info(Link$.italicGray + "Lag generator detected in " + loc.getWorld().getName() + " at {x: " + loc.getBlockX() + ", y: " + loc.getBlockY() + ", z: " + loc.getBlockZ() + "}");
+					String rawMessage = Link$.italicGray + "Lag generator detected in " + loc.getWorld().getName() + " at {x: " + loc.getBlockX() + ", y: " + loc.getBlockY() + ", z: " + loc.getBlockZ() + "}";
+					Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
+					LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+					Logger.info(rawMessage);
 				}
 			}
 		}
