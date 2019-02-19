@@ -1604,7 +1604,10 @@ public class PlayerEventHandler implements Listener {
 			}
 		}
 		if ($.isCustomQuitMessageEnabled()) {
-			event.setQuitMessage(ChatColor.RED + player.getName() + ChatColor.GRAY + " has left the server.");
+			if (Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
+				event.setQuitMessage(null);
+			} else
+				event.setQuitMessage(ChatColor.RED + player.getName() + ChatColor.GRAY + " has left the server.");
 		}
 		if (!(event.getQuitMessage() == null)) {
 			Server.setDefaultQuitMessage(event.getQuitMessage().replace(event.getPlayer().getName(), "{player}"));
@@ -1655,12 +1658,6 @@ public class PlayerEventHandler implements Listener {
 		}
 		if (player.isInsideVehicle())
 			player.leaveVehicle();
-		Server.getDiscordBot().broadcast(
-				":heavy_minus_sign:" + ChatColor.stripColor(
-						event.getQuitMessage().replace(player.getName(), "**" + player.getName() + "**")
-				)
-				, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
-		);
 		if (Link$.isPluginEnabled("AuthMe")) {
 			if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString()) || !$.isAuthenticated(player)) {
 				if (!Server.getOnlineMode().getOrDefault(player.getUniqueId(), false)) {
