@@ -945,7 +945,7 @@ public class PlayerEventHandler implements Listener {
 							"**" + player.getName() + "** " + '\u00BB' + " " + LinkServer.getInstance().getAntiCheat().processAntiSwear(player, event.getMessage(), false, true)
 							, Channel.SERVER_CHAT);
 				}
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(msg).build());
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(msg).origin(player.getName()).build());
 			}
 			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 				if (muted) {
