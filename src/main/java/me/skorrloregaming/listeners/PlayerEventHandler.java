@@ -1162,7 +1162,10 @@ public class PlayerEventHandler implements Listener {
 		player.setAllowFlight(true);
 		Server.setLastKnownHubWorld($.getZoneLocation("hub").getWorld().getName().toString());
 		if ($.isCustomJoinMessageEnabled()) {
-			event.setJoinMessage(ChatColor.RED + player.getName() + ChatColor.GRAY + " has joined the server.");
+			if (Server.getPlugin().getConfig().getBoolean("settings.bungeecord")) {
+				event.setJoinMessage(null);
+			} else
+				event.setJoinMessage(ChatColor.RED + player.getName() + ChatColor.GRAY + " has joined the server.");
 		}
 		if (!(event.getJoinMessage() == null))
 			Server.setDefaultJoinMessage(event.getJoinMessage().replace(event.getPlayer().getName(), "{player}"));
@@ -1211,7 +1214,7 @@ public class PlayerEventHandler implements Listener {
 			LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			Server.getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-					, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+					, Channel.SERVER_CHAT);
 		}
 		if (!Link$.isPluginEnabled("AuthMe")) {
 			String joinMessage = Server.getDefaultJoinMessage().replace("{player}", player.getName());
@@ -1256,7 +1259,7 @@ public class PlayerEventHandler implements Listener {
 								LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 								Server.getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-										, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+										, Channel.SERVER_CHAT);
 								if (Server.getSessionManager().verifySession(player) && dailyAuth) {
 									if (session.isDiscarded()) {
 										player.sendMessage(Link$.italicGray + "Your session was invalidated, please login to your account again.");
@@ -1280,7 +1283,7 @@ public class PlayerEventHandler implements Listener {
 								LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 								Server.getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-										, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+										, Channel.SERVER_CHAT);
 							}
 							if (Server.getSessionManager().getStoredSession(player, hostAddr) == null) {
 								String message = Link$.italicGray + "Player " + player.getName() + " has yet to register new session";
@@ -1288,7 +1291,7 @@ public class PlayerEventHandler implements Listener {
 								LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 								Server.getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-										, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+										, Channel.SERVER_CHAT);
 							}
 							if (!dailyAuth && autoLoginCmd) {
 								String ip = player.getAddress().getAddress().getHostAddress().replace(".", "x");
@@ -1378,7 +1381,7 @@ public class PlayerEventHandler implements Listener {
 			Bukkit.broadcastMessage(message);
 			Server.getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-					, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+					, Channel.SERVER_CHAT);
 			LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 		}
 		Server.getPlugin().getConfig().set(path + ".ip", ipAddress);
@@ -1425,11 +1428,7 @@ public class PlayerEventHandler implements Listener {
 		player.addAttachment(Server.getPlugin(), "usb.social", true);
 		player.addAttachment(Server.getPlugin(), "usb.biome.*", true);
 		CraftGo.Player.setPlayerListHeaderFooter(player, "SkorrloreGaming", "play.skorrloregaming.com");
-		if (player.getName().equals("GemStone166")) {
-			CraftGo.Player.sendTimedTitleAndSubtitle(player, new TitleSubtitle("SkorrloreGaming", "Welcome back to the server, Jaiden :)", 10, 40, 5));
-		} else {
-			CraftGo.Player.sendTimedTitleAndSubtitle(player, new TitleSubtitle("SkorrloreGaming", "Welcome to our minecraft server.", 10, 40, 5));
-		}
+		CraftGo.Player.sendTimedTitleAndSubtitle(player, new TitleSubtitle("SkorrloreGaming", "Welcome to our minecraft server.", 10, 40, 5));
 		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
@@ -1559,13 +1558,15 @@ public class PlayerEventHandler implements Listener {
 				}
 			}
 		});
-		Server.getDiscordBot().broadcast(
-				":heavy_plus_sign:" + ChatColor.stripColor(
-						event.getJoinMessage().replace(player.getName(), "**" + player.getName() + "**")
-				)
-				, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
-		);
-		LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(event.getJoinMessage()).build());
+		if (!Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
+			Server.getDiscordBot().broadcast(
+					":heavy_plus_sign:" + ChatColor.stripColor(
+							event.getJoinMessage().replace(player.getName(), "**" + player.getName() + "**")
+					)
+					, Channel.SERVER_CHAT
+			);
+			LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(event.getJoinMessage()).build());
+		}
 	}
 
 	@EventHandler
@@ -1647,7 +1648,7 @@ public class PlayerEventHandler implements Listener {
 					":heavy_minus_sign:" + ChatColor.stripColor(
 							event.getQuitMessage().replace(player.getName(), "**" + player.getName() + "**")
 					)
-					, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
+					, Channel.SERVER_CHAT
 			);
 		if (Link$.isPluginEnabled("AuthMe")) {
 			if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString()) || !$.isAuthenticated(player)) {
@@ -1657,7 +1658,7 @@ public class PlayerEventHandler implements Listener {
 					LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 					Server.getDiscordBot().broadcast(
 							ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-							, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+							, Channel.SERVER_CHAT);
 				}
 			}
 		}

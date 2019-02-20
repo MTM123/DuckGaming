@@ -17,6 +17,6 @@ public class ReadyListener implements EventListener {
 	@Override
 	public void onEvent(Event event) {
 		if (event instanceof ReadyEvent)
-			discordBot.broadcast(":white_check_mark: **Server has started**", Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+			discordBot.broadcast(":white_check_mark: **Server has started**", Channel.SERVER_CHAT);
 	}
 }

@@ -767,7 +767,7 @@ public class Server extends JavaPlugin implements Listener {
 	public void onDisable() {
 		running = false;
 		plugin.saveConfig();
-		discordBot.broadcast(":octagonal_sign: **Server has stopped**", Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY);
+		discordBot.broadcast(":octagonal_sign: **Server has stopped**", Channel.SERVER_CHAT);
 		discordBot.unregister();
 		if (!(lockette == null))
 			lockette.onDisable();
