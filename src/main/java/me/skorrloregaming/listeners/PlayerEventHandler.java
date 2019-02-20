@@ -881,15 +881,7 @@ public class PlayerEventHandler implements Listener {
 			message = ChatColor.translateAlternateColorCodes('&', message);
 			OfflinePlayer targetPlayer = $.Marriage.getMarriedOfflinePlayer(player);
 			if (targetPlayer.isOnline()) {
-				UUID uid;
-				if ((uid = Link$.getIgnoredPlayer(targetPlayer.getUniqueId())) != null) {
-					Player existingIgnore = Bukkit.getPlayer(uid);
-					if (!existingIgnore.getName().toString().equals(player.getName().toString())) {
-						targetPlayer.getPlayer().sendMessage(message);
-					}
-				} else {
-					targetPlayer.getPlayer().sendMessage(message);
-				}
+				targetPlayer.getPlayer().sendMessage(message);
 				player.sendMessage(message);
 				String rawMessage = Link$.italicGray + ChatColor.stripColor(message);
 				Map<String, String> broadcastMessage = new MapBuilder().message(rawMessage).range(0).build();
@@ -954,15 +946,7 @@ public class PlayerEventHandler implements Listener {
 						onlinePlayer.sendMessage(msg);
 					}
 				} else {
-					UUID uid;
-					if ((uid = Link$.getIgnoredPlayer(onlinePlayer.getUniqueId())) != null) {
-						Player existingIgnore = Bukkit.getPlayer(uid);
-						if (!existingIgnore.getName().toString().equals(player.getName().toString())) {
-							onlinePlayer.sendMessage(msg);
-						}
-					} else {
-						onlinePlayer.sendMessage(msg);
-					}
+					onlinePlayer.sendMessage(msg);
 				}
 			}
 		}
@@ -1658,6 +1642,13 @@ public class PlayerEventHandler implements Listener {
 		}
 		if (player.isInsideVehicle())
 			player.leaveVehicle();
+		if (!Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false))
+			Server.getDiscordBot().broadcast(
+					":heavy_minus_sign:" + ChatColor.stripColor(
+							event.getQuitMessage().replace(player.getName(), "**" + player.getName() + "**")
+					)
+					, Channel.SERVER_CHAT, Channel.SERVER_ACTIVITY
+			);
 		if (Link$.isPluginEnabled("AuthMe")) {
 			if (!Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString()) || !$.isAuthenticated(player)) {
 				if (!Server.getOnlineMode().getOrDefault(player.getUniqueId(), false)) {
@@ -1677,7 +1668,6 @@ public class PlayerEventHandler implements Listener {
 				$.skyfightScoreboard.schedule(op, true);
 		if (Server.getOnlineMode().containsKey(player.getUniqueId()))
 			Server.getOnlineMode().remove(player.getUniqueId());
-		LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(event.getQuitMessage()).build());
 	}
 
 	@EventHandler
