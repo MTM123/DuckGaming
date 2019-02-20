@@ -62,12 +62,12 @@
 			<url>http://central.maven.org/maven2/</url>
 		</repository>
 		<repository>
-			<id>jitpack.io</id>
-			<url>http://jitpack.io</url>
+			<id>speentie8081-repo</id>
+			<url>https://raw.githubusercontent.com/Speentie8081/mvn-repo/master/</url>
 		</repository>
 		<repository>
-			<id>factions-repo</id>
-			<url>http://ci.ender.zone/plugin/repository/everything/</url>
+			<id>jitpack.io</id>
+			<url>http://jitpack.io</url>
 		</repository>
 		<repository>
 			<id>sk89q-repo</id>
@@ -78,113 +78,72 @@
 			<name>jcenter-bintray</name>
 			<url>http://jcenter.bintray.com</url>
 		</repository>
-		<repository>
-			<id>votifier-repo</id>
-			<url>https://dl.bintray.com/nuvotifier/maven/</url>
-		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>com.destroystokyo.paper</groupId>
 			<artifactId>paper-api</artifactId>
 			<version>1.13.2-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.ProtocolSupport</groupId>
 			<artifactId>ProtocolSupport</artifactId>
 			<version>ddbcb5f964</version>
-			<scope>compile</scope>
-			<type>jar</type>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.Speentie8081</groupId>
 			<artifactId>ProtocolSupportPocketStuff</artifactId>
 			<version>3ebfe03503</version>
-			<scope>compile</scope>
-			<type>jar</type>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>
-			<scope>compile</scope>
-			<type>jar</type>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.AuthMe</groupId>
 			<artifactId>AuthMeReloaded</artifactId>
 			<version>033b214ca6</version>
-			<scope>compile</scope>
-			<type>jar</type>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.MilkBowl</groupId>
 			<artifactId>VaultAPI</artifactId>
 			<version>da407c0059</version>
-			<scope>compile</scope>
-			<type>jar</type>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
 			<artifactId>Factions</artifactId>
 			<version>1.6.9.5-U0.2.2</version>
-			<scope>compile</scope>
-			<type>jar</type>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q.worldedit</groupId>
 			<artifactId>worldedit-bukkit</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
-			<scope>compile</scope>
-			<type>jar</type>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q.worldguard</groupId>
 			<artifactId>worldguard-legacy</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
-			<scope>compile</scope>
-			<type>jar</type>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.aadnk</groupId>
 			<artifactId>ProtocolLib</artifactId>
 			<version>6ff6976e85</version>
-			<scope>compile</scope>
-			<type>jar</type>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-all</artifactId>
 			<version>4.1.29.Final</version>
-			<scope>compile</scope>
-			<type>jar</type>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.mcMMO-Dev</groupId>
 			<artifactId>mcMMO</artifactId>
 			<version>2b576568a7</version>
-			<scope>compile</scope>
-			<type>jar</type>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.Speentie8081</groupId>
 			<artifactId>uSkyBlock-API</artifactId>
 			<version>3e0adef633</version>
-			<scope>compile</scope>
-			<type>jar</type>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.json</groupId>
@@ -200,12 +159,6 @@
 			<groupId>net.dv8tion</groupId>
 			<artifactId>JDA</artifactId>
 			<version>3.8.0_427</version>
-			<exclusions>
-				<exclusion>
-					<groupId>club.minnced</groupId>
-					<artifactId>opus-java</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.vexsoftware</groupId>
@@ -226,8 +179,6 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-pool2</artifactId>
 			<version>2.6.0</version>
-			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>

@@ -1217,7 +1217,9 @@ public class PlayerEventHandler implements Listener {
 					, Channel.SERVER_CHAT);
 		}
 		if (!Link$.isPluginEnabled("AuthMe")) {
-			String joinMessage = Server.getDefaultJoinMessage().replace("{player}", player.getName());
+			String joinMessage = null;
+			if (Server.getDefaultJoinMessage() != null && Server.getDefaultJoinMessage().length() > 0)
+				joinMessage = Server.getDefaultJoinMessage().replace("{player}", player.getName());
 			PlayerAuthenticateEvent authEvent = new PlayerAuthenticateEvent(player, joinMessage);
 			Bukkit.getPluginManager().callEvent(authEvent);
 		} else {
