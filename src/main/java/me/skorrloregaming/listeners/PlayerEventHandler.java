@@ -27,6 +27,11 @@ import me.skorrloregaming.shop.LaShoppeEnchant;
 import me.skorrloregaming.shop.LaShoppeFrame;
 import me.skorrloregaming.shop.LaShoppeItem;
 import me.skorrloregaming.skins.model.SkinModel;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.*;
 import org.bukkit.World.Environment;
@@ -71,6 +76,8 @@ public class PlayerEventHandler implements Listener {
 	private ConcurrentMap<Player, ItemStack> storedItem = new ConcurrentHashMap<Player, ItemStack>();
 
 	public int rainbowIndex = 0;
+
+	private ArrayList<UUID> waiverAcceptPlayers = new ArrayList<>();
 
 	public PlayerEventHandler() {
 
@@ -1129,11 +1136,15 @@ public class PlayerEventHandler implements Listener {
 				}
 			}
 		});
-		if ($.isAuthenticated(player)) {
-			player.setWalkSpeed(0.2F);
-			player.setFlySpeed(0.1F);
-		} else {
+		if (Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
 			player.setWalkSpeed(0.0F);
+		} else {
+			if ($.isAuthenticated(player)) {
+				player.setWalkSpeed(0.2F);
+				player.setFlySpeed(0.1F);
+			} else {
+				player.setWalkSpeed(0.0F);
+			}
 		}
 		for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 			if (!onlinePlayer.getName().equals(player.getName())) {
@@ -1217,11 +1228,21 @@ public class PlayerEventHandler implements Listener {
 					, Channel.SERVER_CHAT);
 		}
 		if (!Link$.isPluginEnabled("AuthMe")) {
-			String joinMessage = null;
-			if (Server.getDefaultJoinMessage() != null && Server.getDefaultJoinMessage().length() > 0)
-				joinMessage = Server.getDefaultJoinMessage().replace("{player}", player.getName());
-			PlayerAuthenticateEvent authEvent = new PlayerAuthenticateEvent(player, joinMessage);
-			Bukkit.getPluginManager().callEvent(authEvent);
+			if (CraftGo.Player.getProtocolVersion(player) < 107) {
+				player.sendMessage("You are using an unsupported version of Minecraft on this server that is known to have many issues that negatively affect your experience on this server. We strongly suggest that you update to a newer, more reliable, version of Minecraft for playing on this server. Accepting this waiver, you acknowledge that we will not provide any support for any issues you may encounter and your experience may be negative impacted by several issues.");
+				TextComponent message = new TextComponent("[Y]es, I Accept");
+				message.setColor(net.md_5.bungee.api.ChatColor.BOLD);
+				message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/login"));
+				message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("").create()));
+				String igMessage = ComponentSerializer.toString(message);
+				CraftGo.Player.sendJson(player, igMessage);
+			} else {
+				String joinMessage = null;
+				if (Server.getDefaultJoinMessage() != null && Server.getDefaultJoinMessage().length() > 0)
+					joinMessage = Server.getDefaultJoinMessage().replace("{player}", player.getName());
+				PlayerAuthenticateEvent authEvent = new PlayerAuthenticateEvent(player, joinMessage);
+				Bukkit.getPluginManager().callEvent(authEvent);
+			}
 		} else {
 			Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 				@Override
@@ -1574,6 +1595,8 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
+		if (waiverAcceptPlayers.contains(player.getUniqueId()))
+			waiverAcceptPlayers.remove(player.getUniqueId());
 		for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 			if (!onlinePlayer.getName().equals(player.getName())) {
 				onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.ENTITY_CHICKEN_EGG, 1, 1);
@@ -2939,6 +2962,18 @@ public class PlayerEventHandler implements Listener {
 		}
 		if ($.isAuthenticationCommand(label)) {
 			Bukkit.getConsoleSender().sendMessage(player.getName() + " issued authentication command: " + event.getMessage());
+		}
+		if (label.equalsIgnoreCase("/login") && CraftGo.Player.getProtocolVersion(player) < 107) {
+			event.setCancelled(true);
+			if (!waiverAcceptPlayers.contains(player.getUniqueId())) {
+				String joinMessage = null;
+				if (Server.getDefaultJoinMessage() != null && Server.getDefaultJoinMessage().length() > 0)
+					joinMessage = Server.getDefaultJoinMessage().replace("{player}", player.getName());
+				PlayerAuthenticateEvent authEvent = new PlayerAuthenticateEvent(player, joinMessage);
+				Bukkit.getPluginManager().callEvent(authEvent);
+				waiverAcceptPlayers.add(player.getUniqueId());
+				return;
+			}
 		}
 		if ($.isAuthenticationCommand(label) && !label.equalsIgnoreCase("/login")) {
 			if (player.getName().equalsIgnoreCase("Player")) {
