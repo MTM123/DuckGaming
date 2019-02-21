@@ -2942,8 +2942,6 @@ public class PlayerEventHandler implements Listener {
 	public void onPreprocessCommand(PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();
 		String world = event.getPlayer().getWorld().getName();
-		if (LinkServer.getInstance().getAntiCheat().antiafk.lackingActivityMinutes.containsKey(player.getUniqueId()))
-			LinkServer.getInstance().getAntiCheat().antiafk.lackingActivityMinutes.remove(player.getUniqueId());
 		String formattedAlertMessage = ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.RESET + player.getDisplayName() + ChatColor.RESET + " " + '\u00BB' + " " + ChatColor.GRAY + "" + ChatColor.ITALIC + event.getMessage();
 		String label = event.getMessage().split(" ")[0];
 		if (label.contains(":") && !player.isOp()) {

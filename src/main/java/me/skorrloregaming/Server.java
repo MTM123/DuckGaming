@@ -794,6 +794,7 @@ public class Server extends JavaPlugin implements Listener {
 				LinkServer.getInstance().getPlaytimeManager().handle_QuitEvent(player);
 			}
 		}
+		LinkServer.getInstance().getRedisDatabase().unregister();
 	}
 
 	public void fetchLobby(Player player) {
