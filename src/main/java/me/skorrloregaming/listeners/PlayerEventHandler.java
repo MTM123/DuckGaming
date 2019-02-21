@@ -1236,6 +1236,7 @@ public class PlayerEventHandler implements Listener {
 				message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("").create()));
 				String igMessage = ComponentSerializer.toString(message);
 				CraftGo.Player.sendJson(player, igMessage);
+				waiverAcceptPlayers.add(player.getUniqueId());
 			} else {
 				String joinMessage = null;
 				if (Server.getDefaultJoinMessage() != null && Server.getDefaultJoinMessage().length() > 0)
@@ -1850,6 +1851,8 @@ public class PlayerEventHandler implements Listener {
 			if (player.getAllowFlight())
 				player.setAllowFlight(false);
 			if (!Server.getDoubleJumpCandidates().contains(player.getUniqueId()))
+				return;
+			if (waiverAcceptPlayers.contains(player.getUniqueId()))
 				return;
 			Server.getDoubleJumpCandidates().remove(player.getUniqueId());
 			LinkServer.getInstance().getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(2.5));
@@ -2732,6 +2735,9 @@ public class PlayerEventHandler implements Listener {
 				player.setOp(false);
 				player.sendMessage(ChatColor.DARK_RED + "You are not allowed to be operator on this server!");
 			}
+		if (waiverAcceptPlayers.contains(player.getUniqueId())) {
+			return;
+		}
 		if ($.isAuthenticated(player)) {
 			if (!player.isInsideVehicle()) {
 				if (player.isBlocking()) {
@@ -2965,15 +2971,20 @@ public class PlayerEventHandler implements Listener {
 		}
 		if (label.equalsIgnoreCase("/login") && CraftGo.Player.getProtocolVersion(player) < 107) {
 			event.setCancelled(true);
-			if (!waiverAcceptPlayers.contains(player.getUniqueId())) {
+			if (waiverAcceptPlayers.contains(player.getUniqueId())) {
 				String joinMessage = null;
 				if (Server.getDefaultJoinMessage() != null && Server.getDefaultJoinMessage().length() > 0)
 					joinMessage = Server.getDefaultJoinMessage().replace("{player}", player.getName());
 				PlayerAuthenticateEvent authEvent = new PlayerAuthenticateEvent(player, joinMessage);
 				Bukkit.getPluginManager().callEvent(authEvent);
-				waiverAcceptPlayers.add(player.getUniqueId());
+				waiverAcceptPlayers.remove(player.getUniqueId());
 				return;
 			}
+		}
+		if (waiverAcceptPlayers.contains(player.getUniqueId())) {
+			player.sendMessage("You must accept the waiver before executing commands.");
+			event.setCancelled(true);
+			return;
 		}
 		if ($.isAuthenticationCommand(label) && !label.equalsIgnoreCase("/login")) {
 			if (player.getName().equalsIgnoreCase("Player")) {
