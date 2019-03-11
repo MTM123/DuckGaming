@@ -1,5 +1,6 @@
 package me.skorrloregaming.scoreboard.boards;
 
+import com.gmail.nossr50.listeners.PlayerListener;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;

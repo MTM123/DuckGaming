@@ -1,5 +1,6 @@
 package me.skorrloregaming.listeners;
 
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -300,6 +301,11 @@ public class PlayerEventHandler implements Listener {
 		Player player = event.getPlayer();
 		if (!$.isAuthenticated(player))
 			return;
+		if (waiverAcceptPlayers.contains(player.getUniqueId())) {
+			player.sendMessage("You must accept the waiver before executing commands.");
+			event.setCancelled(true);
+			return;
+		}
 		if (event.getRightClicked() instanceof ArmorStand) {
 			ArmorStand entity = (ArmorStand) event.getRightClicked();
 			if (Server.getConfirmUnregisterNpc().contains(player.getUniqueId())) {
@@ -358,6 +364,11 @@ public class PlayerEventHandler implements Listener {
 		Location playerLoc = player.getLocation();
 		if (!$.isAuthenticated(player))
 			return;
+		if (waiverAcceptPlayers.contains(player.getUniqueId())) {
+			player.sendMessage("You must accept the waiver before executing commands.");
+			event.setCancelled(true);
+			return;
+		}
 		if (event.getRightClicked() instanceof Player && player.isSneaking()) {
 			Player targetPlayer = (Player) event.getRightClicked();
 			int particleCount = 3;
@@ -401,6 +412,15 @@ public class PlayerEventHandler implements Listener {
 			}
 		}
 		return;
+	}
+
+	@EventHandler
+	public void onPlayerJump(PlayerJumpEvent event) {
+		Player player = event.getPlayer();
+		if (waiverAcceptPlayers.contains(player.getUniqueId())) {
+			event.setCancelled(true);
+			return;
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -607,6 +627,11 @@ public class PlayerEventHandler implements Listener {
 				}
 			} else if (Server.getHub().contains(player.getUniqueId()) && itm.getItemMeta().hasDisplayName()) {
 				if (itm.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Server Selector")) {
+					if (waiverAcceptPlayers.contains(player.getUniqueId())) {
+						player.sendMessage("You must accept the waiver before using this item.");
+						event.setCancelled(true);
+						return;
+					}
 					ItemStack skyfight = Link$.createMaterial(Material.BOW, 1, ChatColor.LIGHT_PURPLE + "SkyFight");
 					ItemStack kitpvp = Link$.createMaterial(Material.IRON_SWORD, 1, ChatColor.LIGHT_PURPLE + "KitPvP");
 					ItemStack survivalFactions = Link$.createMaterial(Material.STONE_PICKAXE, 1, ChatColor.LIGHT_PURPLE + "Survival / Factions");
