@@ -134,9 +134,9 @@ public class GCandAutoDemotion implements Runnable {
 		if (!Server.getPlugin().getConfig().contains("config"))
 			return;
 		Set<String> keys = Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false);
-		for (String id : keys) {
+		/*for (String id : keys) {
 			process(id);
-		}
+		}*/
 		File uuid2nameFile = new File("plugins/uSkyBlock", "uuid2name.yml");
 		if (uuid2nameFile.exists()) {
 			uuid2nameFile.delete();
