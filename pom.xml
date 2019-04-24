@@ -189,7 +189,7 @@
 		<dependency>
 			<groupId>net.dv8tion</groupId>
 			<artifactId>JDA</artifactId>
-			<version>3.8.0_427</version>
+			<version>3.8.3_463</version>
 		</dependency>
 		<dependency>
 			<groupId>com.vexsoftware</groupId>
