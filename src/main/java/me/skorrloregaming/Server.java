@@ -578,7 +578,7 @@ public class Server extends JavaPlugin implements Listener {
 		plugin = this;
 		instance = this;
 		String lineOne = ChatColor.RED + pluginName + ChatColor.GRAY + " has been running since late 2013.";
-		String lineTwo = ChatColor.GRAY + "Server has been updated to support 1.13 clients.";
+		String lineTwo = ChatColor.GRAY + "Server has been updated to support 1.14 clients.";
 		serverMotd = lineOne + '\n' + lineTwo;
 		ramConfig = new ConfigurationManager();
 		warpConfig = new ConfigurationManager();
@@ -628,7 +628,7 @@ public class Server extends JavaPlugin implements Listener {
 		spawnerPrices.put(6, 4500);
 		spawnerPrices.put(7, 3000);
 		spawnerPrices.put(8, 3000);
-		if (!Link$.isPluginLoaded("ploader") && !CraftGo.Minecraft.getPackageVersion().startsWith("v1_13")) {
+		if (!Link$.isPluginLoaded("ploader") && !CraftGo.Minecraft.getPackageVersion().startsWith("v1_14")) {
 			perWorldPlugins = new PerWorldPlugin();
 			perWorldPlugins.onLoad();
 		}
@@ -694,7 +694,7 @@ public class Server extends JavaPlugin implements Listener {
 					factionsListener = new Factions_Listener();
 					factionsListener.register();
 				}
-				if (!Link$.isPluginLoaded("ploader") && !CraftGo.Minecraft.getPackageVersion().equals("v1_13_R1")) {
+				if (!Link$.isPluginLoaded("ploader") && !CraftGo.Minecraft.getPackageVersion().equals("v1_14_R1")) {
 					if (perWorldPlugins != null)
 						perWorldPlugins.onEnable();
 				}

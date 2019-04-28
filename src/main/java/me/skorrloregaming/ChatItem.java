@@ -128,76 +128,76 @@ public class ChatItem {
 
 	private boolean isMc18OrLater() {
 		switch (getVersion(Bukkit.getServer())) {
-		case "v1_7_R1":
-			return false;
-		case "v1_7_R2":
-			return false;
-		case "v1_7_R3":
-			return false;
-		case "v1_7_R4":
-			return false;
-		default:
-			return true;
+			case "v1_7_R1":
+				return false;
+			case "v1_7_R2":
+				return false;
+			case "v1_7_R3":
+				return false;
+			case "v1_7_R4":
+				return false;
+			default:
+				return true;
 		}
 	}
 
 	private boolean isMc111OrLater() {
 		switch (getVersion(Bukkit.getServer())) {
-		case "v1_7_R1":
-			return false;
-		case "v1_7_R2":
-			return false;
-		case "v1_7_R3":
-			return false;
-		case "v1_7_R4":
-			return false;
-		case "v1_8_R1":
-			return false;
-		case "v1_8_R2":
-			return false;
-		case "v1_8_R3":
-			return false;
-		case "v1_9_R1":
-			return false;
-		case "v1_9_R2":
-			return false;
-		case "v1_10_R1":
-			return false;
-		case "v1_10_R2":
-			return false;
-		default:
-			return true;
+			case "v1_7_R1":
+				return false;
+			case "v1_7_R2":
+				return false;
+			case "v1_7_R3":
+				return false;
+			case "v1_7_R4":
+				return false;
+			case "v1_8_R1":
+				return false;
+			case "v1_8_R2":
+				return false;
+			case "v1_8_R3":
+				return false;
+			case "v1_9_R1":
+				return false;
+			case "v1_9_R2":
+				return false;
+			case "v1_10_R1":
+				return false;
+			case "v1_10_R2":
+				return false;
+			default:
+				return true;
 		}
 	}
 
 	private boolean isMc112Orlater() {
 		switch (getVersion(Bukkit.getServer())) {
-		case "v1_7_R1":
-			return false;
-		case "v1_7_R2":
-			return false;
-		case "v1_7_R3":
-			return false;
-		case "v1_7_R4":
-			return false;
-		case "v1_8_R1":
-			return false;
-		case "v1_8_R2":
-			return false;
-		case "v1_8_R3":
-			return false;
-		case "v1_9_R1":
-			return false;
-		case "v1_9_R2":
-			return false;
-		case "v1_10_R1":
-			return false;
-		case "v1_10_R2":
-			return false;
-		case "v1_11_R1":
-			return false;
-		default:
-			return true;
+			case "v1_7_R1":
+				return false;
+			case "v1_7_R2":
+				return false;
+			case "v1_7_R3":
+				return false;
+			case "v1_7_R4":
+				return false;
+			case "v1_8_R1":
+				return false;
+			case "v1_8_R2":
+				return false;
+			case "v1_8_R3":
+				return false;
+			case "v1_9_R1":
+				return false;
+			case "v1_9_R2":
+				return false;
+			case "v1_10_R1":
+				return false;
+			case "v1_10_R2":
+				return false;
+			case "v1_11_R1":
+				return false;
+			default:
+				return true;
 		}
 	}
 
@@ -235,7 +235,7 @@ public class ChatItem {
 	}
 
 	public static enum ProtocolVersion {
-		PRE_1_8(0, 5, 0), V1_8_X(6, 47, 1), V1_9_X(49, 110, 2), V1_10_X(201, 210, 3), V1_11_X(301, 316, 4), V1_12_X(317, 340, 5), V1_13_X(383, Integer.MAX_VALUE, 5), INVALID(-1, -1, 6);
+		PRE_1_8(0, 5, 0), V1_8_X(6, 47, 1), V1_9_X(49, 110, 2), V1_10_X(201, 210, 3), V1_11_X(301, 316, 4), V1_12_X(317, 340, 5), V1_13_X(383, 404, 5), V1_14_X(477, Integer.MAX_VALUE, 6), INVALID(-1, -1, 6);
 		public final int MIN_VER;
 		public final int MAX_VER;
 		public final int INDEX;
@@ -261,51 +261,54 @@ public class ChatItem {
 			if (serverVersion == null) {
 				String version = ChatItem.getVersion(Bukkit.getServer());
 				switch (version) {
-				case "v1_7_R1":
-					serverVersion = PRE_1_8;
-					break;
-				case "v1_7_R2":
-					serverVersion = PRE_1_8;
-					break;
-				case "v1_7_R3":
-					serverVersion = PRE_1_8;
-					break;
-				case "v1_8_R1":
-					serverVersion = V1_8_X;
-					break;
-				case "v1_8_R2":
-					serverVersion = V1_8_X;
-					break;
-				case "v1_8_R3":
-					serverVersion = V1_8_X;
-					break;
-				case "v1_9_R1":
-					serverVersion = V1_9_X;
-					break;
-				case "v1_9_R2":
-					serverVersion = V1_9_X;
-					break;
-				case "v1_10_R1":
-					serverVersion = V1_10_X;
-					break;
-				case "v1_10_R2":
-					serverVersion = V1_10_X;
-					break;
-				case "v1_11_R1":
-					serverVersion = V1_11_X;
-					break;
-				case "v1_12_R1":
-					serverVersion = V1_12_X;
-					break;
-				case "v1_12_R2":
-					serverVersion = V1_12_X;
-					break;
-				case "v1_13_R1":
-					serverVersion = V1_13_X;
-					break;
-				case "v1_13_R2":
-					serverVersion = V1_13_X;
-					break;
+					case "v1_7_R1":
+						serverVersion = PRE_1_8;
+						break;
+					case "v1_7_R2":
+						serverVersion = PRE_1_8;
+						break;
+					case "v1_7_R3":
+						serverVersion = PRE_1_8;
+						break;
+					case "v1_8_R1":
+						serverVersion = V1_8_X;
+						break;
+					case "v1_8_R2":
+						serverVersion = V1_8_X;
+						break;
+					case "v1_8_R3":
+						serverVersion = V1_8_X;
+						break;
+					case "v1_9_R1":
+						serverVersion = V1_9_X;
+						break;
+					case "v1_9_R2":
+						serverVersion = V1_9_X;
+						break;
+					case "v1_10_R1":
+						serverVersion = V1_10_X;
+						break;
+					case "v1_10_R2":
+						serverVersion = V1_10_X;
+						break;
+					case "v1_11_R1":
+						serverVersion = V1_11_X;
+						break;
+					case "v1_12_R1":
+						serverVersion = V1_12_X;
+						break;
+					case "v1_12_R2":
+						serverVersion = V1_12_X;
+						break;
+					case "v1_13_R1":
+						serverVersion = V1_13_X;
+						break;
+					case "v1_13_R2":
+						serverVersion = V1_13_X;
+						break;
+					case "v1_14_R1":
+						serverVersion = V1_14_X;
+						break;
 				}
 			}
 			return serverVersion;
@@ -458,20 +461,20 @@ public class ChatItem {
 
 		private static String getStyleName(char code) {
 			switch (code) {
-			case 'k':
-				return "obfuscated";
-			case 'l':
-				return "bold";
-			case 'm':
-				return "strikethrough";
-			case 'n':
-				return "underlined";
-			case 'o':
-				return "italic";
-			case 'r':
-				return "reset";
-			default:
-				return null;
+				case 'k':
+					return "obfuscated";
+				case 'l':
+					return "bold";
+				case 'm':
+					return "strikethrough";
+				case 'n':
+					return "underlined";
+				case 'o':
+					return "italic";
+				case 'r':
+					return "reset";
+				default:
+					return null;
 			}
 		}
 
@@ -1005,6 +1008,7 @@ public class ChatItem {
 	public static class ItemRewriter {
 		public static class ItemRewriter_1_11_TO_1_10 {
 			public static BiMap<String, String> oldToNewNames = HashBiMap.create();
+
 			static {
 				oldToNewNames.put("AreaEffectCloud", "minecraft:area_effect_cloud");
 				oldToNewNames.put("ArmorStand", "minecraft:armor_stand");
@@ -1126,6 +1130,7 @@ public class ChatItem {
 			public static final Map<String, Integer> POTION_NAME_TO_ID = new HashMap<>();
 			public static final Map<Integer, String> POTION_ID_TO_NAME = new HashMap<>();
 			public static final Map<Integer, Integer> POTION_INDEX = new HashMap<>();
+
 			static {
 				/* Entities */
 				registerEntity(1, "Item");
@@ -1334,69 +1339,69 @@ public class ChatItem {
 				boolean canExtend = true;
 				String id;
 				switch (effect) {
-				case 1:
-					id = "regeneration";
-					break;
-				case 2:
-					id = "swiftness";
-					break;
-				case 3:
-					id = "fire_resistance";
-					canEnhance = false;
-					break;
-				case 4:
-					id = "poison";
-					break;
-				case 5:
-					id = "healing";
-					canExtend = false;
-					break;
-				case 6:
-					id = "night_vision";
-					canEnhance = false;
-					break;
-				case 8:
-					id = "weakness";
-					canEnhance = false;
-					break;
-				case 9:
-					id = "strength";
-					break;
-				case 10:
-					id = "slowness";
-					canEnhance = false;
-					break;
-				case 11:
-					id = "leaping";
-					break;
-				case 12:
-					id = "harming";
-					canExtend = false;
-					break;
-				case 13:
-					id = "water_breathing";
-					canEnhance = false;
-					break;
-				case 14:
-					id = "invisibility";
-					canEnhance = false;
-					break;
-				default:
-					canEnhance = false;
-					canExtend = false;
-					switch (name) {
-					case 0:
-						id = "mundane";
+					case 1:
+						id = "regeneration";
 						break;
-					case 16:
-						id = "awkward";
+					case 2:
+						id = "swiftness";
 						break;
-					case 32:
-						id = "thick";
+					case 3:
+						id = "fire_resistance";
+						canEnhance = false;
+						break;
+					case 4:
+						id = "poison";
+						break;
+					case 5:
+						id = "healing";
+						canExtend = false;
+						break;
+					case 6:
+						id = "night_vision";
+						canEnhance = false;
+						break;
+					case 8:
+						id = "weakness";
+						canEnhance = false;
+						break;
+					case 9:
+						id = "strength";
+						break;
+					case 10:
+						id = "slowness";
+						canEnhance = false;
+						break;
+					case 11:
+						id = "leaping";
+						break;
+					case 12:
+						id = "harming";
+						canExtend = false;
+						break;
+					case 13:
+						id = "water_breathing";
+						canEnhance = false;
+						break;
+					case 14:
+						id = "invisibility";
+						canEnhance = false;
 						break;
 					default:
-						id = "empty";
-					}
+						canEnhance = false;
+						canExtend = false;
+						switch (name) {
+							case 0:
+								id = "mundane";
+								break;
+							case 16:
+								id = "awkward";
+								break;
+							case 32:
+								id = "thick";
+								break;
+							default:
+								id = "empty";
+						}
 				}
 				if (effect > 0) {
 					if (canEnhance && enhanced) {
