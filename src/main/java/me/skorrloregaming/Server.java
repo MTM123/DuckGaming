@@ -10,6 +10,7 @@ import me.skorrloregaming.impl.Switches.SwitchIntDouble;
 import me.skorrloregaming.impl.Switches.SwitchUUIDString;
 import me.skorrloregaming.listeners.BlockEventHandler;
 import me.skorrloregaming.listeners.EntityEventHandler;
+import me.skorrloregaming.listeners.PaperEventHandler;
 import me.skorrloregaming.listeners.PlayerEventHandler;
 import me.skorrloregaming.lockette.Lockette;
 import me.skorrloregaming.ping.PingInjector;
@@ -154,6 +155,44 @@ public class Server extends JavaPlugin implements Listener {
 	private static mcMMO_Listener mcmmoListener = null;
 
 	private static DiscordBot discordBot;
+
+	private static ConcurrentMap<Player, ItemStack> storedItem = new ConcurrentHashMap<Player, ItemStack>();
+
+	private static ArrayList<UUID> waiverAcceptPlayers = new ArrayList<>();
+
+	public static ServerType getServerType() {
+		try {
+			Class.forName("org.spigotmc.SpigotConfig");
+			String version = Bukkit.getVersion().toLowerCase();
+			if (version.contains("paper")) {
+				return ServerType.PaperSpigot;
+			} else if (version.contains("taco")) {
+				return ServerType.TacoSpigot;
+			} else if (version.contains("torch")) {
+				return ServerType.TorchSpigot;
+			} else {
+				return ServerType.Spigot;
+			}
+		} catch (Exception ex) {
+			return ServerType.CraftBukkit;
+		}
+	}
+
+	public static ArrayList<UUID> getWaiverAcceptPlayers() {
+		return waiverAcceptPlayers;
+	}
+
+	public static ConcurrentMap<Player, ItemStack> getStoredItem() {
+		return storedItem;
+	}
+
+	public static void doReturnItem(Player player) {
+		if (storedItem.containsKey(player.getPlayer())) {
+			player.getInventory().setItem(9, storedItem.get(player));
+			player.updateInventory();
+			storedItem.remove(player);
+		}
+	}
 
 	public static AuthMe_Listener getAuthListener() {
 		return authListener;
@@ -610,6 +649,8 @@ public class Server extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new BlockEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new PlayerEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new EntityEventHandler(), this);
+		if (getServerType() == ServerType.PaperSpigot)
+			getServer().getPluginManager().registerEvents(new PaperEventHandler(), this);
 		if (getConfig().getBoolean("settings.bungeecord", false))
 			getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		pingInjector = new PingInjector();

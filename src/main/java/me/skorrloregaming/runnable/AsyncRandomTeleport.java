@@ -31,7 +31,13 @@ public class AsyncRandomTeleport implements Runnable {
 		while (z < 500 && z > -500) {
 			z = -5000 + new Random(UUID.randomUUID().hashCode()).nextInt(10000) + 0.5;
 		}
-		player.getWorld().getChunkAtAsync((int) x, (int) z).thenRun(this);
+		try {
+			player.getWorld().getChunkAtAsync((int) x, (int) z).thenRun(this);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			player.getWorld().getChunkAt((int) x, (int) z).load();
+			new Thread(this).run();
+		}
 	}
 
 	@Override

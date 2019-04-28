@@ -98,6 +98,8 @@ public class SessionManager {
 			lore.add(ChatColor.RESET + "Last accessed : " + calendarLastAcc.getTime().toString());
 			String remoteAddr = new String(decoded);
 			IpLocationQuery query = CraftGo.Player.queryIpLocation(remoteAddr);
+			if (query == null)
+				continue;
 			if (player.getName().equals(tp.getName()) || player.isOp() || Link$.getRankId(player) > 1) {
 				lore.add(ChatColor.RESET + "Remote address : " + query.getEndpoint());
 				lore.add(ChatColor.RESET + "Geo-location : " + query.getCity() + ", " + query.getState() + " (" + query.getCountry() + ")");

@@ -74,11 +74,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class PlayerEventHandler implements Listener {
 
-	private ConcurrentMap<Player, ItemStack> storedItem = new ConcurrentHashMap<Player, ItemStack>();
-
 	public int rainbowIndex = 0;
-
-	private ArrayList<UUID> waiverAcceptPlayers = new ArrayList<>();
 
 	public PlayerEventHandler() {
 
@@ -301,7 +297,7 @@ public class PlayerEventHandler implements Listener {
 		Player player = event.getPlayer();
 		if (!$.isAuthenticated(player))
 			return;
-		if (waiverAcceptPlayers.contains(player.getUniqueId())) {
+		if (Server.getWaiverAcceptPlayers().contains(player.getUniqueId())) {
 			player.sendMessage("You must accept the waiver before executing commands.");
 			event.setCancelled(true);
 			return;
@@ -364,7 +360,7 @@ public class PlayerEventHandler implements Listener {
 		Location playerLoc = player.getLocation();
 		if (!$.isAuthenticated(player))
 			return;
-		if (waiverAcceptPlayers.contains(player.getUniqueId())) {
+		if (Server.getWaiverAcceptPlayers().contains(player.getUniqueId())) {
 			player.sendMessage("You must accept the waiver before executing commands.");
 			event.setCancelled(true);
 			return;
@@ -412,15 +408,6 @@ public class PlayerEventHandler implements Listener {
 			}
 		}
 		return;
-	}
-
-	@EventHandler
-	public void onPlayerJump(PlayerJumpEvent event) {
-		Player player = event.getPlayer();
-		if (waiverAcceptPlayers.contains(player.getUniqueId())) {
-			event.setCancelled(true);
-			return;
-		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -627,7 +614,7 @@ public class PlayerEventHandler implements Listener {
 				}
 			} else if (Server.getHub().contains(player.getUniqueId()) && itm.getItemMeta().hasDisplayName()) {
 				if (itm.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Server Selector")) {
-					if (waiverAcceptPlayers.contains(player.getUniqueId())) {
+					if (Server.getWaiverAcceptPlayers().contains(player.getUniqueId())) {
 						player.sendMessage("You must accept the waiver before using this item.");
 						event.setCancelled(true);
 						return;
@@ -685,12 +672,12 @@ public class PlayerEventHandler implements Listener {
 		if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if (!(itm == null) && !(itm.getType() == Material.AIR)) {
 				if (itm.getType() == Material.BOW && Server.getKitpvp().contains(player.getUniqueId()) && !player.getInventory().contains(Material.ARROW)) {
-					if (storedItem.containsKey(player)) {
+					if (Server.getStoredItem().containsKey(player)) {
 						return;
 					}
 					ItemStack item = player.getInventory().getItem(9);
 					if (!(item == null || item.getType() == Material.AIR)) {
-						storedItem.put(player, item);
+						Server.getStoredItem().put(player, item);
 					}
 					player.getInventory().setItem(9, new ItemStack(Material.ARROW, 1));
 					return;
@@ -996,7 +983,7 @@ public class PlayerEventHandler implements Listener {
 
 	@EventHandler
 	public void PlayerItemHeldEvent(PlayerItemHeldEvent event) {
-		returnItem(event.getPlayer());
+		Server.doReturnItem(event.getPlayer());
 	}
 
 	@EventHandler
@@ -1015,15 +1002,7 @@ public class PlayerEventHandler implements Listener {
 			}
 			event.setCancelled(true);
 		}
-		returnItem(event.getPlayer());
-	}
-
-	private void returnItem(Player player) {
-		if (storedItem.containsKey(player.getPlayer())) {
-			player.getInventory().setItem(9, storedItem.get(player));
-			player.updateInventory();
-			storedItem.remove(player);
-		}
+		Server.doReturnItem(event.getPlayer());
 	}
 
 	@EventHandler
@@ -1261,7 +1240,7 @@ public class PlayerEventHandler implements Listener {
 				message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("").create()));
 				String igMessage = ComponentSerializer.toString(message);
 				CraftGo.Player.sendJson(player, igMessage);
-				waiverAcceptPlayers.add(player.getUniqueId());
+				Server.getWaiverAcceptPlayers().add(player.getUniqueId());
 			} else {
 				String joinMessage = null;
 				if (Server.getDefaultJoinMessage() != null && Server.getDefaultJoinMessage().length() > 0)
@@ -1621,8 +1600,8 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		if (waiverAcceptPlayers.contains(player.getUniqueId()))
-			waiverAcceptPlayers.remove(player.getUniqueId());
+		if (Server.getWaiverAcceptPlayers().contains(player.getUniqueId()))
+			Server.getWaiverAcceptPlayers().remove(player.getUniqueId());
 		for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 			if (!onlinePlayer.getName().equals(player.getName())) {
 				onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.ENTITY_CHICKEN_EGG, 1, 1);
@@ -1877,7 +1856,7 @@ public class PlayerEventHandler implements Listener {
 				player.setAllowFlight(false);
 			if (!Server.getDoubleJumpCandidates().contains(player.getUniqueId()))
 				return;
-			if (waiverAcceptPlayers.contains(player.getUniqueId()))
+			if (Server.getWaiverAcceptPlayers().contains(player.getUniqueId()))
 				return;
 			Server.getDoubleJumpCandidates().remove(player.getUniqueId());
 			LinkServer.getInstance().getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(2.5));
@@ -2662,30 +2641,6 @@ public class PlayerEventHandler implements Listener {
 	}
 
 	@EventHandler
-	public void onProjectileLaunch(PlayerLaunchProjectileEvent event) {
-		Player player = event.getPlayer();
-		if (event.getProjectile() instanceof EnderPearl) {
-			if (Server.getDelayedTasks().contains(player.getUniqueId())) {
-				event.setCancelled(true);
-			} else {
-				Server.getDelayedTasks().add(player.getUniqueId());
-				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
-					@Override
-					public void run() {
-						Server.getDelayedTasks().remove(player.getUniqueId());
-					}
-				}, 7L);
-			}
-		} else if (event.getProjectile() instanceof Arrow) {
-			Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
-				public void run() {
-					returnItem(player);
-				}
-			}, 5L);
-		}
-	}
-
-	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		Player player = event.getPlayer();
 		if (Server.getSkyfight().containsKey(player.getUniqueId()))
@@ -2760,7 +2715,7 @@ public class PlayerEventHandler implements Listener {
 				player.setOp(false);
 				player.sendMessage(ChatColor.DARK_RED + "You are not allowed to be operator on this server!");
 			}
-		if (waiverAcceptPlayers.contains(player.getUniqueId())) {
+		if (Server.getWaiverAcceptPlayers().contains(player.getUniqueId())) {
 			return;
 		}
 		if ($.isAuthenticated(player)) {
@@ -2994,17 +2949,17 @@ public class PlayerEventHandler implements Listener {
 		}
 		if (label.equalsIgnoreCase("/login") && CraftGo.Player.getProtocolVersion(player) < 107) {
 			event.setCancelled(true);
-			if (waiverAcceptPlayers.contains(player.getUniqueId())) {
+			if (Server.getWaiverAcceptPlayers().contains(player.getUniqueId())) {
 				String joinMessage = null;
 				if (Server.getDefaultJoinMessage() != null && Server.getDefaultJoinMessage().length() > 0)
 					joinMessage = Server.getDefaultJoinMessage().replace("{player}", player.getName());
 				PlayerAuthenticateEvent authEvent = new PlayerAuthenticateEvent(player, joinMessage);
 				Bukkit.getPluginManager().callEvent(authEvent);
-				waiverAcceptPlayers.remove(player.getUniqueId());
+				Server.getWaiverAcceptPlayers().remove(player.getUniqueId());
 				return;
 			}
 		}
-		if (waiverAcceptPlayers.contains(player.getUniqueId())) {
+		if (Server.getWaiverAcceptPlayers().contains(player.getUniqueId())) {
 			player.sendMessage("You must accept the waiver before executing commands.");
 			event.setCancelled(true);
 			return;
