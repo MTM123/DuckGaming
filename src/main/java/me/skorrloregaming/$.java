@@ -33,6 +33,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URISyntaxException;
@@ -210,7 +211,8 @@ public class $ {
 
 	public static void teleport(Entity entity, Location loc) {
 		try {
-			entity.teleportAsync(loc);
+			Method method = Entity.class.getMethod("teleportAsync", Location.class);
+			method.invoke(entity, loc);
 		} catch (Exception ex) {
 			entity.teleport(loc);
 		}

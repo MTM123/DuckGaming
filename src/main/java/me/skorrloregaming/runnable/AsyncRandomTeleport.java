@@ -3,13 +3,16 @@ package me.skorrloregaming.runnable;
 import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Method;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class AsyncRandomTeleport implements Runnable {
 
@@ -32,9 +35,10 @@ public class AsyncRandomTeleport implements Runnable {
 			z = -5000 + new Random(UUID.randomUUID().hashCode()).nextInt(10000) + 0.5;
 		}
 		try {
-			player.getWorld().getChunkAtAsync((int) x, (int) z).thenRun(this);
+			Method method = World.class.getMethod("getChunkAtAsync", int.class, int.class);
+			CompletableFuture<Chunk> future = (CompletableFuture<Chunk>) method.invoke(player.getWorld(), (int) x, (int) z);
+			future.thenRun(this);
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			player.getWorld().getChunkAt((int) x, (int) z).load();
 			new Thread(this).run();
 		}
