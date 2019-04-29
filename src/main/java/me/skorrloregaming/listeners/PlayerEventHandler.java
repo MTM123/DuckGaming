@@ -194,7 +194,7 @@ public class PlayerEventHandler implements Listener {
 					item = Link$.addLore(item, lore.toArray(new String[0]));
 				inventory.setItem(i, item);
 			}
-			player.openInventory(inventory);
+			LinkServer.getInventoryManager().createInventory(player, inventory, InventoryType.SPAWNER_UPGRADES);
 		}
 	}
 
@@ -269,7 +269,7 @@ public class PlayerEventHandler implements Listener {
 		inventory.setItem(17, f);
 		Server.getSkyfight().get(player.getUniqueId()).setHasTeamSelectionGuiOpen(true);
 		Server.getSkyfight().get(player.getUniqueId()).setScore(0);
-		player.openInventory(inventory);
+		LinkServer.getInventoryManager().createInventory(player, inventory, InventoryType.SKYFIGHT_TEAMS);
 	}
 
 	@EventHandler
@@ -588,7 +588,7 @@ public class PlayerEventHandler implements Listener {
 							SignShop.playShopTitlePopup(player, block);
 							Inventory inv = Bukkit.createInventory(null, 54, ChatColor.BOLD + "Virtual Store [" + x + ";" + y + ";" + z + "]");
 							player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
-							player.openInventory(inv);
+							LinkServer.getInventoryManager().createInventory(player, inv, InventoryType.SELL_ALL, x + ";" + y + ";" + z);
 						}
 						return;
 					} else {
@@ -2070,7 +2070,8 @@ public class PlayerEventHandler implements Listener {
 							if (event.isLeftClick()) {
 								Inventory inv = Bukkit.createInventory(null, 54, ChatColor.BOLD + "Virtual Store [" + index + "]");
 								player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
-								player.openInventory(inv);
+								LinkServer.getInventoryManager().createInventory(player, inv, InventoryType.SELL_ALL, index);
+
 							} else if (event.isRightClick()) {
 								try {
 									DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");

@@ -1,6 +1,5 @@
 package me.skorrloregaming;
 
-import com.sk89q.intake.parametric.Key;
 import me.skorrloregaming.auction.Auctioneer;
 import me.skorrloregaming.commands.*;
 import me.skorrloregaming.discord.Channel;

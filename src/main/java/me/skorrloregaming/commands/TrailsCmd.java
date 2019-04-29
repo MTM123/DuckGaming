@@ -1,9 +1,8 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Link$;
+import me.skorrloregaming.*;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.InventoryType;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -91,7 +90,7 @@ public class TrailsCmd implements CommandExecutor {
 			}
 			inventory.setItem(i, trailItem);
 		}
-		player.openInventory(inventory);
+		LinkServer.getInventoryManager().createInventory(player, inventory, InventoryType.TRAILS);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package me.skorrloregaming.shop;
 
 import me.skorrloregaming.*;
+import me.skorrloregaming.impl.InventoryType;
 import me.skorrloregaming.impl.ServerMinigame;
 import me.skorrloregaming.shop.events.enchant.CreateEnchantTypeEventHandler;
 import me.skorrloregaming.shop.events.item.CreateItemTypeEventHandler;
@@ -120,7 +121,7 @@ public class LaShoppe {
 						}
 					}
 				}
-				player.openInventory(inventory);
+				LinkServer.getInventoryManager().createInventory(player, inventory, InventoryType.LA_SHOPPE, page);
 				break;
 			case CREATE_ITEM:
 				try {

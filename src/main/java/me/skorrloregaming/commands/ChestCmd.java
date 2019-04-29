@@ -1,9 +1,7 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.Link$;
-import me.skorrloregaming.Server;
-import me.skorrloregaming.SolidStorage;
+import me.skorrloregaming.*;
+import me.skorrloregaming.impl.InventoryType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -89,7 +87,7 @@ public class ChestCmd implements CommandExecutor {
 			}
 			Inventory inv = SolidStorage.restorePersonalChest(player, subDomain, true, chestNumber);
 			player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
-			player.openInventory(inv);
+			LinkServer.getInventoryManager().createInventory(player, inv, InventoryType.CHEST, chestNumber);
 		} else {
 			Player tp = Bukkit.getPlayer(args[1]);
 			if (tp == null) {
@@ -104,7 +102,7 @@ public class ChestCmd implements CommandExecutor {
 					Server.getSavePersonalChest().put(player, tp);
 				}
 				player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
-				player.openInventory(inv);
+				LinkServer.getInventoryManager().createInventory(player, inv, InventoryType.CHEST, chestNumber);
 			}
 		}
 		return true;

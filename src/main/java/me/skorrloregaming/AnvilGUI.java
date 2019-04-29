@@ -113,6 +113,7 @@ public class AnvilGUI {
 
 	public void open() throws IllegalAccessException, InvocationTargetException, InstantiationException {
 		player.setLevel(player.getLevel() + 1);
+		LinkServer.getInventoryManager().doCloseInventory(player);
 		try {
 			Object p = CraftGo.Reflection.getHandle(player);
 			Object container = ContainerAnvil.getConstructor(CraftGo.Reflection.getNMSClass("PlayerInventory"), CraftGo.Reflection.getNMSClass("World"), BlockPosition, EntityHuman).newInstance(CraftGo.Reflection.getPlayerField(player, "inventory"), CraftGo.Reflection.getPlayerField(player, "world"), BlockPosition.getConstructor(int.class, int.class, int.class).newInstance(0, 0, 0), p);
