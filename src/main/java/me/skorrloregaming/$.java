@@ -209,7 +209,11 @@ public class $ {
 	}
 
 	public static void teleport(Entity entity, Location loc) {
-		entity.teleportAsync(loc);
+		try {
+			entity.teleportAsync(loc);
+		} catch (Exception ex) {
+			entity.teleport(loc);
+		}
 	}
 
 	public static boolean isWelcomeMessageEnabled() {

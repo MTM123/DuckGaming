@@ -56,6 +56,8 @@
 									<include>redis.clients:jedis</include>
 									<include>org.google.code.gson:gson</include>
 									<include>org.apache.commons:commons-pool2</include>
+									<include>org.slf4j:slf4j-api</include>
+									<include>org.slf4j:slf4j-jdk14</include>
 								</includes>
 							</artifactSet>
 						</configuration>

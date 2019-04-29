@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -638,6 +639,11 @@ public class Server extends JavaPlugin implements Listener {
 	public void onEnable() {
 		getConfig().options().copyDefaults(true);
 		saveConfig();
+		for (World world : Bukkit.getWorlds()) {
+			for (Entity entity : world.getEntities())
+				if (entity.getType() == EntityType.ENDER_DRAGON)
+					entity.remove();
+		}
 		discordBot = new DiscordBot(getPluginName(), getConfig().getString("settings.discordBot.token", "TOKEN"));
 		discordBot.register();
 		lockette = new Lockette();
