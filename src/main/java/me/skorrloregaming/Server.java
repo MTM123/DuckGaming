@@ -1,5 +1,6 @@
 package me.skorrloregaming;
 
+import com.sk89q.intake.parametric.Key;
 import me.skorrloregaming.auction.Auctioneer;
 import me.skorrloregaming.commands.*;
 import me.skorrloregaming.discord.Channel;
@@ -33,6 +34,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -105,6 +107,7 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConcurrentMap<UUID, Integer> obsidianKitCooldownFactions = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, Integer> bedrockKitCooldownFactions = new ConcurrentHashMap<>();
 
+	private static ConcurrentMap<UUID, Map.Entry<InventoryType, Inventory>> inventories = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, UUID> tpaRequests = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, UUID> marriageRequests = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, VanishedInfo> vanishedPlayers = new ConcurrentHashMap<>();
@@ -177,6 +180,21 @@ public class Server extends JavaPlugin implements Listener {
 		} catch (Exception ex) {
 			return ServerType.CraftBukkit;
 		}
+	}
+
+	public static ConcurrentMap<UUID, Map.Entry<InventoryType, Inventory>> getInventories() {
+		return inventories;
+	}
+
+	public static InventoryType getInventoryType(Player player) {
+		if (inventories.containsKey(player.getUniqueId()))
+			return inventories.get(player.getUniqueId()).getKey();
+		return InventoryType.NULL;
+	}
+
+	public static void doCloseInventory(Player player) {
+		if (inventories.containsKey(player.getUniqueId()))
+			inventories.remove(player.getUniqueId());
 	}
 
 	public static ArrayList<UUID> getWaiverAcceptPlayers() {

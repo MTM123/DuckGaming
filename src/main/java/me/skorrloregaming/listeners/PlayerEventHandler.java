@@ -48,7 +48,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.inventory.EnchantingInventory;
@@ -136,6 +135,7 @@ public class PlayerEventHandler implements Listener {
 				}
 				player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 				player.openInventory(inv);
+				Server.getInventories().put(player.getUniqueId(), new AbstractMap.SimpleEntry<>(InventoryType.SURVIVAL_SERVER_SELECTOR, inv));
 			}
 		}, delay);
 	}
@@ -665,6 +665,7 @@ public class PlayerEventHandler implements Listener {
 					}
 					player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 					player.openInventory(inv);
+					Server.getInventories().put(player.getUniqueId(), new AbstractMap.SimpleEntry<>(InventoryType.SERVER_SELECTOR, inv));
 					return;
 				}
 			}
@@ -1875,7 +1876,7 @@ public class PlayerEventHandler implements Listener {
 	public void onInventoryOpen(InventoryOpenEvent event) {
 		Player player = (Player) event.getPlayer();
 		if (Server.getFactions().contains(player.getUniqueId()) || Server.getSurvival().contains(player.getUniqueId()) || Server.getSkyblock().contains(player.getUniqueId())) {
-			if (event.getInventory().getType() == InventoryType.ENCHANTING) {
+			if (event.getInventory().getType() == org.bukkit.event.inventory.InventoryType.ENCHANTING) {
 				EnchantingInventory inventory = (EnchantingInventory) event.getInventory();
 				inventory.setItem(1, Link$.createMaterial(Material.LAPIS_LAZULI, 32));
 			}
@@ -2300,7 +2301,7 @@ public class PlayerEventHandler implements Listener {
 				player.closeInventory();
 			}
 		}
-		if (event.getInventory().getType() == InventoryType.ENCHANTING) {
+		if (event.getInventory().getType() == org.bukkit.event.inventory.InventoryType.ENCHANTING) {
 			if (event.getCurrentItem() == null)
 				return;
 			if (event.getCurrentItem().getType() == Material.LAPIS_LAZULI)
@@ -2372,7 +2373,7 @@ public class PlayerEventHandler implements Listener {
 			}
 			event.setCancelled(true);
 			player.closeInventory();
-		} else if (event.getInventory().getName().equals(ChatColor.DARK_PURPLE + "Server Selector (0b1)")) {
+		} else if (Server.getInventoryType(player) == InventoryType.SERVER_SELECTOR) {
 			if (event.getCurrentItem() == null)
 				return;
 			event.setCancelled(true);
@@ -2405,7 +2406,7 @@ public class PlayerEventHandler implements Listener {
 					player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
 					return;
 			}
-		} else if (event.getInventory().getName().equals(ChatColor.DARK_PURPLE + "Server Selector (0b10)")) {
+		} else if (Server.getInventoryType(player) == InventoryType.SERVER_SELECTOR) {
 			if (event.getCurrentItem() == null)
 				return;
 			event.setCancelled(true);
@@ -2431,7 +2432,8 @@ public class PlayerEventHandler implements Listener {
 	public void onInventoryClose(InventoryCloseEvent event) {
 		Player player = (Player) event.getPlayer();
 		ServerMinigame minigame = $.getCurrentMinigame(player);
-		if (event.getInventory().getType() == InventoryType.ENCHANTING) {
+		Server.doCloseInventory(player);
+		if (event.getInventory().getType() == org.bukkit.event.inventory.InventoryType.ENCHANTING) {
 			EnchantingInventory inventory = (EnchantingInventory) event.getInventory();
 			inventory.setItem(1, Link$.createMaterial(Material.AIR));
 			return;
