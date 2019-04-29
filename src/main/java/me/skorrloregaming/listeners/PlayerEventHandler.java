@@ -1905,11 +1905,11 @@ public class PlayerEventHandler implements Listener {
 				}
 			}
 			if (LinkServer.getInventoryManager().getInventoryType(player) == InventoryType.SELL_ALL) {
-				String name = (String) LinkServer.getInventoryManager().getInventoryData(player);
+				String name = String.valueOf(LinkServer.getInventoryManager().getInventoryData(player));
 				Material material = null;
 				int amount = 0;
 				int data = 0;
-				String code = player.getWorld().getName() + ";" + name.substring(name.lastIndexOf("[") + 1, name.lastIndexOf("]"));
+				String code = player.getWorld().getName() + ";" + name;
 				if (name.contains(";")) {
 					if (Server.getSignConfig().getData().contains("signs." + code.replace(";", ""))) {
 						int blockX = Integer.parseInt(code.split(";")[1]);
@@ -2071,7 +2071,6 @@ public class PlayerEventHandler implements Listener {
 								Inventory inv = Bukkit.createInventory(null, 54, ChatColor.BOLD + "Virtual Store [" + index + "]");
 								player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 								LinkServer.getInventoryManager().createInventory(player, inv, InventoryType.SELL_ALL, index);
-
 							} else if (event.isRightClick()) {
 								try {
 									DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
@@ -2446,12 +2445,12 @@ public class PlayerEventHandler implements Listener {
 			}
 		}
 		if (LinkServer.getInventoryManager().getInventoryType(player) == InventoryType.SELL_ALL) {
-			String name = (String) LinkServer.getInventoryManager().getInventoryData(player);
+			String name = String.valueOf(LinkServer.getInventoryManager().getInventoryData(player));
 			Material material = null;
 			int amount = 0;
 			int price = 0;
 			int data = 0;
-			String code = player.getWorld().getName() + ";" + name.substring(name.lastIndexOf("[") + 1, name.lastIndexOf("]"));
+			String code = player.getWorld().getName() + ";" + name;
 			if (name.contains(";")) {
 				if (Server.getSignConfig().getData().contains("signs." + code.replace(";", ""))) {
 					int blockX = Integer.parseInt(code.split(";")[1]);
