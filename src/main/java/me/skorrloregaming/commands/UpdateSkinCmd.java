@@ -20,7 +20,7 @@ public class UpdateSkinCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (Bukkit.getOnlineMode()) {
+		if (Bukkit.getOnlineMode() || Server.getSkinStorage() == null) {
 			player.sendMessage("This commmand is currently not applicable to you.");
 			return true;
 		}

@@ -1130,16 +1130,18 @@ public class PlayerEventHandler implements Listener {
 			}
 		});
 		CraftGo.Player.getUUID(player.getName(), false, true);
-		Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
-			@Override
-			public void run() {
-				if (!Bukkit.getOnlineMode()) {
-					Optional<SkinModel> model = Server.getSkinStorage().getSkinData(player, true);
-					if (model.isPresent())
-						Server.getSkinStorage().getFactory(player, model.get()).applySkin();
+		if (Server.getSkinStorage() != null) {
+			Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
+				@Override
+				public void run() {
+					if (!Bukkit.getOnlineMode()) {
+						Optional<SkinModel> model = Server.getSkinStorage().getSkinData(player, true);
+						if (model.isPresent())
+							Server.getSkinStorage().getFactory(player, model.get()).applySkin();
+					}
 				}
-			}
-		});
+			});
+		}
 		if (Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
 			player.setWalkSpeed(0.0F);
 		} else {
@@ -1359,17 +1361,19 @@ public class PlayerEventHandler implements Listener {
 		Server.getOnlineMode().put(player.getUniqueId(), CraftGo.Player.getOnlineMode(player));
 		player.setWalkSpeed(0.2F);
 		player.setFlySpeed(0.1F);
-		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
-			@Override
-			public void run() {
-				if (!Bukkit.getOnlineMode()) {
-					Optional<SkinModel> model = Server.getSkinStorage().getSkinData(player, false);
-					if (!model.isPresent())
-						return;
-					Server.getSkinStorage().getFactory(player, model.get()).applySkin();
+		if (Server.getSkinStorage() != null) {
+			Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
+				@Override
+				public void run() {
+					if (!Bukkit.getOnlineMode()) {
+						Optional<SkinModel> model = Server.getSkinStorage().getSkinData(player, false);
+						if (!model.isPresent())
+							return;
+						Server.getSkinStorage().getFactory(player, model.get()).applySkin();
+					}
 				}
-			}
-		});
+			});
+		}
 		String displayName = player.getDisplayName();
 		String path = "config." + player.getUniqueId().toString();
 		String ipAddress = player.getAddress().getAddress().getHostAddress().replace(".", "x");
@@ -1429,13 +1433,15 @@ public class PlayerEventHandler implements Listener {
 			player.sendMessage(ChatColor.GRAY + "/ Type " + ChatColor.RED + "/vote" + ChatColor.GRAY + " for a list of server voting links.");
 			player.sendMessage(ChatColor.GRAY + "/ Type " + ChatColor.RED + "/discord" + ChatColor.GRAY + " for a direct link to our discord.");
 			player.sendMessage(ChatColor.GRAY + "/ Players online: " + ChatColor.RED + (connectedPlayers - 1) + ChatColor.GRAY + " - Staff online: " + ChatColor.RED + $.getStaffOnline(Server.getPlugin(), player).length);
-			if (!Bukkit.getOnlineMode() && Server.getSkinStorage().ENABLE_ONJOIN_MESSAGE) {
-				long timestamp = Server.getSkinStorage().getSkinTimestamp(player);
-				long timeTillExpire = (timestamp + Server.getSkinStorage().TIME_EXPIRE_MILLISECOND) - System.currentTimeMillis();
-				if (timeTillExpire < 0)
-					timeTillExpire = Server.getSkinStorage().TIME_EXPIRE_MILLISECOND;
-				player.sendMessage("► Your skin cache will naturally expire in " + Link$.formatTime((int) (timeTillExpire / 1000)) + ".");
-				player.sendMessage("If you want to update your skin now, simply use /updateskin.");
+			if (Server.getSkinStorage() != null) {
+				if (!Bukkit.getOnlineMode() && Server.getSkinStorage().ENABLE_ONJOIN_MESSAGE) {
+					long timestamp = Server.getSkinStorage().getSkinTimestamp(player);
+					long timeTillExpire = (timestamp + Server.getSkinStorage().TIME_EXPIRE_MILLISECOND) - System.currentTimeMillis();
+					if (timeTillExpire < 0)
+						timeTillExpire = Server.getSkinStorage().TIME_EXPIRE_MILLISECOND;
+					player.sendMessage("► Your skin cache will naturally expire in " + Link$.formatTime((int) (timeTillExpire / 1000)) + ".");
+					player.sendMessage("If you want to update your skin now, simply use /updateskin.");
+				}
 			}
 		}
 		if (Server.getModeratingPlayers().containsKey(player.getUniqueId())) {

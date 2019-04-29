@@ -596,7 +596,6 @@ public class Server extends JavaPlugin implements Listener {
 		chatItemConfig = new ConfigurationManager();
 		chestShopConfig = new ConfigurationManager();
 		discordVerifyConfig = new ConfigurationManager();
-		skinStorage = new SkinStorage();
 		$.createDataFolder();
 		warpConfig.setup(new File(this.getDataFolder(), "warps.yml"));
 		signConfig.setup(new File(this.getDataFolder(), "shops.yml"));
@@ -660,8 +659,11 @@ public class Server extends JavaPlugin implements Listener {
 		if (getConfig().getBoolean("settings.bungeecord", false))
 			getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		pingInjector = new PingInjector();
-		chatitem = new ChatItem();
-		chatitem.onEnable();
+		if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
+			skinStorage = new SkinStorage();
+			chatitem = new ChatItem();
+			chatitem.onEnable();
+		}
 		if (getConfig().contains("settings.enable.pingInjector")) {
 			if (getConfig().getBoolean("settings.enable.pingInjector"))
 				pingInjector.register();
