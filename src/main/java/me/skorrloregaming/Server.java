@@ -159,15 +159,9 @@ public class Server extends JavaPlugin implements Listener {
 
 	private static DiscordBot discordBot;
 
-	private static InventoryManager inventoryManager;
-
 	private static ConcurrentMap<Player, ItemStack> storedItem = new ConcurrentHashMap<Player, ItemStack>();
 
 	private static ArrayList<UUID> waiverAcceptPlayers = new ArrayList<>();
-
-	public static InventoryManager getInventoryManager() {
-		return inventoryManager;
-	}
 
 	public static ServerType getServerType() {
 		try {
@@ -658,7 +652,6 @@ public class Server extends JavaPlugin implements Listener {
 		auctioneer = new Auctioneer();
 		shoppe = new LaShoppe();
 		garbageCollector = new GCandAutoDemotion();
-		inventoryManager = new InventoryManager();
 		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(new BlockEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new PlayerEventHandler(), this);
