@@ -294,6 +294,7 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler
 	public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
 		Player player = event.getPlayer();
+		LinkServer.getInventoryManager().doCloseInventory(player);
 		if (!$.isAuthenticated(player))
 			return;
 		if (Server.getWaiverAcceptPlayers().contains(player.getUniqueId())) {
@@ -355,6 +356,7 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
+		LinkServer.getInventoryManager().doCloseInventory(player);
 		ItemStack itm = player.getInventory().getItemInMainHand();
 		Location playerLoc = player.getLocation();
 		if (!$.isAuthenticated(player))
@@ -412,6 +414,7 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
+		LinkServer.getInventoryManager().doCloseInventory(player);
 		if (event.getHand() == EquipmentSlot.OFF_HAND) {
 			return;
 		}
@@ -2431,7 +2434,6 @@ public class PlayerEventHandler implements Listener {
 	public void onInventoryClose(InventoryCloseEvent event) {
 		Player player = (Player) event.getPlayer();
 		ServerMinigame minigame = $.getCurrentMinigame(player);
-		LinkServer.getInventoryManager().doCloseInventory(player);
 		if (event.getInventory().getType() == org.bukkit.event.inventory.InventoryType.ENCHANTING) {
 			EnchantingInventory inventory = (EnchantingInventory) event.getInventory();
 			inventory.setItem(1, Link$.createMaterial(Material.AIR));
