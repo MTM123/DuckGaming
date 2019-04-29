@@ -134,8 +134,7 @@ public class PlayerEventHandler implements Listener {
 					inv.setItem(5 + add, survival);
 				}
 				player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
-				player.openInventory(inv);
-				LinkServer.getInventoryManager().getInventories().put(player.getUniqueId(), new AbstractMap.SimpleEntry(InventoryType.SERVER_SELECTOR, 1));
+				LinkServer.getInventoryManager().createInventory(player, inv, InventoryType.SERVER_SELECTOR, 1);
 			}
 		}, delay);
 	}
@@ -665,7 +664,7 @@ public class PlayerEventHandler implements Listener {
 					}
 					player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 					player.openInventory(inv);
-					LinkServer.getInventoryManager().getInventories().put(player.getUniqueId(), new AbstractMap.SimpleEntry(InventoryType.SERVER_SELECTOR, 0));
+					LinkServer.getInventoryManager().createInventory(player, inv, InventoryType.SERVER_SELECTOR, 0);
 					return;
 				}
 			}
