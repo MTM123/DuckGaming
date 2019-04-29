@@ -135,7 +135,7 @@ public class PlayerEventHandler implements Listener {
 				}
 				player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 				player.openInventory(inv);
-				Server.getInventories().put(player.getUniqueId(), new AbstractMap.SimpleEntry<>(InventoryType.SURVIVAL_SERVER_SELECTOR, inv));
+				Server.getInventoryManager().getInventories().put(player.getUniqueId(), new AbstractMap.SimpleEntry(InventoryType.SERVER_SELECTOR, 1));
 			}
 		}, delay);
 	}
@@ -665,7 +665,7 @@ public class PlayerEventHandler implements Listener {
 					}
 					player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 					player.openInventory(inv);
-					Server.getInventories().put(player.getUniqueId(), new AbstractMap.SimpleEntry<>(InventoryType.SERVER_SELECTOR, inv));
+					Server.getInventoryManager().getInventories().put(player.getUniqueId(), new AbstractMap.SimpleEntry(InventoryType.SERVER_SELECTOR, 0));
 					return;
 				}
 			}
@@ -1904,8 +1904,8 @@ public class PlayerEventHandler implements Listener {
 					}
 				}
 			}
-			if (event.getInventory().getName().startsWith(ChatColor.BOLD + "Virtual Store")) {
-				String name = ChatColor.stripColor(event.getInventory().getName());
+			if (Server.getInventoryManager().getInventoryType(player) == InventoryType.SELL_ALL) {
+				String name = (String) Server.getInventoryManager().getInventoryData(player);
 				Material material = null;
 				int amount = 0;
 				int data = 0;
@@ -1949,10 +1949,9 @@ public class PlayerEventHandler implements Listener {
 					}
 				}
 			}
-			if (event.getInventory().getName().startsWith("La Shoppe")) {
+			if (Server.getInventoryManager().getInventoryType(player) == InventoryType.LA_SHOPPE) {
 				event.setCancelled(true);
-				String pageString = event.getInventory().getName().substring(event.getInventory().getName().indexOf("page ") + 5);
-				int page = Integer.parseInt(pageString);
+				int page = (int) Server.getInventoryManager().getInventoryData(player);
 				if (event.getCurrentItem() == null)
 					return;
 				if (event.getCurrentItem().getType() == Material.ROSE_RED) {
@@ -2110,9 +2109,9 @@ public class PlayerEventHandler implements Listener {
 				}
 			}
 		}
-		if (!(event.getCurrentItem() == null) && event.getInventory().getName().startsWith(ChatColor.RESET + "") && event.getInventory().getName().endsWith("sessions")) {
+		if (!(event.getCurrentItem() == null) && Server.getInventoryManager().getInventoryType(player) == InventoryType.SESSIONS) {
 			String sessionKey = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
-			String playerName = ChatColor.stripColor(event.getInventory().getName().substring(0, event.getInventory().getName().indexOf("'")));
+			String playerName = (String) Server.getInventoryManager().getInventoryData(player);
 			OfflinePlayer op = CraftGo.Player.getOfflinePlayer(playerName);
 			if (op.getName().equals(player.getName()) || player.isOp() || Link$.getRankId(player) > 2) {
 				if (player.isOp() || Link$.getRankId(player) > 2) {
@@ -2127,7 +2126,7 @@ public class PlayerEventHandler implements Listener {
 			}
 			return;
 		}
-		if (!(event.getCurrentItem() == null) && event.getInventory().getName().equals("Select your preferred team.")) {
+		if (!(event.getCurrentItem() == null) && Server.getInventoryManager().getInventoryType(player) == InventoryType.SKYFIGHT_TEAMS) {
 			if ($.getCurrentMinigame(player) == ServerMinigame.SKYFIGHT) {
 				if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
 					event.setCancelled(true);
@@ -2152,7 +2151,7 @@ public class PlayerEventHandler implements Listener {
 				}
 			}
 		}
-		if (!(event.getCurrentItem() == null) && event.getInventory().getName().equals(ChatColor.BOLD + "Select or purchase trails!")) {
+		if (!(event.getCurrentItem() == null) && Server.getInventoryManager().getInventoryType(player) == InventoryType.TRAILS) {
 			if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
 				event.setCancelled(true);
 				ItemStack item = event.getCurrentItem();
@@ -2182,7 +2181,7 @@ public class PlayerEventHandler implements Listener {
 				player.closeInventory();
 			}
 		}
-		if (!(event.getCurrentItem() == null) && event.getInventory().getName().equals(ChatColor.BOLD + "Upgrade your spawner!")) {
+		if (!(event.getCurrentItem() == null) && Server.getInventoryManager().getInventoryType(player) == InventoryType.SPAWNER_UPGRADES) {
 			if (Server.getFactions().contains(player.getUniqueId()) || Server.getSkyblock().contains(player.getUniqueId())) {
 				if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
 					event.setCancelled(true);
@@ -2234,7 +2233,7 @@ public class PlayerEventHandler implements Listener {
 				player.closeInventory();
 			}
 		}
-		if (!(event.getCurrentItem() == null) && event.getInventory().getName().equals(ChatColor.BOLD + "Select or upgrade your kit!")) {
+		if (!(event.getCurrentItem() == null) && Server.getInventoryManager().getInventoryType(player) == InventoryType.KIT_UPGRADES) {
 			if ($.getCurrentMinigame(player) == ServerMinigame.KITPVP) {
 				if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
 					event.setCancelled(true);
@@ -2308,7 +2307,7 @@ public class PlayerEventHandler implements Listener {
 				event.setCancelled(true);
 			return;
 		}
-		if (event.getInventory().getName().equals(ChatColor.BOLD + "Buy Monster Spawners")) {
+		if (Server.getInventoryManager().getInventoryType(player) == InventoryType.SPAWNER_SHOP) {
 			if (event.getCurrentItem() == null)
 				return;
 			Material material = Material.SPAWNER;
@@ -2373,57 +2372,60 @@ public class PlayerEventHandler implements Listener {
 			}
 			event.setCancelled(true);
 			player.closeInventory();
-		} else if (Server.getInventoryType(player) == InventoryType.SERVER_SELECTOR) {
+		} else if (Server.getInventoryManager().getInventoryType(player) == InventoryType.SERVER_SELECTOR) {
 			if (event.getCurrentItem() == null)
 				return;
 			event.setCancelled(true);
-			switch (event.getCurrentItem().getType()) {
-				case BOW:
-					Server.getInstance().enterSkyfight(player, false, false);
-					break;
-				case STONE_PICKAXE:
-					if ($.isMinigameEnabled(ServerMinigame.FACTIONS) && $.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
-						openSurvivalServerSelectorMenu(player);
-					} else if ($.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
-						Server.getInstance().enterSurvival(player, false, false);
-					} else if ($.isMinigameEnabled(ServerMinigame.FACTIONS)) {
-						Server.getInstance().enterFactions(player, false, false);
+			switch ((int) Server.getInventoryManager().getInventoryData(player)) {
+				case 0:
+					switch (event.getCurrentItem().getType()) {
+						case BOW:
+							Server.getInstance().enterSkyfight(player, false, false);
+							break;
+						case STONE_PICKAXE:
+							if ($.isMinigameEnabled(ServerMinigame.FACTIONS) && $.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
+								openSurvivalServerSelectorMenu(player);
+							} else if ($.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
+								Server.getInstance().enterSurvival(player, false, false);
+							} else if ($.isMinigameEnabled(ServerMinigame.FACTIONS)) {
+								Server.getInstance().enterFactions(player, false, false);
+							}
+							break;
+						case DIAMOND_SWORD:
+							Server.getInstance().enterFactions(player, false, false);
+							break;
+						case IRON_SWORD:
+							Server.getInstance().enterKitpvp(player, false, false);
+							break;
+						case GRASS_BLOCK:
+							Server.getInstance().enterCreative(player, false, false);
+							break;
+						case OAK_SAPLING:
+							Server.getInstance().enterSkyblock(player, false, false);
+							break;
+						default:
+							player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
+							return;
 					}
 					break;
-				case DIAMOND_SWORD:
-					Server.getInstance().enterFactions(player, false, false);
+				case 1:
+					switch (event.getCurrentItem().getType()) {
+						case DIAMOND_SWORD:
+							Server.getInstance().enterFactions(player, false, false);
+							break;
+						case STONE_PICKAXE:
+							Server.getInstance().enterSurvival(player, false, false);
+							break;
+						default:
+							player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
+							return;
+					}
 					break;
-				case IRON_SWORD:
-					Server.getInstance().enterKitpvp(player, false, false);
-					break;
-				case GRASS_BLOCK:
-					Server.getInstance().enterCreative(player, false, false);
-					break;
-				case OAK_SAPLING:
-					Server.getInstance().enterSkyblock(player, false, false);
-					break;
-				default:
-					player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
-					return;
 			}
-		} else if (Server.getInventoryType(player) == InventoryType.SERVER_SELECTOR) {
-			if (event.getCurrentItem() == null)
-				return;
-			event.setCancelled(true);
-			switch (event.getCurrentItem().getType()) {
-				case DIAMOND_SWORD:
-					Server.getInstance().enterFactions(player, false, false);
-					break;
-				case STONE_PICKAXE:
-					Server.getInstance().enterSurvival(player, false, false);
-					break;
-				default:
-					player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
-					return;
-			}
+
 		} else if (Server.getSkyfight().containsKey(player.getUniqueId()) && player.getGameMode() == GameMode.SURVIVAL) {
 			event.setCancelled(true);
-		} else if (event.getInventory().getName().startsWith(ChatColor.BOLD + "Temporary Inventory")) {
+		} else if (Server.getInventoryManager().getInventoryType(player) == InventoryType.TEMPORARY) {
 			event.setCancelled(true);
 		}
 	}
@@ -2432,7 +2434,7 @@ public class PlayerEventHandler implements Listener {
 	public void onInventoryClose(InventoryCloseEvent event) {
 		Player player = (Player) event.getPlayer();
 		ServerMinigame minigame = $.getCurrentMinigame(player);
-		Server.doCloseInventory(player);
+		Server.getInventoryManager().doCloseInventory(player);
 		if (event.getInventory().getType() == org.bukkit.event.inventory.InventoryType.ENCHANTING) {
 			EnchantingInventory inventory = (EnchantingInventory) event.getInventory();
 			inventory.setItem(1, Link$.createMaterial(Material.AIR));

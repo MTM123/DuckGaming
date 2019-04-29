@@ -107,7 +107,6 @@ public class Server extends JavaPlugin implements Listener {
 	private static ConcurrentMap<UUID, Integer> obsidianKitCooldownFactions = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, Integer> bedrockKitCooldownFactions = new ConcurrentHashMap<>();
 
-	private static ConcurrentMap<UUID, Map.Entry<InventoryType, Inventory>> inventories = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, UUID> tpaRequests = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, UUID> marriageRequests = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, VanishedInfo> vanishedPlayers = new ConcurrentHashMap<>();
@@ -160,9 +159,15 @@ public class Server extends JavaPlugin implements Listener {
 
 	private static DiscordBot discordBot;
 
+	private static InventoryManager inventoryManager;
+
 	private static ConcurrentMap<Player, ItemStack> storedItem = new ConcurrentHashMap<Player, ItemStack>();
 
 	private static ArrayList<UUID> waiverAcceptPlayers = new ArrayList<>();
+
+	public static InventoryManager getInventoryManager() {
+		return inventoryManager;
+	}
 
 	public static ServerType getServerType() {
 		try {
@@ -180,21 +185,6 @@ public class Server extends JavaPlugin implements Listener {
 		} catch (Exception ex) {
 			return ServerType.CraftBukkit;
 		}
-	}
-
-	public static ConcurrentMap<UUID, Map.Entry<InventoryType, Inventory>> getInventories() {
-		return inventories;
-	}
-
-	public static InventoryType getInventoryType(Player player) {
-		if (inventories.containsKey(player.getUniqueId()))
-			return inventories.get(player.getUniqueId()).getKey();
-		return InventoryType.NULL;
-	}
-
-	public static void doCloseInventory(Player player) {
-		if (inventories.containsKey(player.getUniqueId()))
-			inventories.remove(player.getUniqueId());
 	}
 
 	public static ArrayList<UUID> getWaiverAcceptPlayers() {
@@ -668,6 +658,7 @@ public class Server extends JavaPlugin implements Listener {
 		auctioneer = new Auctioneer();
 		shoppe = new LaShoppe();
 		garbageCollector = new GCandAutoDemotion();
+		inventoryManager = new InventoryManager();
 		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(new BlockEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new PlayerEventHandler(), this);
