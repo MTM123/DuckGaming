@@ -1,9 +1,7 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Link$;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
+import me.skorrloregaming.impl.InventoryType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -65,7 +63,7 @@ public class SpawnerCmd implements CommandExecutor {
 		inventory.setItem(6 + add, cowSpawner);
 		inventory.setItem(7 + add, pigSpawner);
 		inventory.setItem(8 + add, chickenSpawner);
-		player.openInventory(inventory);
+		LinkServer.getInventoryManager().createInventory(player, inventory, InventoryType.SPAWNER_SHOP);
 		return true;
 	}
 

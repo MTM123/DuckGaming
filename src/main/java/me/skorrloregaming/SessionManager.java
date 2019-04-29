@@ -1,5 +1,6 @@
 package me.skorrloregaming;
 
+import me.skorrloregaming.impl.InventoryType;
 import me.skorrloregaming.impl.IpLocationQuery;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -138,7 +139,7 @@ public class SessionManager {
 			ItemStack item = Link$.createMaterial(skullType, 1, ChatColor.RESET + "" + ChatColor.BOLD + new String(session.getKey()), (short) 0, lore);
 			inventory.setItem(i, item);
 		}
-		player.openInventory(inventory);
+		LinkServer.getInventoryManager().createInventory(player, inventory, InventoryType.SESSIONS, tp.getName());
 	}
 
 	public static class Session {

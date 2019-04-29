@@ -1,9 +1,8 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Link$;
+import me.skorrloregaming.*;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.InventoryType;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -92,7 +91,7 @@ public class UpgradeKitCmd implements CommandExecutor {
 				item = Link$.addLore(item, lore.toArray(new String[0]));
 			inventory.setItem(i, item);
 		}
-		player.openInventory(inventory);
+		LinkServer.getInventoryManager().createInventory(player, inventory, InventoryType.KIT_UPGRADES);
 	}
 
 	@Override

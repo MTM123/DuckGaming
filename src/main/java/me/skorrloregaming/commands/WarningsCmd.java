@@ -2,7 +2,9 @@ package me.skorrloregaming.commands;
 
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Link$;
+import me.skorrloregaming.LinkServer;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.InventoryType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -57,7 +59,7 @@ public class WarningsCmd implements CommandExecutor {
 							message[i] = ChatColor.RESET + message[i];
 						inv.setItem(Integer.valueOf(key) + 1 + add, Link$.createMaterial(Material.ZOMBIE_HEAD, 1, ChatColor.RESET + "" + ChatColor.UNDERLINE + op.getName() + "'s warning #" + key, (short) 0, message));
 					}
-					((Player) sender).openInventory(inv);
+					LinkServer.getInventoryManager().createInventory(((Player) sender), inv, InventoryType.WARNINGS);
 				}
 			}
 			if (warnings == 1) {
