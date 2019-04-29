@@ -13,5 +13,6 @@ public enum InventoryType {
 	KIT_UPGRADES,
 	SPAWNER_UPGRADES,
 	SPAWNER_SHOP,
+	WARNINGS,
 	TEMPORARY
 }

@@ -1889,9 +1889,7 @@ public class PlayerEventHandler implements Listener {
 		ServerMinigame minigame = $.getCurrentMinigame(player);
 		String path = "config." + player.getUniqueId().toString();
 		event.setCancelled(LinkServer.getInstance().getPlaytimeManager().onInventoryClick(event));
-		if (!(event.getCurrentItem() == null) && event.getInventory().getName().startsWith(ChatColor.MAGIC + ""))
-			event.setCancelled(true);
-		if (!(event.getCurrentItem() == null) && event.getInventory().getName().startsWith(ChatColor.BOLD + "") && event.getInventory().getName().endsWith("warnings"))
+		if (!(event.getCurrentItem() == null) && Server.getInventoryManager().getInventoryType(player) == InventoryType.WARNINGS)
 			event.setCancelled(true);
 		if (!(event.getCurrentItem() == null)) {
 			boolean removeMode = false;
@@ -1910,7 +1908,7 @@ public class PlayerEventHandler implements Listener {
 				int amount = 0;
 				int data = 0;
 				String code = player.getWorld().getName() + ";" + name.substring(name.lastIndexOf("[") + 1, name.lastIndexOf("]"));
-				if (event.getInventory().getName().contains(";")) {
+				if (name.contains(";")) {
 					if (Server.getSignConfig().getData().contains("signs." + code.replace(";", ""))) {
 						int blockX = Integer.parseInt(code.split(";")[1]);
 						int blockY = Integer.parseInt(code.split(";")[2]);
@@ -2440,19 +2438,19 @@ public class PlayerEventHandler implements Listener {
 			inventory.setItem(1, Link$.createMaterial(Material.AIR));
 			return;
 		}
-		if (event.getInventory().getName().startsWith("Select your preferred team.")) {
+		if (Server.getInventoryManager().getInventoryType(player) == InventoryType.SKYFIGHT_TEAMS) {
 			if (Server.getSkyfight().containsKey(player.getUniqueId())) {
 				Server.getSkyfight().get(player.getUniqueId()).setHasTeamSelectionGuiOpen(false);
 			}
 		}
-		if (event.getInventory().getName().startsWith(ChatColor.BOLD + "Virtual Store")) {
-			String name = ChatColor.stripColor(event.getInventory().getName());
+		if (Server.getInventoryManager().getInventoryType(player) == InventoryType.SELL_ALL) {
+			String name = (String) Server.getInventoryManager().getInventoryData(player);
 			Material material = null;
 			int amount = 0;
 			int price = 0;
 			int data = 0;
 			String code = player.getWorld().getName() + ";" + name.substring(name.lastIndexOf("[") + 1, name.lastIndexOf("]"));
-			if (event.getInventory().getName().contains(";")) {
+			if (name.contains(";")) {
 				if (Server.getSignConfig().getData().contains("signs." + code.replace(";", ""))) {
 					int blockX = Integer.parseInt(code.split(";")[1]);
 					int blockY = Integer.parseInt(code.split(";")[2]);
@@ -2509,11 +2507,10 @@ public class PlayerEventHandler implements Listener {
 				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Sold " + ChatColor.RED + materialName + " x" + totalAmount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(totalPrice));
 			}
 		}
-		if (event.getInventory().getName().startsWith(ChatColor.BOLD + "Personal Inventory")) {
+		if (Server.getInventoryManager().getInventoryType(player) == InventoryType.CHEST) {
 			try {
 				Player tp = player;
-				String chestNumberStr = event.getInventory().getName().substring(event.getInventory().getName().indexOf("[") + 1, event.getInventory().getName().length() - 1);
-				int chestNumber = Integer.parseInt(chestNumberStr);
+				int chestNumber = (int) Server.getInventoryManager().getInventoryData(player);
 				boolean saveInventory = false;
 				if (Server.getSavePersonalChest().containsKey(player)) {
 					tp = Server.getSavePersonalChest().get(player);
