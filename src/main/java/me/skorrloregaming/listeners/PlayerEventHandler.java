@@ -294,7 +294,6 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler
 	public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
 		Player player = event.getPlayer();
-		LinkServer.getInventoryManager().doCloseInventory(player);
 		if (!$.isAuthenticated(player))
 			return;
 		if (Server.getWaiverAcceptPlayers().contains(player.getUniqueId())) {
@@ -356,7 +355,6 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
-		LinkServer.getInventoryManager().doCloseInventory(player);
 		ItemStack itm = player.getInventory().getItemInMainHand();
 		Location playerLoc = player.getLocation();
 		if (!$.isAuthenticated(player))
@@ -414,7 +412,6 @@ public class PlayerEventHandler implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		LinkServer.getInventoryManager().doCloseInventory(player);
 		if (event.getHand() == EquipmentSlot.OFF_HAND) {
 			return;
 		}
