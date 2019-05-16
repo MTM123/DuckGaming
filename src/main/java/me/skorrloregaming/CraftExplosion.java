@@ -95,7 +95,8 @@ public class CraftExplosion {
 					} else {
 						if (!isDropsDestructable(block)) {
 							for (ItemStack drop : block.getDrops()) {
-								block.getWorld().dropItemNaturally(block.getLocation(), drop);
+								if (drop != null && drop.getType() != Material.AIR)
+									block.getWorld().dropItemNaturally(block.getLocation(), drop);
 							}
 						}
 						block.breakNaturally(Link$.createMaterial(Material.AIR));
