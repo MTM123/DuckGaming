@@ -51,7 +51,7 @@ public class AsyncRandomTeleport implements Runnable {
 			Location teleportLocation = block.getLocation().clone().add(0, 1, 0);
 			if (player.getWorld().getEnvironment() == World.Environment.NETHER)
 				teleportLocation.setY(128);
-			if (teleportLocation.clone().add(0, 1, 0).getType().isSolid()) {
+			if (teleportLocation.clone().add(0, 1, 0).getBlock().getType().isSolid()) {
 				player.sendMessage(Link$.Legacy.tag + "Unsafe teleport destination, trying again..");
 				execute();
 			}
