@@ -152,13 +152,13 @@ public class $ {
 	}
 
 	public static void playFirework(Location location) {
-		FireworkEffect effect = FireworkEffect.builder().with(Type.BURST).withColor(Color.WHITE).build();
+		/*FireworkEffect effect = FireworkEffect.builder().with(Type.BURST).withColor(Color.WHITE).build();
 		Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
 		FireworkMeta fwm = fw.getFireworkMeta();
 		fwm.clearEffects();
 		fwm.setPower(1);
 		fwm.addEffect(effect);
-		fw.setFireworkMeta(fwm);
+		fw.setFireworkMeta(fwm);*/
 	}
 
 	public static String scanStringArrayAndSplitBy(String[] array, char[] split) {
