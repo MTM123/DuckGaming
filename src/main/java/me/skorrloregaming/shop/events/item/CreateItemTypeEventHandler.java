@@ -3,6 +3,7 @@ package me.skorrloregaming.shop.events.item;
 import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.shop.LaShoppe;
+import me.skorrloregaming.shop.LaShoppeFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
@@ -36,7 +37,7 @@ public class CreateItemTypeEventHandler implements AnvilGUI.AnvilClickEventHandl
 			@Override
 			public void run() {
 				try {
-					new AnvilGUI(event.getPlayer(), new CreateItemPriceEventHandler(shoppe, fMaterial))
+					new AnvilGUI(event.getPlayer(), Server.getShoppe().getInventoryName(LaShoppeFrame.CREATE_ITEM), new CreateItemPriceEventHandler(shoppe, fMaterial))
 							.setInputName("Enter price")
 							.open();
 				} catch (IllegalAccessException e) {

@@ -1,5 +1,6 @@
 package me.skorrloregaming;
 
+import jdk.nashorn.internal.ir.Block;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.awt.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -28,9 +30,15 @@ public class AnvilGUI {
 	private static Class<?> ContainerAnvil;
 	private static Class<?> ChatMessage;
 	private static Class<?> EntityHuman;
+	private static Class<?> ContainerAccess;
+	private static Class<?> Containers;
+
+	private static Method at;
 	private HashMap<AnvilSlot, ItemStack> items = new HashMap<AnvilSlot, ItemStack>();
 	private Inventory inv;
 	private Listener listener;
+
+	private String inventoryName;
 
 	private void loadClasses() {
 		BlockPosition = CraftGo.Reflection.getNMSClass("BlockPosition");
@@ -38,13 +46,16 @@ public class AnvilGUI {
 		ContainerAnvil = CraftGo.Reflection.getNMSClass("ContainerAnvil");
 		EntityHuman = CraftGo.Reflection.getNMSClass("EntityHuman");
 		ChatMessage = CraftGo.Reflection.getNMSClass("ChatMessage");
+		ContainerAccess = CraftGo.Reflection.getNMSClass("ContainerAccess");
+		Containers = CraftGo.Reflection.getNMSClass("Containers");
+		at = CraftGo.Reflection.getMethod(ContainerAccess, "at", CraftGo.Reflection.getNMSClass("World"), BlockPosition);
 	}
 
-	public AnvilGUI(final Player player, final AnvilClickEventHandler handler) {
+	public AnvilGUI(final Player player, String inventoryName, final AnvilClickEventHandler handler) {
 		loadClasses();
 		this.player = player;
 		this.handler = handler;
-
+		this.inventoryName = inventoryName;
 		this.listener = new Listener() {
 			@EventHandler
 			public void onInventoryClick(InventoryClickEvent event) {
@@ -113,20 +124,23 @@ public class AnvilGUI {
 
 	public void open() throws IllegalAccessException, InvocationTargetException, InstantiationException {
 		player.setLevel(player.getLevel() + 1);
-		LinkServer.getInventoryManager().doCloseInventory(player);
 		try {
 			Object p = CraftGo.Reflection.getHandle(player);
-			Object container = ContainerAnvil.getConstructor(CraftGo.Reflection.getNMSClass("PlayerInventory"), CraftGo.Reflection.getNMSClass("World"), BlockPosition, EntityHuman).newInstance(CraftGo.Reflection.getPlayerField(player, "inventory"), CraftGo.Reflection.getPlayerField(player, "world"), BlockPosition.getConstructor(int.class, int.class, int.class).newInstance(0, 0, 0), p);
+			int c = (int) CraftGo.Reflection.invokeMethod("nextContainerCounter", p);
+			Object ep = CraftGo.Reflection.getHandle(p);
+			Object world = CraftGo.Reflection.getHandle(player.getWorld());
+			Object blockPosition = BlockPosition.getConstructor(int.class, int.class, int.class).newInstance(0, 0, 0);
+			Object container = ContainerAnvil.getConstructor(int.class, CraftGo.Reflection.getNMSClass("PlayerInventory"), CraftGo.Reflection.getNMSClass("ContainerAccess")).newInstance(c, CraftGo.Reflection.getPlayerField(player, "inventory"), at.invoke(null, world, blockPosition));
 			CraftGo.Reflection.getField(CraftGo.Reflection.getNMSClass("Container"), "checkReachable").set(container, false);
 			Object bukkitView = CraftGo.Reflection.invokeMethod("getBukkitView", container);
 			inv = (Inventory) CraftGo.Reflection.invokeMethod("getTopInventory", bukkitView);
 			for (AnvilSlot slot : items.keySet()) {
 				inv.setItem(slot.getSlot(), items.get(slot));
 			}
-			int c = (int) CraftGo.Reflection.invokeMethod("nextContainerCounter", p);
 			Constructor<?> chatMessageConstructor = ChatMessage.getConstructor(String.class, Object[].class);
 			Object playerConnection = CraftGo.Reflection.getPlayerField(player, "playerConnection");
-			Object packet = PacketPlayOutOpenWindow.getConstructor(int.class, String.class, CraftGo.Reflection.getNMSClass("IChatBaseComponent"), int.class).newInstance(c, "minecraft:anvil", chatMessageConstructor.newInstance("Repairing", new Object[]{}), 0);
+			Object ANVIL = CraftGo.Reflection.getField(CraftGo.Reflection.getNMSClass("Containers"), "ANVIL").get(null);
+			Object packet = PacketPlayOutOpenWindow.getConstructor(int.class, Containers, CraftGo.Reflection.getNMSClass("IChatBaseComponent")).newInstance(c, ANVIL, chatMessageConstructor.newInstance(inventoryName, new Object[]{}));
 			Method sendPacket = CraftGo.Reflection.getMethod("sendPacket", playerConnection.getClass(), PacketPlayOutOpenWindow);
 			sendPacket.invoke(playerConnection, packet);
 			Field activeContainerField = CraftGo.Reflection.getField(EntityHuman, "activeContainer");

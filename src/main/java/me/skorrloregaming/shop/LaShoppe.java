@@ -73,6 +73,17 @@ public class LaShoppe {
 		return new LaShoppeEnchant(enchantment, price, tier, index);
 	}
 
+	public String getInventoryName(LaShoppeFrame frame) {
+		switch (frame) {
+			case CREATE_ITEM:
+				return "Add item to shop";
+			case CREATE_ENCHANT:
+				return "Add enchant to shop";
+			default:
+				return "Repair & Name";
+		}
+	}
+
 	public void createInventory(Player player, LaShoppeFrame frame, int page, boolean removeMode) {
 		ServerMinigame minigame = $.getCurrentMinigame(player);
 		String prefix = minigame.toString().toLowerCase() + ".";
@@ -125,7 +136,7 @@ public class LaShoppe {
 				break;
 			case CREATE_ITEM:
 				try {
-					new AnvilGUI(player, new CreateItemTypeEventHandler(this))
+					new AnvilGUI(player, getInventoryName(frame), new CreateItemTypeEventHandler(this))
 							.setInputName("Enter type")
 							.open();
 				} catch (IllegalAccessException e) {
@@ -138,7 +149,7 @@ public class LaShoppe {
 				break;
 			case CREATE_ENCHANT:
 				try {
-					new AnvilGUI(player, new CreateEnchantTypeEventHandler(this))
+					new AnvilGUI(player, getInventoryName(frame), new CreateEnchantTypeEventHandler(this))
 							.setInputName("Enter type")
 							.open();
 				} catch (IllegalAccessException e) {

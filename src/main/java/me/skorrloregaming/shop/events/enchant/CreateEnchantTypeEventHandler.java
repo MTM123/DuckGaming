@@ -5,6 +5,7 @@ import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.shop.LaShoppe;
+import me.skorrloregaming.shop.LaShoppeFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 
@@ -34,7 +35,7 @@ public class CreateEnchantTypeEventHandler implements AnvilGUI.AnvilClickEventHa
 			@Override
 			public void run() {
 				try {
-					new AnvilGUI(event.getPlayer(), new CreateEnchantPriceEventHandler(shoppe, fEnchantment))
+					new AnvilGUI(event.getPlayer(), Server.getShoppe().getInventoryName(LaShoppeFrame.CREATE_ENCHANT), new CreateEnchantPriceEventHandler(shoppe, fEnchantment))
 							.setInputName("Enter price")
 							.open();
 				} catch (IllegalAccessException e) {
