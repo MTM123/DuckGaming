@@ -16,7 +16,7 @@ public class ComplexParticle {
 
 	private Particle particleType;
 	private int particleCount = 0;
-	private float radius = 1f;
+	private float radius = 4f;
 
 	private Class<?> requiredDataClass = null;
 
@@ -148,15 +148,14 @@ public class ComplexParticle {
 		if (particleCount <= 0)
 			throw new IllegalArgumentException("Particle count <= 0");
 		for (int i = 0; i < particleCount; i++) {
-			double calc = 1000 * radius;
-			double offsetX = (new Random(UUID.randomUUID().hashCode()).nextInt((int) (calc * 2)) - calc) / calc;
-			double offsetY = (new Random(UUID.randomUUID().hashCode()).nextInt((int) (calc * 2)) - calc) / calc;
-			double offsetZ = (new Random(UUID.randomUUID().hashCode()).nextInt((int) (calc * 2)) - calc) / calc;
+			double offsetX = (new Random(UUID.randomUUID().hashCode()).nextInt((int) (radius * 2)) - radius) / 2;
+			double offsetY = (new Random(UUID.randomUUID().hashCode()).nextInt((int) (radius * 2)) - radius) / 2;
+			double offsetZ = (new Random(UUID.randomUUID().hashCode()).nextInt((int) (radius * 2)) - radius) / 2;
 			try {
 				if (particleData == null) {
-					world.spawnParticle(particleType, x, y, z, 1, offsetX, offsetY, offsetZ, extra);
+					player.spawnParticle(particleType, x + offsetX, y + offsetY, z + offsetZ, 1, 0, 0, 0, extra);
 				} else {
-					world.spawnParticle(particleType, x, y, z, 1, offsetX, offsetY, offsetZ, extra, particleData);
+					player.spawnParticle(particleType, x + offsetX, y + offsetY, z + offsetZ, 1, 0, 0, 0, extra, particleData);
 				}
 			} catch (IllegalArgumentException ex) {
 				throw new IllegalArgumentException("Particle requires " + requiredDataClass.getName() + ", null provided");

@@ -162,6 +162,8 @@ public class Server extends JavaPlugin implements Listener {
 
 	private static ArrayList<UUID> waiverAcceptPlayers = new ArrayList<>();
 
+	private static long lastVoteTime = 0L;
+
 	public static ServerType getServerType() {
 		try {
 			Class.forName("org.spigotmc.SpigotConfig");
@@ -194,6 +196,14 @@ public class Server extends JavaPlugin implements Listener {
 			player.updateInventory();
 			storedItem.remove(player);
 		}
+	}
+
+	public static long getLastVoteTime() {
+		return lastVoteTime;
+	}
+
+	public static void setLastVoteTime(long voteTime) {
+		lastVoteTime = voteTime;
 	}
 
 	public static AuthMe_Listener getAuthListener() {

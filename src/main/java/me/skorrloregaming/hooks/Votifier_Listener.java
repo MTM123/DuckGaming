@@ -137,6 +137,7 @@ public class Votifier_Listener implements Listener {
 				if (!spoofed || (spoofed && minigame == ServerMinigame.SKYBLOCK))
 					player.getPlayer().sendMessage(ChatColor.GREEN + "Jackpot." + ChatColor.RESET + " You just voted and earned $" + amountEarned3 + " in Skyblock.");
 				$.playFirework(player.getPlayer().getLocation());
+				Server.setLastVoteTime(System.currentTimeMillis());
 			}
 		} else {
 			Logger.info(this.toString() + " has denied the vote since \"" + username + "\" is undefined.", true);

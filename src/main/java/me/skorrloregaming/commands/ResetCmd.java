@@ -56,8 +56,6 @@ public class ResetCmd implements CommandExecutor {
 				Server.getPlugin().getConfig().set(path + "." + game + ".upgrades", "0");
 			if (Server.getPlugin().getConfig().contains(path + "." + game + ".preferredUpgrade"))
 				Server.getPlugin().getConfig().set(path + "." + game + ".preferredUpgrade", "0");
-			if (Server.getPlugin().getConfig().contains(path + "." + game + ".trails.selectedTrail"))
-				Server.getPlugin().getConfig().set(path + "." + game + ".trails.selectedTrail", "-1");
 			if (Server.getPlugin().getConfig().contains(path + "." + game + ".placed"))
 				Server.getPlugin().getConfig().set(path + "." + game + ".placed", "0");
 			if (Server.getPlugin().getConfig().contains(path + "." + game + ".broken"))

@@ -1009,6 +1009,11 @@ public class PlayerEventHandler implements Listener {
 	public void onProjectileHit(ProjectileHitEvent event) {
 		if (event.getEntity() instanceof Arrow) {
 			if (event.getEntity().getShooter() instanceof Player) {
+				if (event.getHitEntity() != null)
+					if (event.getHitEntity() instanceof Player) {
+						if (Server.getSkyfight().containsKey(((Player) event.getHitEntity()).getUniqueId()))
+							event.getHitEntity().getWorld().createExplosion(event.getEntity().getLocation(), 0.0f);
+					}
 				Player player = (Player) event.getEntity().getShooter();
 				if (!Server.getFactions().contains(player.getUniqueId()) && !Server.getSurvival().contains(player.getUniqueId())) {
 					event.getEntity().remove();
@@ -1393,7 +1398,7 @@ public class PlayerEventHandler implements Listener {
 			Server.getPlugin().getConfig().set(path + ".factions.deaths", "0");
 			Server.getPlugin().getConfig().set(path + ".kitpvp.upgrades", "0");
 			Server.getPlugin().getConfig().set(path + ".kitpvp.preferredUpgrade", "0");
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", "-1");
+			Server.getPlugin().getConfig().set(path + ".trails.selectedTrail", "-1");
 			Server.getPlugin().getConfig().set(path + ".skyblock.broken", "0");
 			Server.getPlugin().getConfig().set(path + ".skyblock.placed", "0");
 			Server.getPlugin().getConfig().set(path + ".balance.kitpvp", "0");
@@ -2154,7 +2159,7 @@ public class PlayerEventHandler implements Listener {
 				ItemStack item = event.getCurrentItem();
 				ItemMeta meta = item.getItemMeta();
 				if (item.getType() == Material.REDSTONE) {
-					Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", "-1");
+					Server.getPlugin().getConfig().set(path + ".trails.selectedTrail", "-1");
 					player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
 					player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
 					TrailsCmd.openTrailManagementInventory(player);
@@ -2169,7 +2174,7 @@ public class PlayerEventHandler implements Listener {
 					} else if (String.valueOf(meta.getDisplayName()).contains("Enchanting")) {
 						trailType = 3;
 					}
-					Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", trailType + "");
+					Server.getPlugin().getConfig().set(path + ".trails.selectedTrail", trailType + "");
 					player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
 					player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
 					TrailsCmd.openTrailManagementInventory(player);
@@ -2749,6 +2754,30 @@ public class PlayerEventHandler implements Listener {
 				ComplexParticle.SMOKE_NORMAL.count(10).display(player, player.getLocation());
 				return;
 			}
+			String path = "config." + player.getUniqueId().toString();
+			int selectedTrail = -1;
+			if (Server.getPlugin().getConfig().contains(path + ".trails.selectedTrail")) {
+				selectedTrail = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".trails.selectedTrail"));
+			}
+			if (selectedTrail == -1)
+				if ((System.currentTimeMillis() - Server.getLastVoteTime()) / 1000 < 300)
+					selectedTrail = 3;
+			switch (selectedTrail) {
+				case 0:
+					ComplexParticle.SMOKE_NORMAL.count(10).display(player.getLocation());
+					break;
+				case 1:
+					ComplexParticle.VILLAGER_HAPPY.count(5).display(player.getLocation());
+					break;
+				case 2:
+					ComplexParticle.DRIP_LAVA.count(5).display(player.getLocation());
+					break;
+				case 3:
+					ComplexParticle.REDSTONE.count(15).data(new Particle.DustOptions(Color.WHITE, 1f)).display(player.getLocation());
+					break;
+				default:
+					break;
+			}
 			boolean isPlayerInHub = false;
 			if (isPlayerInHub = Server.getHub().contains(player.getUniqueId()) || Server.getSkyfight().containsKey(player.getUniqueId())) {
 				if (isPlayerInHub || Server.getFactions().contains(player.getUniqueId())) {
@@ -2870,29 +2899,9 @@ public class PlayerEventHandler implements Listener {
 							Server.getSkyfight().get(player.getUniqueId()).getTag().setDamagee(null);
 							Server.getSkyfight().get(player.getUniqueId()).setScore(0);
 							Server.getInstance().enterSkyfight(player, false, false);
+							return;
 						}
 					}
-					return;
-				}
-			}
-			String path = "config." + player.getUniqueId().toString();
-			if (Server.getPlugin().getConfig().contains(path + ".kitpvp.trails.selectedTrail")) {
-				int selectedTrail = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.trails.selectedTrail"));
-				switch (selectedTrail) {
-					case 0:
-						ComplexParticle.SMOKE_NORMAL.count(10).display(player.getLocation());
-						break;
-					case 1:
-						ComplexParticle.VILLAGER_HAPPY.count(5).display(player.getLocation());
-						break;
-					case 2:
-						ComplexParticle.DRIP_LAVA.count(5).display(player.getLocation());
-						break;
-					case 3:
-						ComplexParticle.REDSTONE.count(15).data(new Particle.DustOptions(Color.WHITE, 1f)).display(player.getLocation());
-						break;
-					default:
-						break;
 				}
 			}
 			if (Server.getFactionFlyPlayers().contains(player.getUniqueId())) {

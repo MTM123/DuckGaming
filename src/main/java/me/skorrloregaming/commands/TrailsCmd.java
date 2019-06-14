@@ -33,10 +33,10 @@ public class TrailsCmd implements CommandExecutor {
 		String prefix = ChatColor.RESET + "" + ChatColor.BOLD;
 		String path = "config." + player.getUniqueId().toString();
 		int selectedTrail = -1;
-		if (Server.getPlugin().getConfig().contains(path + ".kitpvp.trails.selectedTrail")) {
-			selectedTrail = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".kitpvp.trails.selectedTrail"));
+		if (Server.getPlugin().getConfig().contains(path + ".trails.selectedTrail")) {
+			selectedTrail = Integer.parseInt(Server.getPlugin().getConfig().getString(path + ".trails.selectedTrail"));
 		} else {
-			Server.getPlugin().getConfig().set(path + ".kitpvp.trails.selectedTrail", "-1");
+			Server.getPlugin().getConfig().set(path + ".trails.selectedTrail", "-1");
 		}
 		ItemStack disableTrails = Link$.createMaterial(Material.REDSTONE, prefix + "Disable Trails");
 		if (selectedTrail == -1) {
