@@ -797,8 +797,9 @@ public class PlayerEventHandler implements Listener {
 		}
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Material type = event.getClickedBlock().getType();
-			if (type == Material.ENDER_CHEST && Server.getCreative().contains(player.getUniqueId())) {
+			if (type == Material.ENDER_CHEST) {
 				event.setCancelled(true);
+				player.performCommand("chest");
 				return;
 			}
 			if (!(event.getItem() == null)) {
