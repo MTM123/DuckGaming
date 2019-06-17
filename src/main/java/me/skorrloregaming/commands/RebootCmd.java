@@ -1,9 +1,9 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.Link$;
-import me.skorrloregaming.Logger;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
+import me.skorrloregaming.discord.Channel;
+import me.skorrloregaming.redis.MapBuilder;
+import me.skorrloregaming.redis.RedisChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -33,7 +33,9 @@ public class RebootCmd implements CommandExecutor {
 
 					public void run() {
 						value++;
-						Logger.info(Server.getPluginLabel() + ChatColor.GOLD + ChatColor.BOLD + "Server restarting.. " + ChatColor.RED + ChatColor.BOLD + (5 - value), false, -1);
+						String message = Server.getPluginLabel() + ChatColor.GOLD + ChatColor.BOLD + "Server restarting.. " + ChatColor.RED + ChatColor.BOLD + (5 - value);
+						Bukkit.broadcastMessage(message);
+						LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 						if (value > 4) {
 							value = 0;
 							Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
