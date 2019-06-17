@@ -83,8 +83,8 @@ public class EntityEventHandler implements Listener {
 	
 	@EventHandler
 	public void onSpawnerSpawn(SpawnerSpawnEvent event) {
-		if (event.isCancelled())
-			return;
+		/*if (event.isCancelled())
+			return;*/
 		Location loc = event.getSpawner().getLocation();
 		String code = loc.getWorld().getName() + String.valueOf(loc.getBlockX()) + String.valueOf(loc.getBlockY()) + String.valueOf(loc.getBlockZ());
 		if (Server.getSpawnerConfig().getData().contains(code)) {

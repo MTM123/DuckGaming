@@ -2533,6 +2533,7 @@ public class PlayerEventHandler implements Listener {
 				} else {
 					SolidStorage.savePersonalChest(tp, subDomain, event.getInventory().getContents(), chestNumber);
 				}
+				LinkServer.getInventoryManager().doCloseInventory(player);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
