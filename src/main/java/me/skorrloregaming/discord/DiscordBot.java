@@ -23,6 +23,8 @@ public class DiscordBot {
 	private ReadyListener readyListener;
 	private MessageListener messageListener;
 
+	private boolean running = false;
+
 	public DiscordBot(String name, String token) {
 		this.token = token;
 	}
@@ -38,12 +40,14 @@ public class DiscordBot {
 			redisListener.register();
 			bot.addEventListener(messageListener);
 			bot.getPresence().setGame(Game.of(Game.GameType.DEFAULT, "Minecraft"));
+			running = true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
 	public void unregister() {
+		running = false;
 		bot.removeEventListener(messageListener);
 		bot.removeEventListener(readyListener);
 		bot.shutdown();
@@ -63,6 +67,8 @@ public class DiscordBot {
 	}
 
 	public void broadcast(String message, long deleteAfter, Channel... channels) {
+		if (!running)
+			return;
 		for (Channel channel : channels)
 			try {
 				MessageAction messageAction = getTextChannel(getChannelName(channel)).sendMessage(message);
