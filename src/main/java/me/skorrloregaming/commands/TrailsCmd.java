@@ -29,7 +29,7 @@ public class TrailsCmd implements CommandExecutor {
 		int invSize = 18;
 		if (CraftGo.Player.isPocketPlayer(player))
 			invSize = 27;
-		Inventory inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.TRAILS, null), invSize, ChatColor.BOLD + "Select or purchase trails!");
+		Inventory inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.TRAILS), invSize, ChatColor.BOLD + "Select or purchase trails!");
 		String prefix = ChatColor.RESET + "" + ChatColor.BOLD;
 		String path = "config." + player.getUniqueId().toString();
 		int selectedTrail = -1;

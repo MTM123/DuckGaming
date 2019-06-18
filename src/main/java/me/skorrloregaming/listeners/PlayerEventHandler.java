@@ -152,7 +152,7 @@ public class PlayerEventHandler implements Listener {
 			int invSize = 18;
 			if (CraftGo.Player.isPocketPlayer(player))
 				invSize = 27;
-			Inventory inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SPAWNER_UPGRADES, null), invSize, ChatColor.BOLD + "Upgrade your spawner!");
+			Inventory inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SPAWNER_UPGRADES), invSize, ChatColor.BOLD + "Upgrade your spawner!");
 			int upgradeCount = Integer.parseInt(Server.getSpawnerConfig().getData().getString(code + ".upgrade"));
 			int selectedUpgrade = Integer.parseInt(Server.getSpawnerConfig().getData().getString(code + ".selectedUpgrade"));
 			int requiredAmount = 1200 * (upgradeCount + 1);
@@ -205,7 +205,7 @@ public class PlayerEventHandler implements Listener {
 		int invSize = 18;
 		if (CraftGo.Player.isPocketPlayer(player))
 			invSize = 27;
-		Inventory inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SKYFIGHT_TEAMS, null), invSize, "Select your preferred team.");
+		Inventory inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SKYFIGHT_TEAMS), invSize, "Select your preferred team.");
 		String prefix = ChatColor.RESET + "" + ChatColor.BOLD;
 		ItemStack a = Link$.createMaterial(Material.REDSTONE, prefix + "Select the " + ChatColor.ITALIC + "No Team " + prefix + "team.");
 		if (sfPlayer.getTeamValue() == $.Skyfight.Team.NO_TEAM) {
@@ -422,7 +422,7 @@ public class PlayerEventHandler implements Listener {
 		String subDomain = $.getMinigameDomain(player);
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Material type = event.getClickedBlock().getType();
-			if (type == Material.SIGN || type == Material.WALL_SIGN) {
+			if ($.isPostSign(type) || $.isWallSign(type)) {
 				String tag = $.getMinigameTag(subDomain);
 				Sign sign = (Sign) event.getClickedBlock().getState();
 				Block block = event.getClickedBlock();
@@ -507,7 +507,7 @@ public class PlayerEventHandler implements Listener {
 						return;
 					}
 					Block targetBlock = player.getWorld().getBlockAt(x, y, z);
-					if (targetBlock.getType() == Material.SIGN || targetBlock.getType() == Material.SIGN || targetBlock.getType() == Material.WALL_SIGN) {
+					if ($.isPostSign(targetBlock.getType()) || $.isWallSign(targetBlock.getType())) {
 						Sign targetSign = (Sign) targetBlock.getState();
 						SignShop.handle(targetSign, player, subDomain);
 						return;
@@ -546,7 +546,7 @@ public class PlayerEventHandler implements Listener {
 		}
 		if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Block block = event.getClickedBlock();
-			if (block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN) {
+			if ($.isPostSign(block.getType()) || $.isWallSign(block.getType())) {
 				Sign sign = (Sign) block.getState();
 				Location blockLoc = sign.getLocation();
 				String code = String.valueOf(blockLoc.getBlockX()) + ";" + String.valueOf(blockLoc.getBlockY()) + ";" + String.valueOf(blockLoc.getBlockZ());
@@ -579,7 +579,7 @@ public class PlayerEventHandler implements Listener {
 						return;
 					}
 					Block targetBlock = player.getWorld().getBlockAt(x, y, z);
-					if (targetBlock.getType() == Material.SIGN || targetBlock.getType() == Material.SIGN || targetBlock.getType() == Material.WALL_SIGN) {
+					if ($.isPostSign(targetBlock.getType()) || $.isWallSign(targetBlock.getType())) {
 						Sign targetSign = (Sign) targetBlock.getState();
 						if (ChatColor.stripColor(targetSign.getLines()[0]).equals("Sell")) {
 							SignShop.playShopTitlePopup(player, block);
@@ -1902,7 +1902,7 @@ public class PlayerEventHandler implements Listener {
 		if (!(event.getCurrentItem() == null)) {
 			boolean removeMode = false;
 			if (event.getInventory().getItem(0) != null) {
-				if (event.getInventory().getItem(0).getType() == Material.ROSE_RED) {
+				if (event.getInventory().getItem(0).getType() == Material.RED_DYE) {
 					if (event.getInventory().getItem(0).getItemMeta().hasEnchants()) {
 						if (event.getInventory().getItem(0).getItemMeta().getDisplayName().equals("Remove items from shop")) {
 							removeMode = true;
@@ -1962,12 +1962,12 @@ public class PlayerEventHandler implements Listener {
 					if (event.getCurrentItem() == null)
 						return;
 					event.setCancelled(true);
-					if (event.getCurrentItem().getType() == Material.ROSE_RED) {
+					if (event.getCurrentItem().getType() == Material.RED_DYE) {
 						if (event.getCurrentItem().getItemMeta().getDisplayName().equals("Remove items from shop")) {
 							Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page, !removeMode);
 							return;
 						}
-					} else if (event.getCurrentItem().getType() == Material.CACTUS_GREEN) {
+					} else if (event.getCurrentItem().getType() == Material.GREEN_DYE) {
 						if (event.getCurrentItem().getItemMeta().getDisplayName().equals("Add new shop item")) {
 							Server.getShoppe().createInventory(player, LaShoppeFrame.CREATE_ITEM, page, removeMode);
 						}

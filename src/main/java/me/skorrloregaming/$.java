@@ -419,6 +419,18 @@ public class $ {
 		return isMaterialLog(block.getType());
 	}
 
+	public static boolean isPostSign(Material material) {
+		if (material.toString().indexOf("SIGN") > -1 && material.toString().indexOf("WALL_SIGN") == -1)
+			return true;
+		return false;
+	}
+
+	public static boolean isWallSign(Material material) {
+		if (material.toString().indexOf("WALL_SIGN") > -1)
+			return true;
+		return false;
+	}
+
 	public static boolean isMaterialLog(Material material) {
 		switch (material) {
 			case ACACIA_LOG:

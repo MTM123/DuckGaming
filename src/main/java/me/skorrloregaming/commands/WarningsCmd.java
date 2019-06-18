@@ -41,7 +41,7 @@ public class WarningsCmd implements CommandExecutor {
 					int invSize = 9;
 					if (CraftGo.Player.isPocketPlayer((Player) sender))
 						invSize = 27;
-					Inventory inv = Bukkit.createInventory(new InventoryMenu(((Player) sender), InventoryType.WARNINGS, null), invSize, ChatColor.BOLD + op.getName() + "'s warnings");
+					Inventory inv = Bukkit.createInventory(new InventoryMenu(((Player) sender), InventoryType.WARNINGS), invSize, ChatColor.BOLD + op.getName() + "'s warnings");
 					int add = 0;
 					if (CraftGo.Player.isPocketPlayer((Player) sender))
 						add = 9;
