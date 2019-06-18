@@ -92,7 +92,7 @@ public class LaShoppe {
 				int startIndex = 0;
 				Inventory inventory = null;
 				if (player.isOp()) {
-					inventory = Bukkit.createInventory(null, 36, "La Shoppe, page " + page);
+					inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.LA_SHOPPE, page), 36, "La Shoppe, page " + page);
 					ItemStack removeItemModeItem = Link$.createMaterial(Material.ROSE_RED, "Remove items from shop");
 					if (removeMode) {
 						if (CraftGo.Player.getProtocolVersion(player) > 314) {
@@ -106,7 +106,7 @@ public class LaShoppe {
 					inventory.setItem(8, Link$.createMaterial(Material.CACTUS_GREEN, "Add new shop item"));
 					startIndex = 9;
 				} else {
-					inventory = Bukkit.createInventory(null, 27, "La Shoppe, page " + page);
+					inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.LA_SHOPPE, page), 27, "La Shoppe, page " + page);
 				}
 				ItemStack viewPrevious = Link$.createMaterial(Material.EMERALD, "View previous page");
 				ItemStack viewFollowing = Link$.createMaterial(Material.EMERALD, "View following page");
@@ -132,7 +132,7 @@ public class LaShoppe {
 						}
 					}
 				}
-				LinkServer.getInventoryManager().createInventory(player, inventory, InventoryType.LA_SHOPPE, page);
+				player.openInventory(inventory);
 				break;
 			case CREATE_ITEM:
 				try {

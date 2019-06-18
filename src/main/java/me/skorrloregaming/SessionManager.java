@@ -84,7 +84,7 @@ public class SessionManager {
 		int invSize = (1 + ((int) (sessions.length / 9))) * 9;
 		if (CraftGo.Player.isPocketPlayer(player))
 			invSize = 27;
-		Inventory inventory = Bukkit.createInventory(null, invSize, ChatColor.RESET + tp.getName() + "'s auth-sessions");
+		Inventory inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SESSIONS, tp.getName()), invSize, ChatColor.RESET + tp.getName() + "'s auth-sessions");
 		for (int i = 0; i < sessions.length; i++) {
 			Session session = sessions[i];
 			Calendar calendarNow = Calendar.getInstance();
@@ -139,7 +139,7 @@ public class SessionManager {
 			ItemStack item = Link$.createMaterial(skullType, 1, ChatColor.RESET + "" + ChatColor.BOLD + new String(session.getKey()), (short) 0, lore);
 			inventory.setItem(i, item);
 		}
-		LinkServer.getInventoryManager().createInventory(player, inventory, InventoryType.SESSIONS, tp.getName());
+		player.openInventory(inventory);
 	}
 
 	public static class Session {

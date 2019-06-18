@@ -19,7 +19,7 @@ import java.util.List;
 public class UpgradeKitCmd implements CommandExecutor {
 
 	public static void openKitUpgradeInventory(Player player) {
-		Inventory inventory = Bukkit.createInventory(null, 27, ChatColor.BOLD + "Select or upgrade your kit!");
+		Inventory inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.KIT_UPGRADES, null), 27, ChatColor.BOLD + "Select or upgrade your kit!");
 		int upgradeCount = $.Kitpvp.getUpgradeCount(player);
 		int requiredAmount = 150 * ($.Kitpvp.getUpgradeCount(player) + 1);
 		String prefix = ChatColor.RESET + "" + ChatColor.BOLD;
@@ -91,7 +91,7 @@ public class UpgradeKitCmd implements CommandExecutor {
 				item = Link$.addLore(item, lore.toArray(new String[0]));
 			inventory.setItem(i, item);
 		}
-		LinkServer.getInventoryManager().createInventory(player, inventory, InventoryType.KIT_UPGRADES);
+		player.openInventory(inventory);
 	}
 
 	@Override

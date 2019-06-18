@@ -1,5 +1,6 @@
 package me.skorrloregaming;
 
+import me.skorrloregaming.impl.InventoryType;
 import me.skorrloregaming.impl.ServerMinigame;
 import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -73,12 +74,18 @@ public class SolidStorage {
 			content = ((List<ItemStack>) c.get("inventory.content")).toArray(new ItemStack[0]);
 		}
 		String name = ChatColor.BOLD + "Temporary Inventory [" + chestNumber + "]";
-		if (personal)
+		if (personal) {
 			name = ChatColor.BOLD + "Personal Inventory [" + chestNumber + "]";
-		Inventory inv = Bukkit.createInventory(null, slotCount, name);
-		if (!(content == null))
-			inv.setContents(content);
-		return inv;
+			Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.CHEST, chestNumber), slotCount, name);
+			if (!(content == null))
+				inv.setContents(content);
+			return inv;
+		} else {
+			Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.TEMPORARY, chestNumber), slotCount, name);
+			if (!(content == null))
+				inv.setContents(content);
+			return inv;
+		}
 	}
 
 	public static void saveInventory(Player player, String data) throws Exception {

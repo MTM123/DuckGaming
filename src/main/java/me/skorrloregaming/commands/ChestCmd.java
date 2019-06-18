@@ -87,7 +87,7 @@ public class ChestCmd implements CommandExecutor {
 			}
 			Inventory inv = SolidStorage.restorePersonalChest(player, subDomain, true, chestNumber);
 			player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
-			LinkServer.getInventoryManager().createInventory(player, inv, InventoryType.CHEST, chestNumber);
+			player.openInventory(inv);
 		} else {
 			Player tp = Bukkit.getPlayer(args[1]);
 			if (tp == null) {
@@ -102,7 +102,7 @@ public class ChestCmd implements CommandExecutor {
 					Server.getSavePersonalChest().put(player, tp);
 				}
 				player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
-				LinkServer.getInventoryManager().createInventory(player, inv, InventoryType.CHEST, chestNumber);
+				player.openInventory(inv);
 			}
 		}
 		return true;

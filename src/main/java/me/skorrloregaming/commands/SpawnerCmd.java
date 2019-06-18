@@ -32,7 +32,7 @@ public class SpawnerCmd implements CommandExecutor {
 		int invSize = 9;
 		if (CraftGo.Player.isPocketPlayer(player))
 			invSize = 27;
-		Inventory inventory = Bukkit.createInventory(null, invSize, ChatColor.BOLD + "Buy Monster Spawners");
+		Inventory inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SPAWNER_SHOP, null), invSize, ChatColor.BOLD + "Buy Monster Spawners");
 		int add = 0;
 		if (CraftGo.Player.isPocketPlayer(player))
 			add = 9;
@@ -63,7 +63,7 @@ public class SpawnerCmd implements CommandExecutor {
 		inventory.setItem(6 + add, cowSpawner);
 		inventory.setItem(7 + add, pigSpawner);
 		inventory.setItem(8 + add, chickenSpawner);
-		LinkServer.getInventoryManager().createInventory(player, inventory, InventoryType.SPAWNER_SHOP);
+		player.openInventory(inventory);
 		return true;
 	}
 

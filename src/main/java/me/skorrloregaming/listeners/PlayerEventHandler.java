@@ -123,7 +123,7 @@ public class PlayerEventHandler implements Listener {
 				int invSize = 9;
 				if (CraftGo.Player.isPocketPlayer(player))
 					invSize = 27;
-				Inventory inv = Bukkit.createInventory(null, invSize, ChatColor.DARK_PURPLE + "Server Selector (0b10)");
+				Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SERVER_SELECTOR, 1), invSize, ChatColor.DARK_PURPLE + "Server Selector (0b10)");
 				int add = 0;
 				if (CraftGo.Player.isPocketPlayer(player))
 					add = 9;
@@ -134,7 +134,7 @@ public class PlayerEventHandler implements Listener {
 					inv.setItem(5 + add, survival);
 				}
 				player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
-				LinkServer.getInventoryManager().createInventory(player, inv, InventoryType.SERVER_SELECTOR, 1);
+				player.openInventory(inv);
 			}
 		}, delay);
 	}
@@ -152,7 +152,7 @@ public class PlayerEventHandler implements Listener {
 			int invSize = 18;
 			if (CraftGo.Player.isPocketPlayer(player))
 				invSize = 27;
-			Inventory inventory = Bukkit.createInventory(null, invSize, ChatColor.BOLD + "Upgrade your spawner!");
+			Inventory inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SPAWNER_UPGRADES, null), invSize, ChatColor.BOLD + "Upgrade your spawner!");
 			int upgradeCount = Integer.parseInt(Server.getSpawnerConfig().getData().getString(code + ".upgrade"));
 			int selectedUpgrade = Integer.parseInt(Server.getSpawnerConfig().getData().getString(code + ".selectedUpgrade"));
 			int requiredAmount = 1200 * (upgradeCount + 1);
@@ -194,7 +194,7 @@ public class PlayerEventHandler implements Listener {
 					item = Link$.addLore(item, lore.toArray(new String[0]));
 				inventory.setItem(i, item);
 			}
-			LinkServer.getInventoryManager().createInventory(player, inventory, InventoryType.SPAWNER_UPGRADES);
+			player.openInventory(inventory);
 		}
 	}
 
@@ -205,7 +205,7 @@ public class PlayerEventHandler implements Listener {
 		int invSize = 18;
 		if (CraftGo.Player.isPocketPlayer(player))
 			invSize = 27;
-		Inventory inventory = Bukkit.createInventory(null, invSize, "Select your preferred team.");
+		Inventory inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SKYFIGHT_TEAMS, null), invSize, "Select your preferred team.");
 		String prefix = ChatColor.RESET + "" + ChatColor.BOLD;
 		ItemStack a = Link$.createMaterial(Material.REDSTONE, prefix + "Select the " + ChatColor.ITALIC + "No Team " + prefix + "team.");
 		if (sfPlayer.getTeamValue() == $.Skyfight.Team.NO_TEAM) {
@@ -269,7 +269,7 @@ public class PlayerEventHandler implements Listener {
 		inventory.setItem(17, f);
 		Server.getSkyfight().get(player.getUniqueId()).setHasTeamSelectionGuiOpen(true);
 		Server.getSkyfight().get(player.getUniqueId()).setScore(0);
-		LinkServer.getInventoryManager().createInventory(player, inventory, InventoryType.SKYFIGHT_TEAMS);
+		player.openInventory(inventory);
 	}
 
 	@EventHandler
@@ -583,9 +583,9 @@ public class PlayerEventHandler implements Listener {
 						Sign targetSign = (Sign) targetBlock.getState();
 						if (ChatColor.stripColor(targetSign.getLines()[0]).equals("Sell")) {
 							SignShop.playShopTitlePopup(player, block);
-							Inventory inv = Bukkit.createInventory(null, 54, ChatColor.BOLD + "Virtual Store [" + x + ";" + y + ";" + z + "]");
+							Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SELL_ALL, x + ";" + y + ";" + z), 54, ChatColor.BOLD + "Virtual Store [" + x + ";" + y + ";" + z + "]");
 							player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
-							LinkServer.getInventoryManager().createInventory(player, inv, InventoryType.SELL_ALL, x + ";" + y + ";" + z);
+							player.openInventory(inv);
 						}
 						return;
 					} else {
@@ -638,7 +638,7 @@ public class PlayerEventHandler implements Listener {
 					int invSize = 9;
 					if (CraftGo.Player.isPocketPlayer(player))
 						invSize = 27;
-					Inventory inv = Bukkit.createInventory(null, invSize, ChatColor.DARK_PURPLE + "Server Selector (0b1)");
+					Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SERVER_SELECTOR, 0), invSize, ChatColor.DARK_PURPLE + "Server Selector (0b1)");
 					int add = 0;
 					if (CraftGo.Player.isPocketPlayer(player))
 						add = 9;
@@ -664,7 +664,6 @@ public class PlayerEventHandler implements Listener {
 					}
 					player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 					player.openInventory(inv);
-					LinkServer.getInventoryManager().createInventory(player, inv, InventoryType.SERVER_SELECTOR, 0);
 					return;
 				}
 			}
@@ -1894,8 +1893,10 @@ public class PlayerEventHandler implements Listener {
 		ServerMinigame minigame = $.getCurrentMinigame(player);
 		String path = "config." + player.getUniqueId().toString();
 		event.setCancelled(LinkServer.getInstance().getPlaytimeManager().onInventoryClick(event));
-		if (!(event.getCurrentItem() == null) && LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.WARNINGS))
-			event.setCancelled(true);
+		if (!(event.getCurrentItem() == null))
+			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.WARNINGS))
+					event.setCancelled(true);
 		if (!(event.getCurrentItem() == null)) {
 			boolean removeMode = false;
 			if (event.getInventory().getItem(0) != null) {
@@ -1907,10 +1908,566 @@ public class PlayerEventHandler implements Listener {
 					}
 				}
 			}
-			if (LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.SELL_ALL)) {
-				String name = String.valueOf(LinkServer.getInventoryManager().getInventoryData(player));
+			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.SELL_ALL)) {
+					String name = String.valueOf(((InventoryMenu) event.getInventory().getHolder()).getData());
+					Material material = null;
+					int amount = 0;
+					int data = 0;
+					String code = player.getWorld().getName() + ";" + name;
+					if (name.contains(";")) {
+						if (Server.getSignConfig().getData().contains("signs." + code.replace(";", ""))) {
+							int blockX = Integer.parseInt(code.split(";")[1]);
+							int blockY = Integer.parseInt(code.split(";")[2]);
+							int blockZ = Integer.parseInt(code.split(";")[3]);
+							BlockState state = player.getWorld().getBlockAt(blockX, blockY, blockZ).getState();
+							if (state instanceof Sign) {
+								Sign sign = (Sign) state;
+								if (ChatColor.stripColor(sign.getLine(0)).equals("Sell")) {
+									material = Material.getMaterial(String.valueOf(sign.getLine(1)).replace(" ", "_").toUpperCase().split(":")[0]);
+									amount = event.getCurrentItem().getAmount();
+									data = 0;
+									try {
+										data = Integer.parseInt(String.valueOf(sign.getLine(1)).split(":")[1]);
+									} catch (Exception ig) {
+									}
+								}
+							}
+						}
+					} else {
+						code = code.substring(code.indexOf(";") + 1);
+						int index = Integer.parseInt(code);
+						String prefix = minigame.toString().toLowerCase() + ".";
+						if (Server.getShoppeConfig().getData().contains(prefix + "items." + index)) {
+							LaShoppeItem item = Server.getShoppe().retrieveItem(minigame, index);
+							material = item.getMaterial();
+							amount = event.getCurrentItem().getAmount();
+							data = item.getData();
+						}
+					}
+					ItemStack item = new ItemStack(material, amount, (short) data);
+					if (material == Material.SPAWNER)
+						item = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), amount);
+					if (!(event.getCurrentItem().getType() == Material.AIR)) {
+						if (!$.removeLore(event.getCurrentItem()).isSimilar($.removeLore(item))) {
+							event.setCancelled(true);
+						}
+					}
+				}
+			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.LA_SHOPPE)) {
+					int page = (int) ((InventoryMenu) event.getInventory().getHolder()).getData();
+					if (event.getCurrentItem() == null)
+						return;
+					if (event.getCurrentItem().getType() == Material.ROSE_RED) {
+						if (event.getCurrentItem().getItemMeta().getDisplayName().equals("Remove items from shop")) {
+							Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page, !removeMode);
+							return;
+						}
+					} else if (event.getCurrentItem().getType() == Material.CACTUS_GREEN) {
+						if (event.getCurrentItem().getItemMeta().getDisplayName().equals("Add new shop item")) {
+							Server.getShoppe().createInventory(player, LaShoppeFrame.CREATE_ITEM, page, removeMode);
+						}
+					} else if (event.getCurrentItem().getType() == Material.LAPIS_LAZULI) {
+						if (event.getCurrentItem().getItemMeta().getDisplayName().equals("Add new shop enchant")) {
+							Server.getShoppe().createInventory(player, LaShoppeFrame.CREATE_ENCHANT, page, removeMode);
+						}
+					} else if (event.getCurrentItem().getType() == Material.EMERALD) {
+						if (event.getCurrentItem().getItemMeta().getDisplayName().equals("View previous page")) {
+							if (page == 1) {
+								player.playSound(player.getEyeLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+							} else {
+								Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page - 1, removeMode);
+							}
+						} else if (event.getCurrentItem().getItemMeta().getDisplayName().equals("View following page")) {
+							Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page + 1, removeMode);
+						}
+					}
+					if (event.getCurrentItem().hasItemMeta()) {
+						if (event.getCurrentItem().getItemMeta().hasLore()) {
+							if (event.getCurrentItem().getType() == Material.ENCHANTED_BOOK) {
+								String indexIndexString = event.getCurrentItem().getItemMeta().getLore().get(0);
+								String indexString = indexIndexString.substring(indexIndexString.indexOf("Index: ") + 7);
+								int index = Integer.parseInt(indexString);
+								LaShoppeEnchant enchant = Server.getShoppe().retrieveEnchant(minigame, index);
+								int price = enchant.getPrice();
+								int tier = enchant.getTier();
+								if (removeMode) {
+									if (player.isOp()) {
+										String prefix = minigame.toString().toLowerCase() + ".";
+										Server.getShoppeConfig().getData().set(prefix + "enchant." + index, null);
+										Server.getShoppeConfig().saveData();
+										final boolean fRemoveMode = removeMode;
+										Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+											@Override
+											public void run() {
+												Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page, fRemoveMode);
+											}
+										}, 1L);
+									}
+								}
+								if (event.isRightClick()) {
+									try {
+										DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
+										String materialName = Link$.formatMaterial(event.getCurrentItem().getType());
+										String subDomain = $.getMinigameDomain(player);
+										int cash = EconManager.retrieveCash(player, subDomain);
+										String tag = $.getMinigameTag(player);
+										String enchantName = Link$.formatEnchantment(String.valueOf(enchant.getEnchantment().getKey().getKey().trim()), tier);
+										if (cash >= price) {
+											ItemStack currentItem = player.getInventory().getItemInMainHand();
+											if (currentItem.getType() == Material.AIR || currentItem == null || currentItem.getType() == null) {
+												player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
+												return;
+											}
+											if (currentItem.getEnchantments().containsKey(enchant) && currentItem.getEnchantments().get(enchant) == tier) {
+												player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
+												return;
+											}
+											try {
+												currentItem.addUnsafeEnchantment(enchant.getEnchantment(), tier);
+											} catch (Exception ex) {
+												player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
+												return;
+											}
+											EconManager.withdrawCash(player, price, subDomain);
+											player.getInventory().setItemInMainHand(currentItem);
+											player.updateInventory();
+											player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + enchantName + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
+											return;
+										} else {
+											player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money.");
+											return;
+										}
+									} catch (Exception ex) {
+										player.sendMessage("An internal error has occured whilist processing this shop information.");
+										ex.printStackTrace();
+										return;
+									}
+								}
+							} else {
+								String indexIndexString = event.getCurrentItem().getItemMeta().getLore().get(0);
+								String indexString = indexIndexString.substring(indexIndexString.indexOf("Index: ") + 7);
+								int index = Integer.parseInt(indexString);
+								String priceIndexString = event.getCurrentItem().getItemMeta().getLore().get(1);
+								String priceString = priceIndexString.substring(priceIndexString.indexOf("Price: $") + 8);
+								int price = Integer.parseInt(priceString);
+								String amountIndexString = event.getCurrentItem().getItemMeta().getLore().get(2);
+								String amountString = amountIndexString.substring(amountIndexString.indexOf("Amount: ") + 8, amountIndexString.length() - 1);
+								int amount = Integer.parseInt(amountString);
+								String dataIndexString = event.getCurrentItem().getItemMeta().getLore().get(3);
+								String dataString = dataIndexString.substring(dataIndexString.indexOf("Data: ") + 6);
+								int data = Integer.parseInt(dataString);
+								if (removeMode) {
+									if (player.isOp()) {
+										String prefix = minigame.toString().toLowerCase() + ".";
+										Server.getShoppeConfig().getData().set(prefix + "items." + index, null);
+										Server.getShoppeConfig().saveData();
+										final boolean fRemoveMode = removeMode;
+										Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+											@Override
+											public void run() {
+												Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page, fRemoveMode);
+											}
+										}, 1L);
+									}
+								}
+								if (event.isLeftClick()) {
+									Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SELL_ALL, index), 54, ChatColor.BOLD + "Virtual Store [" + index + "]");
+									player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
+									player.openInventory(inv);
+								} else if (event.isRightClick()) {
+									try {
+										DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
+										String materialName = Link$.formatMaterial(event.getCurrentItem().getType());
+										String subDomain = $.getMinigameDomain(player);
+										int cash = EconManager.retrieveCash(player, subDomain);
+										String tag = $.getMinigameTag(player);
+										if (cash >= price * 2 && player.isSneaking()) {
+											amount = amount * 2;
+											price = price * 2;
+										}
+										ItemStack purchaseItem = new ItemStack(event.getCurrentItem().getType(), amount, (short) data);
+										if (event.getCurrentItem().getType() == Material.SPAWNER)
+											purchaseItem = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), amount);
+										if (cash >= price) {
+											if (player.getInventory().firstEmpty() == -1) {
+												player.sendMessage(tag + ChatColor.RED + "Inventory full. " + ChatColor.GRAY + "Empty some slots then try again.");
+												return;
+											}
+											EconManager.withdrawCash(player, price, subDomain);
+											player.getInventory().addItem(purchaseItem);
+											player.updateInventory();
+											player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + materialName + " x" + amount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
+											return;
+										}
+										player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money.");
+										return;
+									} catch (Exception ex) {
+										player.sendMessage("An internal error has occured whilist processing this shop information.");
+										ex.printStackTrace();
+										return;
+									}
+								}
+							}
+						}
+					}
+				}
+		}
+		if (!(event.getCurrentItem() == null))
+			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.SESSIONS)) {
+					String sessionKey = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
+					String playerName = (String) ((InventoryMenu) event.getInventory().getHolder()).getData();
+					OfflinePlayer op = CraftGo.Player.getOfflinePlayer(playerName);
+					if (op.getName().equals(player.getName()) || player.isOp() || Link$.getRankId(player) > 2) {
+						if (player.isOp() || Link$.getRankId(player) > 2) {
+							Server.getSessionManager().invalidateSession(player.getName(), op, sessionKey, true);
+						} else {
+							Server.getSessionManager().invalidateSession(player.getName(), op, sessionKey, false);
+						}
+						Server.getSessionManager().openComplexInventory(player, op);
+						event.setCancelled(true);
+					} else {
+						event.setCancelled(true);
+					}
+					return;
+				}
+		if (!(event.getCurrentItem() == null))
+			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.SKYFIGHT_TEAMS)) {
+					if ($.getCurrentMinigame(player) == ServerMinigame.SKYFIGHT) {
+						if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
+							event.setCancelled(true);
+							ItemStack item = event.getCurrentItem();
+							ItemMeta meta = item.getItemMeta();
+							if (meta.getDisplayName().contains("Blue")) {
+								Server.getSkyfight().get(player.getUniqueId()).setTeamValue($.Skyfight.Team.BLUE);
+							} else if (meta.getDisplayName().contains("Red")) {
+								Server.getSkyfight().get(player.getUniqueId()).setTeamValue($.Skyfight.Team.RED);
+							} else if (meta.getDisplayName().contains("Green")) {
+								Server.getSkyfight().get(player.getUniqueId()).setTeamValue($.Skyfight.Team.GREEN);
+							} else if (meta.getDisplayName().contains("Yellow")) {
+								Server.getSkyfight().get(player.getUniqueId()).setTeamValue($.Skyfight.Team.YELLOW);
+							} else if (meta.getDisplayName().contains("Pink")) {
+								Server.getSkyfight().get(player.getUniqueId()).setTeamValue($.Skyfight.Team.PINK);
+							} else {
+								Server.getSkyfight().get(player.getUniqueId()).setTeamValue($.Skyfight.Team.NO_TEAM);
+							}
+							Server.getSkyfight().get(player.getUniqueId()).getTag().setDamagee(null);
+							Server.getSkyfight().get(player.getUniqueId()).setScore(0);
+							Server.getInstance().enterSkyfight(player, false, false);
+						}
+					}
+				}
+		if (!(event.getCurrentItem() == null))
+			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.TRAILS)) {
+					if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
+						event.setCancelled(true);
+						ItemStack item = event.getCurrentItem();
+						ItemMeta meta = item.getItemMeta();
+						if (item.getType() == Material.REDSTONE) {
+							Server.getPlugin().getConfig().set(path + ".trails.selectedTrail", "-1");
+							player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
+							player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
+							TrailsCmd.openTrailManagementInventory(player);
+						} else if (item.getType() == Material.LEATHER_BOOTS) {
+							int trailType = -1;
+							if (String.valueOf(meta.getDisplayName()).contains("Smoke")) {
+								trailType = 0;
+							} else if (String.valueOf(meta.getDisplayName()).contains("Emerald")) {
+								trailType = 1;
+							} else if (String.valueOf(meta.getDisplayName()).contains("Redstone")) {
+								trailType = 2;
+							} else if (String.valueOf(meta.getDisplayName()).contains("Enchanting")) {
+								trailType = 3;
+							}
+							Server.getPlugin().getConfig().set(path + ".trails.selectedTrail", trailType + "");
+							player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
+							player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
+							TrailsCmd.openTrailManagementInventory(player);
+						}
+					} else {
+						player.closeInventory();
+					}
+				}
+		if (!(event.getCurrentItem() == null))
+			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.SPAWNER_UPGRADES)) {
+					if (Server.getFactions().contains(player.getUniqueId()) || Server.getSkyblock().contains(player.getUniqueId())) {
+						if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
+							event.setCancelled(true);
+							ItemStack item = event.getCurrentItem();
+							ItemMeta meta = item.getItemMeta();
+							ItemStack zero = event.getInventory().getItem(0);
+							String code = $.scanStringArrayAndSplitBy(zero.getItemMeta().getLore().toArray(new String[0]), "code: ".toCharArray());
+							World world = Bukkit.getWorld($.scanStringArrayAndSplitBy(zero.getItemMeta().getLore().toArray(new String[0]), "world: ".toCharArray()));
+							int x = Integer.parseInt($.scanStringArrayAndSplitBy(zero.getItemMeta().getLore().toArray(new String[0]), "x: ".toCharArray()));
+							int y = Integer.parseInt($.scanStringArrayAndSplitBy(zero.getItemMeta().getLore().toArray(new String[0]), "y: ".toCharArray()));
+							int z = Integer.parseInt($.scanStringArrayAndSplitBy(zero.getItemMeta().getLore().toArray(new String[0]), "z: ".toCharArray()));
+							if (meta.getDisplayName().contains("Perform Upgrade")) {
+								int upgradeCount = Integer.parseInt(Server.getSpawnerConfig().getData().getString(code + ".upgrade"));
+								String requiredBalanceStr = ChatColor.stripColor(meta.getDisplayName().substring(meta.getDisplayName().indexOf("$") + 1));
+								requiredBalanceStr = requiredBalanceStr.substring(0, requiredBalanceStr.indexOf(")"));
+								int requiredBalance = Integer.parseInt(requiredBalanceStr);
+								int currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
+								if (upgradeCount + 1 <= 4) {
+									if (currentBalance >= requiredBalance) {
+										EconManager.withdrawCash(player, requiredBalance, $.getMinigameDomain(player));
+										player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+										Server.getSpawnerConfig().getData().set(code + ".upgrade", (upgradeCount + 1) + "");
+										Server.getSpawnerConfig().getData().set(code + ".selectedUpgrade", (upgradeCount + 1) + "");
+										Server.getSpawnerConfig().saveData();
+										player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred upgrade has been changed.");
+										openSpawnerUpgradeInventory(player, world.getBlockAt(x, y, z));
+									} else {
+										player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+										player.sendMessage($.Kitpvp.tag + ChatColor.RED + "You do not have enough money to buy this upgrade.");
+									}
+								} else {
+									player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+								}
+							} else if (meta.getDisplayName().contains("Select spawner upgrade")) {
+								int upgradeNumber = Integer.parseInt(meta.getDisplayName().substring(meta.getDisplayName().indexOf("#") + 1));
+								int upgradeCount = Integer.parseInt(Server.getSpawnerConfig().getData().getString(code + ".upgrade"));
+								if (upgradeNumber >= 0 && upgradeNumber <= upgradeCount + 1) {
+									Server.getSpawnerConfig().getData().set(code + ".selectedUpgrade", upgradeNumber + "");
+									Server.getSpawnerConfig().saveData();
+									player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred upgrade has been changed.");
+									openSpawnerUpgradeInventory(player, world.getBlockAt(x, y, z));
+									player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
+								}
+							} else {
+								player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+							}
+						}
+					} else {
+						player.closeInventory();
+					}
+				}
+		if (!(event.getCurrentItem() == null))
+			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.KIT_UPGRADES)) {
+					if ($.getCurrentMinigame(player) == ServerMinigame.KITPVP) {
+						if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
+							event.setCancelled(true);
+							ItemStack item = event.getCurrentItem();
+							ItemMeta meta = item.getItemMeta();
+							if (meta.getDisplayName().contains("Perform Upgrade")) {
+								int upgradeCount = $.Kitpvp.getUpgradeCount(player);
+								String requiredBalanceStr = ChatColor.stripColor(meta.getDisplayName().substring(meta.getDisplayName().indexOf("$") + 1));
+								requiredBalanceStr = requiredBalanceStr.substring(0, requiredBalanceStr.indexOf(")"));
+								int requiredBalance = Integer.parseInt(requiredBalanceStr);
+								int currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
+								if (upgradeCount + 1 <= $.Kitpvp.DONOR_MAX_UPGRADE_VALUE) {
+									if (upgradeCount + 1 > $.Kitpvp.DEFAULT_MAX_UPGRADE_VALUE) {
+										if (Link$.getDonorRankId(player) > -2) {
+											player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+											player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you need a donor rank to buy this upgrade.");
+											player.performCommand("store");
+											return;
+										}
+									}
+									if (currentBalance >= requiredBalance) {
+										EconManager.withdrawCash(player, requiredBalance, $.getMinigameDomain(player));
+										player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+										$.Kitpvp.setUpgradeCount(player, upgradeCount + 1);
+										$.Kitpvp.setPreferredUpgrade(player, upgradeCount + 1);
+										player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred kit upgrade has been changed.");
+										UpgradeKitCmd.openKitUpgradeInventory(player);
+									} else {
+										player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+										player.sendMessage($.Kitpvp.tag + ChatColor.RED + "You do not have enough money to buy this upgrade.");
+									}
+								} else {
+									player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+								}
+							} else if (meta.getDisplayName().contains("Select preferred weapon")) {
+								int type = -1;
+								if (item.getType() == Material.STONE_AXE || item.getType() == Material.IRON_AXE) {
+									type = 0;
+								} else {
+									type = 1;
+								}
+								if (type == 0) {
+									$.Kitpvp.setPreferredWeaponType(player, $.Kitpvp.WEAPON_AXE);
+								} else if (type == 1) {
+									$.Kitpvp.setPreferredWeaponType(player, $.Kitpvp.WEAPON_SWORD);
+								}
+								player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred weapon type has been changed.");
+								UpgradeKitCmd.openKitUpgradeInventory(player);
+								player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
+							} else if (meta.getDisplayName().contains("Select kit upgrade")) {
+								int upgradeNumber = Integer.parseInt(meta.getDisplayName().substring(meta.getDisplayName().indexOf("#") + 1));
+								int upgradeCount = $.Kitpvp.getUpgradeCount(player);
+								if (upgradeNumber > 0 && upgradeNumber <= upgradeCount + 1) {
+									$.Kitpvp.setPreferredUpgrade(player, upgradeNumber - 1);
+									player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred kit upgrade has been changed.");
+									UpgradeKitCmd.openKitUpgradeInventory(player);
+									player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
+								}
+							} else {
+								player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+							}
+						}
+					} else {
+						player.closeInventory();
+					}
+				}
+		if (event.getInventory().getType() == org.bukkit.event.inventory.InventoryType.ENCHANTING) {
+			if (event.getCurrentItem() == null)
+				return;
+			if (event.getCurrentItem().getType() == Material.LAPIS_LAZULI)
+				event.setCancelled(true);
+			return;
+		}
+		if (event.getClickedInventory().getHolder() instanceof InventoryMenu) {
+			if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.SPAWNER_SHOP)) {
+				if (event.getCurrentItem() == null)
+					return;
+				Material material = Material.SPAWNER;
+				String materialName = Link$.formatMaterial(material);
+				String domain = $.getMinigameDomain(player);
+				String tag = $.getMinigameTag(player);
+				EntityType entityType = CraftGo.MobSpawner.getStoredSpawnerItemEntityType(event.getCurrentItem());
+				int price = 0;
+				int cash = EconManager.retrieveCash(player, domain);
+				int amount = 1;
+				switch (entityType) {
+					case SKELETON:
+						price = Server.getSpawnerPrices().get(0).intValue();
+						break;
+					case ZOMBIE:
+						price = Server.getSpawnerPrices().get(1).intValue();
+						break;
+					case SPIDER:
+						price = Server.getSpawnerPrices().get(2).intValue();
+						break;
+					case BLAZE:
+						price = Server.getSpawnerPrices().get(3).intValue();
+						break;
+					case CREEPER:
+						price = Server.getSpawnerPrices().get(4).intValue();
+						break;
+					case IRON_GOLEM:
+						price = Server.getSpawnerPrices().get(5).intValue();
+						break;
+					case COW:
+						price = Server.getSpawnerPrices().get(6).intValue();
+						break;
+					case PIG:
+						price = Server.getSpawnerPrices().get(7).intValue();
+						break;
+					case CHICKEN:
+						price = Server.getSpawnerPrices().get(8).intValue();
+						break;
+					default:
+						player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
+						event.setCancelled(true);
+						return;
+				}
+				if (cash >= price * 2 && player.isSneaking()) {
+					amount = amount * 2;
+					price = price * 2;
+				}
+				ItemStack item = CraftGo.MobSpawner.newSpawnerItem(entityType, amount);
+				if (cash >= price) {
+					DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
+					if (player.getInventory().firstEmpty() == -1) {
+						player.sendMessage(tag + ChatColor.RED + "Inventory full. " + ChatColor.GRAY + "Empty some slots then try again.");
+						event.setCancelled(true);
+						return;
+					}
+					EconManager.withdrawCash(player, price, domain);
+					player.getInventory().addItem(item);
+					player.updateInventory();
+					player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + materialName + " x" + amount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
+				} else {
+					player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money in your account.");
+				}
+				event.setCancelled(true);
+				player.closeInventory();
+			} else if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.SERVER_SELECTOR)) {
+				if (event.getCurrentItem() == null)
+					return;
+				event.setCancelled(true);
+				switch ((int) ((InventoryMenu) event.getInventory().getHolder()).getData()) {
+					case 0:
+						switch (event.getCurrentItem().getType()) {
+							case BOW:
+								Server.getInstance().enterSkyfight(player, false, false);
+								break;
+							case STONE_PICKAXE:
+								if ($.isMinigameEnabled(ServerMinigame.FACTIONS) && $.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
+									openSurvivalServerSelectorMenu(player);
+								} else if ($.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
+									Server.getInstance().enterSurvival(player, false, false);
+								} else if ($.isMinigameEnabled(ServerMinigame.FACTIONS)) {
+									Server.getInstance().enterFactions(player, false, false);
+								}
+								break;
+							case DIAMOND_SWORD:
+								Server.getInstance().enterFactions(player, false, false);
+								break;
+							case IRON_SWORD:
+								Server.getInstance().enterKitpvp(player, false, false);
+								break;
+							case GRASS_BLOCK:
+								Server.getInstance().enterCreative(player, false, false);
+								break;
+							case OAK_SAPLING:
+								Server.getInstance().enterSkyblock(player, false, false);
+								break;
+							default:
+								player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
+								return;
+						}
+						break;
+					case 1:
+						switch (event.getCurrentItem().getType()) {
+							case DIAMOND_SWORD:
+								Server.getInstance().enterFactions(player, false, false);
+								break;
+							case STONE_PICKAXE:
+								Server.getInstance().enterSurvival(player, false, false);
+								break;
+							default:
+								player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
+								return;
+						}
+						break;
+				}
+
+			} else if (Server.getSkyfight().containsKey(player.getUniqueId()) && player.getGameMode() == GameMode.SURVIVAL) {
+				event.setCancelled(true);
+			} else if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.TEMPORARY)) {
+				event.setCancelled(true);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onInventoryClose(InventoryCloseEvent event) {
+		Player player = (Player) event.getPlayer();
+		ServerMinigame minigame = $.getCurrentMinigame(player);
+		if (event.getInventory().getType() == org.bukkit.event.inventory.InventoryType.ENCHANTING) {
+			EnchantingInventory inventory = (EnchantingInventory) event.getInventory();
+			inventory.setItem(1, Link$.createMaterial(Material.AIR));
+			return;
+		}
+		if (event.getInventory().getHolder() instanceof InventoryMenu)
+			if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.SKYFIGHT_TEAMS)) {
+				if (Server.getSkyfight().containsKey(player.getUniqueId())) {
+					Server.getSkyfight().get(player.getUniqueId()).setHasTeamSelectionGuiOpen(false);
+				}
+			}
+		if (event.getInventory().getHolder() instanceof InventoryMenu)
+			if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.SELL_ALL)) {
+				String name = String.valueOf(((InventoryMenu) event.getInventory().getHolder()).getData());
 				Material material = null;
 				int amount = 0;
+				int price = 0;
 				int data = 0;
 				String code = player.getWorld().getName() + ";" + name;
 				if (name.contains(";")) {
@@ -1923,7 +2480,8 @@ public class PlayerEventHandler implements Listener {
 							Sign sign = (Sign) state;
 							if (ChatColor.stripColor(sign.getLine(0)).equals("Sell")) {
 								material = Material.getMaterial(String.valueOf(sign.getLine(1)).replace(" ", "_").toUpperCase().split(":")[0]);
-								amount = event.getCurrentItem().getAmount();
+								amount = Integer.parseInt(String.valueOf(sign.getLine(3)));
+								price = Integer.parseInt(String.valueOf(sign.getLine(2).replace("$", "").replace(",", "")));
 								data = 0;
 								try {
 									data = Integer.parseInt(String.valueOf(sign.getLine(1)).split(":")[1]);
@@ -1939,606 +2497,64 @@ public class PlayerEventHandler implements Listener {
 					if (Server.getShoppeConfig().getData().contains(prefix + "items." + index)) {
 						LaShoppeItem item = Server.getShoppe().retrieveItem(minigame, index);
 						material = item.getMaterial();
-						amount = event.getCurrentItem().getAmount();
+						price = item.getPrice();
+						amount = item.getAmount();
 						data = item.getData();
 					}
 				}
-				ItemStack item = new ItemStack(material, amount, (short) data);
-				if (material == Material.SPAWNER)
-					item = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), amount);
-				if (!(event.getCurrentItem().getType() == Material.AIR)) {
-					if (!$.removeLore(event.getCurrentItem()).isSimilar($.removeLore(item))) {
-						event.setCancelled(true);
-					}
-				}
-			}
-			if (LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.LA_SHOPPE)) {
-				event.setCancelled(true);
-				int page = (int) LinkServer.getInventoryManager().getInventoryData(player);
-				if (event.getCurrentItem() == null)
-					return;
-				if (event.getCurrentItem().getType() == Material.ROSE_RED) {
-					if (event.getCurrentItem().getItemMeta().getDisplayName().equals("Remove items from shop")) {
-						Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page, !removeMode);
-						return;
-					}
-				} else if (event.getCurrentItem().getType() == Material.CACTUS_GREEN) {
-					if (event.getCurrentItem().getItemMeta().getDisplayName().equals("Add new shop item")) {
-						Server.getShoppe().createInventory(player, LaShoppeFrame.CREATE_ITEM, page, removeMode);
-					}
-				} else if (event.getCurrentItem().getType() == Material.LAPIS_LAZULI) {
-					if (event.getCurrentItem().getItemMeta().getDisplayName().equals("Add new shop enchant")) {
-						Server.getShoppe().createInventory(player, LaShoppeFrame.CREATE_ENCHANT, page, removeMode);
-					}
-				} else if (event.getCurrentItem().getType() == Material.EMERALD) {
-					if (event.getCurrentItem().getItemMeta().getDisplayName().equals("View previous page")) {
-						if (page == 1) {
-							player.playSound(player.getEyeLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-						} else {
-							Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page - 1, removeMode);
-						}
-					} else if (event.getCurrentItem().getItemMeta().getDisplayName().equals("View following page")) {
-						Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page + 1, removeMode);
-					}
-				}
-				if (event.getCurrentItem().hasItemMeta()) {
-					if (event.getCurrentItem().getItemMeta().hasLore()) {
-						if (event.getCurrentItem().getType() == Material.ENCHANTED_BOOK) {
-							String indexIndexString = event.getCurrentItem().getItemMeta().getLore().get(0);
-							String indexString = indexIndexString.substring(indexIndexString.indexOf("Index: ") + 7);
-							int index = Integer.parseInt(indexString);
-							LaShoppeEnchant enchant = Server.getShoppe().retrieveEnchant(minigame, index);
-							int price = enchant.getPrice();
-							int tier = enchant.getTier();
-							if (removeMode) {
-								if (player.isOp()) {
-									String prefix = minigame.toString().toLowerCase() + ".";
-									Server.getShoppeConfig().getData().set(prefix + "enchant." + index, null);
-									Server.getShoppeConfig().saveData();
-									final boolean fRemoveMode = removeMode;
-									Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
-										@Override
-										public void run() {
-											Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page, fRemoveMode);
-										}
-									}, 1L);
-								}
-							}
-							if (event.isRightClick()) {
-								try {
-									DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-									String materialName = Link$.formatMaterial(event.getCurrentItem().getType());
-									String subDomain = $.getMinigameDomain(player);
-									int cash = EconManager.retrieveCash(player, subDomain);
-									String tag = $.getMinigameTag(player);
-									String enchantName = Link$.formatEnchantment(String.valueOf(enchant.getEnchantment().getKey().getKey().trim()), tier);
-									if (cash >= price) {
-										ItemStack currentItem = player.getInventory().getItemInMainHand();
-										if (currentItem.getType() == Material.AIR || currentItem == null || currentItem.getType() == null) {
-											player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
-											return;
-										}
-										if (currentItem.getEnchantments().containsKey(enchant) && currentItem.getEnchantments().get(enchant) == tier) {
-											player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
-											return;
-										}
-										try {
-											currentItem.addUnsafeEnchantment(enchant.getEnchantment(), tier);
-										} catch (Exception ex) {
-											player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
-											return;
-										}
-										EconManager.withdrawCash(player, price, subDomain);
-										player.getInventory().setItemInMainHand(currentItem);
-										player.updateInventory();
-										player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + enchantName + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
-										return;
-									} else {
-										player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money.");
-										return;
-									}
-								} catch (Exception ex) {
-									player.sendMessage("An internal error has occured whilist processing this shop information.");
-									ex.printStackTrace();
-									return;
-								}
-							}
-						} else {
-							String indexIndexString = event.getCurrentItem().getItemMeta().getLore().get(0);
-							String indexString = indexIndexString.substring(indexIndexString.indexOf("Index: ") + 7);
-							int index = Integer.parseInt(indexString);
-							String priceIndexString = event.getCurrentItem().getItemMeta().getLore().get(1);
-							String priceString = priceIndexString.substring(priceIndexString.indexOf("Price: $") + 8);
-							int price = Integer.parseInt(priceString);
-							String amountIndexString = event.getCurrentItem().getItemMeta().getLore().get(2);
-							String amountString = amountIndexString.substring(amountIndexString.indexOf("Amount: ") + 8, amountIndexString.length() - 1);
-							int amount = Integer.parseInt(amountString);
-							String dataIndexString = event.getCurrentItem().getItemMeta().getLore().get(3);
-							String dataString = dataIndexString.substring(dataIndexString.indexOf("Data: ") + 6);
-							int data = Integer.parseInt(dataString);
-							if (removeMode) {
-								if (player.isOp()) {
-									String prefix = minigame.toString().toLowerCase() + ".";
-									Server.getShoppeConfig().getData().set(prefix + "items." + index, null);
-									Server.getShoppeConfig().saveData();
-									final boolean fRemoveMode = removeMode;
-									Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
-										@Override
-										public void run() {
-											Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page, fRemoveMode);
-										}
-									}, 1L);
-								}
-							}
-							if (event.isLeftClick()) {
-								Inventory inv = Bukkit.createInventory(null, 54, ChatColor.BOLD + "Virtual Store [" + index + "]");
-								player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
-								LinkServer.getInventoryManager().createInventory(player, inv, InventoryType.SELL_ALL, index);
-							} else if (event.isRightClick()) {
-								try {
-									DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-									String materialName = Link$.formatMaterial(event.getCurrentItem().getType());
-									String subDomain = $.getMinigameDomain(player);
-									int cash = EconManager.retrieveCash(player, subDomain);
-									String tag = $.getMinigameTag(player);
-									if (cash >= price * 2 && player.isSneaking()) {
-										amount = amount * 2;
-										price = price * 2;
-									}
-									ItemStack purchaseItem = new ItemStack(event.getCurrentItem().getType(), amount, (short) data);
-									if (event.getCurrentItem().getType() == Material.SPAWNER)
-										purchaseItem = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), amount);
-									if (cash >= price) {
-										if (player.getInventory().firstEmpty() == -1) {
-											player.sendMessage(tag + ChatColor.RED + "Inventory full. " + ChatColor.GRAY + "Empty some slots then try again.");
-											return;
-										}
-										EconManager.withdrawCash(player, price, subDomain);
-										player.getInventory().addItem(purchaseItem);
-										player.updateInventory();
-										player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + materialName + " x" + amount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
-										return;
-									}
-									player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money.");
-									return;
-								} catch (Exception ex) {
-									player.sendMessage("An internal error has occured whilist processing this shop information.");
-									ex.printStackTrace();
-									return;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		if (!(event.getCurrentItem() == null) && LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.SESSIONS)) {
-			String sessionKey = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
-			String playerName = (String) LinkServer.getInventoryManager().getInventoryData(player);
-			OfflinePlayer op = CraftGo.Player.getOfflinePlayer(playerName);
-			if (op.getName().equals(player.getName()) || player.isOp() || Link$.getRankId(player) > 2) {
-				if (player.isOp() || Link$.getRankId(player) > 2) {
-					Server.getSessionManager().invalidateSession(player.getName(), op, sessionKey, true);
-				} else {
-					Server.getSessionManager().invalidateSession(player.getName(), op, sessionKey, false);
-				}
-				Server.getSessionManager().openComplexInventory(player, op);
-				event.setCancelled(true);
-			} else {
-				event.setCancelled(true);
-			}
-			return;
-		}
-		if (!(event.getCurrentItem() == null) && LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.SKYFIGHT_TEAMS)) {
-			if ($.getCurrentMinigame(player) == ServerMinigame.SKYFIGHT) {
-				if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
-					event.setCancelled(true);
-					ItemStack item = event.getCurrentItem();
-					ItemMeta meta = item.getItemMeta();
-					if (meta.getDisplayName().contains("Blue")) {
-						Server.getSkyfight().get(player.getUniqueId()).setTeamValue($.Skyfight.Team.BLUE);
-					} else if (meta.getDisplayName().contains("Red")) {
-						Server.getSkyfight().get(player.getUniqueId()).setTeamValue($.Skyfight.Team.RED);
-					} else if (meta.getDisplayName().contains("Green")) {
-						Server.getSkyfight().get(player.getUniqueId()).setTeamValue($.Skyfight.Team.GREEN);
-					} else if (meta.getDisplayName().contains("Yellow")) {
-						Server.getSkyfight().get(player.getUniqueId()).setTeamValue($.Skyfight.Team.YELLOW);
-					} else if (meta.getDisplayName().contains("Pink")) {
-						Server.getSkyfight().get(player.getUniqueId()).setTeamValue($.Skyfight.Team.PINK);
-					} else {
-						Server.getSkyfight().get(player.getUniqueId()).setTeamValue($.Skyfight.Team.NO_TEAM);
-					}
-					Server.getSkyfight().get(player.getUniqueId()).getTag().setDamagee(null);
-					Server.getSkyfight().get(player.getUniqueId()).setScore(0);
-					Server.getInstance().enterSkyfight(player, false, false);
-				}
-			}
-		}
-		if (!(event.getCurrentItem() == null) && LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.TRAILS)) {
-			if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
-				event.setCancelled(true);
-				ItemStack item = event.getCurrentItem();
-				ItemMeta meta = item.getItemMeta();
-				if (item.getType() == Material.REDSTONE) {
-					Server.getPlugin().getConfig().set(path + ".trails.selectedTrail", "-1");
-					player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
-					player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
-					TrailsCmd.openTrailManagementInventory(player);
-				} else if (item.getType() == Material.LEATHER_BOOTS) {
-					int trailType = -1;
-					if (String.valueOf(meta.getDisplayName()).contains("Smoke")) {
-						trailType = 0;
-					} else if (String.valueOf(meta.getDisplayName()).contains("Emerald")) {
-						trailType = 1;
-					} else if (String.valueOf(meta.getDisplayName()).contains("Redstone")) {
-						trailType = 2;
-					} else if (String.valueOf(meta.getDisplayName()).contains("Enchanting")) {
-						trailType = 3;
-					}
-					Server.getPlugin().getConfig().set(path + ".trails.selectedTrail", trailType + "");
-					player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
-					player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred trail has been changed.");
-					TrailsCmd.openTrailManagementInventory(player);
-				}
-			} else {
-				player.closeInventory();
-			}
-		}
-		if (!(event.getCurrentItem() == null) && LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.SPAWNER_UPGRADES)) {
-			if (Server.getFactions().contains(player.getUniqueId()) || Server.getSkyblock().contains(player.getUniqueId())) {
-				if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
-					event.setCancelled(true);
-					ItemStack item = event.getCurrentItem();
-					ItemMeta meta = item.getItemMeta();
-					ItemStack zero = event.getInventory().getItem(0);
-					String code = $.scanStringArrayAndSplitBy(zero.getItemMeta().getLore().toArray(new String[0]), "code: ".toCharArray());
-					World world = Bukkit.getWorld($.scanStringArrayAndSplitBy(zero.getItemMeta().getLore().toArray(new String[0]), "world: ".toCharArray()));
-					int x = Integer.parseInt($.scanStringArrayAndSplitBy(zero.getItemMeta().getLore().toArray(new String[0]), "x: ".toCharArray()));
-					int y = Integer.parseInt($.scanStringArrayAndSplitBy(zero.getItemMeta().getLore().toArray(new String[0]), "y: ".toCharArray()));
-					int z = Integer.parseInt($.scanStringArrayAndSplitBy(zero.getItemMeta().getLore().toArray(new String[0]), "z: ".toCharArray()));
-					if (meta.getDisplayName().contains("Perform Upgrade")) {
-						int upgradeCount = Integer.parseInt(Server.getSpawnerConfig().getData().getString(code + ".upgrade"));
-						String requiredBalanceStr = ChatColor.stripColor(meta.getDisplayName().substring(meta.getDisplayName().indexOf("$") + 1));
-						requiredBalanceStr = requiredBalanceStr.substring(0, requiredBalanceStr.indexOf(")"));
-						int requiredBalance = Integer.parseInt(requiredBalanceStr);
-						int currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
-						if (upgradeCount + 1 <= 4) {
-							if (currentBalance >= requiredBalance) {
-								EconManager.withdrawCash(player, requiredBalance, $.getMinigameDomain(player));
-								player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-								Server.getSpawnerConfig().getData().set(code + ".upgrade", (upgradeCount + 1) + "");
-								Server.getSpawnerConfig().getData().set(code + ".selectedUpgrade", (upgradeCount + 1) + "");
-								Server.getSpawnerConfig().saveData();
-								player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred upgrade has been changed.");
-								openSpawnerUpgradeInventory(player, world.getBlockAt(x, y, z));
-							} else {
-								player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-								player.sendMessage($.Kitpvp.tag + ChatColor.RED + "You do not have enough money to buy this upgrade.");
-							}
-						} else {
-							player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-						}
-					} else if (meta.getDisplayName().contains("Select spawner upgrade")) {
-						int upgradeNumber = Integer.parseInt(meta.getDisplayName().substring(meta.getDisplayName().indexOf("#") + 1));
-						int upgradeCount = Integer.parseInt(Server.getSpawnerConfig().getData().getString(code + ".upgrade"));
-						if (upgradeNumber >= 0 && upgradeNumber <= upgradeCount + 1) {
-							Server.getSpawnerConfig().getData().set(code + ".selectedUpgrade", upgradeNumber + "");
-							Server.getSpawnerConfig().saveData();
-							player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred upgrade has been changed.");
-							openSpawnerUpgradeInventory(player, world.getBlockAt(x, y, z));
-							player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
-						}
-					} else {
-						player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-					}
-				}
-			} else {
-				player.closeInventory();
-			}
-		}
-		if (!(event.getCurrentItem() == null) && LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.KIT_UPGRADES)) {
-			if ($.getCurrentMinigame(player) == ServerMinigame.KITPVP) {
-				if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
-					event.setCancelled(true);
-					ItemStack item = event.getCurrentItem();
-					ItemMeta meta = item.getItemMeta();
-					if (meta.getDisplayName().contains("Perform Upgrade")) {
-						int upgradeCount = $.Kitpvp.getUpgradeCount(player);
-						String requiredBalanceStr = ChatColor.stripColor(meta.getDisplayName().substring(meta.getDisplayName().indexOf("$") + 1));
-						requiredBalanceStr = requiredBalanceStr.substring(0, requiredBalanceStr.indexOf(")"));
-						int requiredBalance = Integer.parseInt(requiredBalanceStr);
-						int currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
-						if (upgradeCount + 1 <= $.Kitpvp.DONOR_MAX_UPGRADE_VALUE) {
-							if (upgradeCount + 1 > $.Kitpvp.DEFAULT_MAX_UPGRADE_VALUE) {
-								if (Link$.getDonorRankId(player) > -2) {
-									player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-									player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you need a donor rank to buy this upgrade.");
-									player.performCommand("store");
-									return;
-								}
-							}
-							if (currentBalance >= requiredBalance) {
-								EconManager.withdrawCash(player, requiredBalance, $.getMinigameDomain(player));
-								player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-								$.Kitpvp.setUpgradeCount(player, upgradeCount + 1);
-								$.Kitpvp.setPreferredUpgrade(player, upgradeCount + 1);
-								player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred kit upgrade has been changed.");
-								UpgradeKitCmd.openKitUpgradeInventory(player);
-							} else {
-								player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-								player.sendMessage($.Kitpvp.tag + ChatColor.RED + "You do not have enough money to buy this upgrade.");
-							}
-						} else {
-							player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-						}
-					} else if (meta.getDisplayName().contains("Select preferred weapon")) {
-						int type = -1;
-						if (item.getType() == Material.STONE_AXE || item.getType() == Material.IRON_AXE) {
-							type = 0;
-						} else {
-							type = 1;
-						}
-						if (type == 0) {
-							$.Kitpvp.setPreferredWeaponType(player, $.Kitpvp.WEAPON_AXE);
-						} else if (type == 1) {
-							$.Kitpvp.setPreferredWeaponType(player, $.Kitpvp.WEAPON_SWORD);
-						}
-						player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred weapon type has been changed.");
-						UpgradeKitCmd.openKitUpgradeInventory(player);
-						player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
-					} else if (meta.getDisplayName().contains("Select kit upgrade")) {
-						int upgradeNumber = Integer.parseInt(meta.getDisplayName().substring(meta.getDisplayName().indexOf("#") + 1));
-						int upgradeCount = $.Kitpvp.getUpgradeCount(player);
-						if (upgradeNumber > 0 && upgradeNumber <= upgradeCount + 1) {
-							$.Kitpvp.setPreferredUpgrade(player, upgradeNumber - 1);
-							player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Preferred kit upgrade has been changed.");
-							UpgradeKitCmd.openKitUpgradeInventory(player);
-							player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1, 1);
-						}
-					} else {
-						player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-					}
-				}
-			} else {
-				player.closeInventory();
-			}
-		}
-		if (event.getInventory().getType() == org.bukkit.event.inventory.InventoryType.ENCHANTING) {
-			if (event.getCurrentItem() == null)
-				return;
-			if (event.getCurrentItem().getType() == Material.LAPIS_LAZULI)
-				event.setCancelled(true);
-			return;
-		}
-		if (LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.SPAWNER_SHOP)) {
-			if (event.getCurrentItem() == null)
-				return;
-			Material material = Material.SPAWNER;
-			String materialName = Link$.formatMaterial(material);
-			String domain = $.getMinigameDomain(player);
-			String tag = $.getMinigameTag(player);
-			EntityType entityType = CraftGo.MobSpawner.getStoredSpawnerItemEntityType(event.getCurrentItem());
-			int price = 0;
-			int cash = EconManager.retrieveCash(player, domain);
-			int amount = 1;
-			switch (entityType) {
-				case SKELETON:
-					price = Server.getSpawnerPrices().get(0).intValue();
-					break;
-				case ZOMBIE:
-					price = Server.getSpawnerPrices().get(1).intValue();
-					break;
-				case SPIDER:
-					price = Server.getSpawnerPrices().get(2).intValue();
-					break;
-				case BLAZE:
-					price = Server.getSpawnerPrices().get(3).intValue();
-					break;
-				case CREEPER:
-					price = Server.getSpawnerPrices().get(4).intValue();
-					break;
-				case IRON_GOLEM:
-					price = Server.getSpawnerPrices().get(5).intValue();
-					break;
-				case COW:
-					price = Server.getSpawnerPrices().get(6).intValue();
-					break;
-				case PIG:
-					price = Server.getSpawnerPrices().get(7).intValue();
-					break;
-				case CHICKEN:
-					price = Server.getSpawnerPrices().get(8).intValue();
-					break;
-				default:
-					player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
-					event.setCancelled(true);
-					return;
-			}
-			if (cash >= price * 2 && player.isSneaking()) {
-				amount = amount * 2;
-				price = price * 2;
-			}
-			ItemStack item = CraftGo.MobSpawner.newSpawnerItem(entityType, amount);
-			if (cash >= price) {
 				DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-				if (player.getInventory().firstEmpty() == -1) {
-					player.sendMessage(tag + ChatColor.RED + "Inventory full. " + ChatColor.GRAY + "Empty some slots then try again.");
-					event.setCancelled(true);
-					return;
-				}
-				EconManager.withdrawCash(player, price, domain);
-				player.getInventory().addItem(item);
-				player.updateInventory();
-				player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + materialName + " x" + amount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
-			} else {
-				player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money in your account.");
-			}
-			event.setCancelled(true);
-			player.closeInventory();
-		} else if (LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.SERVER_SELECTOR)) {
-			if (event.getCurrentItem() == null)
-				return;
-			event.setCancelled(true);
-			switch ((int) LinkServer.getInventoryManager().getInventoryData(player)) {
-				case 0:
-					switch (event.getCurrentItem().getType()) {
-						case BOW:
-							Server.getInstance().enterSkyfight(player, false, false);
-							break;
-						case STONE_PICKAXE:
-							if ($.isMinigameEnabled(ServerMinigame.FACTIONS) && $.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
-								openSurvivalServerSelectorMenu(player);
-							} else if ($.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
-								Server.getInstance().enterSurvival(player, false, false);
-							} else if ($.isMinigameEnabled(ServerMinigame.FACTIONS)) {
-								Server.getInstance().enterFactions(player, false, false);
-							}
-							break;
-						case DIAMOND_SWORD:
-							Server.getInstance().enterFactions(player, false, false);
-							break;
-						case IRON_SWORD:
-							Server.getInstance().enterKitpvp(player, false, false);
-							break;
-						case GRASS_BLOCK:
-							Server.getInstance().enterCreative(player, false, false);
-							break;
-						case OAK_SAPLING:
-							Server.getInstance().enterSkyblock(player, false, false);
-							break;
-						default:
-							player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
-							return;
-					}
-					break;
-				case 1:
-					switch (event.getCurrentItem().getType()) {
-						case DIAMOND_SWORD:
-							Server.getInstance().enterFactions(player, false, false);
-							break;
-						case STONE_PICKAXE:
-							Server.getInstance().enterSurvival(player, false, false);
-							break;
-						default:
-							player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
-							return;
-					}
-					break;
-			}
-
-		} else if (Server.getSkyfight().containsKey(player.getUniqueId()) && player.getGameMode() == GameMode.SURVIVAL) {
-			event.setCancelled(true);
-		} else if (LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.TEMPORARY)) {
-			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler
-	public void onInventoryClose(InventoryCloseEvent event) {
-		Player player = (Player) event.getPlayer();
-		ServerMinigame minigame = $.getCurrentMinigame(player);
-		if (event.getInventory().getType() == org.bukkit.event.inventory.InventoryType.ENCHANTING) {
-			EnchantingInventory inventory = (EnchantingInventory) event.getInventory();
-			inventory.setItem(1, Link$.createMaterial(Material.AIR));
-			return;
-		}
-		if (LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.SKYFIGHT_TEAMS)) {
-			if (Server.getSkyfight().containsKey(player.getUniqueId())) {
-				Server.getSkyfight().get(player.getUniqueId()).setHasTeamSelectionGuiOpen(false);
-			}
-		}
-		if (LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.SELL_ALL)) {
-			String name = String.valueOf(LinkServer.getInventoryManager().getInventoryData(player));
-			Material material = null;
-			int amount = 0;
-			int price = 0;
-			int data = 0;
-			String code = player.getWorld().getName() + ";" + name;
-			if (name.contains(";")) {
-				if (Server.getSignConfig().getData().contains("signs." + code.replace(";", ""))) {
-					int blockX = Integer.parseInt(code.split(";")[1]);
-					int blockY = Integer.parseInt(code.split(";")[2]);
-					int blockZ = Integer.parseInt(code.split(";")[3]);
-					BlockState state = player.getWorld().getBlockAt(blockX, blockY, blockZ).getState();
-					if (state instanceof Sign) {
-						Sign sign = (Sign) state;
-						if (ChatColor.stripColor(sign.getLine(0)).equals("Sell")) {
-							material = Material.getMaterial(String.valueOf(sign.getLine(1)).replace(" ", "_").toUpperCase().split(":")[0]);
-							amount = Integer.parseInt(String.valueOf(sign.getLine(3)));
-							price = Integer.parseInt(String.valueOf(sign.getLine(2).replace("$", "").replace(",", "")));
-							data = 0;
-							try {
-								data = Integer.parseInt(String.valueOf(sign.getLine(1)).split(":")[1]);
-							} catch (Exception ig) {
+				int singleAmount = 1;
+				int singlePrice = (int) $.getSinglePricing(amount, price);
+				String materialName = Link$.formatMaterial(material);
+				ItemStack item = new ItemStack(material, singleAmount, (short) data);
+				if (material == Material.SPAWNER)
+					item = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), singleAmount);
+				int totalPrice = 0;
+				int totalAmount = 0;
+				for (ItemStack itm : event.getInventory().getContents()) {
+					if (!(itm == null)) {
+						if (item.getType() == itm.getType()) {
+							if (item.getDurability() == itm.getDurability()) {
+								int givenPrice = singlePrice * itm.getAmount();
+								totalPrice = totalPrice + givenPrice;
+								totalAmount = totalAmount + itm.getAmount();
 							}
 						}
 					}
 				}
-			} else {
-				code = code.substring(code.indexOf(";") + 1);
-				int index = Integer.parseInt(code);
-				String prefix = minigame.toString().toLowerCase() + ".";
-				if (Server.getShoppeConfig().getData().contains(prefix + "items." + index)) {
-					LaShoppeItem item = Server.getShoppe().retrieveItem(minigame, index);
-					material = item.getMaterial();
-					price = item.getPrice();
-					amount = item.getAmount();
-					data = item.getData();
+				EconManager.depositCash(player, totalPrice, $.getMinigameDomain(player));
+				if (totalAmount > 0) {
+					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Sold " + ChatColor.RED + materialName + " x" + totalAmount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(totalPrice));
 				}
 			}
-			DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-			int singleAmount = 1;
-			int singlePrice = (int) $.getSinglePricing(amount, price);
-			String materialName = Link$.formatMaterial(material);
-			ItemStack item = new ItemStack(material, singleAmount, (short) data);
-			if (material == Material.SPAWNER)
-				item = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), singleAmount);
-			int totalPrice = 0;
-			int totalAmount = 0;
-			for (ItemStack itm : event.getInventory().getContents()) {
-				if (!(itm == null)) {
-					if (item.getType() == itm.getType()) {
-						if (item.getDurability() == itm.getDurability()) {
-							int givenPrice = singlePrice * itm.getAmount();
-							totalPrice = totalPrice + givenPrice;
-							totalAmount = totalAmount + itm.getAmount();
+		if (event.getInventory().getHolder() instanceof InventoryMenu)
+			if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.CHEST)) {
+				try {
+					Player tp = player;
+					int chestNumber = (int) ((InventoryMenu) event.getInventory().getHolder()).getData();
+					boolean saveInventory = false;
+					if (Server.getSavePersonalChest().containsKey(player)) {
+						tp = Server.getSavePersonalChest().get(player);
+						Server.getSavePersonalChest().remove(player);
+					} else if (Server.getSaveOtherInventory().containsKey(player)) {
+						tp = Server.getSaveOtherInventory().get(player);
+						Server.getSaveOtherInventory().remove(player);
+						saveInventory = true;
+					}
+					String subDomain = $.getMinigameDomain(tp);
+					if (saveInventory) {
+						ItemStack[] contents = new ItemStack[Directory.INVENTORY_SIZE];
+						for (int i = 0; i < Directory.INVENTORY_SIZE; i++) {
+							contents[i] = event.getInventory().getContents()[i];
 						}
+						tp.getInventory().setContents(contents);
+					} else {
+						SolidStorage.savePersonalChest(tp, subDomain, event.getInventory().getContents(), chestNumber);
 					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 			}
-			EconManager.depositCash(player, totalPrice, $.getMinigameDomain(player));
-			if (totalAmount > 0) {
-				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Sold " + ChatColor.RED + materialName + " x" + totalAmount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(totalPrice));
-			}
-		}
-		if (LinkServer.getInventoryManager().getInventoryName(player).equals(InventoryType.CHEST)) {
-			try {
-				Player tp = player;
-				int chestNumber = (int) LinkServer.getInventoryManager().getInventoryData(player);
-				boolean saveInventory = false;
-				if (Server.getSavePersonalChest().containsKey(player)) {
-					tp = Server.getSavePersonalChest().get(player);
-					Server.getSavePersonalChest().remove(player);
-				} else if (Server.getSaveOtherInventory().containsKey(player)) {
-					tp = Server.getSaveOtherInventory().get(player);
-					Server.getSaveOtherInventory().remove(player);
-					saveInventory = true;
-				}
-				String subDomain = $.getMinigameDomain(tp);
-				if (saveInventory) {
-					ItemStack[] contents = new ItemStack[Directory.INVENTORY_SIZE];
-					for (int i = 0; i < Directory.INVENTORY_SIZE; i++) {
-						contents[i] = event.getInventory().getContents()[i];
-					}
-					tp.getInventory().setContents(contents);
-				} else {
-					SolidStorage.savePersonalChest(tp, subDomain, event.getInventory().getContents(), chestNumber);
-				}
-				LinkServer.getInventoryManager().doCloseInventory(player);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)

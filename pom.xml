@@ -13,7 +13,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
-	
+
 	<distributionManagement>
 		<repository>
 			<id>nexus-releases</id>
@@ -24,7 +24,7 @@
 			<url>https://maven.skorrloregaming.com/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -157,7 +157,7 @@
 					<groupId>com.sk89q</groupId>
 					<artifactId>commandbook</artifactId>
 				</exclusion>
-			</exclusions> 
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.github.aadnk</groupId>
@@ -202,7 +202,7 @@
 		<dependency>
 			<groupId>com.github.SkorrloreGaming</groupId>
 			<artifactId>SkorrloreGamingLink</artifactId>
-			<version>6c62b8efb1</version>
+			<version>e963bdd4cb</version>
 		</dependency>
 		<dependency>
 			<groupId>redis.clients</groupId>

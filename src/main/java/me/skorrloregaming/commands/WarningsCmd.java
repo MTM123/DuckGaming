@@ -1,9 +1,6 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Link$;
-import me.skorrloregaming.LinkServer;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
 import me.skorrloregaming.impl.InventoryType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,7 +41,7 @@ public class WarningsCmd implements CommandExecutor {
 					int invSize = 9;
 					if (CraftGo.Player.isPocketPlayer((Player) sender))
 						invSize = 27;
-					Inventory inv = Bukkit.createInventory(null, invSize, ChatColor.BOLD + op.getName() + "'s warnings");
+					Inventory inv = Bukkit.createInventory(new InventoryMenu(((Player) sender), InventoryType.WARNINGS, null), invSize, ChatColor.BOLD + op.getName() + "'s warnings");
 					int add = 0;
 					if (CraftGo.Player.isPocketPlayer((Player) sender))
 						add = 9;
@@ -59,7 +56,7 @@ public class WarningsCmd implements CommandExecutor {
 							message[i] = ChatColor.RESET + message[i];
 						inv.setItem(Integer.valueOf(key) + 1 + add, Link$.createMaterial(Material.ZOMBIE_HEAD, 1, ChatColor.RESET + "" + ChatColor.UNDERLINE + op.getName() + "'s warning #" + key, (short) 0, message));
 					}
-					LinkServer.getInventoryManager().createInventory(((Player) sender), inv, InventoryType.WARNINGS);
+					((Player) sender).openInventory(inv);
 				}
 			}
 			if (warnings == 1) {
