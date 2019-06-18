@@ -1,6 +1,12 @@
 package com.skorrloregaming.main;
 
 import com.skorrloregaming.main.SkyFight.SkyFight;
+import me.skorrloregaming.AntiCheat;
+import me.skorrloregaming.Link$;
+import me.skorrloregaming.LinkServer;
+import me.skorrloregaming.redis.MapBuilder;
+import me.skorrloregaming.redis.RedisChannel;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
@@ -929,6 +935,19 @@ public class SkorrloreGaming
 			alt = alt.replaceAll("&", "\u00a7");
 		}
 		e.setMessage("\u00a7a" + alt);
+		String processedMessage = new AntiCheat().processAntiSwear(p, e.getMessage());
+		LinkServer.getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(ChatColor.RESET + "<" + p.getDisplayName() + ChatColor.RESET + "> " + processedMessage).origin(p.getName()).build());
+		if (Link$.isPrefixedRankingEnabled()) {
+			String rankName = WordUtils.capitalize(getRank(p));
+			if (rankName.equals("Youtube"))
+				rankName = "YouTube";
+			String message = "**" + rankName + "** " + p.getName() + " " + '\u00BB' + " " + processedMessage;
+			LinkServer.getRedisMessenger().broadcast(RedisChannel.DISCORD, new MapBuilder().message(message).channel(LinkServer.getDiscordChannel()).build());
+		} else {
+			String message = "**" + p.getName() + "** " + '\u00BB' + " " + processedMessage;
+			LinkServer.getRedisMessenger().broadcast(RedisChannel.DISCORD, new MapBuilder().message(message).channel(LinkServer.getDiscordChannel()).build());
+		}
+		e.setCancelled(true);
 	}
 
 	@EventHandler
