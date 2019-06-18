@@ -1892,7 +1892,9 @@ public class PlayerEventHandler implements Listener {
 		Player player = (Player) event.getWhoClicked();
 		ServerMinigame minigame = $.getCurrentMinigame(player);
 		String path = "config." + player.getUniqueId().toString();
-		event.setCancelled(LinkServer.getInstance().getPlaytimeManager().onInventoryClick(event));
+		boolean cancelled = LinkServer.getInstance().getPlaytimeManager().onInventoryClick(event);
+		if (!event.isCancelled())
+			event.setCancelled(cancelled);
 		if (!(event.getCurrentItem() == null))
 			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
 				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.WARNINGS))
@@ -1959,6 +1961,7 @@ public class PlayerEventHandler implements Listener {
 					int page = (int) ((InventoryMenu) event.getInventory().getHolder()).getData();
 					if (event.getCurrentItem() == null)
 						return;
+					event.setCancelled(true);
 					if (event.getCurrentItem().getType() == Material.ROSE_RED) {
 						if (event.getCurrentItem().getItemMeta().getDisplayName().equals("Remove items from shop")) {
 							Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page, !removeMode);
