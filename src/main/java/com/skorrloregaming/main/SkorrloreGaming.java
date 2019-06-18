@@ -87,7 +87,7 @@ public class SkorrloreGaming
 	ArrayList<Player> pg = new ArrayList();
 	ArrayList<Player> locked = new ArrayList();
 	ArrayList<Player> tagged = new ArrayList();
-	ArrayList<Player> hub = new ArrayList();
+	public ArrayList<Player> hub = new ArrayList();
 	ArrayList<Player> charged = new ArrayList();
 	ArrayList<Player> potions_cooldown = new ArrayList();
 	ItemStack AIR = new ItemStack(Material.AIR);
