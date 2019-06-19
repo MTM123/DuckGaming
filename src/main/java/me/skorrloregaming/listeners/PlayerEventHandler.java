@@ -1895,6 +1895,10 @@ public class PlayerEventHandler implements Listener {
 		boolean cancelled = LinkServer.getInstance().getPlaytimeManager().onInventoryClick(event);
 		if (!event.isCancelled())
 			event.setCancelled(cancelled);
+		if (event.getClickedInventory() == null)
+			return;
+		if (event.getClickedInventory().getHolder() == null)
+			return;
 		if (!(event.getCurrentItem() == null))
 			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
 				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.WARNINGS))
