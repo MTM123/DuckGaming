@@ -56,17 +56,19 @@ public class SkinStorage {
 	public static Optional<SkinModel> getSkinProperty(String uuid) {
 		if (uuid == null || uuid.equals("null"))
 			return Optional.empty();
-		String skinurl = "https://sessionserver.mojang.com/session/minecraft/profile/";
-		String output = null;
-		try {
-			output = CraftGo.Player.readURL(skinurl + uuid + "?unsigned=false");
-			String signature = output.substring(output.indexOf("\"signature\":\"") + "\"signature\":\"".length());
-			signature = signature.substring(0, signature.indexOf("\""));
-			String value = output.substring(output.indexOf("\"value\":\"") + "\"value\":\"".length());
-			value = value.substring(0, value.indexOf("\""));
-			return Optional.of(SkinModel.createSkinFromEncoded(value, signature));
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (!Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
+			String skinurl = "https://sessionserver.mojang.com/session/minecraft/profile/";
+			String output = null;
+			try {
+				output = CraftGo.Player.readURL(skinurl + uuid + "?unsigned=false");
+				String signature = output.substring(output.indexOf("\"signature\":\"") + "\"signature\":\"".length());
+				signature = signature.substring(0, signature.indexOf("\""));
+				String value = output.substring(output.indexOf("\"value\":\"") + "\"value\":\"".length());
+				value = value.substring(0, value.indexOf("\""));
+				return Optional.of(SkinModel.createSkinFromEncoded(value, signature));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return Optional.empty();
 	}
