@@ -34,7 +34,7 @@ public class BlockEventHandler implements Listener {
 		Block block = event.getBlock();
 		Location blockLoc = block.getLocation();
 		Material blockType = block.getType();
-		if (blockType == Material.WALL_SIGN || blockType == Material.SIGN) {
+		if ($.isWallSign(blockType) || $.isPostSign(blockType)) {
 			String[] s = event.getLines();
 			for (int i = 0; i < s.length; i++) {
 				s[i] = ChatColor.stripColor(s[i]);
@@ -57,7 +57,7 @@ public class BlockEventHandler implements Listener {
 					return;
 				}
 				Block targetBlock = player.getWorld().getBlockAt(x, y, z);
-				if (targetBlock.getType() == Material.SIGN || targetBlock.getType() == Material.SIGN || targetBlock.getType() == Material.WALL_SIGN) {
+				if ($.isWallSign(targetBlock.getType()) || $.isPostSign(targetBlock.getType())) {
 					Sign targetSign = (Sign) targetBlock.getState();
 					String[] tl = targetSign.getLines();
 					for (int i = 0; i < tl.length; i++) {
@@ -331,7 +331,7 @@ public class BlockEventHandler implements Listener {
 				}
 			}
 		}
-		if (blockType == Material.WALL_SIGN | blockType == Material.SIGN) {
+		if ($.isWallSign(blockType) || $.isPostSign(blockType)) {
 			Sign sign = (Sign) event.getBlock().getState();
 			String[] s = sign.getLines();
 			for (int i = 0; i < s.length; i++) {

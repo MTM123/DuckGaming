@@ -43,7 +43,7 @@ public class LocketteBlockListener implements Listener {
 		if (event.isCancelled())
 			if (!BlockUtil.isInList(type, BlockUtil.materialListJustDoors))
 				return;
-		if (type == Material.WALL_SIGN) {
+		if ($.isWallSign(type)) {
 			if (block.getData() == 0) {
 				block.getState().setData(new MaterialData(block.getType(), (byte) 5));
 			}
@@ -157,7 +157,7 @@ public class LocketteBlockListener implements Listener {
 		Block against = event.getBlockAgainst();
 		Block checkBlock;
 		Block signBlock;
-		if (against.getType() == Material.WALL_SIGN) {
+		if ($.isWallSign(against.getType())) {
 			Sign sign = (Sign) against.getState();
 			String text = ChatColor.stripColor(sign.getLine(0));
 			if (text.equalsIgnoreCase("[Private]") || text.equalsIgnoreCase(Lockette.altPrivate) || text.equalsIgnoreCase("[More Psers]") || text.equalsIgnoreCase(Lockette.altMoreUsers)) {
@@ -173,7 +173,7 @@ public class LocketteBlockListener implements Listener {
 			return;
 		}
 		if (Lockette.directPlacement) {
-			if (type == Material.WALL_SIGN) {
+			if ($.isWallSign(type)) {
 				checkBlock = Lockette.getSignAttachedBlock(block);
 				if (checkBlock == null)
 					return;
@@ -340,8 +340,8 @@ public class LocketteBlockListener implements Listener {
 			return;
 		Block block = event.getBlock();
 		Material blockType = block.getType();
-		boolean typeWallSign = (blockType == Material.WALL_SIGN);
-		boolean typeSignPost = (blockType == Material.SIGN);
+		boolean typeWallSign = ($.isWallSign(blockType));
+		boolean typeSignPost = ($.isPostSign(blockType));
 		if (typeWallSign) {
 			Sign sign = (Sign) block.getState();
 			String text = ChatColor.stripColor(sign.getLine(0));
@@ -650,8 +650,8 @@ public class LocketteBlockListener implements Listener {
 				event.setLine(1, event.getLine(1));
 			}
 			if (!typeWallSign) {
-				block.setType(Material.WALL_SIGN);
-				org.bukkit.material.Sign matSign = new org.bukkit.material.Sign(Material.WALL_SIGN);
+				block.setType(Material.OAK_WALL_SIGN);
+				org.bukkit.material.Sign matSign = new org.bukkit.material.Sign(Material.OAK_WALL_SIGN);
 				matSign.setFacingDirection(face);
 				Sign sign = (Sign) block.getState();
 				sign.setData(matSign);
@@ -661,7 +661,7 @@ public class LocketteBlockListener implements Listener {
 				Lockette.setLine(sign, 3, event.getLine(3));
 				sign.update(true);
 			} else {
-				org.bukkit.material.Sign matSign = new org.bukkit.material.Sign(Material.SIGN);
+				org.bukkit.material.Sign matSign = new org.bukkit.material.Sign(Material.OAK_WALL_SIGN);
 				matSign.setFacingDirection(face);
 				Sign sign = (Sign) block.getState();
 				sign.setData(matSign);
@@ -736,8 +736,8 @@ public class LocketteBlockListener implements Listener {
 			}
 			event.setCancelled(false);
 			if (!typeWallSign) {
-				block.setType(Material.WALL_SIGN);
-				org.bukkit.material.Sign matSign = new org.bukkit.material.Sign(Material.WALL_SIGN);
+				block.setType(Material.OAK_WALL_SIGN);
+				org.bukkit.material.Sign matSign = new org.bukkit.material.Sign(Material.OAK_WALL_SIGN);
 				matSign.setFacingDirection(face);
 				((Sign) block.getState()).setData(matSign);
 				sign = (Sign) block.getState();
@@ -747,7 +747,7 @@ public class LocketteBlockListener implements Listener {
 				Lockette.setLine(sign, 3, event.getLine(3));
 				sign.update(true);
 			} else {
-				org.bukkit.material.Sign matSign = new org.bukkit.material.Sign(Material.SIGN);
+				org.bukkit.material.Sign matSign = new org.bukkit.material.Sign(Material.OAK_SIGN);
 				matSign.setFacingDirection(face);
 				Sign sign2 = (Sign) block.getState();
 				sign2.setData(matSign);

@@ -1,5 +1,6 @@
 package me.skorrloregaming.lockette;
 
+import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Logger;
 import me.skorrloregaming.Server;
@@ -154,18 +155,18 @@ public class Lockette {
 		}
 		int face = block.getState().getData().getData() & 0x7;
 		switch (face) {
-		case 0:
-			return (BlockFace.DOWN);
-		case 1:
-			return (BlockFace.UP);
-		case 2:
-			return (BlockFace.NORTH);
-		case 3:
-			return (BlockFace.SOUTH);
-		case 4:
-			return (BlockFace.WEST);
-		case 5:
-			return (BlockFace.EAST);
+			case 0:
+				return (BlockFace.DOWN);
+			case 1:
+				return (BlockFace.UP);
+			case 2:
+				return (BlockFace.NORTH);
+			case 3:
+				return (BlockFace.SOUTH);
+			case 4:
+				return (BlockFace.WEST);
+			case 5:
+				return (BlockFace.EAST);
 		}
 		return (BlockFace.SELF);
 	}
@@ -557,7 +558,7 @@ public class Lockette {
 		if (!enabled)
 			return (false);
 		Material type = block.getType();
-		if (type == Material.WALL_SIGN) {
+		if ($.isWallSign(type)) {
 			Sign sign = (Sign) block.getState();
 			String text = ChatColor.stripColor(sign.getLine(0)).toLowerCase();
 			if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate)) {
@@ -582,7 +583,7 @@ public class Lockette {
 		if (!enabled)
 			return (null);
 		Material type = block.getType();
-		if (type == Material.WALL_SIGN) {
+		if ($.isWallSign(type)) {
 			Sign sign = (Sign) block.getState();
 			String text = ChatColor.stripColor(sign.getLine(0)).toLowerCase();
 			if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate)) {
@@ -906,7 +907,7 @@ public class Lockette {
 				return (checkBlock);
 		}
 		checkBlock = block.getRelative(BlockFace.NORTH);
-		if (checkBlock.getType() == Material.WALL_SIGN) {
+		if ($.isWallSign(checkBlock.getType())) {
 			face = checkBlock.getData();
 			if (face == BlockUtil.faceList[2]) {
 				if (ignore == null)
@@ -929,7 +930,7 @@ public class Lockette {
 					return (checkBlock);
 			}
 		checkBlock = block.getRelative(BlockFace.EAST);
-		if (checkBlock.getType() == Material.WALL_SIGN) {
+		if ($.isWallSign(checkBlock.getType())) {
 			face = checkBlock.getData();
 			if (face == BlockUtil.faceList[3]) {
 				if (ignore == null)
@@ -952,7 +953,7 @@ public class Lockette {
 					return (checkBlock);
 			}
 		checkBlock = block.getRelative(BlockFace.SOUTH);
-		if (checkBlock.getType() == Material.WALL_SIGN) {
+		if ($.isWallSign(checkBlock.getType())) {
 			face = checkBlock.getData();
 			if (face == BlockUtil.faceList[0]) {
 				if (ignore == null)
@@ -975,7 +976,7 @@ public class Lockette {
 					return (checkBlock);
 			}
 		checkBlock = block.getRelative(BlockFace.WEST);
-		if (checkBlock.getType() == Material.WALL_SIGN) {
+		if ($.isWallSign(checkBlock.getType())) {
 			face = checkBlock.getData();
 			if (face == BlockUtil.faceList[1]) {
 				if (ignore == null)
@@ -1001,7 +1002,7 @@ public class Lockette {
 	}
 
 	public static Block getSignAttachedBlock(Block block) {
-		if (block.getType() != Material.WALL_SIGN)
+		if (!$.isWallSign(block.getType()))
 			return (null);
 		int face = block.getData() & 0x7;
 		if (face == BlockUtil.faceList[0])
@@ -1069,7 +1070,7 @@ public class Lockette {
 		}
 		checkBlock = block.getRelative(BlockFace.NORTH);
 		type = checkBlock.getType();
-		if (type == Material.WALL_SIGN) {
+		if ($.isWallSign(type)) {
 			face = checkBlock.getData();
 			if (face == BlockUtil.faceList[2]) {
 				Sign sign = (Sign) checkBlock.getState();
@@ -1090,7 +1091,7 @@ public class Lockette {
 			}
 		checkBlock = block.getRelative(BlockFace.EAST);
 		type = checkBlock.getType();
-		if (type == Material.WALL_SIGN) {
+		if ($.isWallSign(type)) {
 			face = checkBlock.getData();
 			if (face == BlockUtil.faceList[3]) {
 				Sign sign = (Sign) checkBlock.getState();
@@ -1111,7 +1112,7 @@ public class Lockette {
 			}
 		checkBlock = block.getRelative(BlockFace.SOUTH);
 		type = checkBlock.getType();
-		if (type == Material.WALL_SIGN) {
+		if ($.isWallSign(type)) {
 			face = checkBlock.getData();
 			if (face == BlockUtil.faceList[0]) {
 				Sign sign = (Sign) checkBlock.getState();
@@ -1132,7 +1133,7 @@ public class Lockette {
 			}
 		checkBlock = block.getRelative(BlockFace.WEST);
 		type = checkBlock.getType();
-		if (type == Material.WALL_SIGN) {
+		if ($.isWallSign(type)) {
 			face = checkBlock.getData();
 			if (face == BlockUtil.faceList[1]) {
 				Sign sign = (Sign) checkBlock.getState();

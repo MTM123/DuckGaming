@@ -93,7 +93,7 @@ public class LaShoppe {
 				Inventory inventory = null;
 				if (player.isOp()) {
 					inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.LA_SHOPPE, page), 36, "La Shoppe, page " + page);
-					ItemStack removeItemModeItem = Link$.createMaterial(Material.ROSE_RED, "Remove items from shop");
+					ItemStack removeItemModeItem = Link$.createMaterial(Material.RED_DYE, "Remove items from shop");
 					if (removeMode) {
 						if (CraftGo.Player.getProtocolVersion(player) > 314) {
 							removeItemModeItem.addUnsafeEnchantment(Enchantment.BINDING_CURSE, 1);
@@ -103,7 +103,7 @@ public class LaShoppe {
 					}
 					inventory.setItem(0, removeItemModeItem);
 					inventory.setItem(7, Link$.createMaterial(Material.LAPIS_LAZULI, "Add new shop enchant"));
-					inventory.setItem(8, Link$.createMaterial(Material.CACTUS_GREEN, "Add new shop item"));
+					inventory.setItem(8, Link$.createMaterial(Material.GREEN_DYE, "Add new shop item"));
 					startIndex = 9;
 				} else {
 					inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.LA_SHOPPE, page), 27, "La Shoppe, page " + page);

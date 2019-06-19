@@ -77,7 +77,7 @@ public class LockettePlayerListener implements Listener {
 				if (block == null) {
 					plugin.localizedMessage(player, null, "msg-error-edit");
 					return;
-				} else if (block.getType() != Material.WALL_SIGN) {
+				} else if (!$.isWallSign(block.getType())) {
 					plugin.localizedMessage(player, null, "msg-error-edit");
 					return;
 				}
@@ -171,7 +171,7 @@ public class LockettePlayerListener implements Listener {
 				event.setUseItemInHand(Result.DENY);
 				return;
 			}
-			if (type == Material.WALL_SIGN) {
+			if ($.isWallSign(type)) {
 				interactSign(block, player);
 				return;
 			}
@@ -180,7 +180,7 @@ public class LockettePlayerListener implements Listener {
 					if (event.hasItem())
 						if ((face != BlockFace.UP) && (face != BlockFace.DOWN)) {
 							item = event.getItem();
-							if (item.getType() == Material.SIGN) {
+							if ($.isPostSign(item.getType())) {
 								Block checkBlock = block.getRelative(face);
 								type = checkBlock.getType();
 								if (type == Material.AIR) {

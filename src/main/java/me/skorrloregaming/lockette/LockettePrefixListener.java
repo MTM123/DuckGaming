@@ -33,8 +33,8 @@ public class LockettePrefixListener implements Listener {
 		}
 		Player player = event.getPlayer();
 		Material blockType = block.getType();
-		boolean typeWallSign = (blockType == Material.WALL_SIGN);
-		boolean typeSignPost = (blockType == Material.SIGN);
+		boolean typeWallSign = ($.isWallSign(blockType));
+		boolean typeSignPost = ($.isPostSign(blockType));
 		if (typeWallSign) {
 			Sign sign = (Sign) block.getState();
 			String text = ChatColor.stripColor(sign.getLine(0));
