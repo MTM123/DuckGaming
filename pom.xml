@@ -136,7 +136,7 @@
 		<dependency>
 			<groupId>com.github.MilkBowl</groupId>
 			<artifactId>VaultAPI</artifactId>
-			<version>da407c0059</version>
+			<version>1.7</version>
 		</dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
