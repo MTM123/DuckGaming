@@ -18,6 +18,15 @@ public class CustomRecipes {
 
 	public static void loadRecipes() {
 		{
+			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "shulker_box");
+			ShapedRecipe recipe = new ShapedRecipe(key, Link$.createMaterial(Material.WHITE_SHULKER_BOX));
+			recipe.shape("AAA", "ABA", "AAA");
+			recipe.setIngredient('A', Material.DIAMOND);
+			recipe.setIngredient('B', Material.ENDER_CHEST);
+			Bukkit.getServer().addRecipe(recipe);
+			log(key);
+		}
+		{
 			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "elytra");
 			ItemStack stack = Link$.createMaterial(Material.ELYTRA, ChatColor.RESET + "Elytra");
 			ShapedRecipe recipe = new ShapedRecipe(key, stack);
