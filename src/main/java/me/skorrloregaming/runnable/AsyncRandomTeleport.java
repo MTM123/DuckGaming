@@ -46,7 +46,7 @@ public class AsyncRandomTeleport implements Runnable {
 
 	@Override
 	public void run() {
-		Block block = player.getWorld().getHighestBlockAt((int) x, (int) z, HeightmapType.SOLID_OR_LIQUID);
+		Block block = player.getWorld().getHighestBlockAt((int) x, (int) z, HeightmapType.SOLID);
 		if (block.getRelative(BlockFace.UP).getType() == Material.AIR || player.getWorld().getEnvironment() == World.Environment.NETHER) {
 			Location teleportLocation = block.getLocation().clone().add(0, 1, 0);
 			if (player.getWorld().getEnvironment() == World.Environment.NETHER)
