@@ -2,13 +2,17 @@ package me.skorrloregaming.listeners;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
+import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CrossbowMeta;
 
 public class PaperEventHandler implements Listener {
 
@@ -24,7 +28,7 @@ public class PaperEventHandler implements Listener {
 
 
 	@EventHandler
-	public void onProjectileLaunch(PlayerLaunchProjectileEvent event) {
+	public void on(PlayerLaunchProjectileEvent event) {
 		Player player = event.getPlayer();
 		if (event.getProjectile() instanceof EnderPearl) {
 			if (Server.getDelayedTasks().contains(player.getUniqueId())) {
@@ -39,6 +43,13 @@ public class PaperEventHandler implements Listener {
 				}, 7L);
 			}
 		} else if (event.getProjectile() instanceof Arrow) {
+			ItemStack mainHand = player.getInventory().getItemInMainHand();
+			if (mainHand.getType() == Material.CROSSBOW) {
+				CrossbowMeta crossBowMeta = (CrossbowMeta) mainHand.getItemMeta();
+				crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+				mainHand.setItemMeta(crossBowMeta);
+				player.getInventory().setItemInMainHand(mainHand);
+			}
 			Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 				public void run() {
 					Server.doReturnItem(player);

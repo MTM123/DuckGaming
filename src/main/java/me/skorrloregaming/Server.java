@@ -35,6 +35,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CrossbowMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
@@ -1347,6 +1348,10 @@ public class Server extends JavaPlugin implements Listener {
 		int ran = random.nextInt(4);
 		ItemStack sword = Link$.createMaterial(Material.STONE_SWORD, ChatColor.GOLD + "The Forbidding Katana");
 		ItemStack bow = Link$.createMaterial(Material.BOW, ChatColor.GOLD + "The Forbidding Bow");
+		ItemStack crossBow = Link$.createMaterial(Material.CROSSBOW, ChatColor.GOLD + "The Forbidding Crossbow");
+		CrossbowMeta crossBowMeta = (CrossbowMeta) crossBow.getItemMeta();
+		crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+		crossBow.setItemMeta(crossBowMeta);
 		ItemStack arrow = Link$.createMaterial(Material.ARROW, 1, ChatColor.GOLD + "The Forbidding Darts");
 		ItemStack helmet = Link$.createMaterial(Material.LEATHER_HELMET, 1, ChatColor.GOLD + "The Forbidding Helmet");
 		ItemStack chestplate = Link$.createMaterial(Material.LEATHER_CHESTPLATE, ChatColor.GOLD + "The Forbidding Chestpeice");
@@ -1380,6 +1385,7 @@ public class Server extends JavaPlugin implements Listener {
 		$.clearPlayer(player);
 		player.getInventory().setItem(0, sword);
 		player.getInventory().setItem(1, bow);
+		player.getInventory().setItem(2, crossBow);
 		player.getInventory().setItem(8, chestplate);
 		player.getInventory().setItem(9, arrow);
 		player.getInventory().setHelmet(helmet);
