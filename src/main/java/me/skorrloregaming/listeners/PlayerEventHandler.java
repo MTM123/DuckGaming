@@ -296,7 +296,6 @@ public class PlayerEventHandler implements Listener {
 	public void onProjectileLaunch(ProjectileLaunchEvent event) {
 		if (event.getEntity().getShooter() instanceof Player) {
 			Player player = (Player) event.getEntity().getShooter();
-			player.sendMessage("Hit 1");
 			if (event.getEntity() instanceof EnderPearl) {
 				if (Server.getDelayedTasks().contains(player.getUniqueId())) {
 					event.setCancelled(true);
@@ -310,23 +309,19 @@ public class PlayerEventHandler implements Listener {
 					}, 7L);
 				}
 			} else if (event.getEntity() instanceof Arrow) {
-				player.sendMessage("Hit 2");
 				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 
 					@Override
 					public void run() {
-						player.sendMessage("Hit 3");
 						ItemStack mainHand = player.getInventory().getItemInMainHand();
 						if (mainHand.getType() == Material.CROSSBOW) {
-							player.sendMessage("Hit 4");
 							CrossbowMeta crossBowMeta = (CrossbowMeta) mainHand.getItemMeta();
 							crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
 							mainHand.setItemMeta(crossBowMeta);
 							player.getInventory().setItemInMainHand(mainHand);
-							player.sendMessage("Recharged");
 						}
 					}
-				}, 20l);
+				}, 2l);
 				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 					public void run() {
 						Server.doReturnItem(player);
