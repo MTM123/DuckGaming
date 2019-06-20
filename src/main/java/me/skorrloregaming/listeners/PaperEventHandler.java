@@ -53,9 +53,10 @@ public class PaperEventHandler implements Listener {
 						crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
 						mainHand.setItemMeta(crossBowMeta);
 						player.getInventory().setItemInMainHand(mainHand);
+						player.sendMessage("Recharged");
 					}
 				}
-			}, 2l);
+			}, 20l);
 			Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 				public void run() {
 					Server.doReturnItem(player);
