@@ -667,7 +667,7 @@ public class Server extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new PlayerEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new EntityEventHandler(), this);
 		ServerType serverType = getServerType();
-		Logger.info("Detected " + serverType + " server type, handling accordingly..");
+		getLogger().info("Detected " + serverType + " server type, handling accordingly..");
 		if (serverType == ServerType.PaperSpigot)
 			getServer().getPluginManager().registerEvents(new PaperEventHandler(), this);
 		if (getConfig().getBoolean("settings.bungeecord", false))
