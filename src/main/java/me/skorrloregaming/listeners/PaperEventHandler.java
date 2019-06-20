@@ -12,6 +12,7 @@ import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CrossbowMeta;
 
@@ -28,49 +29,6 @@ public class PaperEventHandler implements Listener {
 		if (Server.getWaiverAcceptPlayers().contains(player.getUniqueId())) {
 			event.setCancelled(true);
 			return;
-		}
-	}
-
-
-	@EventHandler
-	public void on(PlayerLaunchProjectileEvent event) {
-		Player player = event.getPlayer();
-		player.sendMessage("Hit 1");
-		if (event.getProjectile() instanceof EnderPearl) {
-			if (Server.getDelayedTasks().contains(player.getUniqueId())) {
-				event.setCancelled(true);
-			} else {
-				Server.getDelayedTasks().add(player.getUniqueId());
-				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
-					@Override
-					public void run() {
-						Server.getDelayedTasks().remove(player.getUniqueId());
-					}
-				}, 7L);
-			}
-		} else if (event.getProjectile() instanceof Arrow) {
-			player.sendMessage("Hit 2");
-			Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
-
-				@Override
-				public void run() {
-					player.sendMessage("Hit 3");
-					ItemStack mainHand = player.getInventory().getItemInMainHand();
-					if (mainHand.getType() == Material.CROSSBOW) {
-						player.sendMessage("Hit 4");
-						CrossbowMeta crossBowMeta = (CrossbowMeta) mainHand.getItemMeta();
-						crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
-						mainHand.setItemMeta(crossBowMeta);
-						player.getInventory().setItemInMainHand(mainHand);
-						player.sendMessage("Recharged");
-					}
-				}
-			}, 20l);
-			Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
-				public void run() {
-					Server.doReturnItem(player);
-				}
-			}, 5L);
 		}
 	}
 }

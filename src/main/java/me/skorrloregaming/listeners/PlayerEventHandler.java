@@ -54,6 +54,7 @@ import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CrossbowMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
@@ -287,6 +288,50 @@ public class PlayerEventHandler implements Listener {
 					CraftGo.Player.sendTimedTitleAndSubtitle(player, tst);
 					event.setCancelled(true);
 				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void onProjectileLaunch(ProjectileLaunchEvent event) {
+		if (event.getEntity().getShooter() instanceof Player) {
+			Player player = (Player) event.getEntity().getShooter();
+			player.sendMessage("Hit 1");
+			if (event.getEntity() instanceof EnderPearl) {
+				if (Server.getDelayedTasks().contains(player.getUniqueId())) {
+					event.setCancelled(true);
+				} else {
+					Server.getDelayedTasks().add(player.getUniqueId());
+					Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+						@Override
+						public void run() {
+							Server.getDelayedTasks().remove(player.getUniqueId());
+						}
+					}, 7L);
+				}
+			} else if (event.getEntity() instanceof Arrow) {
+				player.sendMessage("Hit 2");
+				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+
+					@Override
+					public void run() {
+						player.sendMessage("Hit 3");
+						ItemStack mainHand = player.getInventory().getItemInMainHand();
+						if (mainHand.getType() == Material.CROSSBOW) {
+							player.sendMessage("Hit 4");
+							CrossbowMeta crossBowMeta = (CrossbowMeta) mainHand.getItemMeta();
+							crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+							mainHand.setItemMeta(crossBowMeta);
+							player.getInventory().setItemInMainHand(mainHand);
+							player.sendMessage("Recharged");
+						}
+					}
+				}, 20l);
+				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+					public void run() {
+						Server.doReturnItem(player);
+					}
+				}, 5L);
 			}
 		}
 	}
