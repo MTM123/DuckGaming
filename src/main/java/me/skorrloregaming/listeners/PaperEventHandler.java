@@ -43,13 +43,19 @@ public class PaperEventHandler implements Listener {
 				}, 7L);
 			}
 		} else if (event.getProjectile() instanceof Arrow) {
-			ItemStack mainHand = player.getInventory().getItemInMainHand();
-			if (mainHand.getType() == Material.CROSSBOW) {
-				CrossbowMeta crossBowMeta = (CrossbowMeta) mainHand.getItemMeta();
-				crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
-				mainHand.setItemMeta(crossBowMeta);
-				player.getInventory().setItemInMainHand(mainHand);
-			}
+			Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+
+				@Override
+				public void run() {
+					ItemStack mainHand = player.getInventory().getItemInMainHand();
+					if (mainHand.getType() == Material.CROSSBOW) {
+						CrossbowMeta crossBowMeta = (CrossbowMeta) mainHand.getItemMeta();
+						crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+						mainHand.setItemMeta(crossBowMeta);
+						player.getInventory().setItemInMainHand(mainHand);
+					}
+				}
+			}, 2l);
 			Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 				public void run() {
 					Server.doReturnItem(player);
