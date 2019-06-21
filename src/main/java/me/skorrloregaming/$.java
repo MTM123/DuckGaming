@@ -420,15 +420,41 @@ public class $ {
 	}
 
 	public static boolean isPostSign(Material material) {
-		if (material.toString().indexOf("SIGN") > -1 && material.toString().indexOf("WALL_SIGN") == -1)
-			return true;
-		return false;
+		switch (material){
+			case OAK_SIGN:
+				return true;
+			case ACACIA_SIGN:
+				return true;
+			case BIRCH_SIGN:
+				return true;
+			case DARK_OAK_SIGN:
+				return true;
+			case JUNGLE_SIGN:
+				return true;
+			case SPRUCE_SIGN:
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	public static boolean isWallSign(Material material) {
-		if (material.toString().indexOf("WALL_SIGN") > -1)
-			return true;
-		return false;
+		switch (material){
+			case OAK_WALL_SIGN:
+				return true;
+			case ACACIA_WALL_SIGN:
+				return true;
+			case BIRCH_WALL_SIGN:
+				return true;
+			case DARK_OAK_WALL_SIGN:
+				return true;
+			case JUNGLE_WALL_SIGN:
+				return true;
+			case SPRUCE_WALL_SIGN:
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	public static boolean isMaterialLog(Material material) {
