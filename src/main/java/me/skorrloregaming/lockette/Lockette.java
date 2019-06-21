@@ -885,7 +885,6 @@ public class Lockette {
 		Collection<Player> playersNearby = block.getWorld().getNearbyPlayers(block.getLocation(), 5);
 		Block checkBlock;
 		Material type;
-		byte face;
 		boolean doCheck;
 		if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 4");
 		if (iterateUp) {
@@ -914,22 +913,19 @@ public class Lockette {
 		}
 		checkBlock = block.getRelative(BlockFace.NORTH);
 		if ($.isWallSign(checkBlock.getType())) {
-			face = checkBlock.getData();
 			if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 5");
-			if (face == BlockUtil.faceList[2]) {
-				if (ignore == null)
-					doCheck = true;
-				else if (checkBlock.getLocation().equals(ignore))
-					doCheck = false;
-				else
-					doCheck = true;
-				if (doCheck) {
-					Sign sign = (Sign) checkBlock.getState();
-					if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 6");
-					String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
-					if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate))
-						return (checkBlock);
-				}
+			if (ignore == null)
+				doCheck = true;
+			else if (checkBlock.getLocation().equals(ignore))
+				doCheck = false;
+			else
+				doCheck = true;
+			if (doCheck) {
+				Sign sign = (Sign) checkBlock.getState();
+				if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 6");
+				String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
+				if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate))
+					return (checkBlock);
 			}
 		} else if (iterate)
 			if (checkBlock.getType() == block.getType()) {
@@ -939,22 +935,19 @@ public class Lockette {
 			}
 		checkBlock = block.getRelative(BlockFace.EAST);
 		if ($.isWallSign(checkBlock.getType())) {
-			face = checkBlock.getData();
 			if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 5");
-			if (face == BlockUtil.faceList[3]) {
-				if (ignore == null)
-					doCheck = true;
-				else if (checkBlock.getLocation().equals(ignore))
-					doCheck = false;
-				else
-					doCheck = true;
-				if (doCheck) {
-					Sign sign = (Sign) checkBlock.getState();
-					if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 6");
-					String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
-					if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate))
-						return (checkBlock);
-				}
+			if (ignore == null)
+				doCheck = true;
+			else if (checkBlock.getLocation().equals(ignore))
+				doCheck = false;
+			else
+				doCheck = true;
+			if (doCheck) {
+				Sign sign = (Sign) checkBlock.getState();
+				if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 6");
+				String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
+				if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate))
+					return (checkBlock);
 			}
 		} else if (iterate)
 			if (checkBlock.getType() == block.getType()) {
@@ -964,22 +957,19 @@ public class Lockette {
 			}
 		checkBlock = block.getRelative(BlockFace.SOUTH);
 		if ($.isWallSign(checkBlock.getType())) {
-			face = checkBlock.getData();
 			if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 5");
-			if (face == BlockUtil.faceList[0]) {
-				if (ignore == null)
-					doCheck = true;
-				else if (checkBlock.getLocation().equals(ignore))
-					doCheck = false;
-				else
-					doCheck = true;
-				if (doCheck) {
-					Sign sign = (Sign) checkBlock.getState();
-					if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 6");
-					String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
-					if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate))
-						return (checkBlock);
-				}
+			if (ignore == null)
+				doCheck = true;
+			else if (checkBlock.getLocation().equals(ignore))
+				doCheck = false;
+			else
+				doCheck = true;
+			if (doCheck) {
+				Sign sign = (Sign) checkBlock.getState();
+				if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 6");
+				String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
+				if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate))
+					return (checkBlock);
 			}
 		} else if (iterate)
 			if (checkBlock.getType() == block.getType()) {
@@ -989,22 +979,19 @@ public class Lockette {
 			}
 		checkBlock = block.getRelative(BlockFace.WEST);
 		if ($.isWallSign(checkBlock.getType())) {
-			face = checkBlock.getData();
 			if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 5");
-			if (face == BlockUtil.faceList[1]) {
-				if (ignore == null)
-					doCheck = true;
-				else if (checkBlock.getLocation().equals(ignore))
-					doCheck = false;
-				else
-					doCheck = true;
-				if (doCheck) {
-					Sign sign = (Sign) checkBlock.getState();
-					if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 6");
-					String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
-					if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate))
-						return (checkBlock);
-				}
+			if (ignore == null)
+				doCheck = true;
+			else if (checkBlock.getLocation().equals(ignore))
+				doCheck = false;
+			else
+				doCheck = true;
+			if (doCheck) {
+				Sign sign = (Sign) checkBlock.getState();
+				if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 6");
+				String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
+				if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate))
+					return (checkBlock);
 			}
 		} else if (iterate)
 			if (checkBlock.getType() == block.getType()) {
@@ -1064,7 +1051,6 @@ public class Lockette {
 	public static List<Block> findBlockUsersBase(Block block, boolean iterate, boolean iterateUp, boolean iterateDown, boolean traps, int includeYPos) {
 		Block checkBlock;
 		Material type;
-		byte face;
 		List<Block> list = new ArrayList<Block>();
 		if (iterateUp) {
 			checkBlock = block.getRelative(BlockFace.UP);
@@ -1085,84 +1071,68 @@ public class Lockette {
 		checkBlock = block.getRelative(BlockFace.NORTH);
 		type = checkBlock.getType();
 		if ($.isWallSign(type)) {
-			face = checkBlock.getData();
-			if (face == BlockUtil.faceList[2]) {
-				Sign sign = (Sign) checkBlock.getState();
-				String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
-				if (text.equals("[more users]") || text.equalsIgnoreCase(altMoreUsers))
-					list.add(checkBlock);
-			}
+			Sign sign = (Sign) checkBlock.getState();
+			String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
+			if (text.equals("[more users]") || text.equalsIgnoreCase(altMoreUsers))
+				list.add(checkBlock);
 		} else if (iterate) {
 			if (type == block.getType()) {
 				list.addAll(findBlockUsersBase(checkBlock, false, iterateUp, iterateDown, false, includeYPos));
 			}
 		} else if (traps)
 			if (BlockUtil.isInList(type, BlockUtil.materialListTrapDoors)) {
-				face = checkBlock.getData();
-				if ((face & 3) == 2) {
+				if ((checkBlock.getData() & 3) == 2) {
 					list.addAll(findBlockUsersBase(checkBlock, false, false, false, false, includeYPos));
 				}
 			}
 		checkBlock = block.getRelative(BlockFace.EAST);
 		type = checkBlock.getType();
 		if ($.isWallSign(type)) {
-			face = checkBlock.getData();
-			if (face == BlockUtil.faceList[3]) {
-				Sign sign = (Sign) checkBlock.getState();
-				String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
-				if (text.equals("[more users]") || text.equalsIgnoreCase(altMoreUsers))
-					list.add(checkBlock);
-			}
+			Sign sign = (Sign) checkBlock.getState();
+			String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
+			if (text.equals("[more users]") || text.equalsIgnoreCase(altMoreUsers))
+				list.add(checkBlock);
 		} else if (iterate) {
 			if (type == block.getType()) {
 				list.addAll(findBlockUsersBase(checkBlock, false, iterateUp, iterateDown, false, includeYPos));
 			}
 		} else if (traps)
 			if (BlockUtil.isInList(type, BlockUtil.materialListTrapDoors)) {
-				face = checkBlock.getData();
-				if ((face & 3) == 0) {
+				if ((checkBlock.getData() & 3) == 0) {
 					list.addAll(findBlockUsersBase(checkBlock, false, false, false, false, includeYPos));
 				}
 			}
 		checkBlock = block.getRelative(BlockFace.SOUTH);
 		type = checkBlock.getType();
 		if ($.isWallSign(type)) {
-			face = checkBlock.getData();
-			if (face == BlockUtil.faceList[0]) {
-				Sign sign = (Sign) checkBlock.getState();
-				String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
-				if (text.equals("[more users]") || text.equalsIgnoreCase(altMoreUsers))
-					list.add(checkBlock);
-			}
+			Sign sign = (Sign) checkBlock.getState();
+			String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
+			if (text.equals("[more users]") || text.equalsIgnoreCase(altMoreUsers))
+				list.add(checkBlock);
 		} else if (iterate) {
 			if (type == block.getType()) {
 				list.addAll(findBlockUsersBase(checkBlock, false, iterateUp, iterateDown, false, includeYPos));
 			}
 		} else if (traps)
 			if (BlockUtil.isInList(type, BlockUtil.materialListTrapDoors)) {
-				face = checkBlock.getData();
-				if ((face & 3) == 3) {
+				if ((checkBlock.getData() & 3) == 3) {
 					list.addAll(findBlockUsersBase(checkBlock, false, false, false, false, includeYPos));
 				}
 			}
 		checkBlock = block.getRelative(BlockFace.WEST);
 		type = checkBlock.getType();
 		if ($.isWallSign(type)) {
-			face = checkBlock.getData();
-			if (face == BlockUtil.faceList[1]) {
-				Sign sign = (Sign) checkBlock.getState();
-				String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
-				if (text.equals("[more users]") || text.equalsIgnoreCase(altMoreUsers))
-					list.add(checkBlock);
-			}
+			Sign sign = (Sign) checkBlock.getState();
+			String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
+			if (text.equals("[more users]") || text.equalsIgnoreCase(altMoreUsers))
+				list.add(checkBlock);
 		} else if (iterate) {
 			if (type == block.getType()) {
 				list.addAll(findBlockUsersBase(checkBlock, false, iterateUp, iterateDown, false, includeYPos));
 			}
 		} else if (traps)
 			if (BlockUtil.isInList(type, BlockUtil.materialListTrapDoors)) {
-				face = checkBlock.getData();
-				if ((face & 3) == 1) {
+				if ((checkBlock.getData() & 3) == 1) {
 					list.addAll(findBlockUsersBase(checkBlock, false, false, false, false, includeYPos));
 				}
 			}
