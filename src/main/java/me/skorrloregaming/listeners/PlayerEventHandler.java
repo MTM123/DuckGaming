@@ -460,6 +460,23 @@ public class PlayerEventHandler implements Listener {
 		if (!$.isAuthenticated(player)) {
 			return;
 		}
+		if (Server.getSkyfight().containsKey(player.getUniqueId())) {
+			long minuteDiff = ((System.currentTimeMillis() - Server.getLastVoteTime()) / 1000) / 60;
+			if (event.getItem().getType() == Material.CROSSBOW)
+				if (minuteDiff > 5)
+					if (Link$.getDonorRankId(player) > -2) {
+						boolean hit = false;
+						for (UUID uuid : Server.getSkyfight().keySet()) {
+							Player otherPlayer = Bukkit.getPlayer(uuid);
+							if (Link$.getDonorRankId(player) < -1)
+								hit = true;
+						}
+						if (!hit) {
+							event.setCancelled(true);
+							return;
+						}
+					}
+		}
 		ItemStack itm = event.getItem();
 		String subDomain = $.getMinigameDomain(player);
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
