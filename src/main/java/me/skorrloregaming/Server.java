@@ -4,6 +4,8 @@ import me.skorrloregaming.auction.Auctioneer;
 import me.skorrloregaming.commands.*;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.discord.DiscordBot;
+import me.skorrloregaming.events.PlayerMinigameChangeEvent;
+import me.skorrloregaming.events.PlayerPreMinigameChangeEvent;
 import me.skorrloregaming.hooks.*;
 import me.skorrloregaming.impl.*;
 import me.skorrloregaming.impl.Switches.SwitchIntDouble;
@@ -1005,6 +1007,7 @@ public class Server extends JavaPlugin implements Listener {
 	}
 
 	public int performBuggedLeave(Player player, boolean noRestore, boolean noLog) {
+		Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
 		int changes = 0;
 		int rawChanges = 0;
 		changes += leaveSkyfight(player, noLog);
@@ -1019,6 +1022,7 @@ public class Server extends JavaPlugin implements Listener {
 		rawChanges += changes;
 		if (changes > 0)
 			$.clearPlayer(player);
+		Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.HUB));
 		return rawChanges;
 	}
 
@@ -1028,6 +1032,7 @@ public class Server extends JavaPlugin implements Listener {
 			return;
 		}
 		if (!kitpvp.contains(player.getUniqueId())) {
+			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.KITPVP));
 			if (moderatingPlayers.containsKey(player.getUniqueId())) {
 				noRestore = true;
 				noLog = true;
@@ -1077,6 +1082,7 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			player.setAllowFlight(false);
 			$.kitpvpStatisticsScoreboard.schedule(player, DisplayType.Ten_Second_Period, Kitpvp_StatisticsScoreboard.class, Kitpvp_LeaderboardScoreboard.class);
+			Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.KITPVP));
 		}
 	}
 
@@ -1119,6 +1125,7 @@ public class Server extends JavaPlugin implements Listener {
 			return;
 		}
 		if (!factions.contains(player.getUniqueId())) {
+			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.FACTIONS));
 			if (moderatingPlayers.containsKey(player.getUniqueId())) {
 				noRestore = true;
 				noLog = true;
@@ -1169,6 +1176,7 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			player.setAllowFlight(false);
 			$.factionsScoreboard.schedule(player);
+			Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.FACTIONS));
 		}
 	}
 
@@ -1214,6 +1222,7 @@ public class Server extends JavaPlugin implements Listener {
 			return;
 		}
 		if (!survival.contains(player.getUniqueId())) {
+			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.SURVIVAL));
 			if (moderatingPlayers.containsKey(player.getUniqueId())) {
 				noRestore = true;
 				noLog = true;
@@ -1262,6 +1271,7 @@ public class Server extends JavaPlugin implements Listener {
 						, Channel.SERVER_CHAT);
 			}
 			player.setAllowFlight(false);
+			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.SURVIVAL));
 		}
 	}
 
@@ -1318,6 +1328,7 @@ public class Server extends JavaPlugin implements Listener {
 		}
 		boolean initialConnect = false;
 		if (!skyfight.containsKey(player.getUniqueId())) {
+			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.SKYFIGHT));
 			skyfight.put(player.getUniqueId(), new $.Skyfight.Player(player));
 			initialConnect = true;
 			if (!noLog) {
@@ -1420,6 +1431,8 @@ public class Server extends JavaPlugin implements Listener {
 				$.skyfightScoreboard.schedule(op, true);
 			$.Scoreboard.configureHealth(op);
 		}
+		if (initialConnect)
+			Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.SKYFIGHT));
 	}
 
 	public int leaveSkyfight(Player player, boolean noLog) {
@@ -1466,6 +1479,7 @@ public class Server extends JavaPlugin implements Listener {
 			return;
 		}
 		if (!creative.contains(player.getUniqueId())) {
+			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.CREATIVE));
 			if (moderatingPlayers.containsKey(player.getUniqueId())) {
 				noRestore = true;
 				noLog = true;
@@ -1532,6 +1546,7 @@ public class Server extends JavaPlugin implements Listener {
 					}
 				}
 			}, 100L);
+			Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.CREATIVE));
 		}
 	}
 
@@ -1585,6 +1600,7 @@ public class Server extends JavaPlugin implements Listener {
 			return;
 		}
 		if (!skyblock.contains(player.getUniqueId())) {
+			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.SKYBLOCK));
 			if (moderatingPlayers.containsKey(player.getUniqueId())) {
 				noRestore = true;
 				noLog = true;
@@ -1633,6 +1649,7 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			player.setAllowFlight(false);
 			$.skyblockScoreboard.schedule(player);
+			Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.SKYBLOCK));
 		}
 	}
 

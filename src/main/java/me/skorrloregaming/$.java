@@ -733,6 +733,8 @@ public class $ {
 	}
 
 	public static ServerMinigame getLastMinigame(UUID uuid) {
+		if (Bukkit.getPlayer(uuid) != null)
+			return getCurrentMinigame(Bukkit.getPlayer(uuid));
 		if (Server.getPlugin().getConfig().contains("config." + uuid.toString() + ".lastMinigame")) {
 			String minigameLower = Server.getPlugin().getConfig().getString("config." + uuid.toString() + ".lastMinigame");
 			return ServerMinigame.valueOf(minigameLower.toUpperCase());
