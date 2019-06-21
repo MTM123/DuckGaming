@@ -1,7 +1,5 @@
 package me.skorrloregaming.listeners;
 
-import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.massivecraft.factions.FPlayer;
@@ -309,21 +307,22 @@ public class PlayerEventHandler implements Listener {
 					}, 7L);
 				}
 			} else if (event.getEntity() instanceof Arrow) {
-				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+				if ($.getCurrentMinigame(player) == ServerMinigame.SKYFIGHT)
+					Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 
-					@Override
-					public void run() {
-						ItemStack mainHand = player.getInventory().getItemInMainHand();
-						if (mainHand.getType() == Material.CROSSBOW) {
-							CrossbowMeta crossBowMeta = (CrossbowMeta) mainHand.getItemMeta();
-							crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
-							crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
-							crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
-							mainHand.setItemMeta(crossBowMeta);
-							player.getInventory().setItemInMainHand(mainHand);
+						@Override
+						public void run() {
+							ItemStack mainHand = player.getInventory().getItemInMainHand();
+							if (mainHand.getType() == Material.CROSSBOW) {
+								CrossbowMeta crossBowMeta = (CrossbowMeta) mainHand.getItemMeta();
+								crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+								crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+								crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+								mainHand.setItemMeta(crossBowMeta);
+								player.getInventory().setItemInMainHand(mainHand);
+							}
 						}
-					}
-				}, 2l);
+					}, 2l);
 				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 					public void run() {
 						Server.doReturnItem(player);
