@@ -22,7 +22,7 @@ public class TrailsCmd implements CommandExecutor {
 	public static void openTrailManagementInventory(Player player) {
 		if (Link$.getDonorRankId(player) > -2) {
 			player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-			player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you need a donor rank to use cosmetics.");
+			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a donor rank to use cosmetics.");
 			player.performCommand("store");
 			return;
 		}
@@ -104,7 +104,7 @@ public class TrailsCmd implements CommandExecutor {
 		}
 		if (Link$.getDonorRankId(player) > -2) {
 			player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-			player.sendMessage($.Kitpvp.tag + ChatColor.RED + "Sorry, you need a donor rank to use cosmetics.");
+			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Sorry, you need a donor rank to use cosmetics.");
 			player.performCommand("store");
 			return true;
 		}
