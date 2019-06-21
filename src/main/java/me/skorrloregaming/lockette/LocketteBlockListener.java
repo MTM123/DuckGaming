@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -651,20 +652,20 @@ public class LocketteBlockListener implements Listener {
 			}
 			if (!typeWallSign) {
 				block.setType(Material.OAK_WALL_SIGN);
-				org.bukkit.material.Sign matSign = new org.bukkit.material.Sign(Material.OAK_WALL_SIGN);
-				matSign.setFacingDirection(face);
 				Sign sign = (Sign) block.getState();
-				sign.setData(matSign);
+				Directional signData = (Directional) sign.getBlockData();
+				signData.setFacing(face);
+				sign.setBlockData(signData);
 				sign.setLine(0, event.getLine(0));
 				Lockette.setLine(sign, 1, event.getLine(1));
 				Lockette.setLine(sign, 2, event.getLine(2));
 				Lockette.setLine(sign, 3, event.getLine(3));
 				sign.update(true);
 			} else {
-				org.bukkit.material.Sign matSign = new org.bukkit.material.Sign(Material.OAK_WALL_SIGN);
-				matSign.setFacingDirection(face);
 				Sign sign = (Sign) block.getState();
-				sign.setData(matSign);
+				Directional signData = (Directional) sign.getBlockData();
+				signData.setFacing(face);
+				sign.setBlockData(signData);
 			}
 			if (anyone) {
 				Logger.debug("[" + Lockette.pluginName + "] (Admin) " + player.getName() + " has claimed a container for " + event.getLine(1) + ".");
@@ -737,20 +738,20 @@ public class LocketteBlockListener implements Listener {
 			event.setCancelled(false);
 			if (!typeWallSign) {
 				block.setType(Material.OAK_WALL_SIGN);
-				org.bukkit.material.Sign matSign = new org.bukkit.material.Sign(Material.OAK_WALL_SIGN);
-				matSign.setFacingDirection(face);
-				((Sign) block.getState()).setData(matSign);
 				sign = (Sign) block.getState();
+				Directional signData = (Directional) sign.getBlockData();
+				signData.setFacing(face);
+				sign.setBlockData(signData);
 				sign.setLine(0, event.getLine(0));
 				Lockette.setLine(sign, 1, event.getLine(1));
 				Lockette.setLine(sign, 2, event.getLine(2));
 				Lockette.setLine(sign, 3, event.getLine(3));
 				sign.update(true);
 			} else {
-				org.bukkit.material.Sign matSign = new org.bukkit.material.Sign(Material.OAK_SIGN);
-				matSign.setFacingDirection(face);
 				Sign sign2 = (Sign) block.getState();
-				sign2.setData(matSign);
+				Directional signData = (Directional) sign2.getBlockData();
+				signData.setFacing(face);
+				sign2.setBlockData(signData);
 			}
 			if (Lockette.colorTags) {
 				event.setLine(0, ChatColor.translateAlternateColorCodes('&', event.getLine(0)));
