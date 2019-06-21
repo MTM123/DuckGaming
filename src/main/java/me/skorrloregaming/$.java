@@ -732,6 +732,14 @@ public class $ {
 		return false;
 	}
 
+	public static ServerMinigame getLastMinigame(Player player) {
+		if (Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString() + ".lastMinigame")) {
+			String minigameLower = Server.getPlugin().getConfig().getString("config." + player.getUniqueId().toString() + ".lastMinigame");
+			return ServerMinigame.valueOf(minigameLower.toUpperCase());
+		}
+		return ServerMinigame.UNKNOWN;
+	}
+
 	public static ServerMinigame getCurrentMinigame(Player player) {
 		String domain = getMinigameDomain(player);
 		for (ServerMinigame minigame : ServerMinigame.values()) {

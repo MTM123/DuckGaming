@@ -1689,6 +1689,7 @@ public class PlayerEventHandler implements Listener {
 				onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.ENTITY_CHICKEN_EGG, 1, 1);
 			}
 		}
+		Server.getPlugin().getConfig().set("config." + player.getUniqueId().toString() + ".lastMinigame", $.getCurrentMinigame(player).toString().toLowerCase());
 		if (Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString() + ".ip")) {
 			String ipAddress = Server.getPlugin().getConfig().getString("config." + player.getUniqueId().toString() + ".ip");
 			if (Server.getPlugin().getConfig().contains("warning." + ipAddress + ".count")) {
