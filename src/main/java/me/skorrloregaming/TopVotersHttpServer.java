@@ -5,27 +5,20 @@ import me.skorrloregaming.impl.Switches.SwitchIntString;
 
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
 import java.io.File;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
 public class TopVotersHttpServer implements Runnable {
-	public SSLServerSocket server = null;
+	public ServerSocket server = null;
 	public boolean running = false;
 
 	public TopVotersHttpServer(int port) {
 		try {
-			String keyStore = new File(System.getProperty("user.dir"), "server.keystore").getPath();
-			String trustStore = new File(System.getProperty("user.dir"), "server.truststore").getPath();
-			Server.getPlugin().getLogger().info("Using keyStore located at " + keyStore);
-			System.setProperty("javax.net.ssl.keyStore", keyStore);
-			System.setProperty("javax.net.ssl.keyStorePassword", "cloudflare");
-			Server.getPlugin().getLogger().info("Using trustStore located at " + trustStore);
-			System.setProperty("javax.net.ssl.trustStrore", trustStore);
-			System.setProperty("javax.net.ssl.trustStorePassword", "cloudflare");
-			SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-			server = (SSLServerSocket) ssf.createServerSocket(port);
+			server = new ServerSocket(port);
 			Server.getPlugin().getLogger().info("Top voters web server enabled on port " + port + ".");
 			new Thread(this).start();
 			running = true;

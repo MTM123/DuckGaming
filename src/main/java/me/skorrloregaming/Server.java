@@ -742,7 +742,7 @@ public class Server extends JavaPlugin implements Listener {
 		reload();
 		sessionManager = new SessionManager();
 		sessionManager.setup();
-		//topVotersHttpServer = new TopVotersHttpServer(getConfig().getInt("settings.topVotersHttpServerPort", 2096));
+		topVotersHttpServer = new TopVotersHttpServer(getConfig().getInt("settings.topVotersHttpServerPort", 2096));
 		CustomRecipes.loadRecipes();
 		getCommand("verify").setExecutor(new VerifyCmd());
 		getCommand("feed").setExecutor(new FeedCmd());
@@ -829,13 +829,13 @@ public class Server extends JavaPlugin implements Listener {
 			lockette.onDisable();
 		if (!(chatitem == null))
 			chatitem.onDisable();
-		/*try {
+		try {
 			topVotersHttpServer.server.close();
 			getLogger().info("Top voters web server disabled.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		topVotersHttpServer.stop();*/
+		topVotersHttpServer.stop();
 		for (Player player : Bukkit.getOnlinePlayers())
 			player.sendMessage(Link$.modernMsgPrefix + "Psst, the server is now updating; please be patient.");
 		for (Player player : Bukkit.getOnlinePlayers()) {
