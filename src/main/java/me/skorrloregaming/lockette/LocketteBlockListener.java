@@ -501,7 +501,7 @@ public class LocketteBlockListener implements Listener {
 				face = null;
 				type = 0;
 			}
-			if (face == BlockFace.NORTH) {
+			if (face == null) {
 				int lastType;
 				checkBlock[0] = block.getRelative(BlockFace.NORTH);
 				checkBlock[1] = block.getRelative(BlockFace.EAST);
