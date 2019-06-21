@@ -54,6 +54,7 @@ import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CrossbowMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
@@ -292,6 +293,47 @@ public class PlayerEventHandler implements Listener {
 	}
 
 	@EventHandler
+	public void onProjectileLaunch(ProjectileLaunchEvent event) {
+		if (event.getEntity().getShooter() instanceof Player) {
+			Player player = (Player) event.getEntity().getShooter();
+			if (event.getEntity() instanceof EnderPearl) {
+				if (Server.getDelayedTasks().contains(player.getUniqueId())) {
+					event.setCancelled(true);
+				} else {
+					Server.getDelayedTasks().add(player.getUniqueId());
+					Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+						@Override
+						public void run() {
+							Server.getDelayedTasks().remove(player.getUniqueId());
+						}
+					}, 7L);
+				}
+			} else if (event.getEntity() instanceof Arrow) {
+				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+
+					@Override
+					public void run() {
+						ItemStack mainHand = player.getInventory().getItemInMainHand();
+						if (mainHand.getType() == Material.CROSSBOW) {
+							CrossbowMeta crossBowMeta = (CrossbowMeta) mainHand.getItemMeta();
+							crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+							crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+							crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+							mainHand.setItemMeta(crossBowMeta);
+							player.getInventory().setItemInMainHand(mainHand);
+						}
+					}
+				}, 2l);
+				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+					public void run() {
+						Server.doReturnItem(player);
+					}
+				}, 5L);
+			}
+		}
+	}
+
+	@EventHandler
 	public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
 		Player player = event.getPlayer();
 		if (!$.isAuthenticated(player))
@@ -417,6 +459,36 @@ public class PlayerEventHandler implements Listener {
 		}
 		if (!$.isAuthenticated(player)) {
 			return;
+		}
+		if (Server.getSkyfight().containsKey(player.getUniqueId())) {
+			long minuteDiff = ((System.currentTimeMillis() - Server.getLastVoteTime()) / 1000) / 60;
+			if (event.getItem().getType() == Material.CROSSBOW)
+				if (minuteDiff > 5)
+					if (Link$.getDonorRankId(player) > -2) {
+						boolean hit = false;
+						for (UUID uuid : Server.getSkyfight().keySet()) {
+							Player otherPlayer = Bukkit.getPlayer(uuid);
+							if (Link$.getDonorRankId(player) < -1)
+								hit = true;
+						}
+						if (!hit) {
+							if (!Server.getDelayedTasks().contains(player.getUniqueId())) {
+								Server.getDelayedTasks().add(player.getUniqueId());
+								Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+									@Override
+									public void run() {
+										Server.getDelayedTasks().remove(player.getUniqueId());
+									}
+								}, 20L);
+								player.sendMessage($.Skyfight.tag + ChatColor.RED + "Sorry, you need a donor rank to use this item.");
+								player.sendMessage($.Skyfight.tag + ChatColor.RED + "Or during the 5 min grace period following a vote.");
+								player.sendMessage($.Skyfight.tag + ChatColor.RED + "This will also work if someone else online has it.");
+							}
+							event.setCancelled(true);
+							player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+							return;
+						}
+					}
 		}
 		ItemStack itm = event.getItem();
 		String subDomain = $.getMinigameDomain(player);

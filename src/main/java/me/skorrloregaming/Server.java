@@ -35,6 +35,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CrossbowMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
@@ -665,7 +666,9 @@ public class Server extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new BlockEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new PlayerEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new EntityEventHandler(), this);
-		if (getServerType() == ServerType.PaperSpigot)
+		ServerType serverType = getServerType();
+		getLogger().info("Detected " + serverType + " server type, handling accordingly..");
+		if (serverType == ServerType.PaperSpigot)
 			getServer().getPluginManager().registerEvents(new PaperEventHandler(), this);
 		if (getConfig().getBoolean("settings.bungeecord", false))
 			getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -1347,6 +1350,12 @@ public class Server extends JavaPlugin implements Listener {
 		int ran = random.nextInt(4);
 		ItemStack sword = Link$.createMaterial(Material.STONE_SWORD, ChatColor.GOLD + "The Forbidding Katana");
 		ItemStack bow = Link$.createMaterial(Material.BOW, ChatColor.GOLD + "The Forbidding Bow");
+		ItemStack crossBow = Link$.createMaterial(Material.CROSSBOW, ChatColor.GOLD + "The Forbidding Crossbow");
+		CrossbowMeta crossBowMeta = (CrossbowMeta) crossBow.getItemMeta();
+		crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+		crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+		crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+		crossBow.setItemMeta(crossBowMeta);
 		ItemStack arrow = Link$.createMaterial(Material.ARROW, 1, ChatColor.GOLD + "The Forbidding Darts");
 		ItemStack helmet = Link$.createMaterial(Material.LEATHER_HELMET, 1, ChatColor.GOLD + "The Forbidding Helmet");
 		ItemStack chestplate = Link$.createMaterial(Material.LEATHER_CHESTPLATE, ChatColor.GOLD + "The Forbidding Chestpeice");
@@ -1355,7 +1364,13 @@ public class Server extends JavaPlugin implements Listener {
 		bow = Link$.addEnchant(bow, new EnchantInfo(Enchantment.ARROW_KNOCKBACK, 5));
 		bow = Link$.addEnchant(bow, new EnchantInfo(Enchantment.ARROW_INFINITE, 1));
 		bow = Link$.addEnchant(bow, new EnchantInfo(Enchantment.KNOCKBACK, 5));
+		crossBow = Link$.addEnchant(crossBow, new EnchantInfo(Enchantment.ARROW_KNOCKBACK, 5));
+		crossBow = Link$.addEnchant(crossBow, new EnchantInfo(Enchantment.ARROW_INFINITE, 1));
+		crossBow = Link$.addEnchant(crossBow, new EnchantInfo(Enchantment.KNOCKBACK, 5));
+		crossBow = Link$.addEnchant(crossBow, new EnchantInfo(Enchantment.QUICK_CHARGE, 3));
+		crossBow = Link$.addEnchant(crossBow, new EnchantInfo(Enchantment.MULTISHOT, 1));
 		bow = Link$.setUnbreakable(bow, true);
+		crossBow = Link$.setUnbreakable(crossBow, true);
 		sword = Link$.addEnchant(sword, new EnchantInfo(Enchantment.KNOCKBACK, 5));
 		sword = Link$.setUnbreakable(sword, true);
 		helmet = Link$.setUnbreakable(helmet, true);
@@ -1380,6 +1395,7 @@ public class Server extends JavaPlugin implements Listener {
 		$.clearPlayer(player);
 		player.getInventory().setItem(0, sword);
 		player.getInventory().setItem(1, bow);
+		player.getInventory().setItem(2, crossBow);
 		player.getInventory().setItem(8, chestplate);
 		player.getInventory().setItem(9, arrow);
 		player.getInventory().setHelmet(helmet);
