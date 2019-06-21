@@ -472,11 +472,20 @@ public class PlayerEventHandler implements Listener {
 								hit = true;
 						}
 						if (!hit) {
+							if (!Server.getDelayedTasks().contains(player.getUniqueId())) {
+								Server.getDelayedTasks().add(player.getUniqueId());
+								Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+									@Override
+									public void run() {
+										Server.getDelayedTasks().remove(player.getUniqueId());
+									}
+								}, 20L);
+								player.sendMessage($.Skyfight.tag + ChatColor.RED + "Sorry, you need a donor rank to use this item.");
+								player.sendMessage($.Skyfight.tag + ChatColor.RED + "Or during the 5 min grace period following a vote.");
+								player.sendMessage($.Skyfight.tag + ChatColor.RED + "This will also work if someone else online has it.");
+								event.setCancelled(true);
+							}
 							player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-							player.sendMessage($.Skyfight.tag + ChatColor.RED + "Sorry, you need a donor rank to use this item.");
-							player.sendMessage($.Skyfight.tag + ChatColor.RED + "Or during the 5 min grace period following a vote.");
-							player.sendMessage($.Skyfight.tag + ChatColor.RED + "This will also work if someone else online has it.");
-							event.setCancelled(true);
 							return;
 						}
 					}
