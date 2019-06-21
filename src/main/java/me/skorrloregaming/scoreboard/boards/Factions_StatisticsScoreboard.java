@@ -18,8 +18,11 @@ public class Factions_StatisticsScoreboard implements DisposableScoreboard {
 	@Override
 	public void refreshScoreboard(Player player, boolean clearValues) {
 		if (Link$.isPluginEnabled("mcMMO")) {
-			if (com.gmail.nossr50.util.scoreboards.ScoreboardManager.isBoardShown(player.getName()))
-				return;
+			try {
+				if (com.gmail.nossr50.util.scoreboards.ScoreboardManager.isBoardShown(player.getName()))
+					return;
+			} catch (Exception ex) {
+			}
 		}
 		DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 		Hashtable<String, Integer> list = new Hashtable<String, Integer>();

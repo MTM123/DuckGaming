@@ -20,8 +20,11 @@ public class Skyblock_StatisticsScoreboard implements DisposableScoreboard {
 		}
 		uSkyBlockAPI api = (uSkyBlockAPI) Bukkit.getPluginManager().getPlugin("uSkyBlock");
 		if (Link$.isPluginEnabled("mcMMO")) {
-			if (com.gmail.nossr50.util.scoreboards.ScoreboardManager.isBoardShown(player.getName()))
-				return;
+			try {
+				if (com.gmail.nossr50.util.scoreboards.ScoreboardManager.isBoardShown(player.getName()))
+					return;
+			} catch (Exception ex) {
+			}
 		}
 		int members = 0, maxmembers = 0, level = 0;
 		try {
