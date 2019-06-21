@@ -2,7 +2,9 @@ package me.skorrloregaming.commands;
 
 import me.skorrloregaming.$;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.events.PlayerMinigameChangeEvent;
 import me.skorrloregaming.impl.ServerMinigame;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -48,6 +50,7 @@ public class HubCmd implements CommandExecutor {
 				$.teleport(player, hubLocation);
 				Server.getInstance().fetchLobby(player);
 				player.setAllowFlight(true);
+				Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.HUB));
 			}
 		}
 		return true;

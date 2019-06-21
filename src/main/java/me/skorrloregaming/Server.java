@@ -1007,7 +1007,6 @@ public class Server extends JavaPlugin implements Listener {
 	}
 
 	public int performBuggedLeave(Player player, boolean noRestore, boolean noLog) {
-		Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
 		int changes = 0;
 		int rawChanges = 0;
 		changes += leaveSkyfight(player, noLog);
@@ -1022,7 +1021,7 @@ public class Server extends JavaPlugin implements Listener {
 		rawChanges += changes;
 		if (changes > 0) {
 			$.clearPlayer(player);
-			Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.HUB));
+			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
 		}
 		return rawChanges;
 	}
