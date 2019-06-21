@@ -1353,6 +1353,8 @@ public class Server extends JavaPlugin implements Listener {
 		ItemStack crossBow = Link$.createMaterial(Material.CROSSBOW, ChatColor.GOLD + "The Forbidding Crossbow");
 		CrossbowMeta crossBowMeta = (CrossbowMeta) crossBow.getItemMeta();
 		crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+		crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+		crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
 		crossBow.setItemMeta(crossBowMeta);
 		ItemStack arrow = Link$.createMaterial(Material.ARROW, 1, ChatColor.GOLD + "The Forbidding Darts");
 		ItemStack helmet = Link$.createMaterial(Material.LEATHER_HELMET, 1, ChatColor.GOLD + "The Forbidding Helmet");

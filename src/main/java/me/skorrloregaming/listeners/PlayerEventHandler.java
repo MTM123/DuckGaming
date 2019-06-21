@@ -317,6 +317,8 @@ public class PlayerEventHandler implements Listener {
 						if (mainHand.getType() == Material.CROSSBOW) {
 							CrossbowMeta crossBowMeta = (CrossbowMeta) mainHand.getItemMeta();
 							crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+							crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+							crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
 							mainHand.setItemMeta(crossBowMeta);
 							player.getInventory().setItemInMainHand(mainHand);
 						}
