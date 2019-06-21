@@ -147,20 +147,16 @@ public class LockettePlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		player.sendMessage("Hit 1");
 		if (!$.validLocketteMinigames.contains($.getCurrentMinigame(player).toString().toLowerCase()))
 			return;
-		player.sendMessage("Hit 2");
 		if (!event.hasBlock())
 			return;
-		player.sendMessage("Hit 3");
 		Action action = event.getAction();
 		Block block = event.getClickedBlock();
 		Material type = block.getType();
 		BlockFace face = event.getBlockFace();
 		ItemStack item;
 		if (action == Action.RIGHT_CLICK_BLOCK) {
-			player.sendMessage("Hit 4");
 			if ((Lockette.protectTrapDoors) && (BlockUtil.isInList(type, BlockUtil.materialListTrapDoors))) {
 				if (interactDoor(block, player))
 					return;
@@ -176,16 +172,13 @@ public class LockettePlayerListener implements Listener {
 				return;
 			}
 			if ($.isWallSign(type)) {
-				player.sendMessage("Hit 4.5");
 				interactSign(block, player);
 				return;
 			}
 			if (BlockUtil.isInList(type, BlockUtil.materialListNonDoors) || Lockette.isInList(type, Lockette.customBlockList)) {
-				player.sendMessage("Hit 5");
 				if (Lockette.directPlacement)
 					if (event.hasItem())
 						if ((face != BlockFace.UP) && (face != BlockFace.DOWN)) {
-							player.sendMessage("Hit 6");
 							item = event.getItem();
 							if ($.isPostSign(item.getType())) {
 								Block checkBlock = block.getRelative(face);
@@ -206,10 +199,10 @@ public class LockettePlayerListener implements Listener {
 							}
 						}
 				if (interactContainer(block, player)) {
-					player.sendMessage("Hit 7.5");
+					player.sendMessage("Sign not found");
 					return;
 				}
-				player.sendMessage("Hit 8");
+				player.sendMessage("Sign found, cancelling event");
 				event.setUseInteractedBlock(Result.DENY);
 				event.setUseItemInHand(Result.DENY);
 				return;
