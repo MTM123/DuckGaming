@@ -28,8 +28,6 @@ public class ReloadConfigCmd implements CommandExecutor {
 		LinkServer.getInstance().getGeolocationCache().reloadData();
 		Server.getSessionManager().sessionConfig.reloadData();
 		Server.getMonthlyVoteConfig().reloadData();
-		if (PerWorldPlugin.instance != null)
-			PerWorldPlugin.instance.reload();
 		if (!(Server.getInstance().chatitem == null))
 			ChatItem.reload(null);
 		Server.getInstance().garbageCollector.run();

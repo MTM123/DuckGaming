@@ -50,7 +50,6 @@ import java.util.concurrent.ConcurrentMap;
 
 public class Server extends JavaPlugin implements Listener {
 
-	public PerWorldPlugin perWorldPlugins;
 	public TopVotersHttpServer topVotersHttpServer = null;
 	public PingInjector pingInjector;
 	public Lockette lockette = null;
@@ -640,10 +639,6 @@ public class Server extends JavaPlugin implements Listener {
 		spawnerPrices.put(6, 4500);
 		spawnerPrices.put(7, 3000);
 		spawnerPrices.put(8, 3000);
-		if (!Link$.isPluginLoaded("ploader") && !CraftGo.Minecraft.getPackageVersion().startsWith("v1_14")) {
-			perWorldPlugins = new PerWorldPlugin();
-			perWorldPlugins.onLoad();
-		}
 	}
 
 	@Override
@@ -715,10 +710,6 @@ public class Server extends JavaPlugin implements Listener {
 				if (Link$.isPluginEnabled("Factions")) {
 					factionsListener = new Factions_Listener();
 					factionsListener.register();
-				}
-				if (!Link$.isPluginLoaded("ploader") && !CraftGo.Minecraft.getPackageVersion().equals("v1_14_R1")) {
-					if (perWorldPlugins != null)
-						perWorldPlugins.onEnable();
 				}
 				for (Player player : Bukkit.getOnlinePlayers())
 					player.sendMessage(Link$.modernMsgPrefix + "Psst, did you know the server finished updating?");
