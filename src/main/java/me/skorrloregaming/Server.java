@@ -1015,14 +1015,15 @@ public class Server extends JavaPlugin implements Listener {
 		if (!USE_FACTIONS_AS_HUB)
 			changes += factionsLeaveReturnValue;
 		rawChanges += factionsLeaveReturnValue;
-		changes += changes += leaveCreative(player, noRestore, noLog);
+		changes += leaveCreative(player, noRestore, noLog);
 		changes += leaveSurvival(player, noRestore, noLog);
 		changes += leaveKitpvp(player, noRestore, noLog);
 		changes += leaveSkyblock(player, noRestore, noLog);
 		rawChanges += changes;
-		if (changes > 0)
+		if (changes > 0) {
 			$.clearPlayer(player);
-		Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.HUB));
+			Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.HUB));
+		}
 		return rawChanges;
 	}
 
