@@ -5,7 +5,7 @@ author: "Speentie8081"
 depend: [WorldEdit, WorldGuard, SkorrloreGamingLink]
 softdepend: [AuthMe, ProtocolSupport, ProtocolLib, ProtocolSupportPocketStuff, mcMMO, Vault, ploader]
 loadbefore: [ChestShop, Factions]
-api-version: 1.13
+api-version: 1.14
 commands:
     verify:
         description: Verify your minecraft account on discord
