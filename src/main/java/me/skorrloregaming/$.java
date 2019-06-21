@@ -732,9 +732,9 @@ public class $ {
 		return false;
 	}
 
-	public static ServerMinigame getLastMinigame(Player player) {
-		if (Server.getPlugin().getConfig().contains("config." + player.getUniqueId().toString() + ".lastMinigame")) {
-			String minigameLower = Server.getPlugin().getConfig().getString("config." + player.getUniqueId().toString() + ".lastMinigame");
+	public static ServerMinigame getLastMinigame(UUID uuid) {
+		if (Server.getPlugin().getConfig().contains("config." + uuid.toString() + ".lastMinigame")) {
+			String minigameLower = Server.getPlugin().getConfig().getString("config." + uuid.toString() + ".lastMinigame");
 			return ServerMinigame.valueOf(minigameLower.toUpperCase());
 		}
 		return ServerMinigame.UNKNOWN;
