@@ -1366,6 +1366,7 @@ public class Server extends JavaPlugin implements Listener {
 		crossBow = Link$.addEnchant(crossBow, new EnchantInfo(Enchantment.ARROW_INFINITE, 1));
 		crossBow = Link$.addEnchant(crossBow, new EnchantInfo(Enchantment.KNOCKBACK, 5));
 		crossBow = Link$.addEnchant(crossBow, new EnchantInfo(Enchantment.QUICK_CHARGE, 3));
+		crossBow = Link$.addEnchant(crossBow, new EnchantInfo(Enchantment.MULTISHOT, 1));
 		bow = Link$.setUnbreakable(bow, true);
 		crossBow = Link$.setUnbreakable(crossBow, true);
 		sword = Link$.addEnchant(sword, new EnchantInfo(Enchantment.KNOCKBACK, 5));
