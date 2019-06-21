@@ -483,8 +483,8 @@ public class PlayerEventHandler implements Listener {
 								player.sendMessage($.Skyfight.tag + ChatColor.RED + "Sorry, you need a donor rank to use this item.");
 								player.sendMessage($.Skyfight.tag + ChatColor.RED + "Or during the 5 min grace period following a vote.");
 								player.sendMessage($.Skyfight.tag + ChatColor.RED + "This will also work if someone else online has it.");
-								event.setCancelled(true);
 							}
+							event.setCancelled(true);
 							player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
 							return;
 						}
