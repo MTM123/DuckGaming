@@ -198,11 +198,8 @@ public class LockettePlayerListener implements Listener {
 								}
 							}
 						}
-				if (interactContainer(block, player)) {
-					player.sendMessage("Sign not found");
+				if (interactContainer(block, player))
 					return;
-				}
-				player.sendMessage("Sign found, cancelling event");
 				event.setUseInteractedBlock(Result.DENY);
 				event.setUseItemInHand(Result.DENY);
 				return;

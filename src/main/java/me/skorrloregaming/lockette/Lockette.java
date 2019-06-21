@@ -794,11 +794,8 @@ public class Lockette {
 	}
 
 	public static Block findBlockOwner(Block block, Block ignoreBlock, boolean iterateFurther) {
-		Collection<Player> playersNearby = block.getWorld().getNearbyPlayers(block.getLocation(), 5);
-		if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 1");
 		if (block == null)
 			return null;
-		if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 2");
 		Material type = block.getType();
 		Location ignore;
 		if (ignoreBlock != null)
@@ -806,7 +803,6 @@ public class Lockette {
 		else
 			ignore = null;
 		if (BlockUtil.isInList(type, BlockUtil.materialListChests)) {
-			if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 3");
 			return (findBlockOwnerBase(block, ignore, true, false, false, false, false));
 		}
 		if (BlockUtil.isInList(type, BlockUtil.materialListTools) || Lockette.isInList(type, Lockette.customBlockList)) {
@@ -882,11 +878,9 @@ public class Lockette {
 	}
 
 	public static Block findBlockOwnerBase(Block block, Location ignore, boolean iterate, boolean iterateUp, boolean iterateDown, boolean includeEnds, boolean iterateFurther) {
-		Collection<Player> playersNearby = block.getWorld().getNearbyPlayers(block.getLocation(), 5);
 		Block checkBlock;
 		Material type;
 		boolean doCheck;
-		if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 4");
 		if (iterateUp) {
 			checkBlock = block.getRelative(BlockFace.UP);
 			type = checkBlock.getType();
@@ -913,7 +907,6 @@ public class Lockette {
 		}
 		checkBlock = block.getRelative(BlockFace.NORTH);
 		if ($.isWallSign(checkBlock.getType())) {
-			if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 5");
 			if (ignore == null)
 				doCheck = true;
 			else if (checkBlock.getLocation().equals(ignore))
@@ -922,7 +915,6 @@ public class Lockette {
 				doCheck = true;
 			if (doCheck) {
 				Sign sign = (Sign) checkBlock.getState();
-				if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 6");
 				String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
 				if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate))
 					return (checkBlock);
@@ -935,7 +927,6 @@ public class Lockette {
 			}
 		checkBlock = block.getRelative(BlockFace.EAST);
 		if ($.isWallSign(checkBlock.getType())) {
-			if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 5");
 			if (ignore == null)
 				doCheck = true;
 			else if (checkBlock.getLocation().equals(ignore))
@@ -944,7 +935,6 @@ public class Lockette {
 				doCheck = true;
 			if (doCheck) {
 				Sign sign = (Sign) checkBlock.getState();
-				if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 6");
 				String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
 				if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate))
 					return (checkBlock);
@@ -957,7 +947,6 @@ public class Lockette {
 			}
 		checkBlock = block.getRelative(BlockFace.SOUTH);
 		if ($.isWallSign(checkBlock.getType())) {
-			if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 5");
 			if (ignore == null)
 				doCheck = true;
 			else if (checkBlock.getLocation().equals(ignore))
@@ -966,7 +955,6 @@ public class Lockette {
 				doCheck = true;
 			if (doCheck) {
 				Sign sign = (Sign) checkBlock.getState();
-				if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 6");
 				String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
 				if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate))
 					return (checkBlock);
@@ -979,7 +967,6 @@ public class Lockette {
 			}
 		checkBlock = block.getRelative(BlockFace.WEST);
 		if ($.isWallSign(checkBlock.getType())) {
-			if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 5");
 			if (ignore == null)
 				doCheck = true;
 			else if (checkBlock.getLocation().equals(ignore))
@@ -988,7 +975,6 @@ public class Lockette {
 				doCheck = true;
 			if (doCheck) {
 				Sign sign = (Sign) checkBlock.getState();
-				if (playersNearby.size() > 0) playersNearby.toArray(new Player[0])[0].sendMessage("Hit 6");
 				String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
 				if (text.equals("[private]") || text.equalsIgnoreCase(altPrivate))
 					return (checkBlock);
