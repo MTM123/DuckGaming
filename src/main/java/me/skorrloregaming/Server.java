@@ -1313,12 +1313,6 @@ public class Server extends JavaPlugin implements Listener {
 			noRestore = true;
 			noLog = true;
 		}
-		ServerMinigame minigame = $.getCurrentMinigame(player);
-		if (!(minigame == ServerMinigame.SKYFIGHT)) {
-			int changes = performBuggedLeave(player, noRestore, noLog);
-			if (changes == 0 && !(minigame == ServerMinigame.HUB || minigame == ServerMinigame.UNKNOWN))
-				return;
-		}
 		if (hub.contains(player.getUniqueId())) {
 			hub.remove(player.getUniqueId());
 			$.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);
@@ -1327,6 +1321,12 @@ public class Server extends JavaPlugin implements Listener {
 		boolean initialConnect = false;
 		if (!skyfight.containsKey(player.getUniqueId())) {
 			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.SKYFIGHT));
+			ServerMinigame minigame = $.getCurrentMinigame(player);
+			if (!(minigame == ServerMinigame.SKYFIGHT)) {
+				int changes = performBuggedLeave(player, noRestore, noLog);
+				if (changes == 0 && !(minigame == ServerMinigame.HUB || minigame == ServerMinigame.UNKNOWN))
+					return;
+			}
 			skyfight.put(player.getUniqueId(), new $.Skyfight.Player(player));
 			initialConnect = true;
 			if (!noLog) {
