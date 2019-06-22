@@ -3,6 +3,7 @@ package me.skorrloregaming.commands;
 import me.skorrloregaming.$;
 import me.skorrloregaming.Server;
 import me.skorrloregaming.events.PlayerMinigameChangeEvent;
+import me.skorrloregaming.events.PlayerPreMinigameChangeEvent;
 import me.skorrloregaming.impl.ServerMinigame;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,6 +31,7 @@ public class HubCmd implements CommandExecutor {
 		boolean perform = false;
 		if (Server.getInstance().performBuggedLeave(player, !save, false) > 0) {
 			perform = true;
+			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
 		} else if (minigame == ServerMinigame.HUB || minigame == ServerMinigame.UNKNOWN || (minigame == ServerMinigame.FACTIONS && Server.getUseFactionsAsHub())) {
 			perform = true;
 		}

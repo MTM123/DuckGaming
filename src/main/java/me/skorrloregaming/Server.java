@@ -1019,10 +1019,8 @@ public class Server extends JavaPlugin implements Listener {
 		changes += leaveKitpvp(player, noRestore, noLog);
 		changes += leaveSkyblock(player, noRestore, noLog);
 		rawChanges += changes;
-		if (changes > 0) {
+		if (changes > 0)
 			$.clearPlayer(player);
-			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
-		}
 		return rawChanges;
 	}
 
