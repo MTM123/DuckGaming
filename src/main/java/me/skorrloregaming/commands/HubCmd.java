@@ -29,9 +29,11 @@ public class HubCmd implements CommandExecutor {
 			save = false;
 		ServerMinigame minigame = $.getCurrentMinigame(player);
 		boolean perform = false;
-		if (Server.getInstance().performBuggedLeave(player, !save, false) > 0) {
-			perform = true;
+		if (!($.getCurrentMinigame(player) == ServerMinigame.HUB) && !($.getCurrentMinigame(player) == ServerMinigame.UNKNOWN))
 			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
+		int changes = 0;
+		if ((changes = Server.getInstance().performBuggedLeave(player, !save, false)) > 0) {
+			perform = true;
 		} else if (minigame == ServerMinigame.HUB || minigame == ServerMinigame.UNKNOWN || (minigame == ServerMinigame.FACTIONS && Server.getUseFactionsAsHub())) {
 			perform = true;
 		}
@@ -52,7 +54,8 @@ public class HubCmd implements CommandExecutor {
 				$.teleport(player, hubLocation);
 				Server.getInstance().fetchLobby(player);
 				player.setAllowFlight(true);
-				Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.HUB));
+				if (changes > 0)
+					Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.HUB));
 			}
 		}
 		return true;

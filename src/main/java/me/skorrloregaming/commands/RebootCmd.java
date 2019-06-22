@@ -2,6 +2,8 @@ package me.skorrloregaming.commands;
 
 import me.skorrloregaming.*;
 import me.skorrloregaming.discord.Channel;
+import me.skorrloregaming.events.PlayerPreMinigameChangeEvent;
+import me.skorrloregaming.impl.ServerMinigame;
 import me.skorrloregaming.redis.MapBuilder;
 import me.skorrloregaming.redis.RedisChannel;
 import org.bukkit.Bukkit;
@@ -45,7 +47,13 @@ public class RebootCmd implements CommandExecutor {
 										Server.getInstance().performBuggedLeave(player, false, true);
 										player.kickPlayer(Server.getPluginName() + ChatColor.AQUA + " " + '\u00BB' + " " + ChatColor.RESET + "Server restarting, please rejoin soon.");
 									}
-									Bukkit.shutdown();
+									Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+
+										@Override
+										public void run() {
+											Bukkit.shutdown();
+										}
+									}, 20L);
 								}
 							});
 						}

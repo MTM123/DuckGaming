@@ -12,6 +12,7 @@ import me.skorrloregaming.commands.TrailsCmd;
 import me.skorrloregaming.commands.UpgradeKitCmd;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.events.PlayerAuthenticateEvent;
+import me.skorrloregaming.events.PlayerPreMinigameChangeEvent;
 import me.skorrloregaming.impl.*;
 import me.skorrloregaming.impl.Switches.SwitchIntDouble;
 import me.skorrloregaming.impl.Switches.SwitchUUIDString;
@@ -1743,6 +1744,7 @@ public class PlayerEventHandler implements Listener {
 		if (Server.getHubScoreboardTitleIndex().containsKey(player.getUniqueId())) {
 			Server.getHubScoreboardTitleIndex().remove(player.getUniqueId());
 		}
+		Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
 		Server.getInstance().performBuggedLeave(player, false, false);
 		if (Server.getUseFactionsAsHub()) {
 			Server.getInstance().enterFactions(player, false, true);
