@@ -1269,7 +1269,7 @@ public class Server extends JavaPlugin implements Listener {
 						, Channel.SERVER_CHAT);
 			}
 			player.setAllowFlight(false);
-			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.SURVIVAL));
+			Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.SURVIVAL));
 		}
 	}
 
