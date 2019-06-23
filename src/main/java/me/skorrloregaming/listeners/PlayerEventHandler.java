@@ -2548,7 +2548,7 @@ public class PlayerEventHandler implements Listener {
 				String name = String.valueOf(((InventoryMenu) event.getInventory().getHolder()).getData());
 				Material material = null;
 				int amount = 0;
-				int price = 0;
+				double price = 0.0;
 				int data = 0;
 				String code = player.getWorld().getName() + ";" + name;
 				if (name.contains(";")) {
@@ -2585,25 +2585,25 @@ public class PlayerEventHandler implements Listener {
 				}
 				DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 				int singleAmount = 1;
-				int singlePrice = (int) $.getSinglePricing(amount, price);
+				double singlePrice = $.getSinglePricing(amount, price);
 				String materialName = Link$.formatMaterial(material);
 				ItemStack item = new ItemStack(material, singleAmount, (short) data);
 				if (material == Material.SPAWNER)
 					item = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), singleAmount);
-				int totalPrice = 0;
+				double totalPrice = 0;
 				int totalAmount = 0;
 				for (ItemStack itm : event.getInventory().getContents()) {
 					if (!(itm == null)) {
 						if (item.getType() == itm.getType()) {
 							if (item.getDurability() == itm.getDurability()) {
-								int givenPrice = singlePrice * itm.getAmount();
+								double givenPrice = singlePrice * itm.getAmount();
 								totalPrice = totalPrice + givenPrice;
 								totalAmount = totalAmount + itm.getAmount();
 							}
 						}
 					}
 				}
-				EconManager.depositCash(player, totalPrice, $.getMinigameDomain(player));
+				EconManager.depositCash(player, (int) Math.floor(totalPrice), $.getMinigameDomain(player));
 				if (totalAmount > 0) {
 					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Sold " + ChatColor.RED + materialName + " x" + totalAmount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(totalPrice));
 				}

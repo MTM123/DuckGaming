@@ -345,8 +345,8 @@ public class $ {
 		return parts.length == 4 && Arrays.stream(parts).filter($::isStringNumeric).map(Integer::parseInt).filter(i -> i <= 255 && i >= 0).count() == 4;
 	}
 
-	public static long getSinglePricing(double shopAmount, double shopPrice) {
-		return Math.round(shopPrice / shopAmount);
+	public static double getSinglePricing(double shopAmount, double shopPrice) {
+		return shopPrice / shopAmount;
 	}
 
 	public static ChatColor getRainbowColor(int rainboxIndex) {
