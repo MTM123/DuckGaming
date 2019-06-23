@@ -894,6 +894,10 @@ public class $ {
 		}
 	}
 
+	public static Object getGriefPrevention() {
+		return Bukkit.getPluginManager().getPlugin("GriefPrevention");
+	}
+
 	public static Object getWorldGuard() {
 		return Bukkit.getPluginManager().getPlugin("WorldGuard");
 	}
@@ -904,6 +908,9 @@ public class $ {
 
 	public static boolean isWithinSystemClaimedLand(Location location) {
 		int size = 0;
+		if (getGriefPrevention() != null) {
+			size = me.skorrloregaming.GriefPreventionAPI.getClaimAtLocation(location) != null ? 1 : 0;
+		}
 		if (getWorldGuard() != null) {
 			size = me.skorrloregaming.WorldGuardAPI.getApplicableRegionsSetSize(location);
 		}

@@ -219,5 +219,10 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.9</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.TechFortress</groupId>
+			<artifactId>GriefPrevention</artifactId>
+			<version>16.7.1</version>
+		</dependency>
 	</dependencies>
 </project>

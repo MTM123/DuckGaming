@@ -3,7 +3,7 @@ name: SkorrloreGaming
 version: 3.0-SNAPSHOT
 author: "Speentie8081"
 depend: [WorldEdit, WorldGuard, SkorrloreGamingLink]
-softdepend: [AuthMe, ProtocolSupport, ProtocolLib, ProtocolSupportPocketStuff, mcMMO, Vault, ploader]
+softdepend: [AuthMe, ProtocolSupport, ProtocolLib, ProtocolSupportPocketStuff, GriefPrevention, mcMMO, Vault, ploader]
 loadbefore: [ChestShop, Factions]
 api-version: 1.14
 commands:
