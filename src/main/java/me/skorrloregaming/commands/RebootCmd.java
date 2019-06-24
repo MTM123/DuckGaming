@@ -44,6 +44,7 @@ public class RebootCmd implements CommandExecutor {
 								@Override
 								public void run() {
 									for (Player player : Bukkit.getOnlinePlayers()) {
+										Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
 										Server.getInstance().performBuggedLeave(player, false, true);
 										player.kickPlayer(Server.getPluginName() + ChatColor.AQUA + " " + '\u00BB' + " " + ChatColor.RESET + "Server restarting, please rejoin soon.");
 									}
