@@ -12,6 +12,7 @@ import me.skorrloregaming.commands.TrailsCmd;
 import me.skorrloregaming.commands.UpgradeKitCmd;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.events.PlayerAuthenticateEvent;
+import me.skorrloregaming.events.PlayerMinigameChangeEvent;
 import me.skorrloregaming.events.PlayerPreMinigameChangeEvent;
 import me.skorrloregaming.impl.*;
 import me.skorrloregaming.impl.Switches.SwitchIntDouble;
@@ -1540,6 +1541,7 @@ public class PlayerEventHandler implements Listener {
 		player.addAttachment(Server.getPlugin(), "usb.biome.*", true);
 		CraftGo.Player.setPlayerListHeaderFooter(player, "SkorrloreGaming", "play.skorrloregaming.com");
 		CraftGo.Player.sendTimedTitleAndSubtitle(player, new TitleSubtitle("SkorrloreGaming", "Welcome to our minecraft server.", 10, 40, 5));
+		Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.HUB));
 		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
