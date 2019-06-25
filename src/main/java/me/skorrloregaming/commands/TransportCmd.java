@@ -26,7 +26,7 @@ public class TransportCmd implements CommandExecutor {
 			player.performCommand("store");
 			return true;
 		}
-		int invSize = 36;
+		int invSize = 45;
 		if (CraftGo.Player.isPocketPlayer(player))
 			invSize = 54;
 		if (args.length == 0) {
