@@ -7,6 +7,8 @@ softdepend: [AuthMe, ProtocolSupport, ProtocolLib, ProtocolSupportPocketStuff, G
 loadbefore: [ChestShop, Factions]
 api-version: 1.14
 commands:
+    transport:
+        description: Transport items between minigames with a donor rank
     verify:
         description: Verify your minecraft account on discord
     feed:
