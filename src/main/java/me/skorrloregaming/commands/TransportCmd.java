@@ -2,6 +2,7 @@ package me.skorrloregaming.commands;
 
 import me.skorrloregaming.*;
 import me.skorrloregaming.impl.InventoryType;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -39,12 +40,11 @@ public class TransportCmd implements CommandExecutor {
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "There is no inventory stored for that minigame.");
 			return true;
 		}
-		Inventory transportInventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.TRANSPORT, minigame), invSize);
+		Inventory transportInventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.TRANSPORT, minigame), invSize, "Inventory of " + player.getName() + " from " + WordUtils.capitalize(minigame));
 		for (int i = 0; i < contents.length; i++)
 			transportInventory.setItem(i, contents[i]);
 		player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 		player.openInventory(transportInventory);
-		player.sendMessage(contents.length + ""); // TODO: Remove debug
 		return true;
 	}
 
