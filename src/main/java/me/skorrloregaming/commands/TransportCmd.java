@@ -37,7 +37,7 @@ public class TransportCmd implements CommandExecutor {
 		String minigame = args[0].toLowerCase();
 		ItemStack[] contents = SolidStorage.restoreInventoryToArray(player, minigame);
 		if (contents == null) {
-			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "There is no inventory stored for that minigame.");
+			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "There is nothing stored for that minigame.");
 			return true;
 		}
 		Inventory transportInventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.TRANSPORT, minigame), invSize, "Inventory of " + player.getName() + " from " + WordUtils.capitalize(minigame));
