@@ -63,6 +63,12 @@ public class TopVotersHttpServer implements Runnable {
 				sb.append("<!DOCTYPE html>");
 				sb.append("<html>");
 				sb.append("<head>");
+				sb.append("<script>");
+				sb.append("function resize() {");
+				sb.append("	   var height = document.getElementsByTagName('html')[0].scrollHeight;");
+				sb.append("	   window.parent.postMessage(['setHeight', height], '*');");
+				sb.append("}");
+				sb.append("</script>");
 				sb.append("<style>");
 				sb.append("th, td {");
 				sb.append("margin: 0;");
@@ -71,7 +77,7 @@ public class TopVotersHttpServer implements Runnable {
 				sb.append("}");
 				sb.append("</style>");
 				sb.append("</head>");
-				sb.append("<body style=\"margin: 0; padding: 0;\">");
+				sb.append("<body style=\"margin: 0; padding: 0;\" onLoad='resize();'>");
 				sb.append("<table style=\"width: 100%;\">");
 				sb.append("<caption>Summed total of votes from all websites</caption>");
 				sb.append("<tr>");
