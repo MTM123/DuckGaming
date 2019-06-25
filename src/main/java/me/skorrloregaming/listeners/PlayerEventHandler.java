@@ -2540,6 +2540,17 @@ public class PlayerEventHandler implements Listener {
 			return;
 		}
 		if (event.getInventory().getHolder() instanceof InventoryMenu)
+			if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.TRANSPORT)) {
+				String transportMinigame = (String) ((InventoryMenu) event.getInventory().getHolder()).getData();
+				try {
+					SolidStorage.saveInventoryFromArray(player, Arrays.copyOf(event.getInventory().getContents(), 41), transportMinigame);
+					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "The transport has been completed.");
+				} catch (Exception e) {
+					e.printStackTrace();
+					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "An error occurred during inventory save.");
+				}
+			}
+		if (event.getInventory().getHolder() instanceof InventoryMenu)
 			if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.SKYFIGHT_TEAMS)) {
 				if (Server.getSkyfight().containsKey(player.getUniqueId())) {
 					Server.getSkyfight().get(player.getUniqueId()).setHasTeamSelectionGuiOpen(false);

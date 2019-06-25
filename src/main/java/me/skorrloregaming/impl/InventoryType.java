@@ -14,5 +14,6 @@ public class InventoryType {
 	public static final String SPAWNER_UPGRADES = "spawner_upgrades";
 	public static final String SPAWNER_SHOP = "spawner_shop";
 	public static final String WARNINGS = "warnings";
+	public static final String TRANSPORT = "transport";
 	public static final String TEMPORARY = "temporary";
 }

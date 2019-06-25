@@ -817,6 +817,7 @@ public class Server extends JavaPlugin implements Listener {
 		getCommand("balance").setExecutor(new BalanceCmd());
 		getCommand("pay").setExecutor(new PayCmd());
 		getCommand("suicide").setExecutor(new SuicideCmd());
+		getCommand("transport").setExecutor(new TransportCmd());
 	}
 
 	@Override

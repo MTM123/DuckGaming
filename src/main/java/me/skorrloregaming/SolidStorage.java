@@ -97,6 +97,15 @@ public class SolidStorage {
 		c.save(invFile);
 	}
 
+	public static void saveInventoryFromArray(Player player, ItemStack[] contents, String data) throws Exception {
+		String folder = getDataFolder() + File.separator + "Inventory";
+		String file = player.getUniqueId().toString() + "_" + data + ".yml";
+		File invFile = new File(folder, file);
+		YamlConfiguration c = new YamlConfiguration();
+		c.set("inventory.content", contents);
+		c.save(invFile);
+	}
+
 	public static boolean restoreInventory(Player player, String data) {
 		String folder = getDataFolder() + File.separator + "Inventory";
 		String file = player.getUniqueId().toString() + "_" + data + ".yml";
@@ -111,6 +120,21 @@ public class SolidStorage {
 		} else {
 			System.out.println("SolidStorage: Failed to restore inventory to player " + player.getName());
 			return false;
+		}
+	}
+
+	public static ItemStack[] restoreInventoryToArray(Player player, String data) {
+		String folder = getDataFolder() + File.separator + "Inventory";
+		String file = player.getUniqueId().toString() + "_" + data + ".yml";
+		File invFile = new File(folder, file);
+		if (invFile.exists()) {
+			YamlConfiguration c = YamlConfiguration.loadConfiguration(invFile);
+			@SuppressWarnings("unchecked")
+			ItemStack[] content = ((List<ItemStack>) c.get("inventory.content")).toArray(new ItemStack[0]);
+			return content;
+		} else {
+			System.out.println("SolidStorage: Failed to restore inventory to player " + player.getName());
+			return null;
 		}
 	}
 
