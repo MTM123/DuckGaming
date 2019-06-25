@@ -136,7 +136,6 @@ public class TopVotersHttpServer implements Runnable {
 				Socket socket = server.accept();
 				byte[] messageBytes = new byte[8192];
 				socket.getInputStream().read(messageBytes);
-				System.out.print(new String(messageBytes));
 				TopVotersHttpClient client = new TopVotersHttpClient(socket);
 				client.bind();
 			} catch (Exception e) {
