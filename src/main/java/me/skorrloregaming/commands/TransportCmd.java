@@ -2,6 +2,7 @@ package me.skorrloregaming.commands;
 
 import me.skorrloregaming.*;
 import me.skorrloregaming.impl.InventoryType;
+import me.skorrloregaming.impl.ServerMinigame;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,6 +36,14 @@ public class TransportCmd implements CommandExecutor {
 			return true;
 		}
 		String minigame = args[0].toLowerCase();
+		if (minigame.equals("creative") || $.getCurrentMinigame(player) == ServerMinigame.CREATIVE) {
+			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot transport to/from Creative.");
+			return true;
+		}
+		if (minigame.equals("kitpvp") || $.getCurrentMinigame(player) == ServerMinigame.KITPVP) {
+			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot transport to/from Kitpvp.");
+			return true;
+		}
 		ItemStack[] contents = SolidStorage.restoreInventoryToArray(player, minigame);
 		if (contents == null) {
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "There is nothing stored for that minigame.");
