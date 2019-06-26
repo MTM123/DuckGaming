@@ -36,7 +36,7 @@ public class TransportCmd implements CommandExecutor {
 			return true;
 		}
 		String minigame = args[0].toLowerCase();
-		if (!$.validTransportMinigames.contains(minigame)) {
+		if (!$.validTransportMinigames.contains(minigame) || !$.validTransportMinigames.contains($.getCurrentMinigame(player).toString().toLowerCase())) {
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot transport to/from " + WordUtils.capitalize(minigame) + ".");
 			return true;
 		}
