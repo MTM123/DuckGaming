@@ -1352,6 +1352,7 @@ public class Server extends JavaPlugin implements Listener {
 		ItemStack sword = Link$.createMaterial(Material.STONE_SWORD, ChatColor.GOLD + "The Forbidding Katana");
 		ItemStack bow = Link$.createMaterial(Material.BOW, ChatColor.GOLD + "The Forbidding Bow");
 		ItemStack crossBow = Link$.createMaterial(Material.CROSSBOW, ChatColor.GOLD + "The Forbidding Crossbow");
+		ItemStack trident = Link$.createMaterial(Material.TRIDENT, ChatColor.GOLD + "The Forbidding Trident");
 		CrossbowMeta crossBowMeta = (CrossbowMeta) crossBow.getItemMeta();
 		crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
 		crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
@@ -1372,6 +1373,7 @@ public class Server extends JavaPlugin implements Listener {
 		crossBow = Link$.addEnchant(crossBow, new EnchantInfo(Enchantment.MULTISHOT, 1));
 		bow = Link$.setUnbreakable(bow, true);
 		crossBow = Link$.setUnbreakable(crossBow, true);
+		trident = Link$.setUnbreakable(trident, true);
 		sword = Link$.addEnchant(sword, new EnchantInfo(Enchantment.KNOCKBACK, 5));
 		sword = Link$.setUnbreakable(sword, true);
 		helmet = Link$.setUnbreakable(helmet, true);
@@ -1397,6 +1399,7 @@ public class Server extends JavaPlugin implements Listener {
 		player.getInventory().setItem(0, sword);
 		player.getInventory().setItem(1, bow);
 		player.getInventory().setItem(2, crossBow);
+		player.getInventory().setItem(3, trident);
 		player.getInventory().setItem(8, chestplate);
 		player.getInventory().setItem(9, arrow);
 		player.getInventory().setHelmet(helmet);
