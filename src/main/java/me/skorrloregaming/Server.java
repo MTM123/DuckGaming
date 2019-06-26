@@ -1410,7 +1410,7 @@ public class Server extends JavaPlugin implements Listener {
 		player.getInventory().setBoots(boots);
 		player.updateInventory();
 		Location teleportLocation = $.getZoneLocation("skyfight" + ran);
-		teleportLocation.getWorld().setThundering(true);
+		teleportLocation.getWorld().setStorm(true);
 		if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
 			if (teleportLocation.distance(player.getLocation()) > 0.1) {
 				$.teleport(player, teleportLocation);

@@ -36,16 +36,8 @@ public class TransportCmd implements CommandExecutor {
 			return true;
 		}
 		String minigame = args[0].toLowerCase();
-		if (minigame.equals("creative") || $.getCurrentMinigame(player) == ServerMinigame.CREATIVE) {
-			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot transport to/from Creative.");
-			return true;
-		}
-		if (minigame.equals("kitpvp") || $.getCurrentMinigame(player) == ServerMinigame.KITPVP) {
-			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot transport to/from Kitpvp.");
-			return true;
-		}
-		if (minigame.equals("skyfight") || $.getCurrentMinigame(player) == ServerMinigame.SKYFIGHT) {
-			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot transport to/from Skyfight.");
+		if (!$.validTransportMinigames.contains(minigame)) {
+			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot transport to/from " + WordUtils.capitalize(minigame) + ".");
 			return true;
 		}
 		ItemStack[] contents = SolidStorage.restoreInventoryToArray(player, minigame);

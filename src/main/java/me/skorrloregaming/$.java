@@ -51,6 +51,7 @@ public class $ {
 	public static List<String> validEconomyMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "skyblock"});
 	public static List<String> validLocketteMinigames = Arrays.asList(new String[]{"skyblock", "factions"});
 	public static List<String> validStairSeatMinigames = Arrays.asList(new String[]{"creative", "skyblock", "factions"});
+	public static List<String> validTransportMinigames = Arrays.asList(new String[]{"skyblock", "factions", "survival"});
 	public static List<String> scoreboardAutoUpdateMinigames = Arrays.asList(new String[]{"skyblock", "factions", "kitpvp"});
 	public static List<String> betaMinigames = Arrays.asList(new String[]{});
 	public static Kitpvp_LeaderboardScoreboard kitpvpLeaderboardScoreboard = new Kitpvp_LeaderboardScoreboard();
