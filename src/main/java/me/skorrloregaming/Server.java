@@ -1372,7 +1372,6 @@ public class Server extends JavaPlugin implements Listener {
 		crossBow = Link$.addEnchant(crossBow, new EnchantInfo(Enchantment.QUICK_CHARGE, 3));
 		crossBow = Link$.addEnchant(crossBow, new EnchantInfo(Enchantment.MULTISHOT, 1));
 		trident = Link$.addEnchant(trident, new EnchantInfo(Enchantment.LOYALTY, 3));
-		trident = Link$.addEnchant(trident, new EnchantInfo(Enchantment.RIPTIDE, 3));
 		trident = Link$.addEnchant(trident, new EnchantInfo(Enchantment.CHANNELING, 1));
 		bow = Link$.setUnbreakable(bow, true);
 		crossBow = Link$.setUnbreakable(crossBow, true);
