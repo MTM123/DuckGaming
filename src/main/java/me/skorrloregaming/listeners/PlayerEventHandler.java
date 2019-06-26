@@ -1094,7 +1094,11 @@ public class PlayerEventHandler implements Listener {
 			} else {
 				event.getEntity().remove();
 			}
-		}
+		} else if (event.getEntity() instanceof Trident)
+			if (event.getEntity().getShooter() instanceof Player)
+				if (event.getHitBlock() != null)
+					if (Server.getSkyfight().containsKey(((Player) event.getEntity().getShooter()).getUniqueId()))
+						event.getEntity().remove();
 	}
 
 	@EventHandler
