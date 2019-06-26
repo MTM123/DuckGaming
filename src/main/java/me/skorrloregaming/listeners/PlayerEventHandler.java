@@ -461,36 +461,37 @@ public class PlayerEventHandler implements Listener {
 		if (!$.isAuthenticated(player)) {
 			return;
 		}
-		if (Server.getSkyfight().containsKey(player.getUniqueId())) {
-			long minuteDiff = ((System.currentTimeMillis() - Server.getLastVoteTime()) / 1000) / 60;
-			if (event.getItem().getType() == Material.CROSSBOW)
-				if (minuteDiff > 5)
-					if (Link$.getDonorRankId(player) > -2) {
-						boolean hit = false;
-						for (UUID uuid : Server.getSkyfight().keySet()) {
-							Player otherPlayer = Bukkit.getPlayer(uuid);
-							if (Link$.getDonorRankId(player) < -1)
-								hit = true;
-						}
-						if (!hit) {
-							if (!Server.getDelayedTasks().contains(player.getUniqueId())) {
-								Server.getDelayedTasks().add(player.getUniqueId());
-								Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
-									@Override
-									public void run() {
-										Server.getDelayedTasks().remove(player.getUniqueId());
-									}
-								}, 20L);
-								player.sendMessage($.Skyfight.tag + ChatColor.RED + "Sorry, you need a donor rank to use this item.");
-								player.sendMessage($.Skyfight.tag + ChatColor.RED + "Or during the 5 min grace period following a vote.");
-								player.sendMessage($.Skyfight.tag + ChatColor.RED + "This will also work if someone else online has it.");
+		if (event.getItem() != null)
+			if (Server.getSkyfight().containsKey(player.getUniqueId())) {
+				long minuteDiff = ((System.currentTimeMillis() - Server.getLastVoteTime()) / 1000) / 60;
+				if (event.getItem().getType() == Material.CROSSBOW)
+					if (minuteDiff > 5)
+						if (Link$.getDonorRankId(player) > -2) {
+							boolean hit = false;
+							for (UUID uuid : Server.getSkyfight().keySet()) {
+								Player otherPlayer = Bukkit.getPlayer(uuid);
+								if (Link$.getDonorRankId(player) < -1)
+									hit = true;
 							}
-							event.setCancelled(true);
-							player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-							return;
+							if (!hit) {
+								if (!Server.getDelayedTasks().contains(player.getUniqueId())) {
+									Server.getDelayedTasks().add(player.getUniqueId());
+									Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+										@Override
+										public void run() {
+											Server.getDelayedTasks().remove(player.getUniqueId());
+										}
+									}, 20L);
+									player.sendMessage($.Skyfight.tag + ChatColor.RED + "Sorry, you need a donor rank to use this item.");
+									player.sendMessage($.Skyfight.tag + ChatColor.RED + "Or during the 5 min grace period following a vote.");
+									player.sendMessage($.Skyfight.tag + ChatColor.RED + "This will also work if someone else online has it.");
+								}
+								event.setCancelled(true);
+								player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+								return;
+							}
 						}
-					}
-		}
+			}
 		ItemStack itm = event.getItem();
 		String subDomain = $.getMinigameDomain(player);
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
