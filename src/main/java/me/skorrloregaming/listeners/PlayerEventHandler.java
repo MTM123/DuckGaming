@@ -1971,13 +1971,13 @@ public class PlayerEventHandler implements Listener {
 		boolean cancelled = LinkServer.getInstance().getPlaytimeManager().onInventoryClick(event);
 		if (!event.isCancelled())
 			event.setCancelled(cancelled);
-		if (event.getClickedInventory() == null)
+		if (event.getInventory() == null)
 			return;
-		if (event.getClickedInventory().getHolder() == null)
+		if (event.getInventory().getHolder() == null)
 			return;
 		if (!(event.getCurrentItem() == null))
-			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
-				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.WARNINGS))
+			if (event.getInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.WARNINGS))
 					event.setCancelled(true);
 		if (!(event.getCurrentItem() == null)) {
 			boolean removeMode = false;
@@ -1990,8 +1990,8 @@ public class PlayerEventHandler implements Listener {
 					}
 				}
 			}
-			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
-				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.SELL_ALL)) {
+			if (event.getInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.SELL_ALL)) {
 					String name = String.valueOf(((InventoryMenu) event.getInventory().getHolder()).getData());
 					Material material = null;
 					int amount = 0;
@@ -2036,8 +2036,8 @@ public class PlayerEventHandler implements Listener {
 						}
 					}
 				}
-			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
-				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.LA_SHOPPE)) {
+			if (event.getInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.LA_SHOPPE)) {
 					int page = (int) ((InventoryMenu) event.getInventory().getHolder()).getData();
 					if (event.getCurrentItem() == null)
 						return;
@@ -2198,8 +2198,8 @@ public class PlayerEventHandler implements Listener {
 				}
 		}
 		if (!(event.getCurrentItem() == null))
-			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
-				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.SESSIONS)) {
+			if (event.getInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.SESSIONS)) {
 					String sessionKey = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
 					String playerName = (String) ((InventoryMenu) event.getInventory().getHolder()).getData();
 					OfflinePlayer op = CraftGo.Player.getOfflinePlayer(playerName);
@@ -2217,8 +2217,8 @@ public class PlayerEventHandler implements Listener {
 					return;
 				}
 		if (!(event.getCurrentItem() == null))
-			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
-				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.SKYFIGHT_TEAMS)) {
+			if (event.getInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.SKYFIGHT_TEAMS)) {
 					if ($.getCurrentMinigame(player) == ServerMinigame.SKYFIGHT) {
 						if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
 							event.setCancelled(true);
@@ -2244,8 +2244,8 @@ public class PlayerEventHandler implements Listener {
 					}
 				}
 		if (!(event.getCurrentItem() == null))
-			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
-				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.TRAILS)) {
+			if (event.getInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.TRAILS)) {
 					if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
 						event.setCancelled(true);
 						ItemStack item = event.getCurrentItem();
@@ -2276,8 +2276,8 @@ public class PlayerEventHandler implements Listener {
 					}
 				}
 		if (!(event.getCurrentItem() == null))
-			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
-				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.SPAWNER_UPGRADES)) {
+			if (event.getInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.SPAWNER_UPGRADES)) {
 					if (Server.getFactions().contains(player.getUniqueId()) || Server.getSkyblock().contains(player.getUniqueId())) {
 						if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
 							event.setCancelled(true);
@@ -2330,8 +2330,8 @@ public class PlayerEventHandler implements Listener {
 					}
 				}
 		if (!(event.getCurrentItem() == null))
-			if (event.getClickedInventory().getHolder() instanceof InventoryMenu)
-				if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.KIT_UPGRADES)) {
+			if (event.getInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.KIT_UPGRADES)) {
 					if ($.getCurrentMinigame(player) == ServerMinigame.KITPVP) {
 						if (event.getCurrentItem().hasItemMeta() && event.getCurrentItem().getItemMeta().hasDisplayName()) {
 							event.setCancelled(true);
@@ -2405,8 +2405,8 @@ public class PlayerEventHandler implements Listener {
 				event.setCancelled(true);
 			return;
 		}
-		if (event.getClickedInventory().getHolder() instanceof InventoryMenu) {
-			if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.SPAWNER_SHOP)) {
+		if (event.getInventory().getHolder() instanceof InventoryMenu) {
+			if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.SPAWNER_SHOP)) {
 				if (event.getCurrentItem() == null)
 					return;
 				Material material = Material.SPAWNER;
@@ -2471,7 +2471,7 @@ public class PlayerEventHandler implements Listener {
 				}
 				event.setCancelled(true);
 				player.closeInventory();
-			} else if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.SERVER_SELECTOR)) {
+			} else if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.SERVER_SELECTOR)) {
 				if (event.getCurrentItem() == null)
 					return;
 				event.setCancelled(true);
@@ -2524,7 +2524,7 @@ public class PlayerEventHandler implements Listener {
 
 			} else if (Server.getSkyfight().containsKey(player.getUniqueId()) && player.getGameMode() == GameMode.SURVIVAL) {
 				event.setCancelled(true);
-			} else if (((InventoryMenu) event.getClickedInventory().getHolder()).getName().equals(InventoryType.TEMPORARY)) {
+			} else if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.TEMPORARY)) {
 				event.setCancelled(true);
 			}
 		}
