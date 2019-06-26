@@ -44,6 +44,10 @@ public class TransportCmd implements CommandExecutor {
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot transport to/from Kitpvp.");
 			return true;
 		}
+		if (minigame.equals("skyfight") || $.getCurrentMinigame(player) == ServerMinigame.SKYFIGHT) {
+			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot transport to/from Skyfight.");
+			return true;
+		}
 		ItemStack[] contents = SolidStorage.restoreInventoryToArray(player, minigame);
 		if (contents == null) {
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "There is nothing stored for that minigame.");
