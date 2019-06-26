@@ -63,7 +63,7 @@ public class SayCmd implements CommandExecutor {
 							if (!commandEvent.isCancelled())
 								op.getPlayer().performCommand(message.substring(1));
 						} else {
-							String rankName = WordUtils.capitalize(Link$.toRankDisplayName(Link$.getRank(op.getUniqueId())));
+							String rankName = WordUtils.capitalize(Link$.toRankDisplayName(Link$.getDiscordRank(op.getUniqueId())));
 							if (rankName.equals("Youtube"))
 								rankName = "YouTube";
 							if (Link$.isPrefixedRankingEnabled()) {

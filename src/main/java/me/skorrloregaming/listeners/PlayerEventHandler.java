@@ -1017,7 +1017,7 @@ public class PlayerEventHandler implements Listener {
 		if (!isCancelled) {
 			boolean muted = Server.getMutedPlayers().contains(player.getUniqueId());
 			if (!muted) {
-				String rankName = WordUtils.capitalize(Link$.toRankDisplayName(Link$.getRank(player)));
+				String rankName = WordUtils.capitalize(Link$.toRankDisplayName(Link$.getDiscordRank(player)));
 				if (rankName.equals("Youtube"))
 					rankName = "YouTube";
 				if (Link$.isPrefixedRankingEnabled()) {
