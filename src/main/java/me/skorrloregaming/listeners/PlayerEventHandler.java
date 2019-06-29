@@ -891,7 +891,7 @@ public class PlayerEventHandler implements Listener {
 									}
 								}, 20L);
 								String entityName = itm.getType().toString();
-								entityName = entityName.substring(0, entityName.indexOf(" "));
+								entityName = entityName.substring(0, entityName.indexOf("_"));
 								if (player.getGameMode() == GameMode.SURVIVAL) {
 									if (itm.getAmount() < 2) {
 										player.getInventory().setItemInMainHand(Link$.createMaterial(Material.AIR));
