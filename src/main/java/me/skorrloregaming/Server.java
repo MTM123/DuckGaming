@@ -1,5 +1,6 @@
 package me.skorrloregaming;
 
+import com.comphenix.protocol.ProtocolLib;
 import me.skorrloregaming.auction.Auctioneer;
 import me.skorrloregaming.commands.*;
 import me.skorrloregaming.discord.Channel;
@@ -674,6 +675,7 @@ public class Server extends JavaPlugin implements Listener {
 			skinStorage = new SkinStorage();
 			chatitem = new ChatItem();
 			chatitem.onEnable();
+			new ProtocolLib_Listener(this).register();
 		}
 		if (getConfig().contains("settings.enable.pingInjector")) {
 			if (getConfig().getBoolean("settings.enable.pingInjector"))
