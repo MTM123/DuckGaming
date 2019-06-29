@@ -1985,6 +1985,11 @@ public class PlayerEventHandler implements Listener {
 				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.WARNINGS))
 					event.setCancelled(true);
 		if (!(event.getCurrentItem() == null)) {
+			if (event.getInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.TRANSPORT)) {
+					if (event.getCurrentItem().getType() == Material.GOLD_INGOT)
+						event.setCancelled(true);
+				}
 			boolean removeMode = false;
 			if (event.getInventory().getItem(0) != null) {
 				if (event.getInventory().getItem(0).getType() == Material.RED_DYE) {
