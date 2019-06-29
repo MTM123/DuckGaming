@@ -155,6 +155,7 @@ public class Server extends JavaPlugin implements Listener {
 
 	private static AuthMe_Listener authListener = null;
 	private static Factions_Listener factionsListener = null;
+	private static ProtocolLib_Listener protoListener = null;
 	private static ProtocolSupportPocketStuff_Listener protoSupportPocketApi = null;
 	private static Votifier_Listener voteListener = null;
 	private static mcMMO_Listener mcmmoListener = null;
@@ -215,6 +216,10 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static Factions_Listener getFactionsListener() {
 		return factionsListener;
+	}
+
+	public static ProtocolLib_Listener getProtoListener() {
+		return protoListener;
 	}
 
 	public static ProtocolSupportPocketStuff_Listener getProtoSupportPocketApi() {
@@ -675,7 +680,8 @@ public class Server extends JavaPlugin implements Listener {
 			skinStorage = new SkinStorage();
 			chatitem = new ChatItem();
 			chatitem.onEnable();
-			new ProtocolLib_Listener(this).register();
+			protoListener = new ProtocolLib_Listener(this);
+			protoListener.register();
 		}
 		if (getConfig().contains("settings.enable.pingInjector")) {
 			if (getConfig().getBoolean("settings.enable.pingInjector"))

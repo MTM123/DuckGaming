@@ -9,6 +9,7 @@ import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.reflect.StructureModifier;
 import me.skorrloregaming.$;
 import me.skorrloregaming.impl.ServerMinigame;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -26,11 +27,9 @@ public class ProtocolLib_Listener {
 				Player player = event.getPlayer();
 				ServerMinigame minigame = $.getCurrentMinigame(player);
 				PacketContainer packet = event.getPacket();
-				if (minigame == ServerMinigame.SKYFIGHT) {
-					packet.getLongs().write(1, 10000L);
-				} else if ($.daylightMinigames.contains(minigame.toString().toLowerCase())) {
+				if ($.daylightMinigames.contains(minigame.toString().toLowerCase())) {
 					packet.getLongs().write(1, 8000L);
-				} else if (minigame == ServerMinigame.KITPVP) {
+				} else if ($.nightlightMinigames.contains(minigame.toString().toLowerCase())) {
 					packet.getLongs().write(1, 14000L);
 				}
 				event.setPacket(packet);

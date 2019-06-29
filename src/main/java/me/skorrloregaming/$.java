@@ -54,7 +54,8 @@ public class $ {
 	public static List<String> validTransportMinigames = Arrays.asList(new String[]{"skyblock", "factions", "survival"});
 	public static List<String> scoreboardAutoUpdateMinigames = Arrays.asList(new String[]{"skyblock", "factions", "kitpvp"});
 	public static List<String> betaMinigames = Arrays.asList(new String[]{});
-	public static List<String> daylightMinigames = Arrays.asList(new String[]{"kitpvp", "skyblock", "creative"});
+	public static List<String> daylightMinigames = Arrays.asList(new String[]{"skyfight", "skyblock", "creative", "hub"});
+	public static List<String> nightlightMinigames = Arrays.asList(new String[]{"kitpvp"});
 	public static Kitpvp_LeaderboardScoreboard kitpvpLeaderboardScoreboard = new Kitpvp_LeaderboardScoreboard();
 	public static Kitpvp_StatisticsScoreboard kitpvpStatisticsScoreboard = new Kitpvp_StatisticsScoreboard();
 	public static Skyblock_StatisticsScoreboard skyblockScoreboard = new Skyblock_StatisticsScoreboard();
