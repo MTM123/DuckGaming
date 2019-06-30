@@ -1,5 +1,6 @@
 package me.skorrloregaming;
 
+import com.comphenix.protocol.ProtocolLib;
 import me.skorrloregaming.auction.Auctioneer;
 import me.skorrloregaming.commands.*;
 import me.skorrloregaming.discord.Channel;
@@ -154,6 +155,7 @@ public class Server extends JavaPlugin implements Listener {
 
 	private static AuthMe_Listener authListener = null;
 	private static Factions_Listener factionsListener = null;
+	private static ProtocolLib_Listener protoListener = null;
 	private static ProtocolSupportPocketStuff_Listener protoSupportPocketApi = null;
 	private static Votifier_Listener voteListener = null;
 	private static mcMMO_Listener mcmmoListener = null;
@@ -214,6 +216,10 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static Factions_Listener getFactionsListener() {
 		return factionsListener;
+	}
+
+	public static ProtocolLib_Listener getProtoListener() {
+		return protoListener;
 	}
 
 	public static ProtocolSupportPocketStuff_Listener getProtoSupportPocketApi() {
@@ -674,6 +680,8 @@ public class Server extends JavaPlugin implements Listener {
 			skinStorage = new SkinStorage();
 			chatitem = new ChatItem();
 			chatitem.onEnable();
+			protoListener = new ProtocolLib_Listener(this);
+			protoListener.register();
 		}
 		if (getConfig().contains("settings.enable.pingInjector")) {
 			if (getConfig().getBoolean("settings.enable.pingInjector"))
@@ -1411,6 +1419,7 @@ public class Server extends JavaPlugin implements Listener {
 		player.updateInventory();
 		Location teleportLocation = $.getZoneLocation("skyfight" + ran);
 		teleportLocation.getWorld().setStorm(true);
+		teleportLocation.getWorld().setTime(18000);
 		if (teleportLocation.getWorld().getName().equals(player.getWorld().getName())) {
 			if (teleportLocation.distance(player.getLocation()) > 0.1) {
 				$.teleport(player, teleportLocation);
