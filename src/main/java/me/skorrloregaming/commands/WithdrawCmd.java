@@ -15,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 
 public class WithdrawCmd implements CommandExecutor {
 
@@ -47,20 +48,16 @@ public class WithdrawCmd implements CommandExecutor {
 		}
 		double cash = EconManager.retrieveCash(player, subDomain);
 		if (amount <= cash) {
-			int totalWithdraw = 0;
-			do {
-				ItemStack purchaseItem = new ItemStack(material, amount % 64);
-				EconManager.withdrawCash(player, amount % 64, subDomain);
-				player.getInventory().addItem(purchaseItem);
-				player.updateInventory();
-				totalWithdraw += amount % 64;
-				amount -= amount % 64;
-				if (player.getInventory().firstEmpty() == -1) {
-					player.sendMessage(tag + ChatColor.RED + "Inventory full. " + ChatColor.GRAY + "Empty some slots then try again.");
-					return true;
-				}
-			} while (amount > 64 || amount > 0);
-			player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + materialName + " x" + totalWithdraw + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(totalWithdraw));
+			ItemStack purchaseItem = new ItemStack(material, amount);
+			EconManager.withdrawCash(player, amount, subDomain);
+			HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(purchaseItem);
+			player.updateInventory();
+			if (remaining.size() > 0) {
+				player.sendMessage(tag + ChatColor.RED + "Inventory full. " + ChatColor.GRAY + "Dropping the rest on the ground.");
+				for (ItemStack itm : remaining.values())
+					player.getWorld().dropItem(player.getEyeLocation(), itm);
+			}
+			player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + materialName + " x" + amount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(amount));
 			return true;
 		}
 		player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money.");
