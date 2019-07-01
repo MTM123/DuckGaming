@@ -124,7 +124,7 @@ public class PlayerEventHandler implements Listener {
 				int invSize = 9;
 				if (CraftGo.Player.isPocketPlayer(player))
 					invSize = 27;
-				Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SERVER_SELECTOR, 1), invSize, ChatColor.DARK_PURPLE + "Server Selector (0b10)");
+				Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SERVER_SELECTOR, 1), invSize, "Server Selector");
 				int add = 0;
 				if (CraftGo.Player.isPocketPlayer(player))
 					add = 9;
@@ -700,7 +700,7 @@ public class PlayerEventHandler implements Listener {
 					kitpvp = CraftGo.ItemStack.removeAttributes(kitpvp);
 					survivalFactions = CraftGo.ItemStack.removeAttributes(survivalFactions);
 					skyfight = Link$.addLore(skyfight, new String[]{ChatColor.GOLD + "/server skyfight"});
-					kitpvp = Link$.addLore(kitpvp, new String[]{ChatColor.DARK_RED + "/* Attention */", ChatColor.RED + "You may only join on 1.9 or above!", ChatColor.DARK_RED + "/* Attention */", "", ChatColor.GOLD + "/server kitpvp"});
+					kitpvp = Link$.addLore(kitpvp, new String[]{ChatColor.DARK_RED + "/* Attention */", ChatColor.RED + "You may only join on 1.9 or above!", "", ChatColor.GOLD + "/server kitpvp"});
 					creative = Link$.addLore(creative, new String[]{ChatColor.GOLD + "/server creative"});
 					skyblock = Link$.addLore(skyblock, new String[]{ChatColor.GOLD + "/server skyblock"});
 					ItemStack factions = Link$.createMaterial(Material.DIAMOND_SWORD, 1, ChatColor.LIGHT_PURPLE + "Factions");
@@ -712,7 +712,7 @@ public class PlayerEventHandler implements Listener {
 					int invSize = 9;
 					if (CraftGo.Player.isPocketPlayer(player))
 						invSize = 27;
-					Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SERVER_SELECTOR, 0), invSize, ChatColor.DARK_PURPLE + "Server Selector (0b1)");
+					Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SERVER_SELECTOR, 0), invSize, "Server Selector");
 					int add = 0;
 					if (CraftGo.Player.isPocketPlayer(player))
 						add = 9;
