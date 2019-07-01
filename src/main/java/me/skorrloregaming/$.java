@@ -1226,7 +1226,7 @@ public class $ {
 	public static class Survival {
 		public static String tag = ChatColor.GRAY + "[" + ChatColor.RESET + "survival" + ChatColor.GRAY + "] " + ChatColor.RESET;
 		public static String[] validKits = new String[]{"recruit"};
-		public static ItemStack[] kitRecruit = new ItemStack[]{Link$.createMaterial(Material.STONE_SWORD), Link$.createMaterial(Material.STONE_PICKAXE), Link$.createMaterial(Material.STONE_AXE), Link$.createMaterial(Material.STONE_SHOVEL), Link$.createMaterial(Material.COOKED_BEEF, 16), Link$.createMaterial(Material.LEATHER_HELMET), Link$.createMaterial(Material.LEATHER_CHESTPLATE), Link$.createMaterial(Material.LEATHER_LEGGINGS), Link$.createMaterial(Material.LEATHER_BOOTS), Link$.createMaterial(Material.GOLDEN_SHOVEL)};
+		public static ItemStack[] kitRecruit = new ItemStack[]{Link$.createMaterial(Material.STONE_SWORD), Link$.createMaterial(Material.STONE_PICKAXE), Link$.createMaterial(Material.STONE_AXE), Link$.createMaterial(Material.STONE_SHOVEL), Link$.createMaterial(Material.COOKED_BEEF, 16), Link$.createMaterial(Material.LEATHER_HELMET), Link$.createMaterial(Material.LEATHER_CHESTPLATE), Link$.createMaterial(Material.LEATHER_LEGGINGS), Link$.createMaterial(Material.LEATHER_BOOTS), Link$.createMaterial(Material.GOLDEN_SHOVEL), Link$.createMaterial(Material.COMPASS), Link$.createMaterial(Material.MAP)};
 	}
 
 	public static class Kitpvp {
