@@ -38,11 +38,6 @@ settings:
                 GOLD_INGOT: 1
                 GOLD_NUGGET: 0.1111111111111111
                 GOLD_BLOCK: 9
-                IRON_INGOT: 0.5
-                IRON_NUGGET: 0.0555555555555556
-                IRON_BLOCK: 4.5
-                DIAMOND: 10
-                DIAMOND_BLOCK: 90
                 EMERALD: 2
                 EMERALD_BLOCK: 18
     customJoinMessage: true
