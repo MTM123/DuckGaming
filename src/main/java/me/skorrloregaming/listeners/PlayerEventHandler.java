@@ -1987,7 +1987,9 @@ public class PlayerEventHandler implements Listener {
 			if (event.getInventory().getHolder() instanceof InventoryMenu)
 				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.TRANSPORT)) {
 					String transportMinigame = (String) ((InventoryMenu) event.getInventory().getHolder()).getData();
-					if (EconManager.getWorth(event.getCurrentItem().getType(), ServerMinigame.valueOf(transportMinigame.toUpperCase())) > 0.0)
+					double worthRemotely = EconManager.getWorth(event.getCurrentItem().getType(), ServerMinigame.valueOf(transportMinigame.toUpperCase()));
+					double worthLocally = EconManager.getWorth(event.getCurrentItem().getType(), minigame);
+					if (worthRemotely > 0.0 || worthLocally > 0.0)
 						event.setCancelled(true);
 				}
 			boolean removeMode = false;
