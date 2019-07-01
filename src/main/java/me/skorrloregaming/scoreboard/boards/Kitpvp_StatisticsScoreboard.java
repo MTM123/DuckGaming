@@ -17,7 +17,7 @@ public class Kitpvp_StatisticsScoreboard implements DisposableScoreboard {
 		int currentPlayerKills = $.Kitpvp.getPlayerKills(player);
 		int currentPlayerDeaths = $.Kitpvp.getPlayerDeaths(player);
 		int currentPlayerDPK = currentPlayerKills / 50;
-		int currentPlayerCash = EconManager.retrieveCash(player, "kitpvp");
+		double currentPlayerCash = EconManager.retrieveCash(player, "kitpvp");
 		list.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Statistics", 5);
 		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Balance: " + ChatColor.RESET + "$" + formatter.format(currentPlayerCash), 4);
 		list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Kills: " + ChatColor.RESET + formatter.format(currentPlayerKills), 3);

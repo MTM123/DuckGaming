@@ -28,7 +28,7 @@ public class Factions_StatisticsScoreboard implements DisposableScoreboard {
 		Hashtable<String, Integer> list = new Hashtable<String, Integer>();
 		int currentPlayerKills = $.Factions.getPlayerKills(player);
 		int currentPlayerDeaths = $.Factions.getPlayerDeaths(player);
-		int currentPlayerCash = EconManager.retrieveCash(player, "factions");
+		double currentPlayerCash = EconManager.retrieveCash(player, "factions");
 		FPlayer fplayer = FPlayers.getInstance().getByPlayer(player);
 		Faction faction = fplayer.getFaction();
 		list.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Faction", 9);

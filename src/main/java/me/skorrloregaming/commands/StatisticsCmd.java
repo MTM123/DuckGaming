@@ -35,7 +35,7 @@ public class StatisticsCmd implements CommandExecutor {
 		if (Server.getSkyblock().contains(player.getUniqueId())) {
 			int currentPlayerPlaced = $.Skyblock.getPlayerPlacedBlocks(targetPlayer);
 			int currentPlayerBroken = $.Skyblock.getPlayerBrokenBlocks(targetPlayer);
-			int currentPlayerCash = EconManager.retrieveCash(targetPlayer, "skyblock");
+			double currentPlayerCash = EconManager.retrieveCash(targetPlayer, "skyblock");
 			String tag = $.getMinigameTag("kitpvp");
 			player.sendMessage(tag + ChatColor.RESET + "/ Statistics for player " + ChatColor.YELLOW + targetPlayer.getName());
 			player.sendMessage(tag + ChatColor.RESET + "Current Balance: " + ChatColor.YELLOW + "$" + formatter.format(currentPlayerCash));
@@ -45,7 +45,7 @@ public class StatisticsCmd implements CommandExecutor {
 			int currentPlayerKills = $.Kitpvp.getPlayerKills(targetPlayer);
 			int currentPlayerDeaths = $.Kitpvp.getPlayerDeaths(targetPlayer);
 			int currentPlayerDPK = currentPlayerKills / 50;
-			int currentPlayerCash = EconManager.retrieveCash(targetPlayer, "kitpvp");
+			double currentPlayerCash = EconManager.retrieveCash(targetPlayer, "kitpvp");
 			String tag = $.getMinigameTag("kitpvp");
 			player.sendMessage(tag + ChatColor.RESET + "/ Statistics for player " + ChatColor.YELLOW + targetPlayer.getName());
 			player.sendMessage(tag + ChatColor.RESET + "Current Balance: " + ChatColor.YELLOW + "$" + formatter.format(currentPlayerCash));
