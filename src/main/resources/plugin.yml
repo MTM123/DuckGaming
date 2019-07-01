@@ -7,6 +7,10 @@ softdepend: [AuthMe, ProtocolSupport, ProtocolLib, ProtocolSupportPocketStuff, G
 loadbefore: [ChestShop, Factions]
 api-version: 1.14
 commands:
+    deposit:
+        description: Deposit hard currency into your bank account
+    withdraw:
+        description: Withdraw hard currency from your bank account
     transport:
         description: Transport items between minigames with a donor rank
     verify:
