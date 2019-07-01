@@ -49,7 +49,7 @@ public class $ {
 	public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock", "prison", "dated"});
 	public static List<String> validStorageMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "creative", "skyblock"});
 	public static List<String> validEconomyMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "skyblock", "survival"});
-	public static List<String> validLocketteMinigames = Arrays.asList(new String[]{"skyblock", "factions"});
+	public static List<String> validLocketteMinigames = Arrays.asList(new String[]{"skyblock", "factions", "survival"});
 	public static List<String> validStairSeatMinigames = Arrays.asList(new String[]{"creative", "skyblock", "factions"});
 	public static List<String> validTransportMinigames = Arrays.asList(new String[]{"skyblock", "factions", "survival"});
 	public static List<String> scoreboardAutoUpdateMinigames = Arrays.asList(new String[]{"skyblock", "factions", "kitpvp"});
