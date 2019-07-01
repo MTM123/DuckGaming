@@ -46,7 +46,7 @@ public class WithdrawCmd implements CommandExecutor {
 			}
 		}
 		double cash = EconManager.retrieveCash(player, subDomain);
-		if (amount >= cash) {
+		if (amount <= cash) {
 			int totalWithdraw = 0;
 			do {
 				ItemStack purchaseItem = new ItemStack(material, amount % 64);

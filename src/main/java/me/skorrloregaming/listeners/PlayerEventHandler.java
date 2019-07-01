@@ -2584,7 +2584,7 @@ public class PlayerEventHandler implements Listener {
 				}
 				if (totalWorth > 0.0) {
 					EconManager.depositCash(player, totalWorth, $.getMinigameDomain(player));
-					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Deposited " + ChatColor.RED + "$" + formatter.format(totalWorth));
+					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Deposited " + ChatColor.RED + "$" + formatter.format(totalWorth) + ChatColor.GRAY + " into bank account.");
 				}
 			}
 		if (event.getInventory().getHolder() instanceof InventoryMenu)
