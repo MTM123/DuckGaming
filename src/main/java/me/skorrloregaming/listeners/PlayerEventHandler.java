@@ -1986,7 +1986,8 @@ public class PlayerEventHandler implements Listener {
 		if (!(event.getCurrentItem() == null)) {
 			if (event.getInventory().getHolder() instanceof InventoryMenu)
 				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.TRANSPORT)) {
-					if (event.getCurrentItem().getType() == Material.GOLD_INGOT)
+					String transportMinigame = (String) ((InventoryMenu) event.getInventory().getHolder()).getData();
+					if (EconManager.getWorth(event.getCurrentItem().getType(), ServerMinigame.valueOf(transportMinigame.toUpperCase())) > 0.0)
 						event.setCancelled(true);
 				}
 			boolean removeMode = false;
