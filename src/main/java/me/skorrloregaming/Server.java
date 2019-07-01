@@ -1041,6 +1041,11 @@ public class Server extends JavaPlugin implements Listener {
 			return;
 		}
 		if (!kitpvp.contains(player.getUniqueId())) {
+			if (CraftGo.Player.getProtocolVersion(player) < 107) {
+				player.sendMessage("You are not allowed to enter this minigame.");
+				player.sendMessage("To enter this minigame please use 1.9 or above.");
+				return;
+			}
 			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.KITPVP));
 			if (moderatingPlayers.containsKey(player.getUniqueId())) {
 				noRestore = true;
