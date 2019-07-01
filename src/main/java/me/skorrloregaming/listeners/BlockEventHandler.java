@@ -227,17 +227,15 @@ public class BlockEventHandler implements Listener {
 		if (Server.getFactions().contains(player.getUniqueId()) || Server.getSurvival().contains(player.getUniqueId()) || Server.getSkyblock().contains(player.getUniqueId())) {
 			if ($.isWithinUnclaimedLand(blockLoc, player)) {
 				if ($.isBlockLog(block)) {
-					if (Server.getFactions().contains(player.getUniqueId()) || Server.getSkyblock().contains(player.getUniqueId())) {
-						ItemStack heldItem = player.getInventory().getItemInMainHand();
-						Material type = Material.AIR;
-						if (!(heldItem == null))
-							type = heldItem.getType();
-						if (Directory.axes.contains(type)) {
-							if (!Server.getCurrentFellers().contains(player.getUniqueId())) {
-								event.setCancelled(true);
-								new TreeCutter(player, block).runTaskAsynchronously(Server.getPlugin());
-								return;
-							}
+					ItemStack heldItem = player.getInventory().getItemInMainHand();
+					Material type = Material.AIR;
+					if (!(heldItem == null))
+						type = heldItem.getType();
+					if (Directory.axes.contains(type)) {
+						if (!Server.getCurrentFellers().contains(player.getUniqueId())) {
+							event.setCancelled(true);
+							new TreeCutter(player, block).runTaskAsynchronously(Server.getPlugin());
+							return;
 						}
 					}
 				}

@@ -809,9 +809,9 @@ public class PlayerEventHandler implements Listener {
 						return;
 					}
 				}
-				if (itm.getType() == Material.GUNPOWDER && Server.getFactions().contains(player.getUniqueId())) {
+				if (itm.getType() == Material.GUNPOWDER && (Server.getFactions().contains(player.getUniqueId()) || Server.getSurvival().contains(player.getUniqueId()))) {
 					if (itm.hasItemMeta() && itm.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Explosive Gunpowder")) {
-						if (player.getGameMode() == GameMode.SURVIVAL && !Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+						if (Server.getFactions().contains(player.getUniqueId()) && player.getGameMode() == GameMode.SURVIVAL && !Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
 							if (!Server.getDelayedTasks().contains(event.getPlayer().getUniqueId())) {
 								Server.getDelayedTasks().add(event.getPlayer().getUniqueId());
 								Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
