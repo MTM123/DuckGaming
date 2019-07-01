@@ -35,7 +35,7 @@ public class Skyblock_StatisticsScoreboard implements DisposableScoreboard {
 		}
 		int placedBlocks = $.Skyblock.getPlayerPlacedBlocks(player);
 		int brokenBlocks = $.Skyblock.getPlayerBrokenBlocks(player);
-		int currentPlayerCash = EconManager.retrieveCash(player, "skyblock");
+		double currentPlayerCash = EconManager.retrieveCash(player, "skyblock");
 		DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 		Hashtable<String, Integer> list = new Hashtable<String, Integer>();
 		if (maxmembers > 0) {

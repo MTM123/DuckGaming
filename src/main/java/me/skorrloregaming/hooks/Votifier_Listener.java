@@ -74,13 +74,13 @@ public class Votifier_Listener implements Listener {
 				);
 				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			}
-			int balance2 = EconManager.retrieveCash(player.getUniqueId(), "kitpvp");
+			double balance2 = EconManager.retrieveCash(player.getUniqueId(), "kitpvp");
 			int ceil2 = (int) Math.ceil(balance2 / 25);
 			int amountEarned2 = (int) (50 + (ceil2 * 10));
-			int balance1 = EconManager.retrieveCash(player.getUniqueId(), "factions");
+			double balance1 = EconManager.retrieveCash(player.getUniqueId(), "factions");
 			int ceil1 = (int) Math.ceil(balance1 / 30);
 			int amountEarned1 = (int) (500 + (ceil1 * 4.125));
-			int balance3 = EconManager.retrieveCash(player.getUniqueId(), "skyblock");
+			double balance3 = EconManager.retrieveCash(player.getUniqueId(), "skyblock");
 			int ceil3 = (int) Math.ceil(balance3 / 30);
 			int amountEarned3 = (int) (500 + (ceil3 * 5));
 			amountEarned1 *= MODIFIER;

@@ -39,7 +39,7 @@ public class SignShop {
 		} else {
 			playShopTitlePopup(player, sign.getBlock());
 		}
-		int cash = EconManager.retrieveCash(player, subDomain);
+		double cash = EconManager.retrieveCash(player, subDomain);
 		String tag = $.getMinigameTag(subDomain);
 		String[] lines = sign.getLines();
 		for (int i = 0; i < lines.length; i++) {

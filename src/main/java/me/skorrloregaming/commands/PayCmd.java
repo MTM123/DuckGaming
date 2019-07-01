@@ -21,7 +21,7 @@ public class PayCmd implements CommandExecutor {
 		String tag = Link$.Legacy.tag;
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (!Server.getKitpvp().contains(player.getUniqueId()) && !Server.getFactions().contains(player.getUniqueId()) && !Server.getSkyblock().contains(player.getUniqueId())) {
+			if (!Server.getKitpvp().contains(player.getUniqueId()) && !Server.getSurvival().contains(player.getUniqueId()) && !Server.getFactions().contains(player.getUniqueId()) && !Server.getSkyblock().contains(player.getUniqueId())) {
 				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 				return true;
 			}
@@ -38,7 +38,7 @@ public class PayCmd implements CommandExecutor {
 			sender.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 			return true;
 		}
-		int amount = Integer.parseInt(args[1]);
+		double amount = Double.parseDouble(args[1]);
 		DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 		if (sender.isOp()) {
 			EconManager.depositCash(targetPlayer, amount, subDomain);
@@ -48,7 +48,7 @@ public class PayCmd implements CommandExecutor {
 		} else if (sender instanceof Player) {
 			amount = Math.abs(amount);
 			Player player = (Player) sender;
-			int currentPlayerCash = EconManager.retrieveCash(player, subDomain);
+			double currentPlayerCash = EconManager.retrieveCash(player, subDomain);
 			if (currentPlayerCash >= amount) {
 				EconManager.withdrawCash(player, amount, subDomain);
 				EconManager.depositCash(targetPlayer, amount, subDomain);

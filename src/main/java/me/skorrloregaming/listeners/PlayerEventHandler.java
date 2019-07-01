@@ -2001,6 +2001,11 @@ public class PlayerEventHandler implements Listener {
 				}
 			}
 			if (event.getInventory().getHolder() instanceof InventoryMenu)
+				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.DEPOSIT_ALL)) {
+					if (EconManager.getWorth(event.getCurrentItem().getType(), minigame) == 0.0)
+						event.setCancelled(true);
+				}
+			if (event.getInventory().getHolder() instanceof InventoryMenu)
 				if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.SELL_ALL)) {
 					String name = String.valueOf(((InventoryMenu) event.getInventory().getHolder()).getData());
 					Material material = null;
@@ -2104,7 +2109,7 @@ public class PlayerEventHandler implements Listener {
 										DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 										String materialName = Link$.formatMaterial(event.getCurrentItem().getType());
 										String subDomain = $.getMinigameDomain(player);
-										int cash = EconManager.retrieveCash(player, subDomain);
+										double cash = EconManager.retrieveCash(player, subDomain);
 										String tag = $.getMinigameTag(player);
 										String enchantName = Link$.formatEnchantment(String.valueOf(enchant.getEnchantment().getKey().getKey().trim()), tier);
 										if (cash >= price) {
@@ -2174,7 +2179,7 @@ public class PlayerEventHandler implements Listener {
 										DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 										String materialName = Link$.formatMaterial(event.getCurrentItem().getType());
 										String subDomain = $.getMinigameDomain(player);
-										int cash = EconManager.retrieveCash(player, subDomain);
+										double cash = EconManager.retrieveCash(player, subDomain);
 										String tag = $.getMinigameTag(player);
 										if (cash >= price * 2 && player.isSneaking()) {
 											amount = amount * 2;
@@ -2304,7 +2309,7 @@ public class PlayerEventHandler implements Listener {
 								String requiredBalanceStr = ChatColor.stripColor(meta.getDisplayName().substring(meta.getDisplayName().indexOf("$") + 1));
 								requiredBalanceStr = requiredBalanceStr.substring(0, requiredBalanceStr.indexOf(")"));
 								int requiredBalance = Integer.parseInt(requiredBalanceStr);
-								int currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
+								double currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
 								if (upgradeCount + 1 <= 4) {
 									if (currentBalance >= requiredBalance) {
 										EconManager.withdrawCash(player, requiredBalance, $.getMinigameDomain(player));
@@ -2352,7 +2357,7 @@ public class PlayerEventHandler implements Listener {
 								String requiredBalanceStr = ChatColor.stripColor(meta.getDisplayName().substring(meta.getDisplayName().indexOf("$") + 1));
 								requiredBalanceStr = requiredBalanceStr.substring(0, requiredBalanceStr.indexOf(")"));
 								int requiredBalance = Integer.parseInt(requiredBalanceStr);
-								int currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
+								double currentBalance = EconManager.retrieveCash(player, $.getMinigameDomain(player));
 								if (upgradeCount + 1 <= $.Kitpvp.DONOR_MAX_UPGRADE_VALUE) {
 									if (upgradeCount + 1 > $.Kitpvp.DEFAULT_MAX_UPGRADE_VALUE) {
 										if (Link$.getDonorRankId(player) > -2) {
@@ -2425,7 +2430,7 @@ public class PlayerEventHandler implements Listener {
 				String tag = $.getMinigameTag(player);
 				EntityType entityType = CraftGo.MobSpawner.getStoredSpawnerItemEntityType(event.getCurrentItem());
 				int price = 0;
-				int cash = EconManager.retrieveCash(player, domain);
+				double cash = EconManager.retrieveCash(player, domain);
 				int amount = 1;
 				switch (entityType) {
 					case SKELETON:
@@ -2544,6 +2549,7 @@ public class PlayerEventHandler implements Listener {
 	public void onInventoryClose(InventoryCloseEvent event) {
 		Player player = (Player) event.getPlayer();
 		ServerMinigame minigame = $.getCurrentMinigame(player);
+		DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 		if (event.getInventory().getType() == org.bukkit.event.inventory.InventoryType.ENCHANTING) {
 			EnchantingInventory inventory = (EnchantingInventory) event.getInventory();
 			inventory.setItem(1, Link$.createMaterial(Material.AIR));
@@ -2564,6 +2570,21 @@ public class PlayerEventHandler implements Listener {
 			if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.SKYFIGHT_TEAMS)) {
 				if (Server.getSkyfight().containsKey(player.getUniqueId())) {
 					Server.getSkyfight().get(player.getUniqueId()).setHasTeamSelectionGuiOpen(false);
+				}
+			}
+		if (event.getInventory().getHolder() instanceof InventoryMenu)
+			if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.DEPOSIT_ALL)) {
+				double totalWorth = 0.0;
+				for (ItemStack itm : event.getInventory().getContents()) {
+					if (!(itm == null)) {
+						double singleItemWorth = 0.0;
+						if ((singleItemWorth = EconManager.getWorth(itm.getType(), minigame)) > 0.0)
+							totalWorth += singleItemWorth * itm.getAmount();
+					}
+				}
+				if (totalWorth > 0.0) {
+					EconManager.depositCash(player, totalWorth, $.getMinigameDomain(player));
+					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Deposited " + ChatColor.RED + "$" + formatter.format(totalWorth) + ChatColor.GRAY + " into bank account.");
 				}
 			}
 		if (event.getInventory().getHolder() instanceof InventoryMenu)
@@ -2606,7 +2627,6 @@ public class PlayerEventHandler implements Listener {
 						data = item.getData();
 					}
 				}
-				DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 				int singleAmount = 1;
 				double singlePrice = $.getSinglePricing(amount, price);
 				String materialName = Link$.formatMaterial(material);

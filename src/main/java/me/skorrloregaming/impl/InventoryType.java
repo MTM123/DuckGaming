@@ -5,6 +5,7 @@ public class InventoryType {
 	public static final String NULL = "null";
 	public static final String SERVER_SELECTOR = "server_selector";
 	public static final String SELL_ALL = "sell_all";
+	public static final String DEPOSIT_ALL = "deposit_all";
 	public static final String LA_SHOPPE = "la_shoppe";
 	public static final String CHEST = "chest";
 	public static final String SESSIONS = "sessions";
