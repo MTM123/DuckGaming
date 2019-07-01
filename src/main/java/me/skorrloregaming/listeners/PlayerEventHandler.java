@@ -77,7 +77,6 @@ public class PlayerEventHandler implements Listener {
 	public int rainbowIndex = 0;
 
 	public PlayerEventHandler() {
-
 		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {

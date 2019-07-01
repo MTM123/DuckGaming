@@ -746,6 +746,19 @@ public class Server extends JavaPlugin implements Listener {
 				}
 			}
 		}, 0L, 6000L);
+		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
+			@Override
+			public void run() {
+				for (World world : Bukkit.getWorlds()) {
+					ServerMinigame minigame = $.getMinigameFromWorld(world);
+					if ($.daylightMinigames.contains(minigame.toString().toLowerCase())) {
+						world.setTime(8000L);
+					} else if ($.nightlightMinigames.contains(minigame.toString().toLowerCase())) {
+						world.setTime(14000L);
+					}
+				}
+			}
+		}, 20L, 20L);
 		Bukkit.getScheduler().runTaskTimer(this, garbageCollector, 0L, 36000L);
 		reload();
 		sessionManager = new SessionManager();
