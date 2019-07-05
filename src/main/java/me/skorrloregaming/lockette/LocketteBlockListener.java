@@ -211,12 +211,6 @@ public class LocketteBlockListener implements Listener {
 			}
 		}
 		if (BlockUtil.isInList(type, BlockUtil.materialListChests)) {
-			int chests = Lockette.findChestCountNear(block);
-			if (chests > 1) {
-				event.setCancelled(true);
-				plugin.localizedMessage(player, null, "msg-user-illegal");
-				return;
-			}
 			signBlock = Lockette.findBlockOwner(block);
 			if (signBlock != null) {
 				Sign sign = (Sign) signBlock.getState();
