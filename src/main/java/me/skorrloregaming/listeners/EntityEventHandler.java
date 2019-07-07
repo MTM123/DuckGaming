@@ -109,7 +109,7 @@ public class EntityEventHandler implements Listener {
 		if (event.getEntityType() == EntityType.CREEPER || event.getEntityType() == EntityType.PRIMED_TNT) {
 			event.setCancelled(true);
 			ServerMinigame minigame = $.getMinigameFromWorld(entity.getWorld());
-			if (minigame == ServerMinigame.FACTIONS || (minigame == ServerMinigame.SURVIVAL && !(event.getEntityType() == EntityType.PRIMED_TNT))) {
+			if (minigame == ServerMinigame.FACTIONS) {
 				float power = 0.3F;
 				if (event.getEntity().isGlowing())
 					power = 0.4F;
