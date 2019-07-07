@@ -30,6 +30,9 @@ public class EntityEventHandler implements Listener {
 	public void onEntitySpawnEvent(EntitySpawnEvent event) {
 		if (event.getEntity() instanceof Phantom)
 			event.setCancelled(true);
+		if ($.getMinigameFromWorld(event.getLocation().getWorld()) == ServerMinigame.SURVIVAL)
+			if (event.getLocation().distance($.getZoneLocation($.getMinigameFromWorld(event.getLocation().getWorld()).toString().toLowerCase())) < 150)
+				event.setCancelled(true);
 		if (event.getEntity() instanceof Item) {
 			if ($.getMinigameFromWorld(event.getLocation().getWorld()) == ServerMinigame.CREATIVE) {
 				event.setCancelled(true);
