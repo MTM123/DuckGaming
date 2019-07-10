@@ -100,6 +100,7 @@ public class Server extends JavaPlugin implements Listener {
 	private static ArrayList<String> disabledVersions = new ArrayList<String>();
 	private static ArrayList<NpcPlayer> npcPlayers = new ArrayList<>();
 
+	private static ConcurrentMap<UUID, Integer> explosiveFunpowderCooldown = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, Integer> potionsKitCooldownKitpvp = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, Integer> starterKitCooldownKitpvp = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, Integer> recruitKitCooldownSurvival = new ConcurrentHashMap<>();
@@ -392,6 +393,10 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static ConcurrentMap<UUID, Boolean> getOnlineMode() {
 		return onlineMode;
+	}
+
+	public static ConcurrentMap<UUID, Integer> getExplosiveFunpowderCooldown() {
+		return explosiveFunpowderCooldown;
 	}
 
 	public static class Kitpvp {

@@ -60,6 +60,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.util.Vector;
 import org.spigotmc.event.entity.EntityDismountEvent;
@@ -812,14 +813,9 @@ public class PlayerEventHandler implements Listener {
 				if (itm.getType() == Material.GUNPOWDER && (Server.getFactions().contains(player.getUniqueId()) || Server.getSurvival().contains(player.getUniqueId()))) {
 					if (itm.hasItemMeta() && itm.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Explosive Gunpowder")) {
 						if (Server.getFactions().contains(player.getUniqueId()) && player.getGameMode() == GameMode.SURVIVAL && !Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
-							if (!Server.getDelayedTasks().contains(event.getPlayer().getUniqueId())) {
-								Server.getDelayedTasks().add(event.getPlayer().getUniqueId());
-								Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
-									@Override
-									public void run() {
-										Server.getDelayedTasks().remove(event.getPlayer().getUniqueId());
-									}
-								}, 20L);
+							if (Server.getExplosiveFunpowderCooldown().containsKey(player.getUniqueId())) {
+								player.sendMessage($.getMinigameTag(player) + ChatColor.GRAY + "You must wait " + ChatColor.RED + Server.getExplosiveFunpowderCooldown().get(player.getUniqueId()) + ChatColor.GRAY + " seconds before using that again.");
+							} else {
 								if (itm.getAmount() < 2) {
 									player.getInventory().setItemInMainHand(Link$.createMaterial(Material.AIR));
 								} else {
@@ -830,6 +826,31 @@ public class PlayerEventHandler implements Listener {
 								CraftExplosion explosion = new CraftExplosion(player.getLocation(), 0.4F, false);
 								explosion.explodeNaturally();
 								LinkServer.getInstance().getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(5.0));
+								final Player fPlayer = player;
+								final Plugin fPlugin = Server.getPlugin();
+								if (!Server.getExplosiveFunpowderCooldown().containsKey(fPlayer.getUniqueId())) {
+									Server.getExplosiveFunpowderCooldown().put(fPlayer.getUniqueId(), (int) (60 * 7.5));
+								}
+								new BukkitRunnable() {
+									int time = (int) (60 * 7.5);
+
+									public void run() {
+										time--;
+										Server.Factions.getRecruitKitCooldown().put(fPlayer.getUniqueId(), time);
+										if (time <= 0) {
+											Player checkPlayer = fPlugin.getServer().getPlayer(fPlayer.getUniqueId());
+											if (!(checkPlayer == null)) {
+												checkPlayer.sendMessage($.getMinigameTag(checkPlayer) + ChatColor.GRAY + "You can now use the " + ChatColor.RED + "Funpowder");
+											}
+											if (Server.Factions.getRecruitKitCooldown().containsKey(fPlayer.getUniqueId())) {
+												Server.Factions.getRecruitKitCooldown().remove(fPlayer.getUniqueId());
+											}
+											cancel();
+										}
+
+									}
+								}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+								return;
 							}
 						}
 						return;
@@ -904,6 +925,7 @@ public class PlayerEventHandler implements Listener {
 								exactLoc.setX(exactLoc.getBlockX() + 0.5);
 								exactLoc.setY(exactLoc.getBlockY() + 1.0);
 								exactLoc.setZ(exactLoc.getBlockZ() + 0.5);
+								EntityEventHandler.setLastCreeperSpawnEgg(System.currentTimeMillis(), exactLoc);
 								event.getClickedBlock().getWorld().spawnEntity(exactLoc, entityType);
 							}
 						}
@@ -949,6 +971,7 @@ public class PlayerEventHandler implements Listener {
 				}
 			}
 		}
+
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)

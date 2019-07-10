@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -26,10 +27,24 @@ public class EntityEventHandler implements Listener {
 	private int lastSecond = 0;
 	private int hits = 0;
 
+	private static Map.Entry<Long, Location> lastCreeperSpawnEgg = null;
+
+	public static void setLastCreeperSpawnEgg(long time, Location location) {
+		lastCreeperSpawnEgg = new AbstractMap.SimpleEntry<>(time, location);
+	}
+
 	@EventHandler
 	public void onEntitySpawnEvent(EntitySpawnEvent event) {
 		if (event.getEntity() instanceof Phantom)
 			event.setCancelled(true);
+		if (event.getEntity() instanceof Creeper) {
+			event.setCancelled(true);
+			if (lastCreeperSpawnEgg != null)
+				if (System.currentTimeMillis() - lastCreeperSpawnEgg.getKey().longValue() < 500)
+					if (event.getLocation().getWorld().getName().equals(lastCreeperSpawnEgg.getValue().getWorld().getName()))
+						if (event.getLocation().distance(lastCreeperSpawnEgg.getValue()) < 5)
+							event.setCancelled(false);
+		}
 		if ($.getMinigameFromWorld(event.getLocation().getWorld()) == ServerMinigame.SURVIVAL)
 			if (event.getLocation().distance($.getZoneLocation($.getMinigameFromWorld(event.getLocation().getWorld()).toString().toLowerCase())) < 150)
 				event.setCancelled(true);
@@ -54,7 +69,7 @@ public class EntityEventHandler implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void ItemDespawnEvent(ItemDespawnEvent event) {
 		ItemStack item = event.getEntity().getItemStack();
@@ -73,7 +88,7 @@ public class EntityEventHandler implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onItemEntityMerge(ItemMergeEvent event) {
 		ServerMinigame minigame = $.getMinigameFromWorld(event.getEntity().getWorld());
@@ -83,7 +98,7 @@ public class EntityEventHandler implements Listener {
 				event.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler
 	public void onSpawnerSpawn(SpawnerSpawnEvent event) {
 		/*if (event.isCancelled())
@@ -105,7 +120,7 @@ public class EntityEventHandler implements Listener {
 			spawner.update(true);
 		}
 	}
-	
+
 	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
 		Entity entity = event.getEntity();
@@ -122,7 +137,7 @@ public class EntityEventHandler implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
 		EntityDamageEvent damageEvent = event.getEntity().getLastDamageCause();
@@ -181,7 +196,7 @@ public class EntityEventHandler implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onEntityTeleport(EntityTeleportEvent event) {
 		if (event.getEntity() instanceof Enderman)
