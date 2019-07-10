@@ -836,14 +836,14 @@ public class PlayerEventHandler implements Listener {
 
 									public void run() {
 										time--;
-										Server.Factions.getRecruitKitCooldown().put(fPlayer.getUniqueId(), time);
+										Server.getExplosiveFunpowderCooldown().put(fPlayer.getUniqueId(), time);
 										if (time <= 0) {
 											Player checkPlayer = fPlugin.getServer().getPlayer(fPlayer.getUniqueId());
 											if (!(checkPlayer == null)) {
 												checkPlayer.sendMessage($.getMinigameTag(checkPlayer) + ChatColor.GRAY + "You can now use the " + ChatColor.RED + "Funpowder");
 											}
-											if (Server.Factions.getRecruitKitCooldown().containsKey(fPlayer.getUniqueId())) {
-												Server.Factions.getRecruitKitCooldown().remove(fPlayer.getUniqueId());
+											if (Server.getExplosiveFunpowderCooldown().containsKey(fPlayer.getUniqueId())) {
+												Server.getExplosiveFunpowderCooldown().remove(fPlayer.getUniqueId());
 											}
 											cancel();
 										}
