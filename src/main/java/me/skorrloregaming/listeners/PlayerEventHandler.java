@@ -1909,31 +1909,24 @@ public class PlayerEventHandler implements Listener {
 				double baseHealth = $.roundDouble(k.getHealth() / 2, 1);
 				event.setDeathMessage(tag + ChatColor.RED + player.getName() + ChatColor.GRAY + " has been killed by " + ChatColor.RED + k.getName() + ChatColor.GRAY + " [" + ChatColor.RED + baseHealth + ChatColor.DARK_RED + " \u2764" + ChatColor.GRAY + "]");
 				int supplyCash = 10;
-				if (CraftGo.Player.getAccounts(k, k.getName()).contains(player.getName().toString())) {
-					supplyCash = 0;
-					k.sendMessage("Sorry, but you cannot farm kills on alternative accounts.");
-					k.sendMessage("If you believe this is an error, contact server administration.");
+				int currentPlayerKills = 0, currentPlayerDeaths = 0;
+				if (subDomain.equals("kitpvp")) {
+					currentPlayerKills = $.Kitpvp.getPlayerKills(k);
+					$.Kitpvp.setPlayerKills(k, currentPlayerKills + 1);
+					currentPlayerDeaths = $.Kitpvp.getPlayerDeaths(player);
+					$.Kitpvp.setPlayerDeaths(player, currentPlayerDeaths + 1);
+				} else if (subDomain.equals("factions")) {
+					currentPlayerKills = $.Factions.getPlayerKills(k);
+					$.Factions.setPlayerKills(k, currentPlayerKills + 1);
+					currentPlayerDeaths = $.Factions.getPlayerDeaths(player);
+					$.Factions.setPlayerDeaths(player, currentPlayerDeaths + 1);
 				}
-				if (supplyCash > 0) {
-					int currentPlayerKills = 0, currentPlayerDeaths = 0;
-					if (subDomain.equals("kitpvp")) {
-						currentPlayerKills = $.Kitpvp.getPlayerKills(k);
-						$.Kitpvp.setPlayerKills(k, currentPlayerKills + 1);
-						currentPlayerDeaths = $.Kitpvp.getPlayerDeaths(player);
-						$.Kitpvp.setPlayerDeaths(player, currentPlayerDeaths + 1);
-					} else if (subDomain.equals("factions")) {
-						currentPlayerKills = $.Factions.getPlayerKills(k);
-						$.Factions.setPlayerKills(k, currentPlayerKills + 1);
-						currentPlayerDeaths = $.Factions.getPlayerDeaths(player);
-						$.Factions.setPlayerDeaths(player, currentPlayerDeaths + 1);
-					}
-					int dpk = currentPlayerKills / 50;
-					if (Link$.getRankId(k) >= -1 && 6 + dpk > 15)
-						dpk = 15 - 6;
-					if (Link$.getRankId(k) < -1 && 6 + dpk > 30)
-						dpk = 30 - 6;
-					supplyCash = 6 + dpk;
-				}
+				int dpk = currentPlayerKills / 50;
+				if (Link$.getRankId(k) >= -1 && 6 + dpk > 15)
+					dpk = 15 - 6;
+				if (Link$.getRankId(k) < -1 && 6 + dpk > 30)
+					dpk = 30 - 6;
+				supplyCash = 6 + dpk;
 				EconManager.depositCash(k, supplyCash, subDomain);
 				k.sendMessage(tag + ChatColor.GRAY + "You have been given " + ChatColor.RED + "$" + (supplyCash) + ChatColor.GRAY + " for killing " + ChatColor.RED + player.getName());
 				if (subDomain.equals("kitpvp")) {
