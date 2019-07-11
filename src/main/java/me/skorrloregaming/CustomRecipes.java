@@ -113,6 +113,14 @@ public class CustomRecipes {
 			log(key);
 		}
 		{
+			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "smooth_stone");
+			ShapelessRecipe recipe = new ShapelessRecipe(key, Link$.createMaterial(Material.SMOOTH_STONE, 3));
+			recipe.addIngredient(3, Material.STONE);
+			recipe.addIngredient(1, Material.COAL);
+			Bukkit.getServer().addRecipe(recipe);
+			log(key);
+		}
+		{
 			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "monster_vial");
 			ShapelessRecipe recipe = new ShapelessRecipe(key, Link$.createMaterial(Material.POTION, 1, ChatColor.RESET + "Monster Vial", (short) 0, new String[]{ChatColor.RESET + "" + ChatColor.WHITE + "Capture any mob into a spawn egg using this vial."}));
 			recipe.addIngredient(1, Material.GLASS_BOTTLE);
@@ -166,6 +174,20 @@ public class CustomRecipes {
 			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "cobblestone");
 			ShapelessRecipe recipe = new ShapelessRecipe(key, Link$.createMaterial(Material.COBBLESTONE, 3));
 			recipe.addIngredient(1, Material.STONE_BRICKS);
+			Bukkit.getServer().addRecipe(recipe);
+			log(key);
+		}
+		{
+			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "smooth_stone_uncrafting");
+			ShapelessRecipe recipe = new ShapelessRecipe(key, Link$.createMaterial(Material.STONE, 3));
+			recipe.addIngredient(1, Material.SMOOTH_STONE);
+			Bukkit.getServer().addRecipe(recipe);
+			log(key);
+		}
+		{
+			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "bucket_uncrafting");
+			ShapelessRecipe recipe = new ShapelessRecipe(key, Link$.createMaterial(Material.IRON_INGOT, 3));
+			recipe.addIngredient(1, Material.BUCKET);
 			Bukkit.getServer().addRecipe(recipe);
 			log(key);
 		}
