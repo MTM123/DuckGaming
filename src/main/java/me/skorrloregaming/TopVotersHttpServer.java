@@ -58,6 +58,8 @@ public class TopVotersHttpServer implements Runnable {
 
 		public String getTimeDifference(String username, String service) {
 			long timestamp = Server.getVoteListener().getLastVoteForService(username, service);
+			if (timestamp == 0)
+				return "0s";
 			long currentTime = System.currentTimeMillis();
 			long diff = currentTime - timestamp;
 			return Link$.formatTime(diff / 1000);
@@ -121,15 +123,15 @@ public class TopVotersHttpServer implements Runnable {
 						sb.append("<tr>");
 						sb.append("<td>" + key.getArg1() + "</td>");
 						sb.append("<td>" + key.getArg0() + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "PlanetMinecraft") + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "Minecraft-MP") + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "PlanetMinecraft.com") + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "Minecraft-MP.com") + "</td>");
 						sb.append("<td>" + getTimeDifference(key.getArg1(), "MinecraftServers.org") + "</td>");
 						sb.append("<td>" + getTimeDifference(key.getArg1(), "MinecraftServers.biz") + "</td>");
 						sb.append("<td>" + getTimeDifference(key.getArg1(), "MCSL") + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "Minecraft-Server") + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "Minecraft-Server.net") + "</td>");
 						sb.append("<td>" + getTimeDifference(key.getArg1(), "MinecraftServersList") + "</td>");
 						sb.append("<td>" + getTimeDifference(key.getArg1(), "TopG.org") + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "Trackyserver") + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "Trackyserver.com") + "</td>");
 						sb.append("<td>" + getTimeDifference(key.getArg1(), "/Top Minecraft Servers") + "</td>");
 						sb.append("</tr>");
 					}
