@@ -5,6 +5,7 @@ import com.vexsoftware.votifier.model.VotifierEvent;
 import me.skorrloregaming.*;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.impl.ServerMinigame;
+import me.skorrloregaming.impl.Service;
 import me.skorrloregaming.redis.MapBuilder;
 import me.skorrloregaming.redis.RedisChannel;
 import org.bukkit.Bukkit;
@@ -15,11 +16,29 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.util.Calendar;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class Votifier_Listener implements Listener {
 
 	private final int WEBSITE_COUNT = 9;
 	private final double MODIFIER = 1.2;
+
+	private ConcurrentMap<Integer, String> services;
+
+	public Votifier_Listener() {
+		services = new ConcurrentHashMap<>();
+		services.put(0, "PlanetMinecraft.com");
+		services.put(1, "Minecraft-MP.com");
+		services.put(2, "MinecraftServers.org");
+		services.put(3, "MinecraftServers.biz");
+		services.put(4, "MCSL");
+		services.put(5, "Minecraft-Server.net");
+		services.put(6, "MinecraftServersList");
+		services.put(7, "TopG.org");
+		services.put(8, "Trackyserver.com");
+		services.put(9, "/Top Minecraft Servers");
+	}
 
 	public int getMonthlyVotes(String username, int year, int monthId) {
 		if (Server.getMonthlyVoteConfig().getData().contains("config." + username + "." + year + "." + (monthId + 1)))
@@ -31,6 +50,56 @@ public class Votifier_Listener implements Listener {
 		int currentVotes = getMonthlyVotes(username, year, monthId);
 		Server.getMonthlyVoteConfig().getData().set("config." + username + "." + year + "." + (monthId + 1), currentVotes + amount);
 		Server.getMonthlyVoteConfig().saveData();
+	}
+
+	public long getLastVoteForService(String username, String service) {
+		if (Server.getMonthlyVoteConfig().getData().contains("config." + username + "." + service))
+			return Server.getMonthlyVoteConfig().getData().getLong("config." + username + "." + service);
+		return 0;
+	}
+
+	public void setLastVoteForService(String username, long timestamp, String service) {
+		Server.getMonthlyVoteConfig().getData().set("config." + username + "." + service, timestamp);
+		Server.getMonthlyVoteConfig().saveData();
+	}
+
+	public String getServiceNameFromFriendly(Service service) {
+		return services.get(service.ordinal());
+	}
+
+	public long getTimeDifference(String username, String service) {
+		long timestamp = getLastVoteForService(username, service);
+		if (timestamp == 0)
+			return 0;
+		long currentTime = System.currentTimeMillis();
+		long diff = currentTime - timestamp;
+		long reverseDiff = (1000 * 60 * 60 * 24) - diff;
+		return reverseDiff / 1000;
+	}
+
+	public String getFriendlyTimeDifference(String username, String service) {
+		long diff = getTimeDifference(username, service);
+		boolean flag = false;
+		if (diff < 0) {
+			flag = true;
+			diff = Math.abs(diff);
+		}
+		String friendly = Link$.formatTime(diff);
+		if (flag)
+			friendly = "-" + friendly;
+		return friendly;
+	}
+
+	public long getMaximumTimeDiffForAllServices(String username) {
+		long lastDiff = 0;
+		for (Service service : Service.values()) {
+			long diff = getTimeDifference(username, getServiceNameFromFriendly(service));
+			if (diff < 0)
+				diff = 0;
+			if (diff > lastDiff)
+				lastDiff = diff;
+		}
+		return lastDiff;
 	}
 
 	public void register() {
@@ -46,17 +115,19 @@ public class Votifier_Listener implements Listener {
 		Vote vote = event.getVote();
 		String username = vote.getUsername();
 		OfflinePlayer player = CraftGo.Player.getOfflinePlayer(username);
-		Logger.info("Votifier has received a vote for player " + username + ".", true);
+		Logger.info("Votifier has received a vote for player " + username + " at " + event.getVote().getServiceName() + ".", true);
 		boolean spoofed = false;
 		ServerMinigame minigame = null;
 		if (vote.getServiceName().startsWith("Spoofed:")) {
 			spoofed = true;
 			minigame = ServerMinigame.valueOf(vote.getServiceName().split("Spoofed:")[1].toString().toUpperCase());
 		}
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(System.currentTimeMillis());
+		addMonthlyVotes(vote.getUsername(), calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
+		if (!spoofed)
+			setLastVoteForService(username, System.currentTimeMillis(), event.getVote().getServiceName());
 		if (player.hasPlayedBefore() || player.isOnline()) {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(System.currentTimeMillis());
-			addMonthlyVotes(vote.getUsername(), calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
 			if (doJackpots) {
 				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted and earned a jackpot.";
 				Bukkit.broadcastMessage(message);

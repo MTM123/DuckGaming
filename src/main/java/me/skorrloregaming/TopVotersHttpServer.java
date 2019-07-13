@@ -1,5 +1,6 @@
 package me.skorrloregaming;
 
+import me.skorrloregaming.impl.Service;
 import me.skorrloregaming.impl.Switches;
 import me.skorrloregaming.impl.Switches.SwitchIntString;
 
@@ -83,6 +84,16 @@ public class TopVotersHttpServer implements Runnable {
 				sb.append("<tr>");
 				sb.append("<th>Username</th>");
 				sb.append("<th>Votes this month</th> ");
+				sb.append("<th>1</th>");
+				sb.append("<th>2</th>");
+				sb.append("<th>3</th>");
+				sb.append("<th>4</th>");
+				sb.append("<th>5</th>");
+				sb.append("<th>6</th>");
+				sb.append("<th>7</th>");
+				sb.append("<th>8</th>");
+				sb.append("<th>9</th>");
+				sb.append("<th>10</th>");
 				sb.append("</tr>");
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTimeInMillis(System.currentTimeMillis());
@@ -97,14 +108,15 @@ public class TopVotersHttpServer implements Runnable {
 					}
 				}
 				validKeys.sort(myComparator);
-				SwitchIntString[] trimmedKeys = Arrays.copyOf(validKeys.toArray(new SwitchIntString[0]), 5);
-				for (SwitchIntString key : trimmedKeys) {
+				for (SwitchIntString key : validKeys) {
 					if (key == null) {
 						sb.append("<tr><td></td><td></td></tr>");
 					} else {
 						sb.append("<tr>");
 						sb.append("<td>" + key.getArg1() + "</td>");
 						sb.append("<td>" + key.getArg0() + "</td>");
+						for (int i = 0; i < 10; i++)
+							sb.append("<td>" + Server.getVoteListener().getFriendlyTimeDifference(key.getArg1(), Server.getVoteListener().getServiceNameFromFriendly(Service.values()[i])) + "</td>");
 						sb.append("</tr>");
 					}
 				}
