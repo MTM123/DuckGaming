@@ -1,5 +1,6 @@
 package me.skorrloregaming;
 
+import me.skorrloregaming.impl.Service;
 import me.skorrloregaming.impl.Switches;
 import me.skorrloregaming.impl.Switches.SwitchIntString;
 
@@ -55,18 +56,6 @@ public class TopVotersHttpServer implements Runnable {
 				return Integer.compare(o2.getArg0(), o1.getArg0());
 			}
 		};
-
-		public String getTimeDifference(String username, String service) {
-			long timestamp = Server.getVoteListener().getLastVoteForService(username, service);
-			if (timestamp == 0)
-				return "0s";
-			long currentTime = System.currentTimeMillis();
-			long diff = currentTime - timestamp;
-			long reverseDiff = (1000*60*60*24) - diff;
-			if (reverseDiff < 0)
-				return "0s";
-			return Link$.formatTime(reverseDiff / 1000);
-		}
 
 		@Override
 		public void run() {
@@ -126,16 +115,8 @@ public class TopVotersHttpServer implements Runnable {
 						sb.append("<tr>");
 						sb.append("<td>" + key.getArg1() + "</td>");
 						sb.append("<td>" + key.getArg0() + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "PlanetMinecraft.com") + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "Minecraft-MP.com") + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "MinecraftServers.org") + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "MinecraftServers.biz") + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "MCSL") + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "Minecraft-Server.net") + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "MinecraftServersList") + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "TopG.org") + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "Trackyserver.com") + "</td>");
-						sb.append("<td>" + getTimeDifference(key.getArg1(), "/Top Minecraft Servers") + "</td>");
+						for (int i = 0; i < 10; i++)
+							sb.append("<td>" + Server.getVoteListener().getFriendlyTimeDifference(key.getArg1(), Server.getVoteListener().getServiceNameFromFriendly(Service.values()[i])) + "</td>");
 						sb.append("</tr>");
 					}
 				}
