@@ -56,6 +56,13 @@ public class TopVotersHttpServer implements Runnable {
 			}
 		};
 
+		public String getTimeDifference(String username, String service) {
+			long timestamp = Server.getVoteListener().getLastVoteForService(username, service);
+			long currentTime = System.currentTimeMillis();
+			long diff = currentTime - timestamp;
+			return Link$.formatTime(diff / 1000);
+		}
+
 		@Override
 		public void run() {
 			try {
@@ -83,6 +90,16 @@ public class TopVotersHttpServer implements Runnable {
 				sb.append("<tr>");
 				sb.append("<th>Username</th>");
 				sb.append("<th>Votes this month</th> ");
+				sb.append("<th>1</th>");
+				sb.append("<th>2</th>");
+				sb.append("<th>3</th>");
+				sb.append("<th>4</th>");
+				sb.append("<th>5</th>");
+				sb.append("<th>6</th>");
+				sb.append("<th>7</th>");
+				sb.append("<th>8</th>");
+				sb.append("<th>9</th>");
+				sb.append("<th>10</th>");
 				sb.append("</tr>");
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTimeInMillis(System.currentTimeMillis());
@@ -104,6 +121,16 @@ public class TopVotersHttpServer implements Runnable {
 						sb.append("<tr>");
 						sb.append("<td>" + key.getArg1() + "</td>");
 						sb.append("<td>" + key.getArg0() + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "PlanetMinecraft") + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "Minecraft-MP") + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "MinecraftServers.org") + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "MinecraftServers.biz") + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "MCSL") + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "Minecraft-Server") + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "MinecraftServersList") + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "TopG.org") + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "Trackyserver") + "</td>");
+						sb.append("<td>" + getTimeDifference(key.getArg1(), "/Top Minecraft Servers") + "</td>");
 						sb.append("</tr>");
 					}
 				}
