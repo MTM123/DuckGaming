@@ -97,8 +97,7 @@ public class TopVotersHttpServer implements Runnable {
 					}
 				}
 				validKeys.sort(myComparator);
-				SwitchIntString[] trimmedKeys = Arrays.copyOf(validKeys.toArray(new SwitchIntString[0]), 5);
-				for (SwitchIntString key : trimmedKeys) {
+				for (SwitchIntString key : validKeys) {
 					if (key == null) {
 						sb.append("<tr><td></td><td></td></tr>");
 					} else {

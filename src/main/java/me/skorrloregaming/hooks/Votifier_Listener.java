@@ -33,6 +33,17 @@ public class Votifier_Listener implements Listener {
 		Server.getMonthlyVoteConfig().saveData();
 	}
 
+	public long getLastVoteForService(String username, String service) {
+		if (Server.getMonthlyVoteConfig().getData().contains("config." + username + "." + service))
+			return Server.getMonthlyVoteConfig().getData().getLong("config." + username + "." + service);
+		return 0;
+	}
+
+	public void setLastVoteForService(String username, long timestamp, String service) {
+		Server.getMonthlyVoteConfig().getData().set("config." + username + "." + service, timestamp);
+		Server.getMonthlyVoteConfig().saveData();
+	}
+
 	public void register() {
 		Server.getPlugin().getServer().getPluginManager().registerEvents(this, Server.getPlugin());
 	}
@@ -46,17 +57,19 @@ public class Votifier_Listener implements Listener {
 		Vote vote = event.getVote();
 		String username = vote.getUsername();
 		OfflinePlayer player = CraftGo.Player.getOfflinePlayer(username);
-		Logger.info("Votifier has received a vote for player " + username + ".", true);
+		Logger.info("Votifier has received a vote for player " + username + " at " + event.getVote().getServiceName() + ".", true);
 		boolean spoofed = false;
 		ServerMinigame minigame = null;
 		if (vote.getServiceName().startsWith("Spoofed:")) {
 			spoofed = true;
 			minigame = ServerMinigame.valueOf(vote.getServiceName().split("Spoofed:")[1].toString().toUpperCase());
 		}
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(System.currentTimeMillis());
+		addMonthlyVotes(vote.getUsername(), calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
+		if (!spoofed)
+			setLastVoteForService(username, System.currentTimeMillis(), event.getVote().getServiceName());
 		if (player.hasPlayedBefore() || player.isOnline()) {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(System.currentTimeMillis());
-			addMonthlyVotes(vote.getUsername(), calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
 			if (doJackpots) {
 				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted and earned a jackpot.";
 				Bukkit.broadcastMessage(message);
