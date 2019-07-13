@@ -62,7 +62,10 @@ public class TopVotersHttpServer implements Runnable {
 				return "0s";
 			long currentTime = System.currentTimeMillis();
 			long diff = currentTime - timestamp;
-			return Link$.formatTime(diff / 1000);
+			long reverseDiff = (1000*60*60*24) - diff;
+			if (reverseDiff < 0)
+				return "0s";
+			return Link$.formatTime(reverseDiff / 1000);
 		}
 
 		@Override
