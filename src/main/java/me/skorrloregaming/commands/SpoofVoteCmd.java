@@ -24,7 +24,7 @@ public class SpoofVoteCmd implements CommandExecutor {
 			return true;
 		}
 		if (args.length < 2) {
-			sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player> <count> [minigame]");
+			sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player> <count> [minigame?] [service]");
 			return true;
 		} else {
 			OfflinePlayer targetPlayer = CraftGo.Player.getOfflinePlayer(args[0]);
@@ -38,7 +38,11 @@ public class SpoofVoteCmd implements CommandExecutor {
 				boolean doJackpots = true;
 				if (args.length >= 3) {
 					minigame = args[2].toLowerCase();
-					serviceName = "Spoofed:" + minigame;
+					if (args.length >= 4) {
+						serviceName = args[3];
+					} else {
+						serviceName = "Spoofed:" + minigame;
+					}
 				}
 				for (int i = 0; i < count; i++) {
 					Vote vote = new Vote(serviceName, targetPlayer.getName(), "0.0.0.0", new Date().toString());
@@ -50,5 +54,5 @@ public class SpoofVoteCmd implements CommandExecutor {
 			}
 		}
 	}
-
 }
+
