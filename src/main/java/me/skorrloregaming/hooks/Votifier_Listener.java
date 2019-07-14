@@ -115,6 +115,8 @@ public class Votifier_Listener implements Listener {
 		Vote vote = event.getVote();
 		String username = vote.getUsername();
 		OfflinePlayer player = CraftGo.Player.getOfflinePlayer(username);
+		if (player.hasPlayedBefore() || player.isOnline())
+			username = player.getName();
 		Logger.info("Votifier has received a vote for player " + username + " at " + event.getVote().getServiceName() + ".", true);
 		boolean spoofed = false;
 		ServerMinigame minigame = null;
