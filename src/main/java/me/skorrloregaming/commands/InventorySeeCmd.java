@@ -1,8 +1,10 @@
 package me.skorrloregaming.commands;
 
 import me.skorrloregaming.$;
+import me.skorrloregaming.InventoryMenu;
 import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.impl.InventoryType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -31,13 +33,14 @@ public class InventorySeeCmd implements CommandExecutor {
 				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 			} else {
 				String name = ChatColor.BOLD + "Temporary Inventory";
+				Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.TEMPORARY), 54, name);
 				if (player.isOp()) {
+					inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.CHEST), 54, name);
 					name = ChatColor.BOLD + "Personal Inventory";
 					if (Server.getSavePersonalChest().containsKey(player))
 						Server.getSavePersonalChest().remove(player);
 					Server.getSaveOtherInventory().put(player, tp);
 				}
-				Inventory inv = Bukkit.createInventory(null, 54, name);
 				inv.setContents(tp.getInventory().getContents());
 				player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 				player.openInventory(inv);
