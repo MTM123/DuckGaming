@@ -6,6 +6,7 @@ import me.skorrloregaming.impl.ServerMinigame;
 import me.skorrloregaming.shop.events.enchant.CreateEnchantTypeEventHandler;
 import me.skorrloregaming.shop.events.item.CreateItemTypeEventHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -92,7 +93,7 @@ public class LaShoppe {
 				int startIndex = 0;
 				Inventory inventory = null;
 				if (player.isOp()) {
-					inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.LA_SHOPPE, page), 36, "La Shoppe, page " + page);
+					inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.LA_SHOPPE, page), 45, "La Shoppe, page " + page);
 					ItemStack removeItemModeItem = Link$.createMaterial(Material.RED_DYE, "Remove items from shop");
 					if (removeMode) {
 						if (CraftGo.Player.getProtocolVersion(player) > 314) {
@@ -106,7 +107,7 @@ public class LaShoppe {
 					inventory.setItem(8, Link$.createMaterial(Material.GREEN_DYE, "Add new shop item"));
 					startIndex = 9;
 				} else {
-					inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.LA_SHOPPE, page), 27, "La Shoppe, page " + page);
+					inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.LA_SHOPPE, page), 36, "La Shoppe, page " + page);
 				}
 				ItemStack viewPrevious = Link$.createMaterial(Material.EMERALD, "View previous page");
 				ItemStack viewFollowing = Link$.createMaterial(Material.EMERALD, "View following page");
@@ -131,6 +132,11 @@ public class LaShoppe {
 								inventory.setItem(startIndex + slot, retrieveEnchant(minigame, enchantIndex).toItemStack());
 						}
 					}
+				}
+				int slot = 1;
+				for (int i = 27 + startIndex; i < 36; i++) {
+					inventory.setItem(i, Link$.createMaterial(Material.BLACK_STAINED_GLASS_PANE, "Select hotbar slot " + slot));
+					slot++;
 				}
 				player.openInventory(inventory);
 				break;

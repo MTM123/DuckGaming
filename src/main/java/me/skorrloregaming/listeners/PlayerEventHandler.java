@@ -2098,6 +2098,12 @@ public class PlayerEventHandler implements Listener {
 						} else if (event.getCurrentItem().getItemMeta().getDisplayName().equals("View following page")) {
 							Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, page + 1, removeMode);
 						}
+					} else if (event.getCurrentItem().getType() == Material.BLACK_STAINED_GLASS_PANE) {
+						if (event.getCurrentItem().getItemMeta().getDisplayName().contains("hotbar")) {
+							String dn = event.getCurrentItem().getItemMeta().getDisplayName();
+							int slot = Integer.parseInt(dn.substring(dn.indexOf("slot ") + "slot ".length())) - 1;
+							player.getInventory().setHeldItemSlot(slot);
+						}
 					}
 					if (event.getCurrentItem().hasItemMeta()) {
 						if (event.getCurrentItem().getItemMeta().hasLore()) {
@@ -2613,6 +2619,7 @@ public class PlayerEventHandler implements Listener {
 				double price = 0.0;
 				int data = 0;
 				String code = player.getWorld().getName() + ";" + name;
+				boolean virtualShop = false;
 				if (name.contains(";")) {
 					if (Server.getSignConfig().getData().contains("signs." + code.replace(";", ""))) {
 						int blockX = Integer.parseInt(code.split(";")[1]);
@@ -2643,6 +2650,7 @@ public class PlayerEventHandler implements Listener {
 						price = item.getPrice();
 						amount = item.getAmount();
 						data = item.getData();
+						virtualShop = true;
 					}
 				}
 				int singleAmount = 1;
@@ -2668,6 +2676,8 @@ public class PlayerEventHandler implements Listener {
 				if (totalAmount > 0) {
 					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Sold " + ChatColor.RED + materialName + " x" + totalAmount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(totalPrice));
 				}
+				if (virtualShop)
+					Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, 1, false);
 			}
 		if (event.getInventory().getHolder() instanceof InventoryMenu)
 			if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.CHEST)) {
