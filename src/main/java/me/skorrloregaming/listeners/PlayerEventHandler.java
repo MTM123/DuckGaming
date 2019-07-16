@@ -2677,7 +2677,9 @@ public class PlayerEventHandler implements Listener {
 					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Sold " + ChatColor.RED + materialName + " x" + totalAmount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(totalPrice));
 				}
 				if (virtualShop)
-					Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, 1, false);
+					Bukkit.getScheduler().runTaskLater(Server.getPlugin(), () -> {
+						Server.getShoppe().createInventory(player, LaShoppeFrame.HOME, 1, false);
+					}, 2L);
 			}
 		if (event.getInventory().getHolder() instanceof InventoryMenu)
 			if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.CHEST)) {
