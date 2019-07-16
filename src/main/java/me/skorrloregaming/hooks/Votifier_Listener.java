@@ -15,6 +15,7 @@ import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -148,14 +149,17 @@ public class Votifier_Listener implements Listener {
 				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			}
 			double balance2 = EconManager.retrieveCash(player.getUniqueId(), "kitpvp");
-			int ceil2 = (int) Math.ceil(balance2 / 25);
-			int amountEarned2 = (int) (50 + (ceil2 * 10));
+			double ceil2 = balance2 / 25;
+			double amountEarned2 = 50 + (ceil2 * 10);
 			double balance1 = EconManager.retrieveCash(player.getUniqueId(), "factions");
-			int ceil1 = (int) Math.ceil(balance1 / 30);
-			int amountEarned1 = (int) (500 + (ceil1 * 4.125));
+			double ceil1 = balance1 / 30;
+			double amountEarned1 = 500 + (ceil1 * 4.125);
 			double balance3 = EconManager.retrieveCash(player.getUniqueId(), "skyblock");
-			int ceil3 = (int) Math.ceil(balance3 / 30);
-			int amountEarned3 = (int) (500 + (ceil3 * 5));
+			double ceil3 = balance3 / 30;
+			double amountEarned3 = 500 + (ceil3 * 5);
+			double balance4 = EconManager.retrieveCash(player.getUniqueId(), "survival");
+			double ceil4 = balance4 / 100;
+			double amountEarned4 = 2.5 + (ceil4 * 0.1);
 			amountEarned1 *= MODIFIER;
 			amountEarned2 *= MODIFIER;
 			amountEarned3 *= MODIFIER;
@@ -168,6 +172,10 @@ public class Votifier_Listener implements Listener {
 			amountEarned3 /= WEBSITE_COUNT;
 			if (amountEarned3 > 85000)
 				amountEarned3 = 85000;
+			amountEarned4 /= WEBSITE_COUNT;
+			if (amountEarned4 > 50)
+				amountEarned4 = 50;
+
 			if (!doJackpots) {
 				amountEarned1 = 0;
 				amountEarned2 = 0;
@@ -201,14 +209,17 @@ public class Votifier_Listener implements Listener {
 				EconManager.depositCash(player.getUniqueId(), amountEarned1, "factions");
 			if (!spoofed || (spoofed && minigame == ServerMinigame.SKYBLOCK))
 				EconManager.depositCash(player.getUniqueId(), amountEarned3, "skyblock");
+			DecimalFormat formatter = new DecimalFormat("###,###,###,###,###.##");
 			if (player.isOnline()) {
 				player.getPlayer().playSound(player.getPlayer().getEyeLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1F, 1F);
 				if (!spoofed || (spoofed && minigame == ServerMinigame.KITPVP))
-					player.getPlayer().sendMessage(ChatColor.GREEN + "Jackpot." + ChatColor.RESET + " You just voted and earned $" + amountEarned2 + " in Kitpvp.");
+					player.getPlayer().sendMessage(ChatColor.GREEN + "Jackpot." + ChatColor.RESET + " You just voted and earned $" + formatter.format(amountEarned2) + " in Kitpvp.");
 				if (!spoofed || (spoofed && minigame == ServerMinigame.FACTIONS))
-					player.getPlayer().sendMessage(ChatColor.GREEN + "Jackpot." + ChatColor.RESET + " You just voted and earned $" + amountEarned1 + " in Factions.");
+					player.getPlayer().sendMessage(ChatColor.GREEN + "Jackpot." + ChatColor.RESET + " You just voted and earned $" + formatter.format(amountEarned1) + " in Factions.");
 				if (!spoofed || (spoofed && minigame == ServerMinigame.SKYBLOCK))
-					player.getPlayer().sendMessage(ChatColor.GREEN + "Jackpot." + ChatColor.RESET + " You just voted and earned $" + amountEarned3 + " in Skyblock.");
+					player.getPlayer().sendMessage(ChatColor.GREEN + "Jackpot." + ChatColor.RESET + " You just voted and earned $" + formatter.format(amountEarned3) + " in Skyblock.");
+				if (!spoofed || (spoofed && minigame == ServerMinigame.SURVIVAL))
+					player.getPlayer().sendMessage(ChatColor.GREEN + "Jackpot." + ChatColor.RESET + " You just voted and earned $" + formatter.format(amountEarned4) + " in Survival.");
 				$.playFirework(player.getPlayer().getLocation());
 				Server.setLastVoteTime(System.currentTimeMillis());
 			}
