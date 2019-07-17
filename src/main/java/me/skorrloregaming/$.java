@@ -423,7 +423,7 @@ public class $ {
 	}
 
 	public static boolean isPostSign(Material material) {
-		switch (material){
+		switch (material) {
 			case OAK_SIGN:
 				return true;
 			case ACACIA_SIGN:
@@ -442,7 +442,7 @@ public class $ {
 	}
 
 	public static boolean isWallSign(Material material) {
-		switch (material){
+		switch (material) {
 			case OAK_WALL_SIGN:
 				return true;
 			case ACACIA_WALL_SIGN:
@@ -911,9 +911,6 @@ public class $ {
 
 	public static boolean isWithinSystemClaimedLand(Location location) {
 		int size = 0;
-		if (getGriefPrevention() != null) {
-			size = me.skorrloregaming.GriefPreventionAPI.getClaimAtLocation(location) != null ? 1 : 0;
-		}
 		if (getWorldGuard() != null) {
 			size = me.skorrloregaming.WorldGuardAPI.getApplicableRegionsSetSize(location);
 		}
@@ -930,6 +927,10 @@ public class $ {
 
 	public static boolean isWithinUnclaimedLand(Location location, Player player, boolean worldGuardOnly) {
 		int size = 0;
+		if (getGriefPrevention() != null)
+			if (me.skorrloregaming.GriefPreventionAPI.hasClaimInLocation(player, location)) {
+				return false;
+			}
 		boolean[] hits = new boolean[]{false, false};
 		if (getWorldGuard() != null) {
 			size = me.skorrloregaming.WorldGuardAPI.getApplicableRegionsSetSize(location);

@@ -127,6 +127,7 @@ public class Server extends JavaPlugin implements Listener {
 	private static ArrayList<UUID> mutedPlayers = new ArrayList<UUID>();
 	private static ArrayList<UUID> opmePlayers = new ArrayList<UUID>();
 	private static ArrayList<UUID> factionFlyPlayers = new ArrayList<UUID>();
+	private static ArrayList<UUID> survivalFlyPlayers = new ArrayList<UUID>();
 	private static ConcurrentMap<String, Integer> timeSinceLastLogin = new ConcurrentHashMap<>();
 	private static ConcurrentMap<UUID, SwitchUUIDString> transferAcceptPlayers = new ConcurrentHashMap<>();
 	private static ConcurrentMap<Integer, UUID> discordVerifyPlayers = new ConcurrentHashMap<>();
@@ -361,6 +362,10 @@ public class Server extends JavaPlugin implements Listener {
 
 	public static ArrayList<UUID> getFactionFlyPlayers() {
 		return factionFlyPlayers;
+	}
+
+	public static ArrayList<UUID> getSurvivalFlyPlayers() {
+		return survivalFlyPlayers;
 	}
 
 	public static ConcurrentMap<UUID, UUID> getTpaRequests() {

@@ -1958,6 +1958,10 @@ public class PlayerEventHandler implements Listener {
 			player.setFlying(false);
 			event.setCancelled(true);
 		}
+		if (!(Server.getSurvivalFlyPlayers().contains(player.getUniqueId()))) {
+			player.setFlying(false);
+			event.setCancelled(true);
+		}
 		if (Server.getHub().contains(player.getUniqueId()) || Server.getSkyfight().containsKey(player.getUniqueId())) {
 			if (player.getAllowFlight())
 				player.setAllowFlight(false);
@@ -3084,6 +3088,16 @@ public class PlayerEventHandler implements Listener {
 							player.setFlying(false);
 						player.setAllowFlight(false);
 						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Faction flight disabled.");
+					}
+				}
+			} else if (Server.getSurvivalFlyPlayers().contains(player.getUniqueId())) {
+				if (!GriefPreventionAPI.hasClaimInLocation(player, player.getLocation())) {
+					if (Server.getSurvivalFlyPlayers().contains(player.getUniqueId())) {
+						Server.getSurvivalFlyPlayers().remove(player.getUniqueId());
+						if (player.isFlying())
+							player.setFlying(false);
+						player.setAllowFlight(false);
+						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Survival flight disabled.");
 					}
 				}
 			}
