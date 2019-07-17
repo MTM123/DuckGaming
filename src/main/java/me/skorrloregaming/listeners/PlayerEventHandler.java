@@ -1954,11 +1954,7 @@ public class PlayerEventHandler implements Listener {
 		Player player = event.getPlayer();
 		if (player.getGameMode() == GameMode.CREATIVE)
 			return;
-		if (!(Server.getFactionFlyPlayers().contains(player.getUniqueId()))) {
-			player.setFlying(false);
-			event.setCancelled(true);
-		}
-		if (!(Server.getSurvivalFlyPlayers().contains(player.getUniqueId()))) {
+		if (!(Server.getFactionFlyPlayers().contains(player.getUniqueId())) && !(Server.getSurvivalFlyPlayers().contains(player.getUniqueId()))) {
 			player.setFlying(false);
 			event.setCancelled(true);
 		}
