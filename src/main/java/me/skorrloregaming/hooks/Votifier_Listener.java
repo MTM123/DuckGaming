@@ -107,24 +107,22 @@ public class Votifier_Listener implements Listener {
 		services.put(9, "/Top Minecraft Servers");
 		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), () -> {
 			for (String id : Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
-				OfflinePlayer player = Bukkit.getOfflinePlayer(id);
-				if (player.hasPlayedBefore() || player.isOnline()) {
-					long diff;
-					if ((diff = getMaximumTimeDiffForAllServices(player.getName())) <= 0) {
-						if (diff > -86400000) {
-							if (!hasPlayerBeenPingedToday(player)) {
-								updatePlayerPingedDate(player, new Date());
-								boolean subscribed = Boolean.parseBoolean(LinkServer.getPlugin().getConfig().getString("config." + player.getUniqueId().toString() + ".subscribed", "true"));
-								if (subscribed) {
-									for (Member member : Server.getDiscordBot().getGuild().getMembers()) {
-										if (member.getNickname() != null)
-											if (member.getNickname().equals(player.getName())) {
-												member.getUser().openPrivateChannel().queue((channel) ->
-												{
-													channel.sendMessage("It looks like you can vote and collect your daily jackpot now!").queue();
-												});
-											}
-									}
+				String username = Server.getPlugin().getConfig().getString("config." + id + ".username");
+				long diff;
+				if ((diff = getMaximumTimeDiffForAllServices(username)) <= 0) {
+					if (true) {//diff > -86400000) {
+						if (!hasPlayerBeenPingedToday(UUID.fromString(id))) {
+							updatePlayerPingedDate(UUID.fromString(id), new Date());
+							boolean subscribed = Boolean.parseBoolean(LinkServer.getPlugin().getConfig().getString("config." + id + ".subscribed", "true"));
+							if (subscribed) {
+								for (Member member : Server.getDiscordBot().getGuild().getMembers()) {
+									if (member.getNickname() != null)
+										if (member.getNickname().equals(username)) {
+											member.getUser().openPrivateChannel().queue((channel) ->
+											{
+												channel.sendMessage("It looks like you can vote and collect your daily jackpot now!").queue();
+											});
+										}
 								}
 							}
 						}
@@ -135,12 +133,12 @@ public class Votifier_Listener implements Listener {
 		}, 1200L, 1200L);
 	}
 
-	public void updatePlayerPingedDate(OfflinePlayer player, Date date) {
-		Server.getPlugin().getConfig().set("config." + player.getUniqueId().toString() + ".lastVotePing", date.getTime());
+	public void updatePlayerPingedDate(UUID id, Date date) {
+		Server.getPlugin().getConfig().set("config." + id.toString() + ".lastVotePing", date.getTime());
 	}
 
-	public boolean hasPlayerBeenPingedToday(OfflinePlayer player) {
-		long lastPing = Server.getPlugin().getConfig().getLong("config." + player.getUniqueId().toString() + ".lastVotePing", -1);
+	public boolean hasPlayerBeenPingedToday(UUID id) {
+		long lastPing = Server.getPlugin().getConfig().getLong("config." + id.toString() + ".lastVotePing", -1);
 		if (lastPing > -1) {
 			Date date = new Date(lastPing);
 			Date currentDate = new Date();

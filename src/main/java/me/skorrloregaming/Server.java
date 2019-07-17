@@ -663,7 +663,7 @@ public class Server extends JavaPlugin implements Listener {
 				if (entity.getType() == EntityType.ENDER_DRAGON)
 					entity.remove();
 		}
-		discordBot = new DiscordBot(getPluginName(), getConfig().getString("settings.discordBot.token", "TOKEN"));
+		discordBot = new DiscordBot(getPluginName(), getConfig().getString("settings.discordBot.token", "TOKEN"), getConfig().getLong("settings.discordBot.guild", 0));
 		discordBot.register();
 		lockette = new Lockette();
 		lockette.onEnable();
