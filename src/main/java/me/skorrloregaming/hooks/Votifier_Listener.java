@@ -128,8 +128,8 @@ public class Votifier_Listener implements Listener {
 										messageBuilder.append(member);
 										messageBuilder.append(",\n");
 										messageBuilder.append("It looks like you can vote and collect your daily jackpot now!\n");
-										messageBuilder.append("You can vote and view your times at https://vote.skorrloregaming.com\n");
-										messageBuilder.append("If you would like to unsubscribe feel free to type `/unsubscribe` in-game.");
+										messageBuilder.append("You can vote and view your times at https://vote.skorrloregaming.com.\n");
+										messageBuilder.append("If you would like to unsubscribe, feel free to type `/unsubscribe` in-game.");
 										channel.sendMessage(messageBuilder.build()).queue();
 									});
 								}
