@@ -8,6 +8,7 @@ import me.skorrloregaming.impl.ServerMinigame;
 import me.skorrloregaming.impl.Service;
 import me.skorrloregaming.redis.MapBuilder;
 import me.skorrloregaming.redis.RedisChannel;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -120,7 +121,14 @@ public class Votifier_Listener implements Listener {
 										if (member.getNickname().equals(username)) {
 											member.getUser().openPrivateChannel().queue((channel) ->
 											{
-												channel.sendMessage("It looks like you can vote and collect your daily jackpot now!").queue();
+												MessageBuilder messageBuilder = new MessageBuilder();
+												messageBuilder.append("Greetings ");
+												messageBuilder.append(member);
+												messageBuilder.append(",\n");
+												messageBuilder.append("It looks like you can vote and collect your daily jackpot now!\n");
+												messageBuilder.append("You can vote and view your times at https://vote.skorrloregaming.com\n");
+												messageBuilder.append("If you would like to unsubscribe feel free to type `/unsubscribe` in-game.");
+												channel.sendMessage(messageBuilder.build()).queue();
 											});
 										}
 								}
