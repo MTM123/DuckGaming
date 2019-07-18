@@ -34,6 +34,10 @@ public class MessageListener extends ListenerAdapter {
 	public void onMessageReceived(MessageReceivedEvent event) {
 		if (event.getAuthor().isBot())
 			return;
+		if (event.getMember() == null)
+			return;
+		if (event.getMember().getUser() == null)
+			return;
 		if (Server.getPlugin().isEnabled())
 			Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
 

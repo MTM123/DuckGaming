@@ -116,10 +116,6 @@ public class Votifier_Listener implements Listener {
 						boolean subscribed = Boolean.parseBoolean(LinkServer.getPlugin().getConfig().getString("config." + id + ".subscribed", "true"));
 						if (subscribed) {
 							Logger.info("It looks like " + username + " can vote, they WILL be notified.");
-						} else {
-							Logger.info("It looks like " + username + " can vote, they WILL NOT be notified.");
-						}
-						if (subscribed) {
 							for (Member member : Server.getDiscordBot().getGuild().getMembers()) {
 								String discordUsername = member.getUser().getName();
 								if (member.getNickname() != null)
@@ -138,6 +134,8 @@ public class Votifier_Listener implements Listener {
 									});
 								}
 							}
+						} else {
+							Logger.info("It looks like " + username + " can vote, they WILL NOT be notified.");
 						}
 					}
 				}
