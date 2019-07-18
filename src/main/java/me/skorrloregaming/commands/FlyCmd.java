@@ -2,6 +2,7 @@ package me.skorrloregaming.commands;
 
 import com.massivecraft.factions.FPlayers;
 import me.skorrloregaming.$;
+import me.skorrloregaming.GriefPreventionAPI;
 import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
 import org.bukkit.ChatColor;
@@ -17,34 +18,61 @@ public class FlyCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getFactions().contains(player.getUniqueId())) {
+		if (Server.getFactions().contains(player.getUniqueId())) {
+			if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
+				return true;
+			}
+			if (Link$.getDonorRankId(player) < -3) {
+				if (FPlayers.getInstance().getByPlayer(player).isInOwnTerritory()) {
+					if (Server.getFactionFlyPlayers().contains(player.getUniqueId())) {
+						Server.getFactionFlyPlayers().remove(player.getUniqueId());
+						if (player.isFlying())
+							player.setFlying(false);
+						player.setAllowFlight(false);
+						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Faction flight disabled.");
+					} else {
+						Server.getFactionFlyPlayers().add(player.getUniqueId());
+						player.setAllowFlight(true);
+						player.setFlying(true);
+						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Faction flight enabled.");
+					}
+				} else {
+					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not in your territory.");
+				}
+			} else {
+				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You need rank " + ChatColor.RED + "Obsidian" + ChatColor.GRAY + " to use flight.");
+			}
+		} else if (Server.getSurvival().contains(player.getUniqueId())) {
+			if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
+				return true;
+			}
+			if (Link$.getDonorRankId(player) < -3) {
+				if (GriefPreventionAPI.hasClaimInLocation(player, player.getLocation())) {
+					if (Server.getSurvivalFlyPlayers().contains(player.getUniqueId())) {
+						Server.getSurvivalFlyPlayers().remove(player.getUniqueId());
+						if (player.isFlying())
+							player.setFlying(false);
+						player.setAllowFlight(false);
+						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Survival flight disabled.");
+					} else {
+						Server.getSurvivalFlyPlayers().add(player.getUniqueId());
+						player.setAllowFlight(true);
+						player.setFlying(true);
+						player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Survival flight enabled.");
+					}
+				} else {
+					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not in your territory.");
+				}
+			} else {
+				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You need rank " + ChatColor.RED + "Obsidian" + ChatColor.GRAY + " to use flight.");
+			}
+		} else {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
-			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
-			return true;
-		}
-		if (Link$.getDonorRankId(player) < -3) {
-			if (FPlayers.getInstance().getByPlayer(player).isInOwnTerritory()) {
-				if (Server.getFactionFlyPlayers().contains(player.getUniqueId())) {
-					Server.getFactionFlyPlayers().remove(player.getUniqueId());
-					if (player.isFlying())
-						player.setFlying(false);
-					player.setAllowFlight(false);
-					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Faction flight disabled.");
-				} else {
-					Server.getFactionFlyPlayers().add(player.getUniqueId());
-					player.setAllowFlight(true);
-					player.setFlying(true);
-					player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Faction flight enabled.");
-				}
-			} else {
-				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not in your territory.");
-			}
-		} else {
-			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You need rank " + ChatColor.RED + "Obsidian" + ChatColor.GRAY + " to use flight.");
-		}
+
 		return true;
 	}
 

@@ -14,8 +14,17 @@ public class GriefPreventionAPI {
 		return ((GriefPrevention) Bukkit.getPluginManager().getPlugin("GriefPrevention"));
 	}
 
-	public static Claim getClaimAtLocation(Location location) {
-		return GriefPrevention.instance.dataStore.getClaimAt(location, true, null);
+	public static Claim getClaimAtLocation(Player player, Location loc) {
+		PlayerData playerData = GriefPrevention.instance.dataStore.getPlayerData(player.getUniqueId());
+		return GriefPrevention.instance.dataStore.getClaimAt(loc, false, playerData.lastClaim);
+	}
+
+	public static boolean hasClaimInLocation(Player player, Location loc) {
+		return getClaimAtLocation(player, loc) != null;
+	}
+
+	public static boolean isOwnerAtLocation(Player player, Location loc) {
+		return hasClaimInLocation(player, loc) && getClaimAtLocation(player, loc).getOwnerName().equalsIgnoreCase(player.getName());
 	}
 
 }
