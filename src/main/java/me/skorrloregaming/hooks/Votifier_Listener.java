@@ -8,6 +8,8 @@ import me.skorrloregaming.impl.ServerMinigame;
 import me.skorrloregaming.impl.Service;
 import me.skorrloregaming.redis.MapBuilder;
 import me.skorrloregaming.redis.RedisChannel;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.Member;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -17,6 +19,8 @@ import org.bukkit.event.Listener;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -26,20 +30,6 @@ public class Votifier_Listener implements Listener {
 	private final double MODIFIER = 1.2;
 
 	private ConcurrentMap<Integer, String> services;
-
-	public Votifier_Listener() {
-		services = new ConcurrentHashMap<>();
-		services.put(0, "PlanetMinecraft.com");
-		services.put(1, "Minecraft-MP.com");
-		services.put(2, "MinecraftServers.org");
-		services.put(3, "MinecraftServers.biz");
-		services.put(4, "MCSL");
-		services.put(5, "Minecraft-Server.net");
-		services.put(6, "MinecraftServersList");
-		services.put(7, "TopG.org");
-		services.put(8, "Trackyserver.com");
-		services.put(9, "/Top Minecraft Servers");
-	}
 
 	public int getMonthlyVotes(String username, int year, int monthId) {
 		if (Server.getMonthlyVoteConfig().getData().contains("config." + username + "." + year + "." + (monthId + 1)))
@@ -105,6 +95,70 @@ public class Votifier_Listener implements Listener {
 
 	public void register() {
 		Server.getPlugin().getServer().getPluginManager().registerEvents(this, Server.getPlugin());
+		services = new ConcurrentHashMap<>();
+		services.put(0, "PlanetMinecraft.com");
+		services.put(1, "Minecraft-MP.com");
+		services.put(2, "MinecraftServers.org");
+		services.put(3, "MinecraftServers.biz");
+		services.put(4, "MCSL");
+		services.put(5, "Minecraft-Server.net");
+		services.put(6, "MinecraftServersList");
+		services.put(7, "TopG.org");
+		services.put(8, "Trackyserver.com");
+		services.put(9, "/Top Minecraft Servers");
+		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), () -> {
+			for (String id : Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
+				String username = Server.getPlugin().getConfig().getString("config." + id + ".username");
+				long diff;
+				if ((diff = getMaximumTimeDiffForAllServices(username)) <= 0) {
+					if (!hasPlayerBeenPingedToday(UUID.fromString(id))) {
+						updatePlayerPingedDate(UUID.fromString(id), new Date());
+						boolean subscribed = Boolean.parseBoolean(LinkServer.getPlugin().getConfig().getString("config." + id + ".subscribed", "true"));
+						if (subscribed) {
+							Logger.info("It looks like " + username + " can vote, they WILL be notified.");
+							for (Member member : Server.getDiscordBot().getGuild().getMembers()) {
+								String discordUsername = member.getUser().getName();
+								if (member.getNickname() != null)
+									discordUsername = member.getNickname();
+								if (discordUsername.equals(username)) {
+									member.getUser().openPrivateChannel().queue((channel) ->
+									{
+										MessageBuilder messageBuilder = new MessageBuilder();
+										messageBuilder.append("Greetings ");
+										messageBuilder.append(member);
+										messageBuilder.append(",\n");
+										messageBuilder.append("It looks like you can vote and collect your daily jackpot now!\n");
+										messageBuilder.append("You can vote and view your times at https://vote.skorrloregaming.com.\n");
+										messageBuilder.append("If you would like to unsubscribe, feel free to type `/unsubscribe` in-game.");
+										channel.sendMessage(messageBuilder.build()).queue();
+									});
+								}
+							}
+						} else {
+							Logger.info("It looks like " + username + " can vote, they WILL NOT be notified.");
+						}
+					}
+				}
+
+			}
+		}, 1200L, 1200L);
+	}
+
+	public void updatePlayerPingedDate(UUID id, Date date) {
+		Server.getPlugin().getConfig().set("config." + id.toString() + ".lastVotePing", date.getTime());
+	}
+
+	public boolean hasPlayerBeenPingedToday(UUID id) {
+		long lastPing = Server.getPlugin().getConfig().getLong("config." + id.toString() + ".lastVotePing", -1);
+		if (lastPing > -1) {
+			Date date = new Date(lastPing);
+			Date currentDate = new Date();
+			if (date.getYear() == currentDate.getYear())
+				if (date.getMonth() == currentDate.getMonth())
+					if (date.getDay() == currentDate.getDay())
+						return true;
+		}
+		return false;
 	}
 
 	@EventHandler
@@ -186,21 +240,25 @@ public class Votifier_Listener implements Listener {
 					amountEarned1 *= 5;
 					amountEarned2 *= 5;
 					amountEarned3 *= 5;
+					amountEarned4 *= 5;
 					break;
 				case -4:
 					amountEarned1 *= 4;
 					amountEarned2 *= 4;
 					amountEarned3 *= 4;
+					amountEarned4 *= 4;
 					break;
 				case -3:
 					amountEarned1 *= 3;
 					amountEarned2 *= 3;
 					amountEarned3 *= 3;
+					amountEarned4 *= 3;
 					break;
 				case -2:
 					amountEarned1 *= 2;
 					amountEarned2 *= 2;
 					amountEarned3 *= 2;
+					amountEarned4 *= 2;
 					break;
 			}
 			if (!spoofed || (spoofed && minigame == ServerMinigame.KITPVP))

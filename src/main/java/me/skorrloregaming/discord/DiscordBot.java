@@ -6,6 +6,7 @@ import me.skorrloregaming.discord.listeners.RedisListener;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
@@ -16,6 +17,7 @@ public class DiscordBot {
 
 	private String name;
 	private String token;
+	private long guild;
 
 	private JDA bot;
 
@@ -25,8 +27,10 @@ public class DiscordBot {
 
 	private boolean running = false;
 
-	public DiscordBot(String name, String token) {
+	public DiscordBot(String name, String token, long guild) {
+		this.name = name;
 		this.token = token;
+		this.guild = guild;
 	}
 
 	public void register() {
@@ -56,6 +60,14 @@ public class DiscordBot {
 
 	public JDA getBot() {
 		return bot;
+	}
+
+	public long getGuildId() {
+		return guild;
+	}
+
+	public Guild getGuild() {
+		return getBot().getGuildById(guild);
 	}
 
 	public String getChannelName(Channel channel) {
