@@ -111,27 +111,30 @@ public class Votifier_Listener implements Listener {
 				String username = Server.getPlugin().getConfig().getString("config." + id + ".username");
 				long diff;
 				if ((diff = getMaximumTimeDiffForAllServices(username)) <= 0) {
-					if (true) {//diff > -86400000) {
-						if (!hasPlayerBeenPingedToday(UUID.fromString(id))) {
-							updatePlayerPingedDate(UUID.fromString(id), new Date());
-							boolean subscribed = Boolean.parseBoolean(LinkServer.getPlugin().getConfig().getString("config." + id + ".subscribed", "true"));
-							if (subscribed) {
-								for (Member member : Server.getDiscordBot().getGuild().getMembers()) {
-									if (member.getNickname() != null)
-										if (member.getNickname().equals(username)) {
-											member.getUser().openPrivateChannel().queue((channel) ->
-											{
-												MessageBuilder messageBuilder = new MessageBuilder();
-												messageBuilder.append("Greetings ");
-												messageBuilder.append(member);
-												messageBuilder.append(",\n");
-												messageBuilder.append("It looks like you can vote and collect your daily jackpot now!\n");
-												messageBuilder.append("You can vote and view your times at https://vote.skorrloregaming.com\n");
-												messageBuilder.append("If you would like to unsubscribe feel free to type `/unsubscribe` in-game.");
-												channel.sendMessage(messageBuilder.build()).queue();
-											});
-										}
-								}
+					if (!hasPlayerBeenPingedToday(UUID.fromString(id))) {
+						updatePlayerPingedDate(UUID.fromString(id), new Date());
+						boolean subscribed = Boolean.parseBoolean(LinkServer.getPlugin().getConfig().getString("config." + id + ".subscribed", "true"));
+						if (subscribed) {
+							Logger.info("It looks like " + username + " can vote, they WILL be notified.");
+						} else {
+							Logger.info("It looks like " + username + " can vote, they WILL NOT be notified.");
+						}
+						if (subscribed) {
+							for (Member member : Server.getDiscordBot().getGuild().getMembers()) {
+								if (member.getNickname() != null)
+									if (member.getNickname().equals(username)) {
+										member.getUser().openPrivateChannel().queue((channel) ->
+										{
+											MessageBuilder messageBuilder = new MessageBuilder();
+											messageBuilder.append("Greetings ");
+											messageBuilder.append(member);
+											messageBuilder.append(",\n");
+											messageBuilder.append("It looks like you can vote and collect your daily jackpot now!\n");
+											messageBuilder.append("You can vote and view your times at https://vote.skorrloregaming.com\n");
+											messageBuilder.append("If you would like to unsubscribe feel free to type `/unsubscribe` in-game.");
+											channel.sendMessage(messageBuilder.build()).queue();
+										});
+									}
 							}
 						}
 					}

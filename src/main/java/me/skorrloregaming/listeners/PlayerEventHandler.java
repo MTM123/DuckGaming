@@ -1484,7 +1484,6 @@ public class PlayerEventHandler implements Listener {
 		String ipAddress = player.getAddress().getAddress().getHostAddress().replace(".", "x");
 		Server.getSessionManager().updateSession(player, new Session(LinkSessionManager.encodeHex(ipAddress.replace("x", ".")).toCharArray(), player, System.currentTimeMillis()));
 		if (!Server.getPlugin().getConfig().contains(path)) {
-			Server.getPlugin().getConfig().set(path + ".username", displayName);
 			LinkServer.getInstance().getRedisDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
 			LinkServer.getInstance().getRedisDatabase().set("donorRank", player.getUniqueId().toString(), Link$.validDonorRanks.get(0));
 			LinkServer.getInstance().getRedisMessenger().ping(RedisChannel.CHAT, "RANK_UPDATE", player.getName());
@@ -1507,6 +1506,7 @@ public class PlayerEventHandler implements Listener {
 			Server.getPlugin().getConfig().set(path + ".subscribed", "true");
 			Server.getPlugin().getConfig().set("warning." + ipAddress + ".count", "0");
 		}
+		Server.getPlugin().getConfig().set(path + ".username", displayName);
 		if (!Server.getPlugin().getConfig().contains(path + ".joined.value")) {
 			Server.getPlugin().getConfig().set(path + ".joined.value", System.currentTimeMillis() + "");
 			if (Server.getPlugin().getConfig().contains(path)) {
