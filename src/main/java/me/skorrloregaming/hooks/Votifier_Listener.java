@@ -121,20 +121,22 @@ public class Votifier_Listener implements Listener {
 						}
 						if (subscribed) {
 							for (Member member : Server.getDiscordBot().getGuild().getMembers()) {
+								String discordUsername = member.getUser().getName();
 								if (member.getNickname() != null)
-									if (member.getNickname().equals(username)) {
-										member.getUser().openPrivateChannel().queue((channel) ->
-										{
-											MessageBuilder messageBuilder = new MessageBuilder();
-											messageBuilder.append("Greetings ");
-											messageBuilder.append(member);
-											messageBuilder.append(",\n");
-											messageBuilder.append("It looks like you can vote and collect your daily jackpot now!\n");
-											messageBuilder.append("You can vote and view your times at https://vote.skorrloregaming.com\n");
-											messageBuilder.append("If you would like to unsubscribe feel free to type `/unsubscribe` in-game.");
-											channel.sendMessage(messageBuilder.build()).queue();
-										});
-									}
+									discordUsername = member.getNickname();
+								if (discordUsername.equals(username)) {
+									member.getUser().openPrivateChannel().queue((channel) ->
+									{
+										MessageBuilder messageBuilder = new MessageBuilder();
+										messageBuilder.append("Greetings ");
+										messageBuilder.append(member);
+										messageBuilder.append(",\n");
+										messageBuilder.append("It looks like you can vote and collect your daily jackpot now!\n");
+										messageBuilder.append("You can vote and view your times at https://vote.skorrloregaming.com\n");
+										messageBuilder.append("If you would like to unsubscribe feel free to type `/unsubscribe` in-game.");
+										channel.sendMessage(messageBuilder.build()).queue();
+									});
+								}
 							}
 						}
 					}
