@@ -109,37 +109,43 @@ public class Votifier_Listener implements Listener {
 		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), () -> {
 			for (String id : Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
 				String username = Server.getPlugin().getConfig().getString("config." + id + ".username");
-				long diff;
-				if ((diff = getMaximumTimeDiffForAllServices(username)) <= 0) {
-					if (!hasPlayerBeenPingedToday(UUID.fromString(id))) {
-						updatePlayerPingedDate(UUID.fromString(id), new Date());
-						boolean subscribed = Boolean.parseBoolean(LinkServer.getPlugin().getConfig().getString("config." + id + ".subscribed", "true"));
-						if (subscribed) {
-							Logger.info("It looks like " + username + " can vote, they WILL be notified.");
-							for (Member member : Server.getDiscordBot().getGuild().getMembers()) {
-								String discordUsername = member.getUser().getName();
-								if (member.getNickname() != null)
-									discordUsername = member.getNickname();
-								if (discordUsername.equals(username)) {
-									member.getUser().openPrivateChannel().queue((channel) ->
-									{
-										MessageBuilder messageBuilder = new MessageBuilder();
-										messageBuilder.append("Greetings ");
-										messageBuilder.append(member);
-										messageBuilder.append(",\n");
-										messageBuilder.append("It looks like you can vote and collect your daily jackpot now!\n");
-										messageBuilder.append("You can vote and view your times at https://vote.skorrloregaming.com.\n");
-										messageBuilder.append("If you would like to unsubscribe, feel free to type `/unsubscribe` in-game.");
-										channel.sendMessage(messageBuilder.build()).queue();
-									});
+				if (username == null || username.equals("null"))
+					continue;
+				for (String key : Server.getDiscordVerifyConfig().getData().getConfigurationSection("verified").getKeys(false)) {
+					String value = Server.getDiscordVerifyConfig().getData().getString("verified." + key);
+					if (value.equals(id)) {
+						long diff;
+						if ((diff = getMaximumTimeDiffForAllServices(username)) <= 0) {
+							if (!hasPlayerBeenPingedToday(UUID.fromString(id))) {
+								updatePlayerPingedDate(UUID.fromString(id), new Date());
+								boolean subscribed = Boolean.parseBoolean(LinkServer.getPlugin().getConfig().getString("config." + id + ".subscribed", "true"));
+								if (subscribed) {
+									Logger.info("It looks like " + username + " can vote, they WILL be notified.");
+									for (Member member : Server.getDiscordBot().getGuild().getMembers()) {
+										String discordUsername = member.getUser().getName();
+										if (member.getNickname() != null)
+											discordUsername = member.getNickname();
+										if (discordUsername.equals(username)) {
+											member.getUser().openPrivateChannel().queue((channel) ->
+											{
+												MessageBuilder messageBuilder = new MessageBuilder();
+												messageBuilder.append("Greetings ");
+												messageBuilder.append(member);
+												messageBuilder.append(",\n");
+												messageBuilder.append("It looks like you can vote and collect your daily jackpot now!\n");
+												messageBuilder.append("You can vote and view your times at https://vote.skorrloregaming.com.\n");
+												messageBuilder.append("If you would like to unsubscribe, feel free to type `/unsubscribe` in-game.");
+												channel.sendMessage(messageBuilder.build()).queue();
+											});
+										}
+									}
+								} else {
+									Logger.info("It looks like " + username + " can vote, they WILL NOT be notified.");
 								}
 							}
-						} else {
-							Logger.info("It looks like " + username + " can vote, they WILL NOT be notified.");
 						}
 					}
 				}
-
 			}
 		}, 1200L, 1200L);
 	}
