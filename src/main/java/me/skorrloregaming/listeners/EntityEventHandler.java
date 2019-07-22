@@ -45,11 +45,12 @@ public class EntityEventHandler implements Listener {
 						if (event.getLocation().distance(lastCreeperSpawnEgg.getValue()) < 5)
 							event.setCancelled(false);
 		}
-		Location survivalSpawn = $.getZoneLocation($.getMinigameFromWorld(event.getLocation().getWorld()).toString().toLowerCase());
-		if ($.getMinigameFromWorld(event.getLocation().getWorld()) == ServerMinigame.SURVIVAL)
+		if ($.getMinigameFromWorld(event.getLocation().getWorld()) == ServerMinigame.SURVIVAL) {
+			Location survivalSpawn = $.getZoneLocation($.getMinigameFromWorld(event.getLocation().getWorld()).toString().toLowerCase());
 			if (event.getLocation().getWorld().getName().equals(survivalSpawn.getWorld().getName()))
 				if (event.getLocation().distance(survivalSpawn) < 150)
 					event.setCancelled(true);
+		}
 		if (event.getEntity() instanceof Item) {
 			if ($.getMinigameFromWorld(event.getLocation().getWorld()) == ServerMinigame.CREATIVE) {
 				event.setCancelled(true);
