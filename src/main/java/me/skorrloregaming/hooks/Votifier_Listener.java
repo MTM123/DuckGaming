@@ -109,7 +109,6 @@ public class Votifier_Listener implements Listener {
 	public void register() {
 		Server.getPlugin().getServer().getPluginManager().registerEvents(this, Server.getPlugin());
 		Calendar date = Calendar.getInstance();
-		ZoneId zoneId = ZoneId.systemDefault();
 		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), () -> {
 			date.setTimeInMillis(System.currentTimeMillis());
 			date.set(Calendar.HOUR_OF_DAY, 0);
@@ -119,7 +118,8 @@ public class Votifier_Listener implements Listener {
 			date.add(Calendar.DAY_OF_MONTH, 1);
 			midnight = date.getTimeInMillis();
 			LocalTime midnight = LocalTime.MIDNIGHT;
-			LocalDate today = LocalDate.now(ZoneId.of("Etc/GMT+1"));
+			ZoneId zoneId = ZoneId.of("Etc/GMT+1");
+			LocalDate today = LocalDate.now(zoneId);
 			LocalDateTime tomorrowMidnight = LocalDateTime.of(today, midnight).plusDays(1);
 			GMTplus1midnight = tomorrowMidnight.atZone(zoneId).toEpochSecond() * 1000;
 			for (String id : Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
