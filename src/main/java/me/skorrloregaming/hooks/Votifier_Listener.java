@@ -106,22 +106,27 @@ public class Votifier_Listener implements Listener {
 		return lastDiff;
 	}
 
+	public void updateMidnightValues() {
+		Calendar date = Calendar.getInstance();
+		date.setTimeInMillis(System.currentTimeMillis());
+		date.set(Calendar.HOUR_OF_DAY, 0);
+		date.set(Calendar.MINUTE, 0);
+		date.set(Calendar.SECOND, 0);
+		date.set(Calendar.MILLISECOND, 0);
+		date.add(Calendar.DAY_OF_MONTH, 1);
+		midnight = date.getTimeInMillis();
+		LocalTime midnight = LocalTime.MIDNIGHT;
+		ZoneId zoneId = ZoneId.of("Etc/GMT+1");
+		LocalDate today = LocalDate.now(zoneId);
+		LocalDateTime tomorrowMidnight = LocalDateTime.of(today, midnight).plusDays(1);
+		GMTplus1midnight = tomorrowMidnight.atZone(zoneId).toEpochSecond() * 1000;
+	}
+
 	public void register() {
 		Server.getPlugin().getServer().getPluginManager().registerEvents(this, Server.getPlugin());
-		Calendar date = Calendar.getInstance();
+		updateMidnightValues();
 		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), () -> {
-			date.setTimeInMillis(System.currentTimeMillis());
-			date.set(Calendar.HOUR_OF_DAY, 0);
-			date.set(Calendar.MINUTE, 0);
-			date.set(Calendar.SECOND, 0);
-			date.set(Calendar.MILLISECOND, 0);
-			date.add(Calendar.DAY_OF_MONTH, 1);
-			midnight = date.getTimeInMillis();
-			LocalTime midnight = LocalTime.MIDNIGHT;
-			ZoneId zoneId = ZoneId.of("Etc/GMT+1");
-			LocalDate today = LocalDate.now(zoneId);
-			LocalDateTime tomorrowMidnight = LocalDateTime.of(today, midnight).plusDays(1);
-			GMTplus1midnight = tomorrowMidnight.atZone(zoneId).toEpochSecond() * 1000;
+			updateMidnightValues();
 			for (String id : Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
 				String username = Server.getPlugin().getConfig().getString("config." + id + ".username");
 				if (username == null || username.equals("null"))
