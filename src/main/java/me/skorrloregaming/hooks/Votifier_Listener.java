@@ -116,7 +116,7 @@ public class Votifier_Listener implements Listener {
 		date.add(Calendar.DAY_OF_MONTH, 1);
 		midnight = date.getTimeInMillis();
 		LocalTime midnight = LocalTime.MIDNIGHT;
-		ZoneId zoneId = ZoneId.of("Europe/Dublin");
+		ZoneId zoneId = ZoneId.of("Etc/GMT");
 		LocalDate today = LocalDate.now(zoneId);
 		LocalDateTime tomorrowMidnight = LocalDateTime.of(today, midnight).plusDays(1);
 		GMTplus1midnight = tomorrowMidnight.atZone(zoneId).toEpochSecond() * 1000;
