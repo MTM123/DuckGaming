@@ -6,6 +6,7 @@ import me.skorrloregaming.*;
 import me.skorrloregaming.discord.Channel;
 import me.skorrloregaming.impl.ServerMinigame;
 import me.skorrloregaming.impl.Service;
+import me.skorrloregaming.impl.ServicePriority;
 import me.skorrloregaming.redis.MapBuilder;
 import me.skorrloregaming.redis.RedisChannel;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -18,6 +19,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.text.DecimalFormat;
+import java.time.*;
+import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -29,7 +32,16 @@ public class Votifier_Listener implements Listener {
 	private final int WEBSITE_COUNT = 9;
 	private final double MODIFIER = 1.2;
 
-	private ConcurrentMap<Integer, String> services;
+	private long GMTplus1midnight;
+	private long midnight;
+
+	public long getMidnight() {
+		return midnight;
+	}
+
+	public long getGMTplus1midnight() {
+		return GMTplus1midnight;
+	}
 
 	public int getMonthlyVotes(String username, int year, int monthId) {
 		if (Server.getMonthlyVoteConfig().getData().contains("config." + username + "." + year + "." + (monthId + 1)))
@@ -54,22 +66,23 @@ public class Votifier_Listener implements Listener {
 		Server.getMonthlyVoteConfig().saveData();
 	}
 
-	public String getServiceNameFromFriendly(Service service) {
-		return services.get(service.ordinal());
-	}
-
-	public long getTimeDifference(String username, String service) {
+	public long getTimeDifference(String username, String service, long arg0, boolean isEpoch) {
 		long timestamp = getLastVoteForService(username, service);
 		if (timestamp == 0)
 			return 0;
-		long currentTime = System.currentTimeMillis();
-		long diff = currentTime - timestamp;
-		long reverseDiff = (1000 * 60 * 60 * 24) - diff;
-		return reverseDiff / 1000;
+		if (isEpoch) {
+			long reverseDiff = arg0 - timestamp;
+			return reverseDiff / 1000;
+		} else {
+			long currentTime = System.currentTimeMillis();
+			long diff = currentTime - timestamp;
+			long reverseDiff = arg0 - diff;
+			return reverseDiff / 1000;
+		}
 	}
 
-	public String getFriendlyTimeDifference(String username, String service) {
-		long diff = getTimeDifference(username, service);
+	public String getFriendlyTimeDifference(String username, String service, long arg0, boolean isEpoch) {
+		long diff = getTimeDifference(username, service, arg0, isEpoch);
 		boolean flag = false;
 		if (diff < 0) {
 			flag = true;
@@ -81,10 +94,10 @@ public class Votifier_Listener implements Listener {
 		return friendly;
 	}
 
-	public long getMaximumTimeDiffForAllServices(String username) {
+	public long getMaximumTimeDiffForAllServices(String username, long arg0, boolean isEpoch) {
 		long lastDiff = 0;
 		for (Service service : Service.values()) {
-			long diff = getTimeDifference(username, getServiceNameFromFriendly(service));
+			long diff = getTimeDifference(username, service.getName(), arg0, isEpoch);
 			if (diff < 0)
 				diff = 0;
 			if (diff > lastDiff)
@@ -95,18 +108,20 @@ public class Votifier_Listener implements Listener {
 
 	public void register() {
 		Server.getPlugin().getServer().getPluginManager().registerEvents(this, Server.getPlugin());
-		services = new ConcurrentHashMap<>();
-		services.put(0, "PlanetMinecraft.com");
-		services.put(1, "Minecraft-MP.com");
-		services.put(2, "MinecraftServers.org");
-		services.put(3, "MinecraftServers.biz");
-		services.put(4, "MCSL");
-		services.put(5, "Minecraft-Server.net");
-		services.put(6, "MinecraftServersList");
-		services.put(7, "TopG.org");
-		services.put(8, "Trackyserver.com");
-		services.put(9, "/Top Minecraft Servers");
+		Calendar date = Calendar.getInstance();
+		ZoneId zoneId = ZoneId.systemDefault();
 		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), () -> {
+			date.setTimeInMillis(System.currentTimeMillis());
+			date.set(Calendar.HOUR_OF_DAY, 0);
+			date.set(Calendar.MINUTE, 0);
+			date.set(Calendar.SECOND, 0);
+			date.set(Calendar.MILLISECOND, 0);
+			date.add(Calendar.DAY_OF_MONTH, 1);
+			midnight = date.getTimeInMillis();
+			LocalTime midnight = LocalTime.MIDNIGHT;
+			LocalDate today = LocalDate.now(ZoneId.of("Etc/GMT+1"));
+			LocalDateTime tomorrowMidnight = LocalDateTime.of(today, midnight).plusDays(1);
+			GMTplus1midnight = tomorrowMidnight.atZone(zoneId).toEpochSecond() * 1000;
 			for (String id : Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
 				String username = Server.getPlugin().getConfig().getString("config." + id + ".username");
 				if (username == null || username.equals("null"))
@@ -114,8 +129,7 @@ public class Votifier_Listener implements Listener {
 				for (String key : Server.getDiscordVerifyConfig().getData().getConfigurationSection("verified").getKeys(false)) {
 					String value = Server.getDiscordVerifyConfig().getData().getString("verified." + key);
 					if (value.equals(id)) {
-						long diff;
-						if ((diff = getMaximumTimeDiffForAllServices(username)) <= 0) {
+						if (getMaximumTimeDiffForAllServices(username, ServicePriority.delay24hour.getDelay(), false) <= 0) {
 							if (!hasPlayerBeenPingedToday(UUID.fromString(id))) {
 								updatePlayerPingedDate(UUID.fromString(id), new Date());
 								boolean subscribed = Boolean.parseBoolean(LinkServer.getPlugin().getConfig().getString("config." + id + ".subscribed", "true"));

@@ -1,6 +1,7 @@
 package me.skorrloregaming;
 
 import me.skorrloregaming.impl.Service;
+import me.skorrloregaming.impl.ServicePriority;
 import me.skorrloregaming.impl.Switches;
 import me.skorrloregaming.impl.Switches.SwitchIntString;
 
@@ -115,8 +116,23 @@ public class TopVotersHttpServer implements Runnable {
 						sb.append("<tr>");
 						sb.append("<td>" + key.getArg1() + "</td>");
 						sb.append("<td>" + key.getArg0() + "</td>");
-						for (int i = 0; i < 10; i++)
-							sb.append("<td>" + Server.getVoteListener().getFriendlyTimeDifference(key.getArg1(), Server.getVoteListener().getServiceNameFromFriendly(Service.values()[i])) + "</td>");
+						for (int i = 0; i < 10; i++) {
+							Service service = Service.values()[i];
+							long arg0 = service.getPriority().getDelay();
+							if (service.getPriority().isEpoch()) {
+								switch (service.getPriority()) {
+									case midnight:
+										arg0 = Server.getVoteListener().getMidnight();
+										break;
+									case GMTplus1midnight:
+										arg0 = Server.getVoteListener().getGMTplus1midnight();
+										break;
+									default:
+										break;
+								}
+							}
+							sb.append("<td>" + Server.getVoteListener().getFriendlyTimeDifference(key.getArg1(), service.getName(), arg0, service.getPriority().isEpoch()) + "</td>");
+						}
 						sb.append("</tr>");
 					}
 				}
