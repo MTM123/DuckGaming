@@ -1,14 +1,9 @@
 package me.skorrloregaming;
 
 import me.skorrloregaming.impl.Service;
-import me.skorrloregaming.impl.ServicePriority;
 import me.skorrloregaming.impl.Switches;
 import me.skorrloregaming.impl.Switches.SwitchIntString;
 
-import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocket;
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -124,8 +119,8 @@ public class TopVotersHttpServer implements Runnable {
 									case midnight:
 										arg0 = Server.getVoteListener().getMidnight();
 										break;
-									case GMTplus1midnight:
-										arg0 = Server.getVoteListener().getGMTplus1midnight();
+									case midnightGreenwich:
+										arg0 = Server.getVoteListener().getMidnightGreenwich();
 										break;
 									default:
 										break;

@@ -20,27 +20,24 @@ import org.bukkit.event.Listener;
 
 import java.text.DecimalFormat;
 import java.time.*;
-import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class Votifier_Listener implements Listener {
 
 	private final int WEBSITE_COUNT = 9;
 	private final double MODIFIER = 1.2;
 
-	private long GMTplus1midnight;
+	private long midnightGreenwich;
 	private long midnight;
 
 	public long getMidnight() {
 		return midnight;
 	}
 
-	public long getGMTplus1midnight() {
-		return GMTplus1midnight;
+	public long getMidnightGreenwich() {
+		return midnightGreenwich;
 	}
 
 	public int getMonthlyVotes(String username, int year, int monthId) {
@@ -119,7 +116,7 @@ public class Votifier_Listener implements Listener {
 		ZoneId zoneId = ZoneId.of("Etc/GMT");
 		LocalDate today = LocalDate.now(zoneId);
 		LocalDateTime tomorrowMidnight = LocalDateTime.of(today, midnight).plusDays(1);
-		GMTplus1midnight = tomorrowMidnight.atZone(zoneId).toEpochSecond() * 1000;
+		midnightGreenwich = tomorrowMidnight.atZone(zoneId).toEpochSecond() * 1000;
 	}
 
 	public void register() {

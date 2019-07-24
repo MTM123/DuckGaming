@@ -1,17 +1,12 @@
 package me.skorrloregaming.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 public enum Service {
 
 	PlanetMinecraft(0, "PlanetMinecraft.com", ServicePriority.delay24hour),
 	MinecraftMP(1, "Minecraft-MP.com", ServicePriority.delay12hour),
 	MinecraftServersOrg(2, "MinecraftServers.org", ServicePriority.midnight),
 	MinecraftServersBiz(3, "MinecraftServers.biz", ServicePriority.delay12hour),
-	MinecraftServerList(4, "MCSL", ServicePriority.GMTplus1midnight),
+	MinecraftServerList(4, "MCSL", ServicePriority.midnightGreenwich),
 	MinecraftServerNet(5, "Minecraft-Server.net", ServicePriority.midnight),
 	MinecraftList(6, "MinecraftServersList", ServicePriority.delay24hour),
 	TopG(7, "TopG.org", ServicePriority.delay12hour),
