@@ -67,14 +67,14 @@ public class Votifier_Listener implements Listener {
 	}
 
 	public long getTimeDifference(String username, String service, long arg0, boolean isEpoch) {
-		long timestamp = getLastVoteForService(username, service);
-		if (timestamp == 0)
-			return 0;
 		if (isEpoch) {
-			long reverseDiff = arg0 - timestamp;
+			long reverseDiff = arg0 - System.currentTimeMillis();
 			return reverseDiff / 1000;
 		} else {
 			long currentTime = System.currentTimeMillis();
+			long timestamp = getLastVoteForService(username, service);
+			if (timestamp == 0)
+				return 0;
 			long diff = currentTime - timestamp;
 			long reverseDiff = arg0 - diff;
 			return reverseDiff / 1000;
