@@ -164,6 +164,8 @@ public class Server extends JavaPlugin implements Listener {
 
 	private static DiscordBot discordBot;
 
+	private static VoteManager voteManager;
+
 	private static ConcurrentMap<Player, ItemStack> storedItem = new ConcurrentHashMap<Player, ItemStack>();
 
 	private static ArrayList<UUID> waiverAcceptPlayers = new ArrayList<>();
@@ -600,6 +602,10 @@ public class Server extends JavaPlugin implements Listener {
 		return discordBot;
 	}
 
+	public static VoteManager getVoteManager() {
+		return voteManager;
+	}
+
 	@Override
 	public void onLoad() {
 		serverStartTime = System.currentTimeMillis();
@@ -723,6 +729,7 @@ public class Server extends JavaPlugin implements Listener {
 		if (Link$.isPluginEnabled("Votifier")) {
 			voteListener = new Votifier_Listener();
 			voteListener.register();
+			voteManager = new VoteManager();
 		}
 		Bukkit.getScheduler().runTask(this, new Runnable() {
 			@Override

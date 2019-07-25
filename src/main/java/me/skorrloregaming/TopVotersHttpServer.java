@@ -98,7 +98,7 @@ public class TopVotersHttpServer implements Runnable {
 				String[] keys = Server.getMonthlyVoteConfig().getData().getConfigurationSection("config").getKeys(false).toArray(new String[0]);
 				List<SwitchIntString> validKeys = new ArrayList<SwitchIntString>();
 				for (String username : keys) {
-					int votes = Server.getVoteListener().getMonthlyVotes(username, year, monthId);
+					int votes = Server.getVoteManager().getMonthlyVotes(username, year, monthId);
 					if (votes > 0) {
 						validKeys.add(new SwitchIntString(votes, username));
 					}
@@ -115,18 +115,19 @@ public class TopVotersHttpServer implements Runnable {
 							Service service = Service.values()[i];
 							long arg0 = service.getPriority().getDelay();
 							if (service.getPriority().isEpoch()) {
+								long timestamp = Server.getVoteManager().getLastVoteForService(key.getArg1(), service.getName());
 								switch (service.getPriority()) {
 									case midnight:
-										arg0 = Server.getVoteListener().getMidnight();
+										arg0 = Server.getVoteManager().getMidnight(timestamp);
 										break;
 									case midnightGreenwich:
-										arg0 = Server.getVoteListener().getMidnightGreenwich();
+										arg0 = Server.getVoteManager().getMidnightGreenwich(timestamp);
 										break;
 									default:
 										break;
 								}
 							}
-							sb.append("<td>" + Server.getVoteListener().getFriendlyTimeDifference(key.getArg1(), service.getName(), arg0, service.getPriority().isEpoch()) + "</td>");
+							sb.append("<td>" + Server.getVoteManager().getFriendlyTimeDifference(key.getArg1(), service.getName(), arg0, service.getPriority().isEpoch()) + "</td>");
 						}
 						sb.append("</tr>");
 					}
