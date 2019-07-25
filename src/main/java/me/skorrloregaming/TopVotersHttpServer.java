@@ -116,15 +116,17 @@ public class TopVotersHttpServer implements Runnable {
 							long arg0 = service.getPriority().getDelay();
 							if (service.getPriority().isEpoch()) {
 								long timestamp = Server.getVoteManager().getLastVoteForService(key.getArg1(), service.getName());
-								switch (service.getPriority()) {
-									case midnight:
-										arg0 = Server.getVoteManager().getMidnight(timestamp);
-										break;
-									case midnightGreenwich:
-										arg0 = Server.getVoteManager().getMidnightGreenwich(timestamp);
-										break;
-									default:
-										break;
+								if (!(timestamp == 0)) {
+									switch (service.getPriority()) {
+										case midnight:
+											arg0 = Server.getVoteManager().getMidnight(timestamp);
+											break;
+										case midnightGreenwich:
+											arg0 = Server.getVoteManager().getMidnightGreenwich(timestamp);
+											break;
+										default:
+											break;
+									}
 								}
 							}
 							sb.append("<td>" + Server.getVoteManager().getFriendlyTimeDifference(key.getArg1(), service.getName(), arg0, service.getPriority().isEpoch()) + "</td>");
