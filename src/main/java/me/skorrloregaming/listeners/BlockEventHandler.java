@@ -233,9 +233,11 @@ public class BlockEventHandler implements Listener {
 						type = heldItem.getType();
 					if (Directory.axes.contains(type)) {
 						if (!Server.getCurrentFellers().contains(player.getUniqueId())) {
-							event.setCancelled(true);
-							new TreeCutter(player, block).runTaskAsynchronously(Server.getPlugin());
-							return;
+							if (!player.isSneaking()) {
+								event.setCancelled(true);
+								new TreeCutter(player, block).runTaskAsynchronously(Server.getPlugin());
+								return;
+							}
 						}
 					}
 				}
