@@ -203,12 +203,13 @@ public class SignShop {
 			}
 		} else if (lines[0].equals("Enchant")) {
 			try {
+				ItemStack currentItem = player.getInventory().getItemInMainHand();
 				Enchantment enchant = Enchantment.getByName(Link$.unformatEnchantment(String.valueOf(lines[1]).trim()));
 				int amount = Integer.parseInt(String.valueOf(lines[3]));
 				int price = Integer.parseInt(String.valueOf(lines[2]).replace("$", "").replace(",", ""));
+				price *= currentItem.getAmount();
 				String enchantName = Link$.formatEnchantment(String.valueOf(enchant.getKey().getKey().trim()), amount);
 				if (cash >= price) {
-					ItemStack currentItem = player.getInventory().getItemInMainHand();
 					if (currentItem.getType() == Material.AIR || currentItem == null || currentItem.getType() == null) {
 						player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
 						return false;

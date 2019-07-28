@@ -2134,10 +2134,11 @@ public class PlayerEventHandler implements Listener {
 										String materialName = Link$.formatMaterial(event.getCurrentItem().getType());
 										String subDomain = $.getMinigameDomain(player);
 										double cash = EconManager.retrieveCash(player, subDomain);
+										ItemStack currentItem = player.getInventory().getItemInMainHand();
 										String tag = $.getMinigameTag(player);
 										String enchantName = Link$.formatEnchantment(String.valueOf(enchant.getEnchantment().getKey().getKey().trim()), tier);
+										price *= currentItem.getAmount();
 										if (cash >= price) {
-											ItemStack currentItem = player.getInventory().getItemInMainHand();
 											if (currentItem.getType() == Material.AIR || currentItem == null || currentItem.getType() == null) {
 												player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
 												return;
