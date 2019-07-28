@@ -217,6 +217,8 @@ public class SignShop {
 						player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
 						return false;
 					}
+					if (currentItem.getType() == Material.BOOK)
+						currentItem.setType(Material.ENCHANTED_BOOK);
 					try {
 						currentItem.addUnsafeEnchantment(enchant, amount);
 					} catch (Exception ex) {

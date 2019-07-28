@@ -2146,6 +2146,8 @@ public class PlayerEventHandler implements Listener {
 												player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
 												return;
 											}
+											if (currentItem.getType() == Material.BOOK)
+												currentItem.setType(Material.ENCHANTED_BOOK);
 											try {
 												currentItem.addUnsafeEnchantment(enchant.getEnchantment(), tier);
 											} catch (Exception ex) {
