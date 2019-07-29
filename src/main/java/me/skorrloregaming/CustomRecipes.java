@@ -135,6 +135,42 @@ public class CustomRecipes {
 			log(key);
 		}
 		{
+			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "iron_horse_armor");
+			ShapedRecipe recipe = new ShapedRecipe(key, Link$.createMaterial(Material.IRON_HORSE_ARMOR));
+			recipe.shape("AAB", "BBB", "BAB");
+			recipe.setIngredient('A', Material.AIR);
+			recipe.setIngredient('B', Material.IRON_INGOT);
+			Bukkit.getServer().addRecipe(recipe);
+			log(key);
+		}
+		{
+			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "diamond_horse_armor");
+			ShapedRecipe recipe = new ShapedRecipe(key, Link$.createMaterial(Material.DIAMOND_HORSE_ARMOR));
+			recipe.shape("AAB", "BBB", "BAB");
+			recipe.setIngredient('A', Material.AIR);
+			recipe.setIngredient('B', Material.DIAMOND);
+			Bukkit.getServer().addRecipe(recipe);
+			log(key);
+		}
+		{
+			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "golden_horse_armor");
+			ShapedRecipe recipe = new ShapedRecipe(key, Link$.createMaterial(Material.GOLDEN_HORSE_ARMOR));
+			recipe.shape("AAB", "BBB", "BAB");
+			recipe.setIngredient('A', Material.AIR);
+			recipe.setIngredient('B', Material.GOLD_INGOT);
+			Bukkit.getServer().addRecipe(recipe);
+			log(key);
+		}
+		{
+			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "leather_horse_armor");
+			ShapedRecipe recipe = new ShapedRecipe(key, Link$.createMaterial(Material.LEATHER_HORSE_ARMOR));
+			recipe.shape("AAB", "BBB", "BAB");
+			recipe.setIngredient('A', Material.AIR);
+			recipe.setIngredient('B', Material.LEATHER);
+			Bukkit.getServer().addRecipe(recipe);
+			log(key);
+		}
+		{
 			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "chainmail_helmet");
 			ShapedRecipe recipe = new ShapedRecipe(key, Link$.createMaterial(Material.CHAINMAIL_HELMET));
 			recipe.shape("BBB", "BAB", "AAA");
