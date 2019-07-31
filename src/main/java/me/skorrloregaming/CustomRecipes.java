@@ -18,6 +18,17 @@ public class CustomRecipes {
 
 	public static void loadRecipes() {
 		{
+			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "trident");
+			ShapedRecipe recipe = new ShapedRecipe(key, Link$.createMaterial(Material.TRIDENT));
+			recipe.shape("ABA", "ADA", "CDC");
+			recipe.setIngredient('A', Material.DIAMOND);
+			recipe.setIngredient('B', Material.NETHER_STAR);
+			recipe.setIngredient('C', Material.AIR);
+			recipe.setIngredient('D', Material.STICK);
+			Bukkit.getServer().addRecipe(recipe);
+			log(key);
+		}
+		{
 			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "ink_sac");
 			ShapelessRecipe recipe = new ShapelessRecipe(key, Link$.createMaterial(Material.INK_SAC));
 			recipe.addIngredient(1, Material.CHARCOAL);
