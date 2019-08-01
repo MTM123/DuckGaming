@@ -296,7 +296,9 @@ public class PlayerEventHandler implements Listener {
 	public void onProjectileLaunch(ProjectileLaunchEvent event) {
 		if (event.getEntity().getShooter() instanceof Player) {
 			Player player = (Player) event.getEntity().getShooter();
-			if (event.getEntity() instanceof EnderPearl) {
+			if (event.getEntity() instanceof Trident) {
+				LinkServer.getAntiCheat().disableFor(player, 2000L);
+			} else if (event.getEntity() instanceof EnderPearl) {
 				if (Server.getDelayedTasks().contains(player.getUniqueId())) {
 					event.setCancelled(true);
 				} else {
