@@ -297,7 +297,7 @@ public class PlayerEventHandler implements Listener {
 		if (event.getEntity().getShooter() instanceof Player) {
 			Player player = (Player) event.getEntity().getShooter();
 			if (event.getEntity() instanceof Trident) {
-				LinkServer.getAntiCheat().disableFor(player, 2000L);
+				LinkServer.getAntiCheat().disableFor(player, 8000L);
 			} else if (event.getEntity() instanceof EnderPearl) {
 				if (Server.getDelayedTasks().contains(player.getUniqueId())) {
 					event.setCancelled(true);
