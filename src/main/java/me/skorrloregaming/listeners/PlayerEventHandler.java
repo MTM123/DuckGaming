@@ -913,7 +913,7 @@ public class PlayerEventHandler implements Listener {
 									}
 								}, 20L);
 								String entityName = itm.getType().toString();
-								entityName = entityName.substring(0, entityName.indexOf("_"));
+								entityName = entityName.substring(0, entityName.lastIndexOf("_"));
 								if (player.getGameMode() == GameMode.SURVIVAL) {
 									if (itm.getAmount() < 2) {
 										player.getInventory().setItemInMainHand(Link$.createMaterial(Material.AIR));
@@ -922,13 +922,17 @@ public class PlayerEventHandler implements Listener {
 										player.getInventory().setItemInMainHand(itm);
 									}
 								}
-								EntityType entityType = EntityType.valueOf(entityName);
-								Location exactLoc = event.getClickedBlock().getLocation();
-								exactLoc.setX(exactLoc.getBlockX() + 0.5);
-								exactLoc.setY(exactLoc.getBlockY() + 1.0);
-								exactLoc.setZ(exactLoc.getBlockZ() + 0.5);
-								EntityEventHandler.setLastCreeperSpawnEgg(System.currentTimeMillis(), exactLoc);
-								event.getClickedBlock().getWorld().spawnEntity(exactLoc, entityType);
+								try {
+									EntityType entityType = EntityType.valueOf(entityName);
+									Location exactLoc = event.getClickedBlock().getLocation();
+									exactLoc.setX(exactLoc.getBlockX() + 0.5);
+									exactLoc.setY(exactLoc.getBlockY() + 1.0);
+									exactLoc.setZ(exactLoc.getBlockZ() + 0.5);
+									EntityEventHandler.setLastCreeperSpawnEgg(System.currentTimeMillis(), exactLoc);
+									event.getClickedBlock().getWorld().spawnEntity(exactLoc, entityType);
+								} catch (Exception ex) {
+									ex.printStackTrace();
+								}
 							}
 						}
 						event.setCancelled(true);
