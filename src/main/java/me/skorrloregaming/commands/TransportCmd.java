@@ -40,6 +40,10 @@ public class TransportCmd implements CommandExecutor {
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot transport to/from " + WordUtils.capitalize(minigame) + ".");
 			return true;
 		}
+		if ($.getCurrentMinigame(player).toString().toLowerCase().equals(minigame)) {
+			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Sorry. " + ChatColor.GRAY + "Using this as a trash can is not the idea.");
+			return true;
+		}
 		ItemStack[] contents = SolidStorage.restoreInventoryToArray(player, minigame);
 		if (contents == null) {
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "There is nothing stored for that minigame.");

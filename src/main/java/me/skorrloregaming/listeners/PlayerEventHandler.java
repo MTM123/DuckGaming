@@ -296,7 +296,9 @@ public class PlayerEventHandler implements Listener {
 	public void onProjectileLaunch(ProjectileLaunchEvent event) {
 		if (event.getEntity().getShooter() instanceof Player) {
 			Player player = (Player) event.getEntity().getShooter();
-			if (event.getEntity() instanceof EnderPearl) {
+			if (event.getEntity() instanceof Trident) {
+				LinkServer.getAntiCheat().disableFor(player, 8000L);
+			} else if (event.getEntity() instanceof EnderPearl) {
 				if (Server.getDelayedTasks().contains(player.getUniqueId())) {
 					event.setCancelled(true);
 				} else {
@@ -2134,10 +2136,11 @@ public class PlayerEventHandler implements Listener {
 										String materialName = Link$.formatMaterial(event.getCurrentItem().getType());
 										String subDomain = $.getMinigameDomain(player);
 										double cash = EconManager.retrieveCash(player, subDomain);
+										ItemStack currentItem = player.getInventory().getItemInMainHand();
 										String tag = $.getMinigameTag(player);
 										String enchantName = Link$.formatEnchantment(String.valueOf(enchant.getEnchantment().getKey().getKey().trim()), tier);
+										price *= currentItem.getAmount();
 										if (cash >= price) {
-											ItemStack currentItem = player.getInventory().getItemInMainHand();
 											if (currentItem.getType() == Material.AIR || currentItem == null || currentItem.getType() == null) {
 												player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
 												return;
@@ -2146,6 +2149,8 @@ public class PlayerEventHandler implements Listener {
 												player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
 												return;
 											}
+											if (currentItem.getType() == Material.BOOK)
+												currentItem.setType(Material.ENCHANTED_BOOK);
 											try {
 												currentItem.addUnsafeEnchantment(enchant.getEnchantment(), tier);
 											} catch (Exception ex) {

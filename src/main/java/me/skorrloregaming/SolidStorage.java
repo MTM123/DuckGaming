@@ -669,4 +669,10 @@ public class SolidStorage {
 			return false;
 		return true;
 	}
+
+	public static boolean isForbiddenWorld(String worldName, UUID playerId) {
+		if ($.getMinigameFromWorld(Bukkit.getWorld(worldName)) == $.getCurrentMinigame(Bukkit.getPlayer(playerId)))
+			return false;
+		return true;
+	}
 }

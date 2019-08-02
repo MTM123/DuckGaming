@@ -4,10 +4,6 @@ import me.skorrloregaming.impl.Service;
 import me.skorrloregaming.impl.Switches;
 import me.skorrloregaming.impl.Switches.SwitchIntString;
 
-import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocket;
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -102,7 +98,7 @@ public class TopVotersHttpServer implements Runnable {
 				String[] keys = Server.getMonthlyVoteConfig().getData().getConfigurationSection("config").getKeys(false).toArray(new String[0]);
 				List<SwitchIntString> validKeys = new ArrayList<SwitchIntString>();
 				for (String username : keys) {
-					int votes = Server.getVoteListener().getMonthlyVotes(username, year, monthId);
+					int votes = Server.getVoteManager().getMonthlyVotes(username, year, monthId);
 					if (votes > 0) {
 						validKeys.add(new SwitchIntString(votes, username));
 					}
@@ -115,8 +111,26 @@ public class TopVotersHttpServer implements Runnable {
 						sb.append("<tr>");
 						sb.append("<td>" + key.getArg1() + "</td>");
 						sb.append("<td>" + key.getArg0() + "</td>");
-						for (int i = 0; i < 10; i++)
-							sb.append("<td>" + Server.getVoteListener().getFriendlyTimeDifference(key.getArg1(), Server.getVoteListener().getServiceNameFromFriendly(Service.values()[i])) + "</td>");
+						for (int i = 0; i < 10; i++) {
+							Service service = Service.values()[i];
+							long arg0 = service.getPriority().getDelay();
+							if (service.getPriority().isEpoch()) {
+								long timestamp = Server.getVoteManager().getLastVoteForService(key.getArg1(), service.getName());
+								if (!(timestamp == 0)) {
+									switch (service.getPriority()) {
+										case midnight:
+											arg0 = Server.getVoteManager().getMidnight(timestamp);
+											break;
+										case midnightGreenwich:
+											arg0 = Server.getVoteManager().getMidnightGreenwich(timestamp);
+											break;
+										default:
+											break;
+									}
+								}
+							}
+							sb.append("<td>" + Server.getVoteManager().getFriendlyTimeDifference(key.getArg1(), service.getName(), arg0, service.getPriority().isEpoch()) + "</td>");
+						}
 						sb.append("</tr>");
 					}
 				}
