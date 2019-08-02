@@ -18,6 +18,15 @@ public class CustomRecipes {
 
 	public static void loadRecipes() {
 		{
+			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "black_dye");
+			ShapelessRecipe recipe = new ShapelessRecipe(key, Link$.createMaterial(Material.BLACK_DYE));
+			recipe.addIngredient(1, Material.RED_DYE);
+			recipe.addIngredient(1, Material.BLUE_DYE);
+			recipe.addIngredient(1, Material.YELLOW_DYE);
+			Bukkit.getServer().addRecipe(recipe);
+			log(key);
+		}
+		{
 			NamespacedKey key = new NamespacedKey(Server.getPlugin(), "ink_sac");
 			ShapelessRecipe recipe = new ShapelessRecipe(key, Link$.createMaterial(Material.INK_SAC));
 			recipe.addIngredient(1, Material.CHARCOAL);
