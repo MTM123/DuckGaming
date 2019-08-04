@@ -3,11 +3,14 @@ package me.skorrloregaming.commands;
 import me.skorrloregaming.$;
 import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.ServerGet;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import me.skorrloregaming.*;
 
 public class ClearCmd implements CommandExecutor {
 
@@ -16,7 +19,7 @@ public class ClearCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}

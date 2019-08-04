@@ -16,6 +16,8 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class BalanceTopCmd implements CommandExecutor {
 
 	@Override
@@ -23,7 +25,7 @@ public class BalanceTopCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getKitpvp().contains(player.getUniqueId()) && !Server.getSurvival().contains(player.getUniqueId()) && !Server.getFactions().contains(player.getUniqueId()) && !Server.getSkyblock().contains(player.getUniqueId())) {
+		if (!ServerGet.get().getKitpvp().contains(player.getUniqueId()) && !ServerGet.get().getSurvival().contains(player.getUniqueId()) && !ServerGet.get().getFactions().contains(player.getUniqueId()) && !ServerGet.get().getSkyblock().contains(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
@@ -45,7 +47,7 @@ public class BalanceTopCmd implements CommandExecutor {
 		String subDomain = $.getMinigameDomain(player);
 		String minigameTag = $.getMinigameTag(player);
 		HashMap<Double, UUID> array1 = new HashMap<>();
-		for (String uuid : Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
+		for (String uuid : ServerGet.get().getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
 			if (uuid.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
 				double money = EconManager.retrieveCash(UUID.fromString(uuid), subDomain);
 				if (money > 0) {

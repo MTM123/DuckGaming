@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import me.skorrloregaming.*;
+
 public class CraftExplosion {
 	private Location location;
 	private float force;
@@ -101,7 +103,7 @@ public class CraftExplosion {
 						}
 						block.breakNaturally(Link$.createMaterial(Material.AIR));
 						block.getState().update();
-						LinkServer.getInstance().getAntiCheat().onBlockBreak(block, null);
+						new LinkServerGet().get().getInstance().getAntiCheat().onBlockBreak(block, null);
 					}
 				}
 			}
@@ -112,7 +114,7 @@ public class CraftExplosion {
 		for (Block block : blocks) {
 			block.breakNaturally(Link$.createMaterial(Material.AIR));
 			block.getState().update();
-			LinkServer.getInstance().getAntiCheat().onBlockBreak(block, null);
+			new LinkServerGet().get().getInstance().getAntiCheat().onBlockBreak(block, null);
 		}
 	}
 

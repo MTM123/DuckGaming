@@ -11,6 +11,8 @@ import org.bukkit.enchantments.Enchantment;
 
 import java.lang.reflect.InvocationTargetException;
 
+import me.skorrloregaming.*;
+
 public class CreateEnchantTypeEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
 	private LaShoppe shoppe;
@@ -30,12 +32,12 @@ public class CreateEnchantTypeEventHandler implements AnvilGUI.AnvilClickEventHa
 			return;
 		}
 		final Enchantment fEnchantment = enchantment;
-		Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+		Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					new AnvilGUI(event.getPlayer(), Server.getShoppe().getInventoryName(LaShoppeFrame.CREATE_ENCHANT), new CreateEnchantPriceEventHandler(shoppe, fEnchantment))
+					new AnvilGUI(event.getPlayer(), ServerGet.get().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ENCHANT), new CreateEnchantPriceEventHandler(shoppe, fEnchantment))
 							.setInputName("Enter price")
 							.open();
 				} catch (IllegalAccessException e) {

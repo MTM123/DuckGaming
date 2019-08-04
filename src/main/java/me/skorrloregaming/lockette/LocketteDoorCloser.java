@@ -1,6 +1,7 @@
 package me.skorrloregaming.lockette;
 
 import me.skorrloregaming.Server;
+import me.skorrloregaming.ServerGet;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
@@ -8,6 +9,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
+
+import me.skorrloregaming.*;
 
 public class LocketteDoorCloser implements Runnable {
 	private static int doorTask = -1;
@@ -19,7 +22,7 @@ public class LocketteDoorCloser implements Runnable {
 	protected boolean start() {
 		if (doorTask != -1)
 			return (false);
-		doorTask = Server.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(Server.getPlugin(), this, 100, 10);
+		doorTask = ServerGet.get().getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(ServerGet.get().getPlugin(), this, 100, 10);
 		if (doorTask == -1)
 			return (true);
 		return (false);
@@ -28,7 +31,7 @@ public class LocketteDoorCloser implements Runnable {
 	protected boolean stop() {
 		if (doorTask == -1)
 			return (false);
-		Server.getPlugin().getServer().getScheduler().cancelTask(doorTask);
+		ServerGet.get().getPlugin().getServer().getScheduler().cancelTask(doorTask);
 		doorTask = -1;
 		cleanup();
 		return (false);

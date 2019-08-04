@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class EconManager {
 	public static final double MAX_CASH = 1_000_000_000.0;
 	public static final double MIN_CASH = 0.0;
@@ -34,13 +36,13 @@ public class EconManager {
 	public static void withdrawCash(UUID id, double amount, String subDomain, boolean updateScoreboard) {
 		if ($.validEconomyMinigames.contains(subDomain)) {
 			String path = "config." + id.toString() + ".balance." + subDomain;
-			if (!Server.getPlugin().getConfig().contains(path)) {
-				Server.getPlugin().getConfig().set(path, 0);
+			if (!ServerGet.get().getPlugin().getConfig().contains(path)) {
+				ServerGet.get().getPlugin().getConfig().set(path, 0);
 			}
-			double value = Double.parseDouble(Server.getPlugin().getConfig().getString(path)) - amount;
+			double value = Double.parseDouble(ServerGet.get().getPlugin().getConfig().getString(path)) - amount;
 			if (value < MIN_CASH)
 				value = MIN_CASH;
-			Server.getPlugin().getConfig().set(path, value + "");
+			ServerGet.get().getPlugin().getConfig().set(path, value + "");
 			if (updateScoreboard) {
 				updateScoreboards(subDomain, id);
 			}
@@ -58,13 +60,13 @@ public class EconManager {
 	public static void depositCash(UUID id, double amount, String subDomain, boolean updateScoreboard) {
 		if ($.validEconomyMinigames.contains(subDomain)) {
 			String path = "config." + id.toString() + ".balance." + subDomain;
-			if (!Server.getPlugin().getConfig().contains(path)) {
-				Server.getPlugin().getConfig().set(path, 0);
+			if (!ServerGet.get().getPlugin().getConfig().contains(path)) {
+				ServerGet.get().getPlugin().getConfig().set(path, 0);
 			}
-			double value = Double.parseDouble(Server.getPlugin().getConfig().getString(path)) + amount;
+			double value = Double.parseDouble(ServerGet.get().getPlugin().getConfig().getString(path)) + amount;
 			if (value > MAX_CASH)
 				value = MAX_CASH;
-			Server.getPlugin().getConfig().set(path, value + "");
+			ServerGet.get().getPlugin().getConfig().set(path, value + "");
 			if (updateScoreboard) {
 				updateScoreboards(subDomain, id);
 			}
@@ -74,10 +76,10 @@ public class EconManager {
 	public static double retrieveCash(UUID id, String subDomain) {
 		if ($.validEconomyMinigames.contains(subDomain)) {
 			String path = "config." + id.toString() + ".balance." + subDomain;
-			if (!Server.getPlugin().getConfig().contains(path)) {
-				Server.getPlugin().getConfig().set(path, 0.0);
+			if (!ServerGet.get().getPlugin().getConfig().contains(path)) {
+				ServerGet.get().getPlugin().getConfig().set(path, 0.0);
 			}
-			return Double.parseDouble(Server.getPlugin().getConfig().getString(path));
+			return Double.parseDouble(ServerGet.get().getPlugin().getConfig().getString(path));
 		} else {
 			return 0.0;
 		}
@@ -104,8 +106,8 @@ public class EconManager {
 	}
 
 	public static double getWorth(Material material, ServerMinigame minigame) {
-		if (Server.getPlugin().getConfig().contains("settings.economy.modifier." + minigame.toString() + "." + material.toString()))
-			return Server.getPlugin().getConfig().getDouble("settings.economy.modifier." + minigame.toString() + "." + material.toString());
+		if (ServerGet.get().getPlugin().getConfig().contains("settings.economy.modifier." + minigame.toString() + "." + material.toString()))
+			return ServerGet.get().getPlugin().getConfig().getDouble("settings.economy.modifier." + minigame.toString() + "." + material.toString());
 		return 0.0;
 	}
 

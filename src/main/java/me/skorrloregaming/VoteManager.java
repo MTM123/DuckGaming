@@ -22,6 +22,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class VoteManager {
 
 	private final int WEBSITE_COUNT = 9;
@@ -47,26 +49,26 @@ public class VoteManager {
 	}
 
 	public int getMonthlyVotes(String username, int year, int monthId) {
-		if (Server.getMonthlyVoteConfig().getData().contains("config." + username + "." + year + "." + (monthId + 1)))
-			return Server.getMonthlyVoteConfig().getData().getInt("config." + username + "." + year + "." + (monthId + 1));
+		if (ServerGet.get().getMonthlyVoteConfig().getData().contains("config." + username + "." + year + "." + (monthId + 1)))
+			return ServerGet.get().getMonthlyVoteConfig().getData().getInt("config." + username + "." + year + "." + (monthId + 1));
 		return 0;
 	}
 
 	public void addMonthlyVotes(String username, int year, int monthId, int amount) {
 		int currentVotes = getMonthlyVotes(username, year, monthId);
-		Server.getMonthlyVoteConfig().getData().set("config." + username + "." + year + "." + (monthId + 1), currentVotes + amount);
-		Server.getMonthlyVoteConfig().saveData();
+		ServerGet.get().getMonthlyVoteConfig().getData().set("config." + username + "." + year + "." + (monthId + 1), currentVotes + amount);
+		ServerGet.get().getMonthlyVoteConfig().saveData();
 	}
 
 	public long getLastVoteForService(String username, String service) {
-		if (Server.getMonthlyVoteConfig().getData().contains("config." + username + "." + service))
-			return Server.getMonthlyVoteConfig().getData().getLong("config." + username + "." + service);
+		if (ServerGet.get().getMonthlyVoteConfig().getData().contains("config." + username + "." + service))
+			return ServerGet.get().getMonthlyVoteConfig().getData().getLong("config." + username + "." + service);
 		return 0;
 	}
 
 	public void setLastVoteForService(String username, long timestamp, String service) {
-		Server.getMonthlyVoteConfig().getData().set("config." + username + "." + service, timestamp);
-		Server.getMonthlyVoteConfig().saveData();
+		ServerGet.get().getMonthlyVoteConfig().getData().set("config." + username + "." + service, timestamp);
+		ServerGet.get().getMonthlyVoteConfig().saveData();
 	}
 
 	public long getTimeDifference(String username, String service, long arg0, boolean isEpoch) {
@@ -112,21 +114,21 @@ public class VoteManager {
 	}
 
 	public VoteManager() {
-		Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), () -> {
-			for (String id : Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
-				String username = Server.getPlugin().getConfig().getString("config." + id + ".username");
+		ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskTimer(ServerGet.get().getPlugin(), () -> {
+			for (String id : ServerGet.get().getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
+				String username = ServerGet.get().getPlugin().getConfig().getString("config." + id + ".username");
 				if (username == null || username.equals("null"))
 					continue;
-				for (String key : Server.getDiscordVerifyConfig().getData().getConfigurationSection("verified").getKeys(false)) {
-					String value = Server.getDiscordVerifyConfig().getData().getString("verified." + key);
+				for (String key : ServerGet.get().getDiscordVerifyConfig().getData().getConfigurationSection("verified").getKeys(false)) {
+					String value = ServerGet.get().getDiscordVerifyConfig().getData().getString("verified." + key);
 					if (value.equals(id)) {
 						if (getMaximumTimeDiffForAllServices(username, ServicePriority.delay24hour.getDelay(), false) <= 0) {
 							if (!hasPlayerBeenPingedToday(UUID.fromString(id))) {
 								updatePlayerPingedDate(UUID.fromString(id), new Date());
-								boolean subscribed = Boolean.parseBoolean(LinkServer.getPlugin().getConfig().getString("config." + id + ".subscribed", "true"));
+								boolean subscribed = Boolean.parseBoolean(new LinkServerGet().get().getPlugin().getConfig().getString("config." + id + ".subscribed", "true"));
 								if (subscribed) {
 									Logger.info("It looks like " + username + " can vote, they WILL be notified.");
-									for (Member member : Server.getDiscordBot().getGuild().getMembers()) {
+									for (Member member : ServerGet.get().getDiscordBot().getGuild().getMembers()) {
 										String discordUsername = member.getUser().getName();
 										if (member.getNickname() != null)
 											discordUsername = member.getNickname();
@@ -156,11 +158,11 @@ public class VoteManager {
 	}
 
 	public void updatePlayerPingedDate(UUID id, Date date) {
-		Server.getPlugin().getConfig().set("config." + id.toString() + ".lastVotePing", date.getTime());
+		ServerGet.get().getPlugin().getConfig().set("config." + id.toString() + ".lastVotePing", date.getTime());
 	}
 
 	public boolean hasPlayerBeenPingedToday(UUID id) {
-		long lastPing = Server.getPlugin().getConfig().getLong("config." + id.toString() + ".lastVotePing", -1);
+		long lastPing = ServerGet.get().getPlugin().getConfig().getLong("config." + id.toString() + ".lastVotePing", -1);
 		if (lastPing > -1) {
 			Date date = new Date(lastPing);
 			Date currentDate = new Date();
@@ -194,19 +196,19 @@ public class VoteManager {
 			if (doJackpots) {
 				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted and earned a jackpot.";
 				Bukkit.broadcastMessage(message);
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT
 				);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			} else {
-				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted for the server.";
+				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted for the ServerGet.get().";
 				Bukkit.broadcastMessage(message);
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT
 				);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			}
 			double balance2 = EconManager.retrieveCash(player.getUniqueId(), "kitpvp");
 			double ceil2 = balance2 / 25;
@@ -285,7 +287,7 @@ public class VoteManager {
 				if (!spoofed || (spoofed && minigame == ServerMinigame.SURVIVAL))
 					player.getPlayer().sendMessage(ChatColor.GREEN + "Jackpot." + ChatColor.RESET + " You just voted and earned $" + formatter.format(amountEarned4) + " in Survival.");
 				$.playFirework(player.getPlayer().getLocation());
-				Server.setLastVoteTime(System.currentTimeMillis());
+				ServerGet.get().setLastVoteTime(System.currentTimeMillis());
 			}
 		} else {
 			Logger.info(this.toString() + " has denied the vote since \"" + username + "\" is undefined.", true);

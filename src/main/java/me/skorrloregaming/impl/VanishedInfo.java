@@ -3,6 +3,8 @@ package me.skorrloregaming.impl;
 import org.bukkit.GameMode;
 import org.bukkit.inventory.ItemStack;
 
+import me.skorrloregaming.*;
+
 public class VanishedInfo {
 	private ItemStack[] contents;
 	private GameMode gameMode;

@@ -18,27 +18,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class VaultEconomy implements Economy {
 	private long[] timeSinceLastWarning = new long[3];
-	
+
 	private boolean isEnabled = false;
 
 	public VaultEconomy() {
-		Server.getPlugin().getServer().getPluginManager().registerEvents(new EconomyServerListener(), Server.getPlugin());
-		Server.getPlugin().getLogger().info("Vault support enabled.");
+		ServerGet.get().getPlugin().getServer().getPluginManager().registerEvents(new EconomyServerListener(), ServerGet.get().getPlugin());
+		ServerGet.get().getPlugin().getLogger().info("Vault support enabled.");
 	}
 
 	public void setupVault() {
-		Plugin vault = Server.getPlugin().getServer().getPluginManager().getPlugin("Vault");
+		Plugin vault = ServerGet.get().getPlugin().getServer().getPluginManager().getPlugin("Vault");
 		if (vault == null) {
 			return;
 		}
-		Server.getPlugin().getServer().getServicesManager().register(Economy.class, this, Server.getPlugin(), ServicePriority.Highest);
+		ServerGet.get().getPlugin().getServer().getServicesManager().register(Economy.class, this, ServerGet.get().getPlugin(), ServicePriority.Highest);
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return Server.getPlugin() != null;
+		return ServerGet.get().getPlugin() != null;
 	}
 
 	@Override
@@ -349,7 +351,7 @@ public class VaultEconomy implements Economy {
 				Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("SkorrloreGaming");
 				if ((plugin != null) && (plugin.isEnabled())) {
 					VaultEconomy.this.isEnabled = true;
-					Server.getPlugin().getLogger().info("Vault support enabled.");
+					ServerGet.get().getPlugin().getLogger().info("Vault support enabled.");
 				}
 			}
 		}

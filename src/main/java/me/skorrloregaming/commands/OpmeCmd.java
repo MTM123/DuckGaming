@@ -9,6 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.skorrloregaming.*;
+
 public class OpmeCmd implements CommandExecutor {
 
 	@Override
@@ -19,18 +21,18 @@ public class OpmeCmd implements CommandExecutor {
 		int rankID = Link$.getRankId(player);
 		if (rankID == 3) {
 			if (player.isOp()) {
-				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are already opped on this server.");
+				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are already opped on this ServerGet.get().");
 			} else {
 				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You should now be opped temporarily.");
 				player.setOp(true);
-				Server.getOpmePlayers().add(player.getUniqueId());
-				Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+				ServerGet.get().getOpmePlayers().add(player.getUniqueId());
+				ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
 					@Override
 					public void run() {
-						if (Server.getOpmePlayers().contains(player.getUniqueId())) {
-							player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Times up! " + ChatColor.GRAY + "You will now be deopped from this server.");
+						if (ServerGet.get().getOpmePlayers().contains(player.getUniqueId())) {
+							player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Times up! " + ChatColor.GRAY + "You will now be deopped from this ServerGet.get().");
 							player.setOp(false);
-							Server.getOpmePlayers().remove(player.getUniqueId());
+							ServerGet.get().getOpmePlayers().remove(player.getUniqueId());
 						}
 					}
 				}, (20 * 60) * 3));

@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class TpacceptCmd implements CommandExecutor {
 
 	@Override
@@ -21,22 +23,22 @@ public class TpacceptCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getCreative().contains(player.getUniqueId()) && !Server.getFactions().contains(player.getUniqueId()) && !Server.getSurvival().contains(player.getUniqueId()) && !Server.getKitpvp().contains(player.getUniqueId()) && !Server.getSkyblock().contains(player.getUniqueId())) {
+		if (!ServerGet.get().getCreative().contains(player.getUniqueId()) && !ServerGet.get().getFactions().contains(player.getUniqueId()) && !ServerGet.get().getSurvival().contains(player.getUniqueId()) && !ServerGet.get().getKitpvp().contains(player.getUniqueId()) && !ServerGet.get().getSkyblock().contains(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
 		String tag = $.getMinigameTag(player);
-		if (!Server.getTpaRequests().containsValue(player.getUniqueId())) {
+		if (!ServerGet.get().getTpaRequests().containsValue(player.getUniqueId())) {
 			player.sendMessage(tag + ChatColor.RED + "You have not received any teleport requests recently.");
 		} else {
-			for (Map.Entry<UUID, UUID> id : Server.getTpaRequests().entrySet()) {
+			for (Map.Entry<UUID, UUID> id : ServerGet.get().getTpaRequests().entrySet()) {
 				if (id.getValue().equals(player.getUniqueId())) {
-					Server.getTpaRequests().remove(id.getKey());
-					Player targetPlayer = Server.getPlugin().getServer().getPlayer(id.getKey());
+					ServerGet.get().getTpaRequests().remove(id.getKey());
+					Player targetPlayer = ServerGet.get().getPlugin().getServer().getPlayer(id.getKey());
 					if (targetPlayer == null) {
 						player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.WHITE + "The specified player could not be found.");
 					} else {
@@ -47,10 +49,10 @@ public class TpacceptCmd implements CommandExecutor {
 							DelayedTeleport dt = null;
 							if (ma.toString().equals(mb.toString()) && ma.toString().equals(ServerMinigame.CREATIVE.toString())) {
 								dt = new DelayedTeleport(targetPlayer, 0.0, zoneLocation, false);
-								dt.runTask(Server.getPlugin());
+								dt.runTask(ServerGet.get().getPlugin());
 							} else {
-								dt = new DelayedTeleport(targetPlayer, Server.getTeleportationDelay(), zoneLocation, false);
-								Server.getBukkitTasks().add(dt.runTaskTimer(Server.getPlugin(), 4, 4));
+								dt = new DelayedTeleport(targetPlayer, ServerGet.get().getTeleportationDelay(), zoneLocation, false);
+								ServerGet.get().getBukkitTasks().add(dt.runTaskTimer(ServerGet.get().getPlugin(), 4, 4));
 							}
 							player.sendMessage(tag + ChatColor.WHITE + "Teleportation request accepted.");
 							targetPlayer.sendMessage(tag + ChatColor.YELLOW + player.getName() + ChatColor.WHITE + " has accepted your teleport request.");

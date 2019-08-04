@@ -7,6 +7,8 @@ import org.bukkit.util.CachedServerIcon;
 import java.net.InetSocketAddress;
 import java.util.List;
 
+import me.skorrloregaming.*;
+
 public class PingReply {
 	private String motd;
 	private int onlinePlayers;

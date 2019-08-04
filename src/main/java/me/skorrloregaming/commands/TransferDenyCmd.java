@@ -8,6 +8,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.skorrloregaming.*;
+
 public class TransferDenyCmd implements CommandExecutor {
 
 	@Override
@@ -19,27 +21,27 @@ public class TransferDenyCmd implements CommandExecutor {
 			player.sendMessage("This commmand is currently not applicable to you.");
 			return true;
 		}
-		if (Server.getTransferAcceptPlayers().containsKey(player.getUniqueId())) {
-			SwitchUUIDString suu = Server.getTransferAcceptPlayers().get(player.getUniqueId());
+		if (ServerGet.get().getTransferAcceptPlayers().containsKey(player.getUniqueId())) {
+			SwitchUUIDString suu = ServerGet.get().getTransferAcceptPlayers().get(player.getUniqueId());
 			String uuid = suu.getArg0().toString();
 			for (String domain : $.validStorageMinigames)
 				SolidStorage.clearPlayerSave(CraftGo.Player.getOfflinePlayer(uuid), domain);
-			Server.getPlugin().getConfig().set("config." + uuid, null);
-			Server.getPlugin().getConfig().set("denyDataTransfer." + uuid, true);
-			if (LinkServer.getInstance().getRedisDatabase().contains("playtime.total", uuid)) {
+			ServerGet.get().getPlugin().getConfig().set("config." + uuid, null);
+			ServerGet.get().getPlugin().getConfig().set("denyDataTransfer." + uuid, true);
+			if (new LinkServerGet().get().getInstance().getRedisDatabase().contains("playtime.total", uuid)) {
 				for (int day = 0; day <= 365; day++) {
-					if (LinkServer.getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, uuid))
-						LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, uuid, null);
+					if (new LinkServerGet().get().getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, uuid))
+						new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, uuid, null);
 				}
-				LinkServer.getInstance().getRedisDatabase().set("playtime.total", uuid, null);
-				LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
+				new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.total", uuid, null);
+				new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
 			}
-			Server.getSurvivalConfig().getData().set("homes." + uuid, null);
-			Server.getSurvivalConfig().saveData();
-			Server.getFactionsConfig().getData().set("homes." + uuid, null);
-			Server.getFactionsConfig().saveData();
+			ServerGet.get().getSurvivalConfig().getData().set("homes." + uuid, null);
+			ServerGet.get().getSurvivalConfig().saveData();
+			ServerGet.get().getFactionsConfig().getData().set("homes." + uuid, null);
+			ServerGet.get().getFactionsConfig().saveData();
 			player.sendMessage("Operation completed, this operation cannot be reversed.");
-			Server.getTransferAcceptPlayers().remove(player.getUniqueId());
+			ServerGet.get().getTransferAcceptPlayers().remove(player.getUniqueId());
 		} else {
 			player.sendMessage("You have no pending transfers from old accounts.");
 		}

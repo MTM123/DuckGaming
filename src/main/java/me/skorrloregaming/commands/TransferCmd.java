@@ -10,6 +10,8 @@ import org.bukkit.command.CommandSender;
 import java.util.Set;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class TransferCmd implements CommandExecutor {
 
 	@Override
@@ -40,54 +42,54 @@ public class TransferCmd implements CommandExecutor {
 				if (player.isOnline())
 					player.getPlayer().performCommand("hub");
 				String uuid = targetPlayer.getUniqueId().toString();
-				Set<String> array = Server.getPlugin().getConfig().getConfigurationSection("config." + uuid).getKeys(true);
+				Set<String> array = ServerGet.get().getPlugin().getConfig().getConfigurationSection("config." + uuid).getKeys(true);
 				for (String value : array) {
 					String valuePath = "config." + player.getUniqueId().toString() + "." + value;
 					String oldValuePath = "config." + uuid + "." + value;
-					Server.getPlugin().getConfig().set(valuePath, Server.getPlugin().getConfig().get(oldValuePath));
+					ServerGet.get().getPlugin().getConfig().set(valuePath, ServerGet.get().getPlugin().getConfig().get(oldValuePath));
 				}
-				if (LinkServer.getInstance().getRedisDatabase().contains("playtime.total", uuid)) {
+				if (new LinkServerGet().get().getInstance().getRedisDatabase().contains("playtime.total", uuid)) {
 					for (int day = 0; day <= 365; day++) {
-						if (LinkServer.getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, uuid)) {
-							String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.dayOfYear." + day, uuid);
-							LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
-							LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, uuid, null);
+						if (new LinkServerGet().get().getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, uuid)) {
+							String value = new LinkServerGet().get().getInstance().getRedisDatabase().getString("playtime.dayOfYear." + day, uuid);
+							new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
+							new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, uuid, null);
 						}
 					}
 					{
-						String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.total", uuid);
-						LinkServer.getInstance().getRedisDatabase().set("playtime.total", player.getUniqueId().toString(), value);
-						LinkServer.getInstance().getRedisDatabase().set("playtime.total", uuid, null);
+						String value = new LinkServerGet().get().getInstance().getRedisDatabase().getString("playtime.total", uuid);
+						new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.total", player.getUniqueId().toString(), value);
+						new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.total", uuid, null);
 					}
 					{
-						String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.lastKnownDayOfYear", uuid);
-						LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
-						LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
+						String value = new LinkServerGet().get().getInstance().getRedisDatabase().getString("playtime.lastKnownDayOfYear", uuid);
+						new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
+						new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
 					}
 				}
-				if (Server.getSurvivalConfig().getData().contains("homes." + uuid)) {
-					Set<String> array1 = Server.getSurvivalConfig().getData().getConfigurationSection("homes." + uuid).getKeys(true);
+				if (ServerGet.get().getSurvivalConfig().getData().contains("homes." + uuid)) {
+					Set<String> array1 = ServerGet.get().getSurvivalConfig().getData().getConfigurationSection("homes." + uuid).getKeys(true);
 					for (String value : array1) {
 						String valuePath = "homes." + player.getUniqueId().toString() + "." + value;
 						String oldValuePath = "homes." + uuid + "." + value;
-						Server.getSurvivalConfig().getData().set(valuePath, Server.getSurvivalConfig().getData().get(oldValuePath));
+						ServerGet.get().getSurvivalConfig().getData().set(valuePath, ServerGet.get().getSurvivalConfig().getData().get(oldValuePath));
 					}
-					Server.getSurvivalConfig().getData().set("homes." + uuid, null);
-					Server.getSurvivalConfig().saveData();
+					ServerGet.get().getSurvivalConfig().getData().set("homes." + uuid, null);
+					ServerGet.get().getSurvivalConfig().saveData();
 				}
-				if (Server.getFactionsConfig().getData().contains("homes." + uuid)) {
-					Set<String> array1 = Server.getFactionsConfig().getData().getConfigurationSection("homes." + uuid).getKeys(true);
+				if (ServerGet.get().getFactionsConfig().getData().contains("homes." + uuid)) {
+					Set<String> array1 = ServerGet.get().getFactionsConfig().getData().getConfigurationSection("homes." + uuid).getKeys(true);
 					for (String value : array1) {
 						String valuePath = "homes." + player.getUniqueId().toString() + "." + value;
 						String oldValuePath = "homes." + uuid + "." + value;
-						Server.getFactionsConfig().getData().set(valuePath, Server.getFactionsConfig().getData().get(oldValuePath));
+						ServerGet.get().getFactionsConfig().getData().set(valuePath, ServerGet.get().getFactionsConfig().getData().get(oldValuePath));
 					}
-					Server.getFactionsConfig().getData().set("homes." + uuid, null);
-					Server.getFactionsConfig().saveData();
+					ServerGet.get().getFactionsConfig().getData().set("homes." + uuid, null);
+					ServerGet.get().getFactionsConfig().saveData();
 				}
 				for (String domain : $.validStorageMinigames)
 					SolidStorage.dataUUIDtoUUID(UUID.fromString(uuid), player.getUniqueId(), domain);
-				Server.getPlugin().getConfig().set("config." + uuid, null);
+				ServerGet.get().getPlugin().getConfig().set("config." + uuid, null);
 				if (player.isOnline())
 					player.getPlayer().sendMessage("Operation completed, you may now play as usual.");
 				sender.sendMessage("Operation completed, " + player.getName() + " data has been modified.");

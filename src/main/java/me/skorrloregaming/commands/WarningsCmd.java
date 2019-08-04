@@ -12,6 +12,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import me.skorrloregaming.*;
+
 public class WarningsCmd implements CommandExecutor {
 
 	@Override
@@ -28,15 +30,15 @@ public class WarningsCmd implements CommandExecutor {
 				return true;
 			}
 			String path = "config." + op.getUniqueId().toString();
-			if (!Server.getPlugin().getConfig().contains(path + ".ip")) {
+			if (!ServerGet.get().getPlugin().getConfig().contains(path + ".ip")) {
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 				return true;
 			}
-			String ipAddress = Server.getPlugin().getConfig().getString(path + ".ip");
+			String ipAddress = ServerGet.get().getPlugin().getConfig().getString(path + ".ip");
 			String configPath = "warning." + ipAddress + ".count";
 			int warnings = 0;
-			if (Server.getPlugin().getConfig().contains(configPath)) {
-				warnings = Integer.parseInt(Server.getPlugin().getConfig().getString(configPath));
+			if (ServerGet.get().getPlugin().getConfig().contains(configPath)) {
+				warnings = Integer.parseInt(ServerGet.get().getPlugin().getConfig().getString(configPath));
 				if (sender instanceof Player) {
 					int invSize = 9;
 					if (CraftGo.Player.isPocketPlayer((Player) sender))
@@ -48,10 +50,10 @@ public class WarningsCmd implements CommandExecutor {
 					for (int i = 1; i <= 5; i++) {
 						inv.setItem(i + 1 + add, Link$.createMaterial(Material.SKELETON_SKULL, 1, ChatColor.RESET + "" + ChatColor.UNDERLINE + op.getName() + "'s warning #" + i, (short) 0, new String[0]));
 					}
-					for (String key : Server.getPlugin().getConfig().getConfigurationSection("warning." + ipAddress).getKeys(false)) {
+					for (String key : ServerGet.get().getPlugin().getConfig().getConfigurationSection("warning." + ipAddress).getKeys(false)) {
 						if (key.equals("count"))
 							continue;
-						String[] message = Server.getPlugin().getConfig().getString("warning." + ipAddress + "." + key).split("[\\r?\\n]+");
+						String[] message = ServerGet.get().getPlugin().getConfig().getString("warning." + ipAddress + "." + key).split("[\\r?\\n]+");
 						for (int i = 0; i < message.length; i++)
 							message[i] = ChatColor.RESET + message[i];
 						inv.setItem(Integer.valueOf(key) + 1 + add, Link$.createMaterial(Material.ZOMBIE_HEAD, 1, ChatColor.RESET + "" + ChatColor.UNDERLINE + op.getName() + "'s warning #" + key, (short) 0, message));
@@ -64,7 +66,7 @@ public class WarningsCmd implements CommandExecutor {
 			} else {
 				sender.sendMessage(op.getName() + " has " + warnings + " warnings on record.");
 			}
-			if (Server.getBanConfig().getData().contains(ipAddress.replace(".", "x"))) {
+			if (ServerGet.get().getBanConfig().getData().contains(ipAddress.replace(".", "x"))) {
 				sender.sendMessage("Banned signature found, " + op.getName() + " is banned.");
 			} else {
 				sender.sendMessage("Banned signature not found, " + op.getName() + " is not banned.");

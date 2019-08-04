@@ -3,6 +3,8 @@ package me.skorrloregaming.lockette;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 
+import me.skorrloregaming.*;
+
 public class BlockUtil {
 	public static byte faceList[] = {5, 3, 4, 2};
 	public static byte attachList[] = {1, 2, 0, 3};

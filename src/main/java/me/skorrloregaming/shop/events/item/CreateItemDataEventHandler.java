@@ -5,6 +5,8 @@ import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.shop.LaShoppe;
 import org.bukkit.Material;
 
+import me.skorrloregaming.*;
+
 public class CreateItemDataEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
 	private LaShoppe shoppe;

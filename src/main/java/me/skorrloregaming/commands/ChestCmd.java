@@ -11,6 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import me.skorrloregaming.*;
+
 public class ChestCmd implements CommandExecutor {
 
 	@Override
@@ -18,17 +20,17 @@ public class ChestCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getKitpvp().contains(player.getUniqueId()) && !Server.getFactions().contains(player.getUniqueId()) && !Server.getSkyblock().contains(player.getUniqueId()) && !Server.getSurvival().contains(player.getUniqueId())) {
+		if (!ServerGet.get().getKitpvp().contains(player.getUniqueId()) && !ServerGet.get().getFactions().contains(player.getUniqueId()) && !ServerGet.get().getSkyblock().contains(player.getUniqueId()) && !ServerGet.get().getSurvival().contains(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
 		String subDomain = $.getMinigameDomain(player);
-		if (Server.getSaveOtherInventory().containsKey(player))
-			Server.getSaveOtherInventory().remove(player);
+		if (ServerGet.get().getSaveOtherInventory().containsKey(player))
+			ServerGet.get().getSaveOtherInventory().remove(player);
 		int chestNumber = 1;
 		if (args.length > 0) {
 			try {
@@ -99,7 +101,7 @@ public class ChestCmd implements CommandExecutor {
 				String tpSubDomain = $.getMinigameDomain(player);
 				Inventory inv = SolidStorage.restorePersonalChest(tp, tpSubDomain, hasControl, chestNumber);
 				if (hasControl) {
-					Server.getSavePersonalChest().put(player, tp);
+					ServerGet.get().getSavePersonalChest().put(player, tp);
 				}
 				player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 				player.openInventory(inv);

@@ -3,6 +3,7 @@ package me.skorrloregaming.lockette;
 import me.skorrloregaming.$;
 import me.skorrloregaming.Logger;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.ServerGet;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,13 +15,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.plugin.PluginManager;
 
+import me.skorrloregaming.*;
+
 public class LockettePrefixListener implements Listener {
 	public LockettePrefixListener(Lockette instance) {
 	}
 
 	protected void registerEvents() {
-		PluginManager pm = Server.getPlugin().getServer().getPluginManager();
-		pm.registerEvents(this, Server.getPlugin());
+		PluginManager pm = ServerGet.get().getPlugin().getServer().getPluginManager();
+		pm.registerEvents(this, ServerGet.get().getPlugin());
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)

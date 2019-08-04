@@ -6,6 +6,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import me.skorrloregaming.*;
+
 public class CombatTimer extends BukkitRunnable {
 	private final Player player;
 	private String prefix;
@@ -22,19 +24,19 @@ public class CombatTimer extends BukkitRunnable {
 	@Override
 	public void run() {
 		if (passes == 0) {
-			Server.getPlayersInCombat().put(player.getUniqueId(), new SwitchIntDouble(this.getTaskId(), originalSeconds));
+			ServerGet.get().getPlayersInCombat().put(player.getUniqueId(), new SwitchIntDouble(this.getTaskId(), originalSeconds));
 		}
 		passes = passes + 1;
-		if (!Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (!ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			cancel();
 			return;
 		}
-		SwitchIntDouble existingExtreme = Server.getPlayersInCombat().get(player.getUniqueId());
+		SwitchIntDouble existingExtreme = ServerGet.get().getPlayersInCombat().get(player.getUniqueId());
 		existingExtreme.setArg1(existingExtreme.getArg1() - 0.20);
-		Server.getPlayersInCombat().put(player.getUniqueId(), existingExtreme);
+		ServerGet.get().getPlayersInCombat().put(player.getUniqueId(), existingExtreme);
 		if (existingExtreme.getArg1() <= 0) {
 			player.sendMessage(prefix + ChatColor.GRAY + "You are no longer engaged in combat.");
-			Server.getPlayersInCombat().remove(player.getUniqueId());
+			ServerGet.get().getPlayersInCombat().remove(player.getUniqueId());
 			cancel();
 			return;
 		}

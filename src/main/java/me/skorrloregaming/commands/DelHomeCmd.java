@@ -1,9 +1,6 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.ConfigurationManager;
-import me.skorrloregaming.Link$;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,6 +9,8 @@ import org.bukkit.entity.Player;
 
 import java.util.Set;
 
+import me.skorrloregaming.*;
+
 public class DelHomeCmd implements CommandExecutor {
 
 	@Override
@@ -19,20 +18,20 @@ public class DelHomeCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getFactions().contains(player.getUniqueId()) && !Server.getSurvival().contains(player.getUniqueId())) {
+		if (!ServerGet.get().getFactions().contains(player.getUniqueId()) && !ServerGet.get().getSurvival().contains(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
 
 		ConfigurationManager config = null;
-		if (Server.getFactions().contains(player.getUniqueId())) {
-			config = Server.getFactionsConfig();
-		} else if (Server.getSurvival().contains(player.getUniqueId())) {
-			config = Server.getSurvivalConfig();
+		if (ServerGet.get().getFactions().contains(player.getUniqueId())) {
+			config = ServerGet.get().getFactionsConfig();
+		} else if (ServerGet.get().getSurvival().contains(player.getUniqueId())) {
+			config = ServerGet.get().getSurvivalConfig();
 		}
 		int count = 0;
 		if (config.getData().contains("home." + player.getUniqueId().toString())) {
@@ -40,12 +39,12 @@ public class DelHomeCmd implements CommandExecutor {
 			count = values.size();
 		}
 		if (count == 0) {
-			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You have not yet set a home on this server.");
+			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You have not yet set a home on this ServerGet.get().");
 			return true;
 		} else if (count == 1) {
 			config.getData().set("home." + player.getUniqueId().toString(), null);
 			config.saveData();
-			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have unset your home on this server.");
+			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have unset your home on this ServerGet.get().");
 			return true;
 		}
 		if (args.length == 0) {

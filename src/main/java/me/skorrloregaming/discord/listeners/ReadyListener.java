@@ -6,6 +6,8 @@ import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.hooks.EventListener;
 
+import me.skorrloregaming.*;
+
 public class ReadyListener implements EventListener {
 
 	private DiscordBot discordBot;

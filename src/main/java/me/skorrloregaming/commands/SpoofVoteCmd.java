@@ -2,10 +2,7 @@ package me.skorrloregaming.commands;
 
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Link$;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -14,6 +11,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.Date;
+
+import me.skorrloregaming.*;
 
 public class SpoofVoteCmd implements CommandExecutor {
 

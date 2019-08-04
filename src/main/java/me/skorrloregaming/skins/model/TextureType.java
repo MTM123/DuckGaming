@@ -2,9 +2,9 @@ package me.skorrloregaming.skins.model;
 
 public enum TextureType {
 
-    SKIN,
+	SKIN,
 
-    CAPE,
+	CAPE,
 
-    ELYTRA
+	ELYTRA
 }

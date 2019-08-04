@@ -1,9 +1,6 @@
 package me.skorrloregaming.lockette;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.Link$;
-import me.skorrloregaming.Logger;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -22,6 +19,8 @@ import org.bukkit.plugin.PluginManager;
 
 import java.util.List;
 
+import me.skorrloregaming.*;
+
 public class LocketteBlockListener implements Listener {
 	private static Lockette plugin;
 
@@ -30,8 +29,8 @@ public class LocketteBlockListener implements Listener {
 	}
 
 	protected void registerEvents() {
-		PluginManager pm = Server.getPlugin().getServer().getPluginManager();
-		pm.registerEvents(this, Server.getPlugin());
+		PluginManager pm = ServerGet.get().getPlugin().getServer().getPluginManager();
+		pm.registerEvents(this, ServerGet.get().getPlugin());
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

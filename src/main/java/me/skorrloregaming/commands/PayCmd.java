@@ -1,9 +1,6 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.EconManager;
-import me.skorrloregaming.Link$;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -13,6 +10,8 @@ import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 
+import me.skorrloregaming.*;
+
 public class PayCmd implements CommandExecutor {
 
 	@Override
@@ -21,7 +20,7 @@ public class PayCmd implements CommandExecutor {
 		String tag = Link$.Legacy.tag;
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (!Server.getKitpvp().contains(player.getUniqueId()) && !Server.getSurvival().contains(player.getUniqueId()) && !Server.getFactions().contains(player.getUniqueId()) && !Server.getSkyblock().contains(player.getUniqueId())) {
+			if (!ServerGet.get().getKitpvp().contains(player.getUniqueId()) && !ServerGet.get().getSurvival().contains(player.getUniqueId()) && !ServerGet.get().getFactions().contains(player.getUniqueId()) && !ServerGet.get().getSkyblock().contains(player.getUniqueId())) {
 				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 				return true;
 			}

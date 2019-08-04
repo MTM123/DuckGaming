@@ -47,6 +47,8 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import me.skorrloregaming.*;
+
 public class Server extends JavaPlugin implements Listener {
 
 	public TopVotersHttpServer topVotersHttpServer = null;
@@ -55,122 +57,122 @@ public class Server extends JavaPlugin implements Listener {
 	public ChatItem chatitem = null;
 	public GCandAutoDemotion garbageCollector = null;
 
-	private static ConfigurationManager ramConfig;
-	private static ConfigurationManager warpConfig;
-	private static ConfigurationManager signConfig;
-	private static ConfigurationManager factionsConfig;
-	private static ConfigurationManager shoppeConfig;
-	private static ConfigurationManager survivalConfig;
-	private static ConfigurationManager marriageHomesConfig;
-	private static ConfigurationManager npcConfig;
-	private static ConfigurationManager spawnerConfig;
-	private static ConfigurationManager banConfig;
-	private static ConfigurationManager monthlyVoteConfig;
-	private static ConfigurationManager locketteConfig;
-	private static ConfigurationManager chatItemConfig;
-	private static ConfigurationManager chestShopConfig;
-	private static ConfigurationManager discordVerifyConfig;
+	private ConfigurationManager ramConfig;
+	private ConfigurationManager warpConfig;
+	private ConfigurationManager signConfig;
+	private ConfigurationManager factionsConfig;
+	private ConfigurationManager shoppeConfig;
+	private ConfigurationManager survivalConfig;
+	private ConfigurationManager marriageHomesConfig;
+	private ConfigurationManager npcConfig;
+	private ConfigurationManager spawnerConfig;
+	private ConfigurationManager banConfig;
+	private ConfigurationManager monthlyVoteConfig;
+	private ConfigurationManager locketteConfig;
+	private ConfigurationManager chatItemConfig;
+	private ConfigurationManager chestShopConfig;
+	private ConfigurationManager discordVerifyConfig;
 
-	private static Plugin plugin;
-	private static Server instance;
-	private static SkinStorage skinStorage = null;
-	private static SessionManager sessionManager = null;
-	private static Auctioneer auctioneer = null;
-	private static LaShoppe shoppe = null;
-	private static final int BASIC_TELEPORT_TIME = 3;
+	private Plugin plugin;
+	private Server instance;
+	private SkinStorage skinStorage = null;
+	private SessionManager sessionManager = null;
+	private Auctioneer auctioneer = null;
+	private LaShoppe shoppe = null;
+	private final int BASIC_TELEPORT_TIME = 3;
 
-	private static ArrayList<UUID> hub = new ArrayList<>();
-	private static ArrayList<UUID> kitpvp = new ArrayList<>();
-	private static ArrayList<UUID> factions = new ArrayList<>();
-	private static ArrayList<UUID> survival = new ArrayList<>();
-	private static ConcurrentMap<UUID, $.Skyfight.Player> skyfight = new ConcurrentHashMap<>();
-	private static ArrayList<UUID> creative = new ArrayList<>();
-	private static ArrayList<UUID> skyblock = new ArrayList<>();
+	private ArrayList<UUID> hub = new ArrayList<>();
+	private ArrayList<UUID> kitpvp = new ArrayList<>();
+	private ArrayList<UUID> factions = new ArrayList<>();
+	private ArrayList<UUID> survival = new ArrayList<>();
+	private ConcurrentMap<UUID, $.Skyfight.Player> skyfight = new ConcurrentHashMap<>();
+	private ArrayList<UUID> creative = new ArrayList<>();
+	private ArrayList<UUID> skyblock = new ArrayList<>();
 
-	private static String tempMotd = "/unspecified";
-	private static ArrayList<UUID> simpleDelayedTask = new ArrayList<>();
-	private static ConcurrentMap<UUID, Integer> delaySkinUpdate = new ConcurrentHashMap<>();
-	private static ArrayList<UUID> confirmRepairShop = new ArrayList<>();
-	private static ArrayList<UUID> confirmUnregisterNpc = new ArrayList<>();
-	private static ArrayList<UUID> currentFellers = new ArrayList<>();
-	private static ArrayList<String> disabledVersions = new ArrayList<String>();
-	private static ArrayList<NpcPlayer> npcPlayers = new ArrayList<>();
+	private String tempMotd = "/unspecified";
+	private ArrayList<UUID> simpleDelayedTask = new ArrayList<>();
+	private ConcurrentMap<UUID, Integer> delaySkinUpdate = new ConcurrentHashMap<>();
+	private ArrayList<UUID> confirmRepairShop = new ArrayList<>();
+	private ArrayList<UUID> confirmUnregisterNpc = new ArrayList<>();
+	private ArrayList<UUID> currentFellers = new ArrayList<>();
+	private ArrayList<String> disabledVersions = new ArrayList<String>();
+	private ArrayList<NpcPlayer> npcPlayers = new ArrayList<>();
 
-	private static ConcurrentMap<UUID, Integer> explosiveFunpowderCooldown = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, Integer> potionsKitCooldownKitpvp = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, Integer> starterKitCooldownKitpvp = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, Integer> recruitKitCooldownSurvival = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, Integer> recruitKitCooldownFactions = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, Integer> donatorKitCooldownFactions = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, Integer> redstoneKitCooldownFactions = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, Integer> obsidianKitCooldownFactions = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, Integer> bedrockKitCooldownFactions = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, Integer> explosiveFunpowderCooldown = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, Integer> potionsKitCooldownKitpvp = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, Integer> starterKitCooldownKitpvp = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, Integer> recruitKitCooldownSurvival = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, Integer> recruitKitCooldownFactions = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, Integer> donatorKitCooldownFactions = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, Integer> redstoneKitCooldownFactions = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, Integer> obsidianKitCooldownFactions = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, Integer> bedrockKitCooldownFactions = new ConcurrentHashMap<>();
 
-	private static ConcurrentMap<UUID, UUID> tpaRequests = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, UUID> marriageRequests = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, VanishedInfo> vanishedPlayers = new ConcurrentHashMap<>();
-	private static ConcurrentMap<Player, Player> savePersonalChest = new ConcurrentHashMap<>();
-	private static ConcurrentMap<Player, Player> saveOtherInventory = new ConcurrentHashMap<>();
-	private static ConcurrentMap<Player, SignInfo> signEditParam = new ConcurrentHashMap<>();
-	private static ConcurrentMap<Integer, Integer> spawnerPrices = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, UUID> tpaRequests = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, UUID> marriageRequests = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, VanishedInfo> vanishedPlayers = new ConcurrentHashMap<>();
+	private ConcurrentMap<Player, Player> savePersonalChest = new ConcurrentHashMap<>();
+	private ConcurrentMap<Player, Player> saveOtherInventory = new ConcurrentHashMap<>();
+	private ConcurrentMap<Player, SignInfo> signEditParam = new ConcurrentHashMap<>();
+	private ConcurrentMap<Integer, Integer> spawnerPrices = new ConcurrentHashMap<>();
 
-	private static ConcurrentMap<UUID, Boolean> onlineMode = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, Boolean> onlineMode = new ConcurrentHashMap<>();
 
-	private static ArrayList<UUID> doubleJumpCandidates = new ArrayList<>();
-	private static ArrayList<UUID> staffChatPlayers = new ArrayList<>();
-	private static ArrayList<UUID> marriageChatPlayers = new ArrayList<>();
-	private static ArrayList<UUID> spectatingPlayers = new ArrayList<>();
-	private static ArrayList<UUID> mutedPlayers = new ArrayList<UUID>();
-	private static ArrayList<UUID> opmePlayers = new ArrayList<UUID>();
-	private static ArrayList<UUID> factionFlyPlayers = new ArrayList<UUID>();
-	private static ArrayList<UUID> survivalFlyPlayers = new ArrayList<UUID>();
-	private static ConcurrentMap<String, Integer> timeSinceLastLogin = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, SwitchUUIDString> transferAcceptPlayers = new ConcurrentHashMap<>();
-	private static ConcurrentMap<Integer, UUID> discordVerifyPlayers = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, DelayedTeleport> delayedTeleports = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, SwitchIntDouble> playersInCombat = new ConcurrentHashMap<>();
-	private static ConcurrentMap<UUID, ServerMinigame> moderatingPlayers = new ConcurrentHashMap<>();
+	private ArrayList<UUID> doubleJumpCandidates = new ArrayList<>();
+	private ArrayList<UUID> staffChatPlayers = new ArrayList<>();
+	private ArrayList<UUID> marriageChatPlayers = new ArrayList<>();
+	private ArrayList<UUID> spectatingPlayers = new ArrayList<>();
+	private ArrayList<UUID> mutedPlayers = new ArrayList<UUID>();
+	private ArrayList<UUID> opmePlayers = new ArrayList<UUID>();
+	private ArrayList<UUID> factionFlyPlayers = new ArrayList<UUID>();
+	private ArrayList<UUID> survivalFlyPlayers = new ArrayList<UUID>();
+	private ConcurrentMap<String, Integer> timeSinceLastLogin = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, SwitchUUIDString> transferAcceptPlayers = new ConcurrentHashMap<>();
+	private ConcurrentMap<Integer, UUID> discordVerifyPlayers = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, DelayedTeleport> delayedTeleports = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, SwitchIntDouble> playersInCombat = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, ServerMinigame> moderatingPlayers = new ConcurrentHashMap<>();
 
-	private static String defaultJoinMessage = null;
-	private static String defaultQuitMessage = null;
+	private String defaultJoinMessage = null;
+	private String defaultQuitMessage = null;
 
-	private static String serverMotd = null;
-	private static String pluginName = null;
-	private static String pluginLabel;
-	private static String lastKnownHubWorld;
+	private String serverMotd = null;
+	private String pluginName = null;
+	private String pluginLabel;
+	private String lastKnownHubWorld;
 
-	private static long serverStartTime = 0L;
-	private static boolean pluginDebug = false;
-	private static boolean ingameAnticheatDebug = true;
+	private long serverStartTime = 0L;
+	private boolean pluginDebug = false;
+	private boolean ingameAnticheatDebug = true;
 
-	private static boolean running = true;
+	private boolean running = true;
 
-	private static final long BASIC_INVENTORY_UPDATE_DELAY = 5L;
-	private static final boolean USE_FACTIONS_AS_HUB = false;
+	private final long BASIC_INVENTORY_UPDATE_DELAY = 5L;
+	private final boolean USE_FACTIONS_AS_HUB = false;
 
-	private static ConcurrentMap<UUID, Integer> hubScoreboardTitleIndex = new ConcurrentHashMap<>();
-	private static ConcurrentMap<Integer, Long> hideLoginMessage = new ConcurrentHashMap<>();
+	private ConcurrentMap<UUID, Integer> hubScoreboardTitleIndex = new ConcurrentHashMap<>();
+	private ConcurrentMap<Integer, Long> hideLoginMessage = new ConcurrentHashMap<>();
 
-	private static AuthMe_Listener authListener = null;
-	private static Factions_Listener factionsListener = null;
-	private static ProtocolLib_Listener protoListener = null;
-	private static ProtocolSupportPocketStuff_Listener protoSupportPocketApi = null;
-	private static Votifier_Listener voteListener = null;
-	private static mcMMO_Listener mcmmoListener = null;
+	private AuthMe_Listener authListener = null;
+	private Factions_Listener factionsListener = null;
+	private ProtocolLib_Listener protoListener = null;
+	private ProtocolSupportPocketStuff_Listener protoSupportPocketApi = null;
+	private Votifier_Listener voteListener = null;
+	private mcMMO_Listener mcmmoListener = null;
 
-	private static DiscordBot discordBot;
+	private DiscordBot discordBot;
 
-	private static VoteManager voteManager;
+	private VoteManager voteManager;
 
-	private static ConcurrentMap<Player, ItemStack> storedItem = new ConcurrentHashMap<Player, ItemStack>();
+	private ConcurrentMap<Player, ItemStack> storedItem = new ConcurrentHashMap<Player, ItemStack>();
 
-	private static ArrayList<UUID> waiverAcceptPlayers = new ArrayList<>();
+	private ArrayList<UUID> waiverAcceptPlayers = new ArrayList<>();
 
-	private static long lastVoteTime = 0L;
+	private long lastVoteTime = 0L;
 
-	private static ArrayList<BukkitTask> bukkitTasks = new ArrayList<>();
+	private ArrayList<BukkitTask> bukkitTasks = new ArrayList<>();
 
-	public static ServerType getServerType() {
+	public ServerType getServerType() {
 		try {
 			Class.forName("org.spigotmc.SpigotConfig");
 			String version = Bukkit.getVersion().toLowerCase();
@@ -188,15 +190,15 @@ public class Server extends JavaPlugin implements Listener {
 		}
 	}
 
-	public static ArrayList<UUID> getWaiverAcceptPlayers() {
+	public ArrayList<UUID> getWaiverAcceptPlayers() {
 		return waiverAcceptPlayers;
 	}
 
-	public static ConcurrentMap<Player, ItemStack> getStoredItem() {
+	public ConcurrentMap<Player, ItemStack> getStoredItem() {
 		return storedItem;
 	}
 
-	public static void doReturnItem(Player player) {
+	public void doReturnItem(Player player) {
 		if (storedItem.containsKey(player.getPlayer())) {
 			player.getInventory().setItem(9, storedItem.get(player));
 			player.updateInventory();
@@ -204,407 +206,398 @@ public class Server extends JavaPlugin implements Listener {
 		}
 	}
 
-	public static long getLastVoteTime() {
+	public long getLastVoteTime() {
 		return lastVoteTime;
 	}
 
-	public static void setLastVoteTime(long voteTime) {
+	public void setLastVoteTime(long voteTime) {
 		lastVoteTime = voteTime;
 	}
 
-	public static AuthMe_Listener getAuthListener() {
+	public AuthMe_Listener getAuthListener() {
 		return authListener;
 	}
 
-	public static Factions_Listener getFactionsListener() {
+	public Factions_Listener getFactionsListener() {
 		return factionsListener;
 	}
 
-	public static ProtocolLib_Listener getProtoListener() {
+	public ProtocolLib_Listener getProtoListener() {
 		return protoListener;
 	}
 
-	public static ProtocolSupportPocketStuff_Listener getProtoSupportPocketApi() {
+	public ProtocolSupportPocketStuff_Listener getProtoSupportPocketApi() {
 		return protoSupportPocketApi;
 	}
 
-	public static Votifier_Listener getVoteListener() {
+	public Votifier_Listener getVoteListener() {
 		return voteListener;
 	}
 
-	public static mcMMO_Listener getMcmmoListener() {
+	public mcMMO_Listener getMcmmoListener() {
 		return mcmmoListener;
 	}
 
-	public static ConcurrentMap<UUID, Integer> getHubScoreboardTitleIndex() {
+	public ConcurrentMap<UUID, Integer> getHubScoreboardTitleIndex() {
 		return hubScoreboardTitleIndex;
 	}
 
-	public static ConcurrentMap<Integer, Long> getHideLoginMessage() {
+	public ConcurrentMap<Integer, Long> getHideLoginMessage() {
 		return hideLoginMessage;
 	}
 
-	public static long getServerStartTime() {
+	public long getServerStartTime() {
 		return serverStartTime;
 	}
 
-	public static boolean getPluginDebug() {
+	public boolean getPluginDebug() {
 		return pluginDebug;
 	}
 
-	public static void setPluginDebug(boolean enabled) {
-		Server.pluginDebug = enabled;
+	public void setPluginDebug(boolean enabled) {
+		ServerGet.get().pluginDebug = enabled;
 	}
 
-	public static boolean getIngameAnticheatDebug() {
+	public boolean getIngameAnticheatDebug() {
 		return ingameAnticheatDebug;
 	}
 
-	public static void setIngameAnticheatDebug(boolean enabled) {
-		Server.ingameAnticheatDebug = enabled;
+	public void setIngameAnticheatDebug(boolean enabled) {
+		ServerGet.get().ingameAnticheatDebug = enabled;
 	}
 
-	public static boolean isRunning() {
+	public boolean isRunning() {
 		return running;
 	}
 
-	public static long getInventoryUpdateDelay() {
+	public long getInventoryUpdateDelay() {
 		return BASIC_INVENTORY_UPDATE_DELAY;
 	}
 
-	public static boolean getUseFactionsAsHub() {
+	public boolean getUseFactionsAsHub() {
 		return USE_FACTIONS_AS_HUB;
 	}
 
-	public static String getDefaultJoinMessage() {
+	public String getDefaultJoinMessage() {
 		return defaultJoinMessage;
 	}
 
-	public static void setDefaultJoinMessage(String defaultJoinMessage) {
-		Server.defaultJoinMessage = defaultJoinMessage;
+	public void setDefaultJoinMessage(String defaultJoinMessage) {
+		ServerGet.get().defaultJoinMessage = defaultJoinMessage;
 	}
 
-	public static String setDefaultQuitMessage() {
+	public String setDefaultQuitMessage() {
 		return defaultQuitMessage;
 	}
 
-	public static void setDefaultQuitMessage(String defaultQuitMessage) {
-		Server.defaultQuitMessage = defaultQuitMessage;
+	public void setDefaultQuitMessage(String defaultQuitMessage) {
+		ServerGet.get().defaultQuitMessage = defaultQuitMessage;
 	}
 
-	public static String getServerMotd() {
+	public String getServerMotd() {
 		return serverMotd;
 	}
 
-	public static String getPluginName() {
+	public String getPluginName() {
 		return pluginName;
 	}
 
-	public static String getPluginLabel() {
+	public String getPluginLabel() {
 		return pluginLabel;
 	}
 
-	public static String getLastKnownHubWorld() {
+	public String getLastKnownHubWorld() {
 		return lastKnownHubWorld;
 	}
 
-	public static void setLastKnownHubWorld(String lastKnownHubWorld) {
-		Server.lastKnownHubWorld = lastKnownHubWorld;
+	public void setLastKnownHubWorld(String lastKnownHubWorld) {
+		ServerGet.get().lastKnownHubWorld = lastKnownHubWorld;
 	}
 
-	public static ConcurrentMap<String, Integer> getTimeSinceLastLogin() {
+	public ConcurrentMap<String, Integer> getTimeSinceLastLogin() {
 		return timeSinceLastLogin;
 	}
 
-	public static ConcurrentMap<UUID, SwitchUUIDString> getTransferAcceptPlayers() {
+	public ConcurrentMap<UUID, SwitchUUIDString> getTransferAcceptPlayers() {
 		return transferAcceptPlayers;
 	}
 
-	public static ConcurrentMap<Integer, UUID> getDiscordVerifyPlayers() {
+	public ConcurrentMap<Integer, UUID> getDiscordVerifyPlayers() {
 		return discordVerifyPlayers;
 	}
 
-	public static ConcurrentMap<UUID, DelayedTeleport> getDelayedTeleports() {
+	public ConcurrentMap<UUID, DelayedTeleport> getDelayedTeleports() {
 		return delayedTeleports;
 	}
 
-	public static ConcurrentMap<UUID, SwitchIntDouble> getPlayersInCombat() {
+	public ConcurrentMap<UUID, SwitchIntDouble> getPlayersInCombat() {
 		return playersInCombat;
 	}
 
-	public static ConcurrentMap<UUID, ServerMinigame> getModeratingPlayers() {
+	public ConcurrentMap<UUID, ServerMinigame> getModeratingPlayers() {
 		return moderatingPlayers;
 	}
 
-	public static ArrayList<UUID> getDoubleJumpCandidates() {
+	public ArrayList<UUID> getDoubleJumpCandidates() {
 		return doubleJumpCandidates;
 	}
 
-	public static ArrayList<UUID> getStaffChatPlayers() {
+	public ArrayList<UUID> getStaffChatPlayers() {
 		return staffChatPlayers;
 	}
 
-	public static ArrayList<UUID> getMarriageChatPlayers() {
+	public ArrayList<UUID> getMarriageChatPlayers() {
 		return marriageChatPlayers;
 	}
 
-	public static ArrayList<UUID> getSpectatingPlayers() {
+	public ArrayList<UUID> getSpectatingPlayers() {
 		return spectatingPlayers;
 	}
 
-	public static ArrayList<UUID> getMutedPlayers() {
+	public ArrayList<UUID> getMutedPlayers() {
 		return mutedPlayers;
 	}
 
-	public static ArrayList<UUID> getOpmePlayers() {
+	public ArrayList<UUID> getOpmePlayers() {
 		return opmePlayers;
 	}
 
-	public static ArrayList<UUID> getFactionFlyPlayers() {
+	public ArrayList<UUID> getFactionFlyPlayers() {
 		return factionFlyPlayers;
 	}
 
-	public static ArrayList<UUID> getSurvivalFlyPlayers() {
+	public ArrayList<UUID> getSurvivalFlyPlayers() {
 		return survivalFlyPlayers;
 	}
 
-	public static ConcurrentMap<UUID, UUID> getTpaRequests() {
+	public ConcurrentMap<UUID, UUID> getTpaRequests() {
 		return tpaRequests;
 	}
 
-	public static ConcurrentMap<UUID, UUID> getMarriageRequests() {
+	public ConcurrentMap<UUID, UUID> getMarriageRequests() {
 		return marriageRequests;
 	}
 
-	public static ConcurrentMap<UUID, VanishedInfo> getVanishedPlayers() {
+	public ConcurrentMap<UUID, VanishedInfo> getVanishedPlayers() {
 		return vanishedPlayers;
 	}
 
-	public static ConcurrentMap<Player, Player> getSavePersonalChest() {
+	public ConcurrentMap<Player, Player> getSavePersonalChest() {
 		return savePersonalChest;
 	}
 
-	public static ConcurrentMap<Player, Player> getSaveOtherInventory() {
+	public ConcurrentMap<Player, Player> getSaveOtherInventory() {
 		return saveOtherInventory;
 	}
 
-	public static ConcurrentMap<Player, SignInfo> getSignEditParam() {
+	public ConcurrentMap<Player, SignInfo> getSignEditParam() {
 		return signEditParam;
 	}
 
-	public static ConcurrentMap<Integer, Integer> getSpawnerPrices() {
+	public ConcurrentMap<Integer, Integer> getSpawnerPrices() {
 		return spawnerPrices;
 	}
 
-	public static ConcurrentMap<UUID, Boolean> getOnlineMode() {
+	public ConcurrentMap<UUID, Boolean> getOnlineMode() {
 		return onlineMode;
 	}
 
-	public static ConcurrentMap<UUID, Integer> getExplosiveFunpowderCooldown() {
+	public ConcurrentMap<UUID, Integer> getExplosiveFunpowderCooldown() {
 		return explosiveFunpowderCooldown;
 	}
 
-	public static class Kitpvp {
-
-		public static ConcurrentMap<UUID, Integer> getPotionsKitCooldown() {
-			return potionsKitCooldownKitpvp;
-		}
-
-		public static ConcurrentMap<UUID, Integer> getStarterKitCooldown() {
-			return starterKitCooldownKitpvp;
-		}
-
+	public ConcurrentMap<UUID, Integer> getPotionsKitCooldown() {
+		return potionsKitCooldownKitpvp;
 	}
 
-	public static class Survival {
-
-		public static ConcurrentMap<UUID, Integer> getRecruitKitCooldown() {
-			return recruitKitCooldownSurvival;
-		}
-
+	public ConcurrentMap<UUID, Integer> getStarterKitCooldown() {
+		return starterKitCooldownKitpvp;
 	}
 
-	public static class Factions {
-
-		public static ConcurrentMap<UUID, Integer> getRecruitKitCooldown() {
-			return recruitKitCooldownFactions;
+	public ConcurrentMap<UUID, Integer> getRecruitKitCooldown(ServerMinigame minigame) {
+		switch (minigame) {
+			case SURVIVAL:
+				return recruitKitCooldownSurvival;
+			case FACTIONS:
+				return recruitKitCooldownFactions;
+			default:
+				return null;
 		}
-
-		public static ConcurrentMap<UUID, Integer> getDonatorKitCooldown() {
-			return donatorKitCooldownFactions;
-		}
-
-		public static ConcurrentMap<UUID, Integer> getRedstoneKitCooldown() {
-			return redstoneKitCooldownFactions;
-		}
-
-		public static ConcurrentMap<UUID, Integer> getObsidianKitCooldown() {
-			return obsidianKitCooldownFactions;
-		}
-
-		public static ConcurrentMap<UUID, Integer> getBedrockKitCooldown() {
-			return bedrockKitCooldownFactions;
-		}
-
 	}
 
-	public static Server getInstance() {
+	public ConcurrentMap<UUID, Integer> getDonatorKitCooldown() {
+		return donatorKitCooldownFactions;
+	}
+
+	public ConcurrentMap<UUID, Integer> getRedstoneKitCooldown() {
+		return redstoneKitCooldownFactions;
+	}
+
+	public ConcurrentMap<UUID, Integer> getObsidianKitCooldown() {
+		return obsidianKitCooldownFactions;
+	}
+
+	public ConcurrentMap<UUID, Integer> getBedrockKitCooldown() {
+		return bedrockKitCooldownFactions;
+	}
+
+	public Server getInstance() {
 		return instance;
 	}
 
-	public static String getTempMotd() {
+	public String getTempMotd() {
 		return tempMotd;
 	}
 
-	public static void setTempMotd(String tempMotd) {
-		Server.tempMotd = tempMotd;
+	public void setTempMotd(String tempMotd) {
+		ServerGet.get().tempMotd = tempMotd;
 	}
 
-	public static ArrayList<UUID> getDelayedTasks() {
+	public ArrayList<UUID> getDelayedTasks() {
 		return simpleDelayedTask;
 	}
 
-	public static ConcurrentMap<UUID, Integer> getDelaySkinUpdate() {
+	public ConcurrentMap<UUID, Integer> getDelaySkinUpdate() {
 		return delaySkinUpdate;
 	}
 
-	public static ArrayList<UUID> getConfirmRepairShop() {
+	public ArrayList<UUID> getConfirmRepairShop() {
 		return confirmRepairShop;
 	}
 
-	public static ArrayList<UUID> getConfirmUnregisterNpc() {
+	public ArrayList<UUID> getConfirmUnregisterNpc() {
 		return confirmUnregisterNpc;
 	}
 
-	public static ArrayList<UUID> getCurrentFellers() {
+	public ArrayList<UUID> getCurrentFellers() {
 		return currentFellers;
 	}
 
-	public static ArrayList<String> getDisabledVersions() {
+	public ArrayList<String> getDisabledVersions() {
 		return disabledVersions;
 	}
 
-	public static ArrayList<NpcPlayer> getNpcPlayers() {
+	public ArrayList<NpcPlayer> getNpcPlayers() {
 		return npcPlayers;
 	}
 
-	public static ArrayList<UUID> getHub() {
+	public ArrayList<UUID> getHub() {
 		return hub;
 	}
 
-	public static ArrayList<UUID> getKitpvp() {
+	public ArrayList<UUID> getKitpvp() {
 		return kitpvp;
 	}
 
-	public static ArrayList<UUID> getFactions() {
+	public ArrayList<UUID> getFactions() {
 		return factions;
 	}
 
-	public static ArrayList<UUID> getSurvival() {
+	public ArrayList<UUID> getSurvival() {
 		return survival;
 	}
 
-	public static ConcurrentMap<UUID, $.Skyfight.Player> getSkyfight() {
+	public ConcurrentMap<UUID, $.Skyfight.Player> getSkyfight() {
 		return skyfight;
 	}
 
-	public static ArrayList<UUID> getCreative() {
+	public ArrayList<UUID> getCreative() {
 		return creative;
 	}
 
-	public static ArrayList<UUID> getSkyblock() {
+	public ArrayList<UUID> getSkyblock() {
 		return skyblock;
 	}
 
-	public static ConfigurationManager getRamConfig() {
+	public ConfigurationManager getRamConfig() {
 		return ramConfig;
 	}
 
-	public static ConfigurationManager getWarpConfig() {
+	public ConfigurationManager getWarpConfig() {
 		return warpConfig;
 	}
 
-	public static ConfigurationManager getSignConfig() {
+	public ConfigurationManager getSignConfig() {
 		return signConfig;
 	}
 
-	public static ConfigurationManager getFactionsConfig() {
+	public ConfigurationManager getFactionsConfig() {
 		return factionsConfig;
 	}
 
-	public static ConfigurationManager getShoppeConfig() {
+	public ConfigurationManager getShoppeConfig() {
 		return shoppeConfig;
 	}
 
-	public static ConfigurationManager getSurvivalConfig() {
+	public ConfigurationManager getSurvivalConfig() {
 		return survivalConfig;
 	}
 
-	public static ConfigurationManager getMarriageHomesConfig() {
+	public ConfigurationManager getMarriageHomesConfig() {
 		return marriageHomesConfig;
 	}
 
-	public static ConfigurationManager getNpcConfig() {
+	public ConfigurationManager getNpcConfig() {
 		return npcConfig;
 	}
 
-	public static ConfigurationManager getSpawnerConfig() {
+	public ConfigurationManager getSpawnerConfig() {
 		return spawnerConfig;
 	}
 
-	public static ConfigurationManager getBanConfig() {
+	public ConfigurationManager getBanConfig() {
 		return banConfig;
 	}
 
-	public static ConfigurationManager getMonthlyVoteConfig() {
+	public ConfigurationManager getMonthlyVoteConfig() {
 		return monthlyVoteConfig;
 	}
 
-	public static ConfigurationManager getLocketteConfig() {
+	public ConfigurationManager getLocketteConfig() {
 		return locketteConfig;
 	}
 
-	public static ConfigurationManager getChatItemConfig() {
+	public ConfigurationManager getChatItemConfig() {
 		return chatItemConfig;
 	}
 
-	public static ConfigurationManager getChestShopConfig() {
+	public ConfigurationManager getChestShopConfig() {
 		return chestShopConfig;
 	}
 
-	public static ConfigurationManager getDiscordVerifyConfig() {
+	public ConfigurationManager getDiscordVerifyConfig() {
 		return discordVerifyConfig;
 	}
 
-	public static SkinStorage getSkinStorage() {
+	public SkinStorage getSkinStorage() {
 		return skinStorage;
 	}
 
-	public static Auctioneer getAuctioneer() {
+	public Auctioneer getAuctioneer() {
 		return auctioneer;
 	}
 
-	public static LaShoppe getShoppe() {
+	public LaShoppe getShoppe() {
 		return shoppe;
 	}
 
-	public static SessionManager getSessionManager() {
+	public SessionManager getSessionManager() {
 		return sessionManager;
 	}
 
-	public static int getTeleportationDelay() {
+	public int getTeleportationDelay() {
 		return BASIC_TELEPORT_TIME;
 	}
 
-	public static DiscordBot getDiscordBot() {
+	public DiscordBot getDiscordBot() {
 		return discordBot;
 	}
 
-	public static VoteManager getVoteManager() {
+	public VoteManager getVoteManager() {
 		return voteManager;
 	}
 
-	public static ArrayList<BukkitTask> getBukkitTasks() {
+	public ArrayList<BukkitTask> getBukkitTasks() {
 		return bukkitTasks;
 	}
 
@@ -655,7 +648,7 @@ public class Server extends JavaPlugin implements Listener {
 				e.printStackTrace();
 			}
 		}
-		Server.chatItemConfig.setup(chatItemConfig);
+		ServerGet.get().chatItemConfig.setup(chatItemConfig);
 		spawnerPrices.put(0, 6500);
 		spawnerPrices.put(1, 6500);
 		spawnerPrices.put(2, 9500);
@@ -744,7 +737,7 @@ public class Server extends JavaPlugin implements Listener {
 					player.sendMessage(Link$.modernMsgPrefix + "Psst, did you know the server finished updating?");
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					player.performCommand("hub");
-					LinkServer.getInstance().getPlaytimeManager().handle_JoinEvent(player);
+					new LinkServerGet().get().getInstance().getPlaytimeManager().handle_JoinEvent(player);
 				}
 				List<Entity> entity = new LinkedList<Entity>($.getZoneLocation("creative").getWorld().getEntities());
 				for (Entity e : entity) {
@@ -765,7 +758,7 @@ public class Server extends JavaPlugin implements Listener {
 				}
 			}
 		}, 0L, 6000L));
-		bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
+		bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(ServerGet.get().getPlugin(), new Runnable() {
 			@Override
 			public void run() {
 				for (World world : Bukkit.getWorlds()) {
@@ -890,10 +883,10 @@ public class Server extends JavaPlugin implements Listener {
 				if (!hub.contains(player.getUniqueId()))
 					hub.add(player.getUniqueId());
 				fetchLobby(player);
-				LinkServer.getInstance().getPlaytimeManager().handle_QuitEvent(player);
+				new LinkServerGet().get().getInstance().getPlaytimeManager().handle_QuitEvent(player);
 			}
 		}
-		LinkServer.getInstance().getRedisDatabase().unregister();
+		new LinkServerGet().get().getInstance().getRedisDatabase().unregister();
 	}
 
 	public void fetchLobby(Player player) {
@@ -1018,11 +1011,11 @@ public class Server extends JavaPlugin implements Listener {
 		}
 	}
 
-	public static long getUptime() {
+	public long getUptime() {
 		return System.currentTimeMillis() - serverStartTime;
 	}
 
-	public static Plugin getPlugin() {
+	public Plugin getPlugin() {
 		return plugin;
 	}
 
@@ -1120,9 +1113,9 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "KitPvP";
 				Bukkit.broadcastMessage(message);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1150,9 +1143,9 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "KitPvP";
 				Bukkit.broadcastMessage(message);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1213,9 +1206,9 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Factions";
 				Bukkit.broadcastMessage(message);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1245,16 +1238,16 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Factions";
 				Bukkit.broadcastMessage(message);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
 			factions.remove(player.getUniqueId());
 			player.setAllowFlight(true);
-			if (Server.getFactionFlyPlayers().contains(player.getUniqueId()))
-				Server.getFactionFlyPlayers().remove(player.getUniqueId());
+			if (ServerGet.get().getFactionFlyPlayers().contains(player.getUniqueId()))
+				ServerGet.get().getFactionFlyPlayers().remove(player.getUniqueId());
 			$.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);
 			return 1;
 		}
@@ -1309,9 +1302,9 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Survival";
 				Bukkit.broadcastMessage(message);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1338,9 +1331,9 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Survival";
 				Bukkit.broadcastMessage(message);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1379,9 +1372,9 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Skyfight";
 				Bukkit.broadcastMessage(message);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1498,9 +1491,9 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Skyfight";
 				Bukkit.broadcastMessage(message);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1572,13 +1565,13 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Creative";
 				Bukkit.broadcastMessage(message);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
-			Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+			ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 				@Override
 				public void run() {
 					if (creative.contains(player.getUniqueId())) {
@@ -1620,9 +1613,9 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Creative";
 				Bukkit.broadcastMessage(message);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1693,9 +1686,9 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Skyblock";
 				Bukkit.broadcastMessage(message);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1723,9 +1716,9 @@ public class Server extends JavaPlugin implements Listener {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Skyblock";
 				Bukkit.broadcastMessage(message);
-				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				Server.getDiscordBot().broadcast(
+				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}

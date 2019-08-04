@@ -2,12 +2,15 @@ package me.skorrloregaming.shop.events.item;
 
 import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.ServerGet;
 import me.skorrloregaming.shop.LaShoppe;
 import me.skorrloregaming.shop.LaShoppeFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.lang.reflect.InvocationTargetException;
+
+import me.skorrloregaming.*;
 
 public class CreateItemPriceEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
@@ -30,12 +33,12 @@ public class CreateItemPriceEventHandler implements AnvilGUI.AnvilClickEventHand
 			event.getPlayer().sendMessage("Sorry, that's not a valid item price.");
 			return;
 		}
-		Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+		Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					new AnvilGUI(event.getPlayer(), Server.getShoppe().getInventoryName(LaShoppeFrame.CREATE_ITEM), new CreateItemAmountEventHandler(shoppe, material, price))
+					new AnvilGUI(event.getPlayer(), ServerGet.get().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ITEM), new CreateItemAmountEventHandler(shoppe, material, price))
 							.setInputName("Enter amount")
 							.open();
 				} catch (IllegalAccessException e) {

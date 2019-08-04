@@ -13,6 +13,8 @@ import org.bukkit.command.CommandSender;
 
 import java.io.File;
 
+import me.skorrloregaming.*;
+
 public class ResetCmd implements CommandExecutor {
 
 	private int removeAllPlayerData(ServerMinigame minigame, File playerDataFolder, File altPlayerDataFolder, String subFolder) {
@@ -37,7 +39,7 @@ public class ResetCmd implements CommandExecutor {
 
 	private int removeAllPlayerInfo(ServerMinigame minigame) {
 		int reset = 0;
-		for (String uuid : Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
+		for (String uuid : ServerGet.get().getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
 			String path = "config." + uuid;
 			int balance = 0;
 			switch (minigame) {
@@ -46,20 +48,20 @@ public class ResetCmd implements CommandExecutor {
 					break;
 			}
 			String game = minigame.toString().toLowerCase();
-			if (Server.getPlugin().getConfig().contains(path + ".balance." + game))
-				Server.getPlugin().getConfig().set(path + ".balance." + game, balance + "");
-			if (Server.getPlugin().getConfig().contains(path + "." + game + ".kills"))
-				Server.getPlugin().getConfig().set(path + "." + game + ".kills", "0");
-			if (Server.getPlugin().getConfig().contains(path + "." + game + ".deaths"))
-				Server.getPlugin().getConfig().set(path + "." + game + ".deaths", "0");
-			if (Server.getPlugin().getConfig().contains(path + "." + game + ".upgrades"))
-				Server.getPlugin().getConfig().set(path + "." + game + ".upgrades", "0");
-			if (Server.getPlugin().getConfig().contains(path + "." + game + ".preferredUpgrade"))
-				Server.getPlugin().getConfig().set(path + "." + game + ".preferredUpgrade", "0");
-			if (Server.getPlugin().getConfig().contains(path + "." + game + ".placed"))
-				Server.getPlugin().getConfig().set(path + "." + game + ".placed", "0");
-			if (Server.getPlugin().getConfig().contains(path + "." + game + ".broken"))
-				Server.getPlugin().getConfig().set(path + "." + game + ".broken", "0");
+			if (ServerGet.get().getPlugin().getConfig().contains(path + ".balance." + game))
+				ServerGet.get().getPlugin().getConfig().set(path + ".balance." + game, balance + "");
+			if (ServerGet.get().getPlugin().getConfig().contains(path + "." + game + ".kills"))
+				ServerGet.get().getPlugin().getConfig().set(path + "." + game + ".kills", "0");
+			if (ServerGet.get().getPlugin().getConfig().contains(path + "." + game + ".deaths"))
+				ServerGet.get().getPlugin().getConfig().set(path + "." + game + ".deaths", "0");
+			if (ServerGet.get().getPlugin().getConfig().contains(path + "." + game + ".upgrades"))
+				ServerGet.get().getPlugin().getConfig().set(path + "." + game + ".upgrades", "0");
+			if (ServerGet.get().getPlugin().getConfig().contains(path + "." + game + ".preferredUpgrade"))
+				ServerGet.get().getPlugin().getConfig().set(path + "." + game + ".preferredUpgrade", "0");
+			if (ServerGet.get().getPlugin().getConfig().contains(path + "." + game + ".placed"))
+				ServerGet.get().getPlugin().getConfig().set(path + "." + game + ".placed", "0");
+			if (ServerGet.get().getPlugin().getConfig().contains(path + "." + game + ".broken"))
+				ServerGet.get().getPlugin().getConfig().set(path + "." + game + ".broken", "0");
 			reset++;
 		}
 		return reset;
@@ -77,8 +79,8 @@ public class ResetCmd implements CommandExecutor {
 		} else {
 			ServerMinigame minigame;
 			if ((minigame = ServerMinigame.valueOf(args[0].toUpperCase())) != null) {
-				File playerDataFolder = new File(Server.getPlugin().getDataFolder(), "Players");
-				File altPlayerDataFolder = new File(Server.getPlugin().getDataFolder(), "BackupPlayers");
+				File playerDataFolder = new File(ServerGet.get().getPlugin().getDataFolder(), "Players");
+				File altPlayerDataFolder = new File(ServerGet.get().getPlugin().getDataFolder(), "BackupPlayers");
 				int deleted = 0;
 				deleted += removeAllPlayerData(minigame, playerDataFolder, altPlayerDataFolder, "Chest");
 				deleted += removeAllPlayerData(minigame, playerDataFolder, altPlayerDataFolder, "Information");
@@ -90,14 +92,14 @@ public class ResetCmd implements CommandExecutor {
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Reset " + ChatColor.RED + reset + ChatColor.GRAY + " sections.");
 			} else {
 				OfflinePlayer op = CraftGo.Player.getOfflinePlayer(args[0]);
-				if ((!op.hasPlayedBefore() && !op.isOnline()) || !Server.getPlugin().getConfig().contains("config." + op.getUniqueId().toString())) {
+				if ((!op.hasPlayedBefore() && !op.isOnline()) || !ServerGet.get().getPlugin().getConfig().contains("config." + op.getUniqueId().toString())) {
 					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 					return true;
 				}
-				String msg = ChatColor.RED + "You have been forcibly unregistered from the server.";
+				String msg = ChatColor.RED + "You have been forcibly unregistered from the ServerGet.get().";
 				if (op.isOnline())
 					op.getPlayer().kickPlayer(msg);
-				Server.getPlugin().getConfig().set("config." + op.getUniqueId().toString(), null);
+				ServerGet.get().getPlugin().getConfig().set("config." + op.getUniqueId().toString(), null);
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The specified player should now be unregistered.");
 			}
 		}

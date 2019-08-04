@@ -13,6 +13,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.skorrloregaming.*;
+
 public class HubCmd implements CommandExecutor {
 
 	@Override
@@ -20,7 +22,7 @@ public class HubCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
@@ -32,27 +34,27 @@ public class HubCmd implements CommandExecutor {
 		if (!($.getCurrentMinigame(player) == ServerMinigame.HUB) && !($.getCurrentMinigame(player) == ServerMinigame.UNKNOWN))
 			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
 		int changes = 0;
-		if ((changes = Server.getInstance().performBuggedLeave(player, !save, false)) > 0) {
+		if ((changes = ServerGet.get().getInstance().performBuggedLeave(player, !save, false)) > 0) {
 			perform = true;
-		} else if (minigame == ServerMinigame.HUB || minigame == ServerMinigame.UNKNOWN || (minigame == ServerMinigame.FACTIONS && Server.getUseFactionsAsHub())) {
+		} else if (minigame == ServerMinigame.HUB || minigame == ServerMinigame.UNKNOWN || (minigame == ServerMinigame.FACTIONS && ServerGet.get().getUseFactionsAsHub())) {
 			perform = true;
 		}
 		if (perform) {
-			if (Server.getUseFactionsAsHub()) {
-				if (Server.getHub().contains(player.getUniqueId()))
-					Server.getHub().remove(player.getUniqueId());
-				Server.getInstance().enterFactions(player, false, true);
+			if (ServerGet.get().getUseFactionsAsHub()) {
+				if (ServerGet.get().getHub().contains(player.getUniqueId()))
+					ServerGet.get().getHub().remove(player.getUniqueId());
+				ServerGet.get().getInstance().enterFactions(player, false, true);
 			} else {
-				if (!Server.getHub().contains(player.getUniqueId()))
-					Server.getHub().add(player.getUniqueId());
+				if (!ServerGet.get().getHub().contains(player.getUniqueId()))
+					ServerGet.get().getHub().add(player.getUniqueId());
 			}
-			if (Server.getVanishedPlayers().containsKey(player.getUniqueId())) {
+			if (ServerGet.get().getVanishedPlayers().containsKey(player.getUniqueId())) {
 				player.performCommand("vanish");
 			}
-			if (!Server.getUseFactionsAsHub()) {
+			if (!ServerGet.get().getUseFactionsAsHub()) {
 				Location hubLocation = $.getZoneLocation("hub");
 				$.teleport(player, hubLocation);
-				Server.getInstance().fetchLobby(player);
+				ServerGet.get().getInstance().fetchLobby(player);
 				player.setAllowFlight(true);
 				if (changes > 0)
 					Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.HUB));

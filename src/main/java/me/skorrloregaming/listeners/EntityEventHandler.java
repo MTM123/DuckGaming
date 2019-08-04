@@ -22,6 +22,8 @@ import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Random;
 
+import me.skorrloregaming.*;
+
 public class EntityEventHandler implements Listener {
 
 	private int lastSecond = 0;
@@ -66,7 +68,7 @@ public class EntityEventHandler implements Listener {
 					Location loc = event.getLocation();
 					String rawMessage = Link$.italicGray + "Lag generator detected in " + loc.getWorld().getName() + " at {x: " + loc.getBlockX() + ", y: " + loc.getBlockY() + ", z: " + loc.getBlockZ() + "}";
 					Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
-					LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+					new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 					Logger.info(rawMessage);
 				}
 			}
@@ -108,7 +110,7 @@ public class EntityEventHandler implements Listener {
 			return;*/
 		Location loc = event.getSpawner().getLocation();
 		String code = loc.getWorld().getName() + String.valueOf(loc.getBlockX()) + String.valueOf(loc.getBlockY()) + String.valueOf(loc.getBlockZ());
-		if (Server.getSpawnerConfig().getData().contains(code)) {
+		if (ServerGet.get().getSpawnerConfig().getData().contains(code)) {
 			EntityType previousSpawnedType = event.getSpawner().getSpawnedType();
 			Block block = event.getSpawner().getBlock();
 			block.breakNaturally();
@@ -116,8 +118,8 @@ public class EntityEventHandler implements Listener {
 			block.getState().update(true);
 			CreatureSpawner spawner = (CreatureSpawner) block.getState();
 			int upgrade = 0;
-			if (Server.getSpawnerConfig().getData().contains(code + ".selectedUpgrade"))
-				upgrade = Integer.parseInt(Server.getSpawnerConfig().getData().getString(code + ".selectedUpgrade"));
+			if (ServerGet.get().getSpawnerConfig().getData().contains(code + ".selectedUpgrade"))
+				upgrade = Integer.parseInt(ServerGet.get().getSpawnerConfig().getData().getString(code + ".selectedUpgrade"));
 			spawner.setSpawnedType(previousSpawnedType);
 			spawner.setDelay(300 - ((upgrade + 1) * 50));
 			spawner.update(true);

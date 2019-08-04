@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import me.skorrloregaming.*;
+
 public class SpawnerCmd implements CommandExecutor {
 
 	@Override
@@ -20,11 +22,11 @@ public class SpawnerCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getFactions().contains(player.getUniqueId()) && !Server.getSkyblock().contains(player.getUniqueId())) {
+		if (!ServerGet.get().getFactions().contains(player.getUniqueId()) && !ServerGet.get().getSkyblock().contains(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
@@ -37,23 +39,23 @@ public class SpawnerCmd implements CommandExecutor {
 		if (CraftGo.Player.isPocketPlayer(player))
 			add = 9;
 		ItemStack skeletonSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.SKELETON, 1);
-		skeletonSpawner = Link$.appendLore(skeletonSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(0) });
+		skeletonSpawner = Link$.appendLore(skeletonSpawner, new String[]{"", $.pricePrefix + ServerGet.get().getSpawnerPrices().get(0)});
 		ItemStack zombieSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.ZOMBIE, 1);
-		zombieSpawner = Link$.appendLore(zombieSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(1) });
+		zombieSpawner = Link$.appendLore(zombieSpawner, new String[]{"", $.pricePrefix + ServerGet.get().getSpawnerPrices().get(1)});
 		ItemStack spiderSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.SPIDER, 1);
-		spiderSpawner = Link$.appendLore(spiderSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(2) });
+		spiderSpawner = Link$.appendLore(spiderSpawner, new String[]{"", $.pricePrefix + ServerGet.get().getSpawnerPrices().get(2)});
 		ItemStack blazeSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.BLAZE, 1);
-		blazeSpawner = Link$.appendLore(blazeSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(3) });
+		blazeSpawner = Link$.appendLore(blazeSpawner, new String[]{"", $.pricePrefix + ServerGet.get().getSpawnerPrices().get(3)});
 		ItemStack creeperSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.CREEPER, 1);
-		creeperSpawner = Link$.appendLore(creeperSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(4) });
+		creeperSpawner = Link$.appendLore(creeperSpawner, new String[]{"", $.pricePrefix + ServerGet.get().getSpawnerPrices().get(4)});
 		ItemStack caveSpiderSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.CAVE_SPIDER, 1);
-		caveSpiderSpawner = Link$.appendLore(caveSpiderSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(5) });
+		caveSpiderSpawner = Link$.appendLore(caveSpiderSpawner, new String[]{"", $.pricePrefix + ServerGet.get().getSpawnerPrices().get(5)});
 		ItemStack cowSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.COW, 1);
-		cowSpawner = Link$.appendLore(cowSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(6) });
+		cowSpawner = Link$.appendLore(cowSpawner, new String[]{"", $.pricePrefix + ServerGet.get().getSpawnerPrices().get(6)});
 		ItemStack pigSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.PIG, 1);
-		pigSpawner = Link$.appendLore(pigSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(7) });
+		pigSpawner = Link$.appendLore(pigSpawner, new String[]{"", $.pricePrefix + ServerGet.get().getSpawnerPrices().get(7)});
 		ItemStack chickenSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.CHICKEN, 1);
-		chickenSpawner = Link$.appendLore(chickenSpawner, new String[] { "", $.pricePrefix + Server.getSpawnerPrices().get(8) });
+		chickenSpawner = Link$.appendLore(chickenSpawner, new String[]{"", $.pricePrefix + ServerGet.get().getSpawnerPrices().get(8)});
 		inventory.setItem(0 + add, skeletonSpawner);
 		inventory.setItem(1 + add, zombieSpawner);
 		inventory.setItem(2 + add, spiderSpawner);

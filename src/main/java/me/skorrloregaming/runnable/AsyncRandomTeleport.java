@@ -3,6 +3,7 @@ package me.skorrloregaming.runnable;
 import com.destroystokyo.paper.HeightmapType;
 import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.ServerGet;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -12,6 +13,8 @@ import java.lang.reflect.Method;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+
+import me.skorrloregaming.*;
 
 public class AsyncRandomTeleport implements Runnable {
 
@@ -52,8 +55,8 @@ public class AsyncRandomTeleport implements Runnable {
 			if (player.getWorld().getEnvironment() == World.Environment.NETHER)
 				teleportLocation.setY(128);
 			player.sendMessage(Link$.Legacy.tag + "Teleport destination: " + ChatColor.RED + teleportLocation.getX() + ChatColor.RESET + ", " + ChatColor.RED + teleportLocation.getY() + ChatColor.RESET + ", " + ChatColor.RED + teleportLocation.getZ() + ChatColor.RESET + ".");
-			DelayedTeleport dt = new DelayedTeleport(player, Server.getTeleportationDelay() * 1.5, teleportLocation, false);
-			Server.getBukkitTasks().add(dt.runTaskTimerAsynchronously(Server.getPlugin(), 4, 4));
+			DelayedTeleport dt = new DelayedTeleport(player, ServerGet.get().getTeleportationDelay() * 1.5, teleportLocation, false);
+			ServerGet.get().getBukkitTasks().add(dt.runTaskTimerAsynchronously(ServerGet.get().getPlugin(), 4, 4));
 		} else {
 			player.sendMessage(Link$.Legacy.tag + "Unsafe teleport destination, trying again..");
 			execute();

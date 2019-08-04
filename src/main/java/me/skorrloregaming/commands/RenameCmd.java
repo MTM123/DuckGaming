@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import me.skorrloregaming.*;
+
 public class RenameCmd implements CommandExecutor {
 
 	@Override

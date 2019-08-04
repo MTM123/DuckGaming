@@ -2,6 +2,7 @@ package me.skorrloregaming.commands;
 
 import me.skorrloregaming.$;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.ServerGet;
 import me.skorrloregaming.runnable.DelayedTeleport;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -12,6 +13,8 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class TpaCmd implements CommandExecutor {
 
 	@Override
@@ -19,11 +22,11 @@ public class TpaCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getModeratingPlayers().containsKey(player.getUniqueId()) && (!Server.getCreative().contains(player.getUniqueId()) && !Server.getFactions().contains(player.getUniqueId()) && !Server.getSurvival().contains(player.getUniqueId()) && !Server.getKitpvp().contains(player.getUniqueId()) && !Server.getSkyblock().contains(player.getUniqueId()))) {
+		if (!ServerGet.get().getModeratingPlayers().containsKey(player.getUniqueId()) && (!ServerGet.get().getCreative().contains(player.getUniqueId()) && !ServerGet.get().getFactions().contains(player.getUniqueId()) && !ServerGet.get().getSurvival().contains(player.getUniqueId()) && !ServerGet.get().getKitpvp().contains(player.getUniqueId()) && !ServerGet.get().getSkyblock().contains(player.getUniqueId()))) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
@@ -31,23 +34,23 @@ public class TpaCmd implements CommandExecutor {
 		if (args.length == 0) {
 			player.sendMessage(tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player>");
 		} else {
-			Player targetPlayer = Server.getPlugin().getServer().getPlayer(args[0]);
+			Player targetPlayer = ServerGet.get().getPlugin().getServer().getPlayer(args[0]);
 			if (targetPlayer == null) {
 				player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.WHITE + "The specified player could not be found.");
 			} else {
 				if ($.getCurrentMinigame(targetPlayer) == $.getCurrentMinigame(player)) {
-					if (Server.getModeratingPlayers().containsKey(player.getUniqueId())) {
+					if (ServerGet.get().getModeratingPlayers().containsKey(player.getUniqueId())) {
 						DelayedTeleport dt = new DelayedTeleport(player, 0, targetPlayer.getLocation(), false);
-						dt.runTask(Server.getPlugin());
+						dt.runTask(ServerGet.get().getPlugin());
 					} else {
-						for (Map.Entry<UUID, UUID> id : Server.getTpaRequests().entrySet()) {
+						for (Map.Entry<UUID, UUID> id : ServerGet.get().getTpaRequests().entrySet()) {
 							if (id.getValue().equals(targetPlayer.getUniqueId())) {
-								Server.getTpaRequests().remove(id.getKey());
+								ServerGet.get().getTpaRequests().remove(id.getKey());
 							}
 						}
-						if (Server.getTpaRequests().containsKey(player.getUniqueId()))
-							Server.getTpaRequests().remove(player.getUniqueId());
-						Server.getTpaRequests().put(player.getUniqueId(), targetPlayer.getUniqueId());
+						if (ServerGet.get().getTpaRequests().containsKey(player.getUniqueId()))
+							ServerGet.get().getTpaRequests().remove(player.getUniqueId());
+						ServerGet.get().getTpaRequests().put(player.getUniqueId(), targetPlayer.getUniqueId());
 						player.sendMessage(tag + ChatColor.WHITE + "Teleport request sent to " + ChatColor.YELLOW + targetPlayer.getName() + ChatColor.WHITE + ".");
 						targetPlayer.sendMessage(tag + ChatColor.WHITE + "Teleport request received from " + ChatColor.YELLOW + player.getName() + ChatColor.WHITE + ".");
 						targetPlayer.sendMessage(tag + ChatColor.WHITE + "To accept this request, type " + ChatColor.YELLOW + "/tpaccept" + ChatColor.WHITE + " in chat.");

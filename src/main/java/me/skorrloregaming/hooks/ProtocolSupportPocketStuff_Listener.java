@@ -3,6 +3,7 @@ package me.skorrloregaming.hooks;
 import fr.xephi.authme.events.FailedLoginEvent;
 import me.skorrloregaming.$;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.ServerGet;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,6 +15,8 @@ import protocolsupportpocketstuff.api.modals.elements.ElementResponse;
 import protocolsupportpocketstuff.api.modals.elements.complex.ModalInput;
 import protocolsupportpocketstuff.api.modals.elements.complex.ModalLabel;
 import protocolsupportpocketstuff.api.util.PocketPlayer;
+
+import me.skorrloregaming.*;
 
 public class ProtocolSupportPocketStuff_Listener implements Listener {
 	private ComplexForm loginModal;
@@ -27,15 +30,15 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 	private ModalCallback registerCallback;
 
 	public void register() {
-		Server.getPlugin().getServer().getPluginManager().registerEvents(this, Server.getPlugin());
+		ServerGet.get().getPlugin().getServer().getPluginManager().registerEvents(this, ServerGet.get().getPlugin());
 	}
 
 	public void bakeModals() {
-		loginModal = new ComplexForm("Login").addElement(new ModalLabel("You must login to play on this server.")).addElement(new ModalInput(" ").setPlaceholderText("Password"));
+		loginModal = new ComplexForm("Login").addElement(new ModalLabel("You must login to play on this ServerGet.get().")).addElement(new ModalInput(" ").setPlaceholderText("Password"));
 		faultyLoginModal = loginModal.clone();
 		faultyLoginModal.getElements().get(0).setText("Wrong password, please try again.");
 		closeLoginModal = loginModal.clone();
-		closeLoginModal.getElements().get(0).setText("You must login to play on this server.");
+		closeLoginModal.getElements().get(0).setText("You must login to play on this ServerGet.get().");
 		registerModal = new ComplexForm("Register").addElement(new ModalLabel("You must register to play on here.")).addElement(new ModalInput(" ").setPlaceholderText("Password")).addElement(new ModalInput(" ").setPlaceholderText("Confirm Password"));
 		faultyRegisterModal = registerModal.clone();
 		faultyRegisterModal.getElements().get(0).setText("Your password isn't long enough, try again.");
@@ -55,7 +58,7 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 				ElementResponse password = response.asComplexFormResponse().getResponse(1);
 				if (getAuthMeApi().checkPassword(response.getPlayer().getName(), password.getString().trim())) {
 					getAuthMeApi().forceLogin(response.getPlayer());
-					Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+					Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
 						@Override
 						public void run() {
 						}
@@ -77,10 +80,10 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 					} else {
 						getAuthMeApi().forceRegister(response.getPlayer(), password.getString().trim());
 						getAuthMeApi().forceLogin(response.getPlayer());
-						Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+						Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
 							@Override
 							public void run() {
-								Server.getInstance().fetchLobby(response.getPlayer());
+								ServerGet.get().getInstance().fetchLobby(response.getPlayer());
 							}
 						}, 20L);
 					}
@@ -95,10 +98,10 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 
 	public void onLogin(PlayerJoinEvent event) {
 		if (!PocketPlayer.isPocketPlayer(event.getPlayer())) {
-			Server.getInstance().fetchLobby(event.getPlayer());
+			ServerGet.get().getInstance().fetchLobby(event.getPlayer());
 			return;
 		}
-		Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getPlugin(), () -> {
+		ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), () -> {
 			if (event.getPlayer() != null && event.getPlayer().isOnline() && !getAuthMeApi().isAuthenticated(event.getPlayer())) {
 				if (getAuthMeApi().isRegistered(event.getPlayer().getName())) {
 					PocketPlayer.sendModal(event.getPlayer(), loginModal, loginCallback);

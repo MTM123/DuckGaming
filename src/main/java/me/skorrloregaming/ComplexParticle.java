@@ -12,6 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Random;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class ComplexParticle {
 
 	private Particle particleType;
@@ -117,18 +119,18 @@ public class ComplexParticle {
 
 	public Class<?> getRequiredDataClass() {
 		switch (toString()) {
-		case "REDSTONE":
-			return DustOptions.class;
-		case "ITEM_CRACK":
-			return ItemStack.class;
-		case "BLOCK_CRACK":
-			return BlockData.class;
-		case "BLOCK_DUST":
-			return BlockData.class;
-		case "FALLING_DUST":
-			return BlockData.class;
-		default:
-			return null;
+			case "REDSTONE":
+				return DustOptions.class;
+			case "ITEM_CRACK":
+				return ItemStack.class;
+			case "BLOCK_CRACK":
+				return BlockData.class;
+			case "BLOCK_DUST":
+				return BlockData.class;
+			case "FALLING_DUST":
+				return BlockData.class;
+			default:
+				return null;
 		}
 	}
 

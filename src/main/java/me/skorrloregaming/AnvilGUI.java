@@ -21,6 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
+import me.skorrloregaming.*;
+
 public class AnvilGUI {
 
 	private Player player;
@@ -106,7 +108,7 @@ public class AnvilGUI {
 				}
 			}
 		};
-		Bukkit.getPluginManager().registerEvents(listener, Server.getPlugin());
+		Bukkit.getPluginManager().registerEvents(listener, ServerGet.get().getPlugin());
 	}
 
 	public Player getPlayer() {

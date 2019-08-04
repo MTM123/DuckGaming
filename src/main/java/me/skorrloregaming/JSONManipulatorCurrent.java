@@ -16,6 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import me.skorrloregaming.*;
+
 public class JSONManipulatorCurrent implements JSONManipulator {
 
 	private static final Class<?> CRAFT_ITEM_STACK_Class = Reflect.getOBCClass("inventory.CraftItemStack");
@@ -106,10 +108,10 @@ public class JSONManipulatorCurrent implements JSONManipulator {
 			JsonArray use = Translator.toJson(replacement); // We get the json representation of the old color formatting method
 
 			JsonObject hover = PARSER.parse("{\"action\":\"show_item\", \"value\": \"\"}").getAsJsonObject(); // There's no public clone method for JSONObjects so we need to parse them every
-																												// time
+			// time
 
 			String jsonRep = stringifyItem(item); // Get the JSON representation of the item (well, not really JSON, but rather a
-													// string representation of NBT data)
+			// string representation of NBT data)
 			hover.addProperty("value", jsonRep);
 
 			JsonObject wrapper = new JsonObject(); // Create a wrapper object for the whole array
@@ -119,8 +121,8 @@ public class JSONManipulatorCurrent implements JSONManipulator {
 
 			itemTooltip = wrapper; // Save the tooltip for later use when we encounter a placeholder
 			STACKS.put(p, itemTooltip); // Save it in the cache too so when parsing other packets with the same item
-										// (and client version) we no longer have to create it again
-			Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLaterAsynchronously(Server.getPlugin(), () -> STACKS.remove(p), 100L)); // We remove it later when no longer needed to save memory
+			// (and client version) we no longer have to create it again
+			ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskLaterAsynchronously(ServerGet.get().getPlugin(), () -> STACKS.remove(p), 100L)); // We remove it later when no longer needed to save memory
 		}
 
 		for (int i = 0; i < array.size(); ++i) {
@@ -431,7 +433,7 @@ public class JSONManipulatorCurrent implements JSONManipulator {
 						inside = true;
 					}
 				if (!inside) { // the placeholder we're looking for is not inside this element, so we continue
-								// searching
+					// searching
 					replacer.add(o);
 					continue;
 				}
@@ -550,7 +552,7 @@ public class JSONManipulatorCurrent implements JSONManipulator {
 						inside = true;
 					}
 				if (!inside) { // the placeholder we're looking for is not inside this element, so we continue
-								// searching
+					// searching
 					replacer.add(o);
 					continue;
 				}

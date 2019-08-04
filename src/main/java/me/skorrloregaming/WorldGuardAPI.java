@@ -14,6 +14,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import me.skorrloregaming.*;
+
 public class WorldGuardAPI {
 
 	public static WorldGuardPlugin getWorldGuard() {

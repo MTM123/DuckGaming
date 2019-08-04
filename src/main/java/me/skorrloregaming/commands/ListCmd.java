@@ -11,6 +11,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.skorrloregaming.*;
+
 public class ListCmd implements CommandExecutor {
 
 	public static void listOnlinePlayers(CommandSender sender) {
@@ -41,7 +43,7 @@ public class ListCmd implements CommandExecutor {
 				hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
 			}
 		}
-		for (NpcPlayer player : Server.getNpcPlayers()) {
+		for (NpcPlayer player : ServerGet.get().getNpcPlayers()) {
 			length++;
 			hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
 		}

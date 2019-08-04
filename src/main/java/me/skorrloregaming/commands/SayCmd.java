@@ -14,6 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import me.skorrloregaming.*;
+
 public class SayCmd implements CommandExecutor {
 
 	@Override
@@ -29,26 +31,26 @@ public class SayCmd implements CommandExecutor {
 				}
 				if (args[0].split("/")[1].equals(".")) {
 					if (Link$.isPrefixedRankingEnabled()) {
-						String processedMessage = ChatColor.GRAY + "[" + ChatColor.WHITE + Server.getLastKnownHubWorld() + ChatColor.GRAY + "] " + ChatColor.WHITE + $.consoleTag + "Server" + ChatColor.WHITE + " " + '\u00BB' + " " + sb.toString();
+						String processedMessage = ChatColor.GRAY + "[" + ChatColor.WHITE + ServerGet.get().getLastKnownHubWorld() + ChatColor.GRAY + "] " + ChatColor.WHITE + $.consoleTag + "Server" + ChatColor.WHITE + " " + '\u00BB' + " " + sb.toString();
 						Bukkit.broadcastMessage(processedMessage);
-						Server.getDiscordBot().broadcast(
+						ServerGet.get().getDiscordBot().broadcast(
 								"**Console** Server " + '\u00BB' + " " + sb.toString()
 								, Channel.SERVER_CHAT
 						);
-						LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(processedMessage).build());
+						new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(processedMessage).build());
 					} else {
-						String processedMessage = ChatColor.GRAY + "[" + ChatColor.WHITE + Server.getLastKnownHubWorld() + ChatColor.GRAY + "] " + ChatColor.RED + "Server" + ChatColor.WHITE + " " + '\u00BB' + " " + sb.toString();
+						String processedMessage = ChatColor.GRAY + "[" + ChatColor.WHITE + ServerGet.get().getLastKnownHubWorld() + ChatColor.GRAY + "] " + ChatColor.RED + "Server" + ChatColor.WHITE + " " + '\u00BB' + " " + sb.toString();
 						Bukkit.broadcastMessage(processedMessage);
-						Server.getDiscordBot().broadcast(
+						ServerGet.get().getDiscordBot().broadcast(
 								"**Server** " + '\u00BB' + " " + sb.toString()
 								, Channel.SERVER_CHAT
 						);
-						LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(processedMessage).build());
+						new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(processedMessage).build());
 					}
 				} else {
 					OfflinePlayer op = CraftGo.Player.getOfflinePlayer(args[0].split("/")[1]);
 					Player checkPlayer = Bukkit.getPlayer(args[0].split("/")[1]);
-					String world = Server.getLastKnownHubWorld();
+					String world = ServerGet.get().getLastKnownHubWorld();
 					String message = sb.toString();
 					if (!(checkPlayer == null)) {
 						world = checkPlayer.getWorld().getName();
@@ -69,19 +71,19 @@ public class SayCmd implements CommandExecutor {
 							if (Link$.isPrefixedRankingEnabled()) {
 								String processedMessage = ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.WHITE + Link$.getFlashPlayerDisplayName(op) + ChatColor.WHITE + " " + '\u00BB' + " " + message;
 								Bukkit.broadcastMessage(processedMessage);
-								Server.getDiscordBot().broadcast(
-										"**" + rankName + "** " + op.getName() + " " + '\u00BB' + " " + LinkServer.getInstance().getAntiCheat().processAntiSwear(op, message)
+								ServerGet.get().getDiscordBot().broadcast(
+										"**" + rankName + "** " + op.getName() + " " + '\u00BB' + " " + new LinkServerGet().get().getInstance().getAntiCheat().processAntiSwear(op, message)
 										, Channel.SERVER_CHAT
 								);
-								LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(processedMessage).build());
+								new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(processedMessage).build());
 							} else {
 								String processedMessage = ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.WHITE + op.getName() + ChatColor.WHITE + " " + '\u00BB' + " " + message;
 								Bukkit.broadcastMessage(processedMessage);
-								Server.getDiscordBot().broadcast(
-										"**" + op.getName() + "** " + '\u00BB' + " " + LinkServer.getInstance().getAntiCheat().processAntiSwear(op, message)
+								ServerGet.get().getDiscordBot().broadcast(
+										"**" + op.getName() + "** " + '\u00BB' + " " + new LinkServerGet().get().getInstance().getAntiCheat().processAntiSwear(op, message)
 										, Channel.SERVER_CHAT
 								);
-								LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(processedMessage).build());
+								new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(processedMessage).build());
 							}
 						}
 					}

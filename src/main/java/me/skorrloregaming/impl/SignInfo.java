@@ -1,5 +1,7 @@
 package me.skorrloregaming.impl;
 
+import me.skorrloregaming.*;
+
 public class SignInfo {
 	private int line;
 	private String text;
