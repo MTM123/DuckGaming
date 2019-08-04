@@ -26,8 +26,8 @@ public class ReloadConfigCmd implements CommandExecutor {
 		ServerGet.get().getMarriageHomesConfig().reloadData();
 		ServerGet.get().getNpcConfig().reloadData();
 		ServerGet.get().getSpawnerConfig().reloadData();
-		new LinkServerGet().get().getInstance().getUUIDCache().reloadData();
-		new LinkServerGet().get().getInstance().getGeolocationCache().reloadData();
+		LinkServerGet.get().getInstance().getUUIDCache().reloadData();
+		LinkServerGet.get().getInstance().getGeolocationCache().reloadData();
 		ServerGet.get().getSessionManager().sessionConfig.reloadData();
 		ServerGet.get().getMonthlyVoteConfig().reloadData();
 		if (!(ServerGet.get().getInstance().chatitem == null))

@@ -302,7 +302,7 @@ public class PlayerEventHandler implements Listener {
 		if (event.getEntity().getShooter() instanceof Player) {
 			Player player = (Player) event.getEntity().getShooter();
 			if (event.getEntity() instanceof Trident) {
-				new LinkServerGet().get().getAntiCheat().disableFor(player, 8000L);
+				LinkServerGet.get().getAntiCheat().disableFor(player, 8000L);
 			} else if (event.getEntity() instanceof EnderPearl) {
 				if (ServerGet.get().getDelayedTasks().contains(player.getUniqueId())) {
 					event.setCancelled(true);
@@ -832,7 +832,7 @@ public class PlayerEventHandler implements Listener {
 								player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
 								CraftExplosion explosion = new CraftExplosion(player.getLocation(), 0.4F, false);
 								explosion.explodeNaturally();
-								new LinkServerGet().get().getInstance().getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(5.0));
+								LinkServerGet.get().getInstance().getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(5.0));
 								final Player fPlayer = player;
 								final Plugin fPlugin = ServerGet.get().getPlugin();
 								if (!ServerGet.get().getExplosiveFunpowderCooldown().containsKey(fPlayer.getUniqueId())) {
@@ -870,7 +870,7 @@ public class PlayerEventHandler implements Listener {
 								player.getInventory().setItemInMainHand(itm);
 							}
 							player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
-							new LinkServerGet().get().getInstance().getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(2.5));
+							LinkServerGet.get().getInstance().getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(2.5));
 						}
 						return;
 					}
@@ -995,7 +995,7 @@ public class PlayerEventHandler implements Listener {
 		if (Link$.getRankId(player) > -1 && ServerGet.get().getStaffChatPlayers().contains(player.getUniqueId())) {
 			String rawMessage = "[sc] " + ChatColor.stripColor(player.getDisplayName()) + ": " + event.getMessage();
 			Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
-			new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+			LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 			Logger.info(rawMessage);
 			event.setCancelled(true);
 			return;
@@ -1003,7 +1003,7 @@ public class PlayerEventHandler implements Listener {
 		if (ServerGet.get().getMarriageChatPlayers().contains(player.getUniqueId()) && $.Marriage.getPlayerMarriageId(player) > 0) {
 			String message = "[mc] " + player.getDisplayName().replace(player.getName(), ChatColor.LIGHT_PURPLE + player.getName()) + ChatColor.DARK_GRAY + ": " + ChatColor.RESET + event.getMessage();
 			if ($.Marriage.getPlayerSwearFilter(player))
-				message = new LinkServerGet().get().getInstance().getAntiCheat().processAntiSwear(player, message);
+				message = LinkServerGet.get().getInstance().getAntiCheat().processAntiSwear(player, message);
 			message = ChatColor.translateAlternateColorCodes('&', message);
 			OfflinePlayer targetPlayer = $.Marriage.getMarriedOfflinePlayer(player);
 			if (targetPlayer.isOnline()) {
@@ -1011,11 +1011,11 @@ public class PlayerEventHandler implements Listener {
 				player.sendMessage(message);
 				String rawMessage = Link$.italicGray + ChatColor.stripColor(message);
 				Map<String, String> broadcastMessage = new MapBuilder().message(rawMessage).range(0).build();
-				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, broadcastMessage);
+				LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, broadcastMessage);
 				Logger.info(rawMessage);
 			} else {
 				Map<String, String> broadcastMessage = new MapBuilder().message(message).playerName(targetPlayer.getName()).build();
-				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, broadcastMessage);
+				LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, broadcastMessage);
 				player.sendMessage(message);
 			}
 			event.setCancelled(true);
@@ -1037,14 +1037,14 @@ public class PlayerEventHandler implements Listener {
 			player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You cannot chat while you are muted.");
 			msg = ChatColor.GRAY + "[" + ChatColor.WHITE + world + ChatColor.GRAY + "] " + ChatColor.RESET + player.getDisplayName() + ChatColor.RESET + " " + '\u00BB' + " " + Link$.italicGray + event.getMessage();
 		}
-		msg = new LinkServerGet().get().getInstance().getAntiCheat().processAntiSwear(player, msg);
+		msg = LinkServerGet.get().getInstance().getAntiCheat().processAntiSwear(player, msg);
 		int rank = Link$.getRankId(player);
 		int donorRank = Link$.getDonorRankId(player);
 		if (player.isOp() || rank > -1 || donorRank < -2) {
 			msg = ChatColor.translateAlternateColorCodes('&', msg);
 		}
 		Map<String, String> message = new MapBuilder().message(msg).range(0).consoleOnly(true).build();
-		new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+		LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 		Logger.info(msg, true);
 		boolean isCancelled = event.isCancelled();
 		event.setCancelled(true);
@@ -1056,14 +1056,14 @@ public class PlayerEventHandler implements Listener {
 					rankName = "YouTube";
 				if (Link$.isPrefixedRankingEnabled()) {
 					ServerGet.get().getDiscordBot().broadcast(
-							"**" + rankName + "** " + player.getName() + " " + '\u00BB' + " " + new LinkServerGet().get().getInstance().getAntiCheat().processAntiSwear(player, event.getMessage(), false, true)
+							"**" + rankName + "** " + player.getName() + " " + '\u00BB' + " " + LinkServerGet.get().getInstance().getAntiCheat().processAntiSwear(player, event.getMessage(), false, true)
 							, Channel.SERVER_CHAT);
 				} else {
 					ServerGet.get().getDiscordBot().broadcast(
-							"**" + player.getName() + "** " + '\u00BB' + " " + new LinkServerGet().get().getInstance().getAntiCheat().processAntiSwear(player, event.getMessage(), false, true)
+							"**" + player.getName() + "** " + '\u00BB' + " " + LinkServerGet.get().getInstance().getAntiCheat().processAntiSwear(player, event.getMessage(), false, true)
 							, Channel.SERVER_CHAT);
 				}
-				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(msg).origin(player.getName()).build());
+				LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(msg).origin(player.getName()).build());
 			}
 			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 				if (muted) {
@@ -1148,7 +1148,7 @@ public class PlayerEventHandler implements Listener {
 				event.disallow(PlayerLoginEvent.Result.KICK_OTHER, disallowMsg);
 				String rawMessage = Link$.italicGray + "Server: Disallow " + event.getPlayer().getName() + " '" + disallowMsg + "'";
 				Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
-				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+				LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 				Logger.info(rawMessage);
 			}
 		}
@@ -1214,7 +1214,7 @@ public class PlayerEventHandler implements Listener {
 			}
 			String rawMessage = Link$.italicGray + "Server: Disallow " + event.getName() + " '" + kickMessage + "'";
 			Map<String, String> message = new MapBuilder().message(rawMessage).range(0).consoleOnly(consoleOnly).build();
-			new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+			LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 			Logger.info(rawMessage, consoleOnly);
 		} else {
 			if (ServerGet.get().getHideLoginMessage().containsKey(Integer.valueOf(uuidHash)))
@@ -1234,13 +1234,13 @@ public class PlayerEventHandler implements Listener {
 				{
 					String rawMessage = "Defined country of " + player.getName() + ": " + query.getCountry();
 					Map<String, String> message = new MapBuilder().message(rawMessage).range(0).consoleOnly(true).build();
-					new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+					LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 					Logger.info(rawMessage, true);
 				}
 				{
 					String rawMessage = "Defined geo-location of " + player.getName() + ": " + query.getCity() + ", " + query.getState();
 					Map<String, String> message = new MapBuilder().message(rawMessage).range(0).consoleOnly(true).build();
-					new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+					LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 					Logger.info(rawMessage, true);
 				}
 			}
@@ -1344,7 +1344,7 @@ public class PlayerEventHandler implements Listener {
 		if (CraftGo.Player.getUUID(player.getName(), false) == null) {
 			String message = Link$.italicGray + "Player " + player.getName() + " is using an offline/cracked account";
 			Bukkit.broadcastMessage(message);
-			new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+			LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			ServerGet.get().getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 					, Channel.SERVER_CHAT);
@@ -1402,7 +1402,7 @@ public class PlayerEventHandler implements Listener {
 								int day = cal.get(Calendar.DAY_OF_MONTH);
 								String message = Link$.italicGray + "Player " + player.getName() + " previously logged in on " + Link$.formatMonthIdAbbrev(month) + " " + day + Link$.formatDayOfMonthSuffix(day) + " " + year;
 								Bukkit.broadcastMessage(message);
-								new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+								LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 								ServerGet.get().getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 										, Channel.SERVER_CHAT);
@@ -1426,7 +1426,7 @@ public class PlayerEventHandler implements Listener {
 							if (!ServerGet.get().getPlugin().getConfig().contains("config." + player.getUniqueId().toString())) {
 								String message = Link$.italicGray + "Player " + player.getName() + " has yet to register for the server";
 								Bukkit.broadcastMessage(message);
-								new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+								LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 								ServerGet.get().getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 										, Channel.SERVER_CHAT);
@@ -1434,7 +1434,7 @@ public class PlayerEventHandler implements Listener {
 							if (ServerGet.get().getSessionManager().getStoredSession(player, hostAddr) == null) {
 								String message = Link$.italicGray + "Player " + player.getName() + " has yet to register new session";
 								Bukkit.broadcastMessage(message);
-								new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+								LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 								ServerGet.get().getDiscordBot().broadcast(
 										ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 										, Channel.SERVER_CHAT);
@@ -1495,9 +1495,9 @@ public class PlayerEventHandler implements Listener {
 		String ipAddress = player.getAddress().getAddress().getHostAddress().replace(".", "x");
 		ServerGet.get().getSessionManager().updateSession(player, new Session(LinkSessionManager.encodeHex(ipAddress.replace("x", ".")).toCharArray(), player, System.currentTimeMillis()));
 		if (!ServerGet.get().getPlugin().getConfig().contains(path)) {
-			new LinkServerGet().get().getInstance().getRedisDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
-			new LinkServerGet().get().getInstance().getRedisDatabase().set("donorRank", player.getUniqueId().toString(), Link$.validDonorRanks.get(0));
-			new LinkServerGet().get().getInstance().getRedisMessenger().ping(RedisChannel.CHAT, "RANK_UPDATE", player.getName());
+			LinkServerGet.get().getInstance().getRedisDatabase().set("rank", player.getUniqueId().toString(), Link$.validRanks.get(0));
+			LinkServerGet.get().getInstance().getRedisDatabase().set("donorRank", player.getUniqueId().toString(), Link$.validDonorRanks.get(0));
+			LinkServerGet.get().getInstance().getRedisMessenger().ping(RedisChannel.CHAT, "RANK_UPDATE", player.getName());
 			ServerGet.get().getPlugin().getConfig().set(path + ".marry.marriedTo", "0");
 			ServerGet.get().getPlugin().getConfig().set(path + ".marry.marriageId", "0");
 			ServerGet.get().getPlugin().getConfig().set(path + ".marry.marriedPvp", "true");
@@ -1530,7 +1530,7 @@ public class PlayerEventHandler implements Listener {
 			ServerGet.get().getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 					, Channel.SERVER_CHAT);
-			new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+			LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 		}
 		ServerGet.get().getPlugin().getConfig().set(path + ".ip", ipAddress);
 		ServerGet.get().getPlugin().getConfig().set("address." + ipAddress + "." + player.getUniqueId().toString(), "0");
@@ -1621,23 +1621,23 @@ public class PlayerEventHandler implements Listener {
 
 					@Override
 					public void run() {
-						if (new LinkServerGet().get().getInstance().getRedisDatabase().contains("playtime.total", fUUID)) {
+						if (LinkServerGet.get().getInstance().getRedisDatabase().contains("playtime.total", fUUID)) {
 							for (int day = 0; day <= 365; day++) {
-								if (new LinkServerGet().get().getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, fUUID)) {
-									String value = new LinkServerGet().get().getInstance().getRedisDatabase().getString("playtime.dayOfYear." + day, fUUID);
-									new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
-									new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, fUUID, null);
+								if (LinkServerGet.get().getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, fUUID)) {
+									String value = LinkServerGet.get().getInstance().getRedisDatabase().getString("playtime.dayOfYear." + day, fUUID);
+									LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
+									LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, fUUID, null);
 								}
 							}
 							{
-								String value = new LinkServerGet().get().getInstance().getRedisDatabase().getString("playtime.total", fUUID);
-								new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.total", player.getUniqueId().toString(), value);
-								new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.total", fUUID, null);
+								String value = LinkServerGet.get().getInstance().getRedisDatabase().getString("playtime.total", fUUID);
+								LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.total", player.getUniqueId().toString(), value);
+								LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.total", fUUID, null);
 							}
 							{
-								String value = new LinkServerGet().get().getInstance().getRedisDatabase().getString("playtime.lastKnownDayOfYear", fUUID);
-								new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
-								new LinkServerGet().get().getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", fUUID, null);
+								String value = LinkServerGet.get().getInstance().getRedisDatabase().getString("playtime.lastKnownDayOfYear", fUUID);
+								LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
+								LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", fUUID, null);
 							}
 						}
 						if (ServerGet.get().getSurvivalConfig().getData().contains("homes." + fUUID)) {
@@ -1716,7 +1716,7 @@ public class PlayerEventHandler implements Listener {
 					)
 					, Channel.SERVER_CHAT
 			);
-			new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(event.getJoinMessage()).build());
+			LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(event.getJoinMessage()).build());
 		}
 	}
 
@@ -1755,7 +1755,7 @@ public class PlayerEventHandler implements Listener {
 			player.setHealth(0.0);
 			String message = ServerGet.get().getPluginLabel() + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged out during combat.";
 			Bukkit.broadcastMessage(message);
-			new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+			LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			message = message.substring(message.indexOf(ChatColor.RED + ""));
 			ServerGet.get().getDiscordBot().broadcast(
 					ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
@@ -1810,7 +1810,7 @@ public class PlayerEventHandler implements Listener {
 				if (!ServerGet.get().getOnlineMode().getOrDefault(player.getUniqueId(), false)) {
 					String message = Link$.italicGray + "Player " + player.getName() + " has left without registering for this server";
 					Bukkit.broadcastMessage(message);
-					new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+					LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 					ServerGet.get().getDiscordBot().broadcast(
 							ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 							, Channel.SERVER_CHAT);
@@ -1905,7 +1905,7 @@ public class PlayerEventHandler implements Listener {
 						String discordMsg = event.getDeathMessage().substring(tag.length()).replace(ChatColor.RED + "", "**")
 								.replace(ChatColor.GRAY + "", "**").replace(ChatColor.DARK_RED + "", "");
 						ServerGet.get().getDiscordBot().broadcast(discordMsg, Channel.SERVER_CHAT);
-						new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(event.getDeathMessage()).build());
+						LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(event.getDeathMessage()).build());
 						return;
 					}
 				} else if (event.getEntity().getKiller() instanceof Player) {
@@ -1914,7 +1914,7 @@ public class PlayerEventHandler implements Listener {
 					String discordMsg = event.getDeathMessage().substring(tag.length()).replace(ChatColor.RED + "", "**")
 							.replace(ChatColor.GRAY + "", "**").replace(ChatColor.DARK_RED + "", "");
 					ServerGet.get().getDiscordBot().broadcast(discordMsg, Channel.SERVER_CHAT);
-					new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(event.getDeathMessage()).build());
+					LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(event.getDeathMessage()).build());
 					return;
 				}
 				double baseHealth = $.roundDouble(k.getHealth() / 2, 1);
@@ -1955,7 +1955,7 @@ public class PlayerEventHandler implements Listener {
 		String discordMsg = event.getDeathMessage().substring(tag.length()).replace(ChatColor.RED + "", "**")
 				.replace(ChatColor.GRAY + "", "**").replace(ChatColor.DARK_RED + "", "");
 		ServerGet.get().getDiscordBot().broadcast(discordMsg, Channel.SERVER_CHAT);
-		new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(event.getDeathMessage()).build());
+		LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(event.getDeathMessage()).build());
 	}
 
 	@EventHandler
@@ -1975,8 +1975,8 @@ public class PlayerEventHandler implements Listener {
 			if (ServerGet.get().getWaiverAcceptPlayers().contains(player.getUniqueId()))
 				return;
 			ServerGet.get().getDoubleJumpCandidates().remove(player.getUniqueId());
-			new LinkServerGet().get().getInstance().getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(2.5));
-			new LinkServerGet().get().getInstance().getAntiCheat().handleVelocity(player, new Vector(player.getVelocity().getX(), 1.1D, player.getVelocity().getZ()), true);
+			LinkServerGet.get().getInstance().getAntiCheat().handleVelocity(player, player.getLocation().getDirection().multiply(2.5));
+			LinkServerGet.get().getInstance().getAntiCheat().handleVelocity(player, new Vector(player.getVelocity().getX(), 1.1D, player.getVelocity().getZ()), true);
 			player.playSound(player.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 1, 1);
 		}
 	}
@@ -1997,7 +1997,7 @@ public class PlayerEventHandler implements Listener {
 		Player player = (Player) event.getWhoClicked();
 		ServerMinigame minigame = $.getCurrentMinigame(player);
 		String path = "config." + player.getUniqueId().toString();
-		boolean cancelled = new LinkServerGet().get().getInstance().getPlaytimeManager().onInventoryClick(event);
+		boolean cancelled = LinkServerGet.get().getInstance().getPlaytimeManager().onInventoryClick(event);
 		if (!event.isCancelled())
 			event.setCancelled(cancelled);
 		if (event.getInventory() == null)
@@ -2907,7 +2907,7 @@ public class PlayerEventHandler implements Listener {
 				Material faceDownType2 = event.getFrom().getBlock().getRelative(BlockFace.DOWN).getType();
 				if (!(faceDownType1 == faceDownType2)) {
 					if (faceDownType1 == Material.GLOWSTONE && event.getTo().clone().subtract(0, 2, 0).getBlock().getType() == Material.LAPIS_BLOCK && !(player.getGameMode() == GameMode.CREATIVE)) {
-						new LinkServerGet().get().getInstance().getAntiCheat().handleVelocity(player, player.getVelocity().add(new Vector(0, 1.5, 0)));
+						LinkServerGet.get().getInstance().getAntiCheat().handleVelocity(player, player.getVelocity().add(new Vector(0, 1.5, 0)));
 					}
 				}
 			}
@@ -3100,7 +3100,7 @@ public class PlayerEventHandler implements Listener {
 					if (player.getLocation().getY() > 256 * 1.2)
 						vec.setY(-0.5);
 					if (blocksUntilGround > 5 || blocksUntilGround < 0) {
-						new LinkServerGet().get().getInstance().getAntiCheat().handleVelocity(player, vec);
+						LinkServerGet.get().getInstance().getAntiCheat().handleVelocity(player, vec);
 					}
 				}
 				return;

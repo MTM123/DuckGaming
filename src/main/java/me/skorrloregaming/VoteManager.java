@@ -125,7 +125,7 @@ public class VoteManager {
 						if (getMaximumTimeDiffForAllServices(username, ServicePriority.delay24hour.getDelay(), false) <= 0) {
 							if (!hasPlayerBeenPingedToday(UUID.fromString(id))) {
 								updatePlayerPingedDate(UUID.fromString(id), new Date());
-								boolean subscribed = Boolean.parseBoolean(new LinkServerGet().get().getPlugin().getConfig().getString("config." + id + ".subscribed", "true"));
+								boolean subscribed = Boolean.parseBoolean(LinkServerGet.get().getPlugin().getConfig().getString("config." + id + ".subscribed", "true"));
 								if (subscribed) {
 									Logger.info("It looks like " + username + " can vote, they WILL be notified.");
 									for (Member member : ServerGet.get().getDiscordBot().getGuild().getMembers()) {
@@ -200,7 +200,7 @@ public class VoteManager {
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT
 				);
-				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			} else {
 				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted for the ServerGet.get().";
 				Bukkit.broadcastMessage(message);
@@ -208,7 +208,7 @@ public class VoteManager {
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT
 				);
-				new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			}
 			double balance2 = EconManager.retrieveCash(player.getUniqueId(), "kitpvp");
 			double ceil2 = balance2 / 25;

@@ -68,7 +68,7 @@ public class EntityEventHandler implements Listener {
 					Location loc = event.getLocation();
 					String rawMessage = Link$.italicGray + "Lag generator detected in " + loc.getWorld().getName() + " at {x: " + loc.getBlockX() + ", y: " + loc.getBlockY() + ", z: " + loc.getBlockZ() + "}";
 					Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
-					new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+					LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 					Logger.info(rawMessage);
 				}
 			}

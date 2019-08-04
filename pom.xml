@@ -82,6 +82,10 @@
 	</build>
 	<repositories>
 		<repository>
+			<id>nexus-repo</id>
+			<url>https://maven.skorrloregaming.com/repository/maven-snapshots/</url>
+		</repository>
+		<repository>
 			<id>papermc</id>
 			<url>https://papermc.io/repo/repository/maven-public/</url>
 		</repository>
@@ -200,9 +204,9 @@
 			<version>2.3.4</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.SkorrloreGaming</groupId>
+			<groupId>me.skorrloregaming</groupId>
 			<artifactId>SkorrloreGamingLink</artifactId>
-			<version>nostatic-main-class~1.14-SNAPSHOT</version>
+			<version>1.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>redis.clients</groupId>

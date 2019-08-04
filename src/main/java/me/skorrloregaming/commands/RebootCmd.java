@@ -39,7 +39,7 @@ public class RebootCmd implements CommandExecutor {
 						value++;
 						String message = ServerGet.get().getPluginLabel() + ChatColor.GOLD + ChatColor.BOLD + "Server restarting.. " + ChatColor.RED + ChatColor.BOLD + (5 - value);
 						Bukkit.broadcastMessage(message);
-						new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+						LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 						if (value > 4) {
 							value = 0;
 							Bukkit.getScheduler().runTask(ServerGet.get().getPlugin(), new Runnable() {

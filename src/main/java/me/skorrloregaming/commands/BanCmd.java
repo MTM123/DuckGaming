@@ -54,11 +54,11 @@ public class BanCmd implements CommandExecutor {
 						String message1 = Link$.italicGray + "Server: Banned " + bannedPlayer.getName() + " '" + sb.toString().trim() + "'";
 						if (!bannedPlayer.hasPlayedBefore() && !bannedPlayer.isOnline()) {
 							Map<String, String> message = new MapBuilder().message(message0).range(0).consoleOnly(true).build();
-							new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+							LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 							Logger.info(message0, true);
 						} else {
 							Map<String, String> message = new MapBuilder().message(message1).range(0).consoleOnly(true).build();
-							new LinkServerGet().get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+							LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 							Logger.info(message1, true);
 						}
 						for (Player otherPlayer : ServerGet.get().getPlugin().getServer().getOnlinePlayers()) {

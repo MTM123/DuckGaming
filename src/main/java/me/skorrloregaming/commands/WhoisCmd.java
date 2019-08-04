@@ -29,7 +29,7 @@ public class WhoisCmd implements CommandExecutor {
 			int latency = CraftGo.Player.getConnectionLatency(player);
 			ServerMinigame minigame = $.getCurrentMinigame(player);
 			ServerMinigame worldMinigame = $.getMinigameFromWorld(player.getWorld());
-			String playtime = Link$.formatTime((int) new LinkServerGet().get().getInstance().getPlaytimeManager().getStoredPlayerPlaytime(player));
+			String playtime = Link$.formatTime((int) LinkServerGet.get().getInstance().getPlaytimeManager().getStoredPlayerPlaytime(player));
 			String rank = WordUtils.capitalize(Link$.getRank(player));
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "/ Known information about " + ChatColor.RED + player.getName());
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Connection latency (ping): " + ChatColor.RED + latency);
