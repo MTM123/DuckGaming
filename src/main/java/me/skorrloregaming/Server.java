@@ -866,8 +866,6 @@ public class Server extends JavaPlugin implements Listener {
 	public void onDisable() {
 		running = false;
 		plugin.saveConfig();
-		for (BukkitTask task : bukkitTasks)
-			task.cancel();
 		discordBot.broadcast(":octagonal_sign: **Server has stopped**", Channel.SERVER_CHAT);
 		discordBot.unregister();
 		if (!(lockette == null))
