@@ -22,6 +22,7 @@ import me.skorrloregaming.redis.RedisChannel;
 import me.skorrloregaming.runnable.DelayedTeleport;
 import me.skorrloregaming.runnable.GCandAutoDemotion;
 import me.skorrloregaming.scoreboard.DisplayType;
+import me.skorrloregaming.scoreboard.DisposableScoreboard;
 import me.skorrloregaming.scoreboard.boards.Kitpvp_LeaderboardScoreboard;
 import me.skorrloregaming.scoreboard.boards.Kitpvp_StatisticsScoreboard;
 import me.skorrloregaming.shop.LaShoppe;
@@ -864,6 +865,13 @@ public class Server extends JavaPlugin implements Listener {
 	public void onDisable() {
 		running = false;
 		plugin.saveConfig();
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			for (ServerMinigame minigame : ServerMinigame.values()) {
+				DisposableScoreboard scoreboard = $.getPrimaryScoreboard(minigame);
+				if (scoreboard != null)
+					scoreboard.unregister(player);
+			}
+		}
 		discordBot.broadcast(":octagonal_sign: **Server has stopped**", Channel.SERVER_CHAT);
 		discordBot.unregister();
 		if (!(lockette == null))
