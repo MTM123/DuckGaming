@@ -886,7 +886,7 @@ public class Server extends JavaPlugin implements Listener {
 		}
 		topVotersHttpServer.stop();
 		for (Player player : Bukkit.getOnlinePlayers())
-			player.sendMessage(Link$.modernMsgPrefix + "Psst, the server is now updating; please be patient.");
+			player.kickPlayer(Link$.modernMsgPrefix + "Psst, the server is now updating; please rejoin.");
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			this.performBuggedLeave(player, false, false);
 			if (USE_FACTIONS_AS_HUB) {
