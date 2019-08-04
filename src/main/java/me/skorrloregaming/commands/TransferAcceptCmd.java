@@ -35,23 +35,23 @@ public class TransferAcceptCmd implements CommandExecutor {
 				String oldValuePath = "config." + uuid + "." + value;
 				ServerGet.get().getPlugin().getConfig().set(valuePath, ServerGet.get().getPlugin().getConfig().get(oldValuePath));
 			}
-			if (LinkServerGet.get().getInstance().getRedisDatabase().contains("playtime.total", uuid)) {
+			if (LinkServerGet.get().getRedisDatabase().contains("playtime.total", uuid)) {
 				for (int day = 0; day <= 365; day++) {
-					if (LinkServerGet.get().getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, uuid)) {
-						String value = LinkServerGet.get().getInstance().getRedisDatabase().getString("playtime.dayOfYear." + day, uuid);
-						LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
-						LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, uuid, null);
+					if (LinkServerGet.get().getRedisDatabase().contains("playtime.dayOfYear." + day, uuid)) {
+						String value = LinkServerGet.get().getRedisDatabase().getString("playtime.dayOfYear." + day, uuid);
+						LinkServerGet.get().getRedisDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
+						LinkServerGet.get().getRedisDatabase().set("playtime.dayOfYear." + day, uuid, null);
 					}
 				}
 				{
-					String value = LinkServerGet.get().getInstance().getRedisDatabase().getString("playtime.total", uuid);
-					LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.total", player.getUniqueId().toString(), value);
-					LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.total", uuid, null);
+					String value = LinkServerGet.get().getRedisDatabase().getString("playtime.total", uuid);
+					LinkServerGet.get().getRedisDatabase().set("playtime.total", player.getUniqueId().toString(), value);
+					LinkServerGet.get().getRedisDatabase().set("playtime.total", uuid, null);
 				}
 				{
-					String value = LinkServerGet.get().getInstance().getRedisDatabase().getString("playtime.lastKnownDayOfYear", uuid);
-					LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
-					LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
+					String value = LinkServerGet.get().getRedisDatabase().getString("playtime.lastKnownDayOfYear", uuid);
+					LinkServerGet.get().getRedisDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
+					LinkServerGet.get().getRedisDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
 				}
 			}
 			if (ServerGet.get().getSurvivalConfig().getData().contains("homes." + uuid)) {

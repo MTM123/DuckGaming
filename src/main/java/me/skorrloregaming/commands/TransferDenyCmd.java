@@ -28,13 +28,13 @@ public class TransferDenyCmd implements CommandExecutor {
 				SolidStorage.clearPlayerSave(CraftGo.Player.getOfflinePlayer(uuid), domain);
 			ServerGet.get().getPlugin().getConfig().set("config." + uuid, null);
 			ServerGet.get().getPlugin().getConfig().set("denyDataTransfer." + uuid, true);
-			if (LinkServerGet.get().getInstance().getRedisDatabase().contains("playtime.total", uuid)) {
+			if (LinkServerGet.get().getRedisDatabase().contains("playtime.total", uuid)) {
 				for (int day = 0; day <= 365; day++) {
-					if (LinkServerGet.get().getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, uuid))
-						LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, uuid, null);
+					if (LinkServerGet.get().getRedisDatabase().contains("playtime.dayOfYear." + day, uuid))
+						LinkServerGet.get().getRedisDatabase().set("playtime.dayOfYear." + day, uuid, null);
 				}
-				LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.total", uuid, null);
-				LinkServerGet.get().getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
+				LinkServerGet.get().getRedisDatabase().set("playtime.total", uuid, null);
+				LinkServerGet.get().getRedisDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
 			}
 			ServerGet.get().getSurvivalConfig().getData().set("homes." + uuid, null);
 			ServerGet.get().getSurvivalConfig().saveData();

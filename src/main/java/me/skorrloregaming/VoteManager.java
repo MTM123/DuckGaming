@@ -200,7 +200,7 @@ public class VoteManager {
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT
 				);
-				LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			} else {
 				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted for the ServerGet.get().";
 				Bukkit.broadcastMessage(message);
@@ -208,7 +208,7 @@ public class VoteManager {
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT
 				);
-				LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			}
 			double balance2 = EconManager.retrieveCash(player.getUniqueId(), "kitpvp");
 			double ceil2 = balance2 / 25;

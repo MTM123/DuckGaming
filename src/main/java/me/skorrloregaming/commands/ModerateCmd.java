@@ -26,20 +26,20 @@ public class ModerateCmd implements CommandExecutor {
 		}
 		if (ServerGet.get().getModeratingPlayers().containsKey(player.getUniqueId())) {
 			ServerMinigame minigame = ServerGet.get().getModeratingPlayers().get(player.getUniqueId());
-			ServerGet.get().getInstance().performBuggedLeave(player, true, true);
+			ServerGet.get().performBuggedLeave(player, true, true);
 			ServerGet.get().getModeratingPlayers().remove(player.getUniqueId());
 			if (minigame == ServerMinigame.FACTIONS) {
-				ServerGet.get().getInstance().enterFactions(player, false, true);
+				ServerGet.get().enterFactions(player, false, true);
 			} else if (minigame == ServerMinigame.KITPVP) {
-				ServerGet.get().getInstance().enterKitpvp(player, false, true);
+				ServerGet.get().enterKitpvp(player, false, true);
 			} else if (minigame == ServerMinigame.SKYFIGHT) {
-				ServerGet.get().getInstance().enterSkyfight(player, false, true);
+				ServerGet.get().enterSkyfight(player, false, true);
 			} else if (minigame == ServerMinigame.CREATIVE) {
-				ServerGet.get().getInstance().enterCreative(player, false, true);
+				ServerGet.get().enterCreative(player, false, true);
 			} else if (minigame == ServerMinigame.SURVIVAL) {
-				ServerGet.get().getInstance().enterSurvival(player, false, true);
+				ServerGet.get().enterSurvival(player, false, true);
 			} else if (minigame == ServerMinigame.SKYBLOCK) {
-				ServerGet.get().getInstance().enterSkyblock(player, false, true);
+				ServerGet.get().enterSkyblock(player, false, true);
 			} else if (minigame == ServerMinigame.HUB || minigame == ServerMinigame.UNKNOWN) {
 				player.performCommand("hub");
 			}
@@ -48,7 +48,7 @@ public class ModerateCmd implements CommandExecutor {
 			int rankID = Link$.getRankId(player);
 			if (rankID > 0 || player.isOp()) {
 				ServerMinigame minigame = $.getCurrentMinigame(player);
-				ServerGet.get().getInstance().performBuggedLeave(player, false, true);
+				ServerGet.get().performBuggedLeave(player, false, true);
 				player.performCommand("hub");
 				ServerGet.get().getModeratingPlayers().put(player.getUniqueId(), minigame);
 				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are now moderating the ServerGet.get().");

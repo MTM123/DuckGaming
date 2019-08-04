@@ -69,7 +69,7 @@ public class MessageListener extends ListenerAdapter {
 									event.getGuild().getController().setNickname(event.getMember(), event.getMember().getUser().getName()).complete();
 									return;
 								}
-								rawMessage = LinkServerGet.get().getInstance().getAntiCheat().processAntiSwear(op, rawMessage, false, true);
+								rawMessage = LinkServerGet.get().getAntiCheat().processAntiSwear(op, rawMessage, false, true);
 								String displayName = Link$.getFlashPlayerDisplayName(memberName);
 								String username = event.getMember().getUser().getName() + "#" + event.getMember().getUser().getDiscriminator();
 								TextComponent newLine = new TextComponent(ComponentSerializer.parse("{text: \"\n\"}"));
@@ -92,7 +92,7 @@ public class MessageListener extends ListenerAdapter {
 								for (Player player : Bukkit.getOnlinePlayers()) {
 									CraftGo.Player.sendJson(player, json);
 								}
-								LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(json).json(true).build());
+								LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(json).json(true).build());
 							} else if (event.getTextChannel().getName().equals(discordBot.getChannelName(Channel.SERVER_VERIFY))) {
 								String rawMessage = event.getMessage().getContentDisplay();
 								if (rawMessage.startsWith("?verify")) {

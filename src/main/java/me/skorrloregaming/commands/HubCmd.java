@@ -34,7 +34,7 @@ public class HubCmd implements CommandExecutor {
 		if (!($.getCurrentMinigame(player) == ServerMinigame.HUB) && !($.getCurrentMinigame(player) == ServerMinigame.UNKNOWN))
 			Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
 		int changes = 0;
-		if ((changes = ServerGet.get().getInstance().performBuggedLeave(player, !save, false)) > 0) {
+		if ((changes = ServerGet.get().performBuggedLeave(player, !save, false)) > 0) {
 			perform = true;
 		} else if (minigame == ServerMinigame.HUB || minigame == ServerMinigame.UNKNOWN || (minigame == ServerMinigame.FACTIONS && ServerGet.get().getUseFactionsAsHub())) {
 			perform = true;
@@ -43,7 +43,7 @@ public class HubCmd implements CommandExecutor {
 			if (ServerGet.get().getUseFactionsAsHub()) {
 				if (ServerGet.get().getHub().contains(player.getUniqueId()))
 					ServerGet.get().getHub().remove(player.getUniqueId());
-				ServerGet.get().getInstance().enterFactions(player, false, true);
+				ServerGet.get().enterFactions(player, false, true);
 			} else {
 				if (!ServerGet.get().getHub().contains(player.getUniqueId()))
 					ServerGet.get().getHub().add(player.getUniqueId());
@@ -54,7 +54,7 @@ public class HubCmd implements CommandExecutor {
 			if (!ServerGet.get().getUseFactionsAsHub()) {
 				Location hubLocation = $.getZoneLocation("hub");
 				$.teleport(player, hubLocation);
-				ServerGet.get().getInstance().fetchLobby(player);
+				ServerGet.get().fetchLobby(player);
 				player.setAllowFlight(true);
 				if (changes > 0)
 					Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.HUB));

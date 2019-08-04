@@ -131,7 +131,7 @@ public class BlockEventHandler implements Listener {
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
 		if (!event.isCancelled())
-			event.setCancelled(LinkServerGet.get().getInstance().getAntiCheat().onBlockPlace(event.getBlock(), player));
+			event.setCancelled(LinkServerGet.get().getAntiCheat().onBlockPlace(event.getBlock(), player));
 		if (event.isCancelled())
 			return;
 		if (ServerGet.get().getSkyblock().contains(player.getUniqueId())) {
@@ -168,7 +168,7 @@ public class BlockEventHandler implements Listener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		if (!event.isCancelled())
-			event.setCancelled(LinkServerGet.get().getInstance().getAntiCheat().onBlockBreak(event.getBlock(), player));
+			event.setCancelled(LinkServerGet.get().getAntiCheat().onBlockBreak(event.getBlock(), player));
 		if (event.isCancelled())
 			return;
 		Block block = event.getBlock();

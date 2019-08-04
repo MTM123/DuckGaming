@@ -83,7 +83,7 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 						Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
 							@Override
 							public void run() {
-								ServerGet.get().getInstance().fetchLobby(response.getPlayer());
+								ServerGet.get().fetchLobby(response.getPlayer());
 							}
 						}, 20L);
 					}
@@ -98,7 +98,7 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 
 	public void onLogin(PlayerJoinEvent event) {
 		if (!PocketPlayer.isPocketPlayer(event.getPlayer())) {
-			ServerGet.get().getInstance().fetchLobby(event.getPlayer());
+			ServerGet.get().fetchLobby(event.getPlayer());
 			return;
 		}
 		ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), () -> {

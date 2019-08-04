@@ -38,7 +38,7 @@ public class ServerCmd implements CommandExecutor {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
 				return true;
 			}
-			ServerGet.get().getInstance().enterKitpvp(player, false, false);
+			ServerGet.get().enterKitpvp(player, false, false);
 		} else if ("factions".startsWith(args[0].toLowerCase())) {
 			if (!$.isMinigameEnabled(ServerMinigame.FACTIONS)) {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
@@ -48,7 +48,7 @@ public class ServerCmd implements CommandExecutor {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
 				return true;
 			}
-			ServerGet.get().getInstance().enterFactions(player, false, false);
+			ServerGet.get().enterFactions(player, false, false);
 		} else if ("survival".startsWith(args[0].toLowerCase())) {
 			if (!$.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
@@ -58,7 +58,7 @@ public class ServerCmd implements CommandExecutor {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
 				return true;
 			}
-			ServerGet.get().getInstance().enterSurvival(player, false, false);
+			ServerGet.get().enterSurvival(player, false, false);
 		} else if ("skyfight".startsWith(args[0].toLowerCase())) {
 			if (!$.isMinigameEnabled(ServerMinigame.SKYFIGHT)) {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
@@ -68,7 +68,7 @@ public class ServerCmd implements CommandExecutor {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
 				return true;
 			}
-			ServerGet.get().getInstance().enterSkyfight(player, false, false);
+			ServerGet.get().enterSkyfight(player, false, false);
 		} else if ("creative".startsWith(args[0].toLowerCase())) {
 			if (!$.isMinigameEnabled(ServerMinigame.CREATIVE)) {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
@@ -78,7 +78,7 @@ public class ServerCmd implements CommandExecutor {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
 				return true;
 			}
-			ServerGet.get().getInstance().enterCreative(player, false, false);
+			ServerGet.get().enterCreative(player, false, false);
 		} else if ("skyblock".startsWith(args[0].toLowerCase())) {
 			if (!$.isMinigameEnabled(ServerMinigame.SKYBLOCK)) {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
@@ -88,7 +88,7 @@ public class ServerCmd implements CommandExecutor {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
 				return true;
 			}
-			ServerGet.get().getInstance().enterSkyblock(player, false, false);
+			ServerGet.get().enterSkyblock(player, false, false);
 		} else if ("prison".startsWith(args[0].toLowerCase())) {
 			if (!$.isMinigameEnabled(ServerMinigame.PRISON)) {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");

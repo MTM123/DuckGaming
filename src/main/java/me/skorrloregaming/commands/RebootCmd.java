@@ -39,7 +39,7 @@ public class RebootCmd implements CommandExecutor {
 						value++;
 						String message = ServerGet.get().getPluginLabel() + ChatColor.GOLD + ChatColor.BOLD + "Server restarting.. " + ChatColor.RED + ChatColor.BOLD + (5 - value);
 						Bukkit.broadcastMessage(message);
-						LinkServerGet.get().getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+						LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 						if (value > 4) {
 							value = 0;
 							Bukkit.getScheduler().runTask(ServerGet.get().getPlugin(), new Runnable() {
@@ -47,7 +47,7 @@ public class RebootCmd implements CommandExecutor {
 								public void run() {
 									for (Player player : Bukkit.getOnlinePlayers()) {
 										Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
-										ServerGet.get().getInstance().performBuggedLeave(player, false, true);
+										ServerGet.get().performBuggedLeave(player, false, true);
 										player.kickPlayer(ServerGet.get().getPluginName() + ChatColor.AQUA + " " + '\u00BB' + " " + ChatColor.RESET + "Server restarting, please rejoin soon.");
 									}
 									Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
