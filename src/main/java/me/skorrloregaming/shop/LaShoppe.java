@@ -80,6 +80,8 @@ public class LaShoppe {
 				return "Add item to shop";
 			case CREATE_ENCHANT:
 				return "Add enchant to shop";
+			case BUY_ITEM:
+				return "Buy item from shop";
 			default:
 				return "Repair & Name";
 		}

@@ -27,6 +27,8 @@ import me.skorrloregaming.scoreboard.boards.Kitpvp_StatisticsScoreboard;
 import me.skorrloregaming.shop.LaShoppeEnchant;
 import me.skorrloregaming.shop.LaShoppeFrame;
 import me.skorrloregaming.shop.LaShoppeItem;
+import me.skorrloregaming.shop.events.buy.BuyItemAmountEventHandler;
+import me.skorrloregaming.shop.events.enchant.CreateEnchantTypeEventHandler;
 import me.skorrloregaming.skins.model.SkinModel;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -65,6 +67,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.util.Vector;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -2208,36 +2211,18 @@ public class PlayerEventHandler implements Listener {
 									player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 									player.openInventory(inv);
 								} else if (event.isRightClick()) {
+									String inventoryName = Server.getShoppe().getInventoryName(LaShoppeFrame.BUY_ITEM);
+									ItemStack purchaseItem = new ItemStack(event.getCurrentItem().getType(), amount, (short) data);
 									try {
-										DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-										String materialName = Link$.formatMaterial(event.getCurrentItem().getType());
-										String subDomain = $.getMinigameDomain(player);
-										double cash = EconManager.retrieveCash(player, subDomain);
-										String tag = $.getMinigameTag(player);
-										if (cash >= price * 2 && player.isSneaking()) {
-											amount = amount * 2;
-											price = price * 2;
-										}
-										ItemStack purchaseItem = new ItemStack(event.getCurrentItem().getType(), amount, (short) data);
-										if (event.getCurrentItem().getType() == Material.SPAWNER)
-											purchaseItem = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), amount);
-										if (cash >= price) {
-											if (player.getInventory().firstEmpty() == -1) {
-												player.sendMessage(tag + ChatColor.RED + "Inventory full. " + ChatColor.GRAY + "Empty some slots then try again.");
-												return;
-											}
-											EconManager.withdrawCash(player, price, subDomain);
-											player.getInventory().addItem(purchaseItem);
-											player.updateInventory();
-											player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + materialName + " x" + amount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
-											return;
-										}
-										player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money.");
-										return;
-									} catch (Exception ex) {
-										player.sendMessage("An internal error has occured whilist processing this shop information.");
-										ex.printStackTrace();
-										return;
+										new AnvilGUI(player, inventoryName, new BuyItemAmountEventHandler(Server.getShoppe(), player, purchaseItem, data,price / amount))
+												.setInputName("Enter type")
+												.open();
+									} catch (IllegalAccessException e) {
+										e.printStackTrace();
+									} catch (InvocationTargetException e) {
+										e.printStackTrace();
+									} catch (InstantiationException e) {
+										e.printStackTrace();
 									}
 								}
 							}
