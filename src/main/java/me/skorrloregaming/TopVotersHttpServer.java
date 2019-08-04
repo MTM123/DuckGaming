@@ -11,7 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
-public class TopVotersHttpServer extends BukkitRunnable {
+public class TopVotersHttpServer implements Runnable {
 	public ServerSocket server = null;
 	public boolean running = false;
 
