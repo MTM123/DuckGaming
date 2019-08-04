@@ -39,12 +39,12 @@ public class DelHomeCmd implements CommandExecutor {
 			count = values.size();
 		}
 		if (count == 0) {
-			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You have not yet set a home on this ServerGet.get().");
+			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You have not yet set a home on this server.");
 			return true;
 		} else if (count == 1) {
 			config.getData().set("home." + player.getUniqueId().toString(), null);
 			config.saveData();
-			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have unset your home on this ServerGet.get().");
+			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have unset your home on this server.");
 			return true;
 		}
 		if (args.length == 0) {

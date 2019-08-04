@@ -134,7 +134,7 @@ public class MarryCmd implements CommandExecutor {
 				ServerGet.get().getMarriageHomesConfig().getData().set(base + ".yaw", (int) player.getLocation().getYaw());
 				ServerGet.get().getMarriageHomesConfig().getData().set(base + ".pitch", (int) player.getLocation().getPitch());
 				ServerGet.get().getMarriageHomesConfig().saveData();
-				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have set your home on this ServerGet.get().");
+				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have set your home on this server.");
 			} else if (args[0].equalsIgnoreCase("home")) {
 				int marriageId = $.Marriage.getPlayerMarriageId(player);
 				if (marriageId == 0) {

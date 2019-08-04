@@ -136,7 +136,7 @@ public class Reflection {
 	}
 
 	public static Class<?> getNMSClass(String clazz) throws Exception {
-		return Class.forName("net.minecraft.ServerGet.get()." + serverVersion + "." + clazz);
+		return Class.forName("net.minecraft.server." + serverVersion + "." + clazz);
 	}
 
 	public static Object getObject(Class<?> clazz, Object obj, String fname) throws Exception {

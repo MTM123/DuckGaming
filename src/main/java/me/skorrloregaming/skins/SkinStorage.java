@@ -56,7 +56,7 @@ public class SkinStorage {
 		if (uuid == null || uuid.equals("null"))
 			return Optional.empty();
 		if (!ServerGet.get().getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
-			String skinurl = "https://sessionServerGet.get().mojang.com/session/minecraft/profile/";
+			String skinurl = "https://sessionserver.mojang.com/session/minecraft/profile/";
 			String output = null;
 			try {
 				output = CraftGo.Player.readURL(skinurl + uuid + "?unsigned=false");

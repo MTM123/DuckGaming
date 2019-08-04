@@ -1351,7 +1351,7 @@ public class PlayerEventHandler implements Listener {
 		}
 		if (!Link$.isPluginEnabled("AuthMe")) {
 			if (CraftGo.Player.getProtocolVersion(player) < 107) {
-				player.sendMessage("You are using an unsupported version of Minecraft on this server that is known to have many issues that negatively affect your experience on this ServerGet.get(). We strongly suggest that you update to a newer, more reliable, version of Minecraft for playing on this ServerGet.get(). Accepting this waiver, you acknowledge that we will not provide any support for any issues you may encounter and your experience may be negative impacted by several issues.");
+				player.sendMessage("You are using an unsupported version of Minecraft on this server that is known to have many issues that negatively affect your experience on this server. We strongly suggest that you update to a newer, more reliable, version of Minecraft for playing on this server. Accepting this waiver, you acknowledge that we will not provide any support for any issues you may encounter and your experience may be negative impacted by several issues.");
 				TextComponent message = new TextComponent("[Y]es, I Accept");
 				message.setColor(net.md_5.bungee.api.ChatColor.BOLD);
 				message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/login"));
@@ -1567,7 +1567,7 @@ public class PlayerEventHandler implements Listener {
 				public void run() {
 					int rankID = Link$.getRankId(player);
 					if (rankID > 0 || player.isOp()) {
-						player.sendMessage(ChatColor.RED + "Notice. " + ChatColor.GRAY + "You are currently still moderating the ServerGet.get().");
+						player.sendMessage(ChatColor.RED + "Notice. " + ChatColor.GRAY + "You are currently still moderating the server.");
 					} else {
 						if (!(player == null) && player.isOnGround())
 							player.performCommand("moderate");
@@ -1578,7 +1578,7 @@ public class PlayerEventHandler implements Listener {
 		player.addAttachment(ServerGet.get().getPlugin(), "usb.social", true);
 		player.addAttachment(ServerGet.get().getPlugin(), "usb.biome.*", true);
 		CraftGo.Player.setPlayerListHeaderFooter(player, "SkorrloreGaming", "play.skorrloregaming.com");
-		CraftGo.Player.sendTimedTitleAndSubtitle(player, new TitleSubtitle("SkorrloreGaming", "Welcome to our minecraft ServerGet.get().", 10, 40, 5));
+		CraftGo.Player.sendTimedTitleAndSubtitle(player, new TitleSubtitle("SkorrloreGaming", "Welcome to our minecraft server.", 10, 40, 5));
 		Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.HUB));
 		Bukkit.getScheduler().runTaskAsynchronously(ServerGet.get().getPlugin(), new Runnable() {
 			@Override

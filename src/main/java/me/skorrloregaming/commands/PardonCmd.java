@@ -38,7 +38,7 @@ public class PardonCmd implements CommandExecutor {
 					ServerGet.get().getPlugin().getConfig().set("warning." + ipAddress, null);
 					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The address should no longer be banned.");
 				} else {
-					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The address is not banned from the ServerGet.get().");
+					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The address is not banned from the server.");
 				}
 			}
 		} else {

@@ -66,7 +66,7 @@ public class HomeCmd implements CommandExecutor {
 			base = oldBase;
 		}
 		if (!config.getData().contains(base)) {
-			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You have not yet set a home on this ServerGet.get().");
+			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You have not yet set a home on this server.");
 		} else {
 			World world = ServerGet.get().getPlugin().getServer().getWorld(config.getData().getString(base + ".world"));
 			double x = config.getData().getDouble(base + ".x");

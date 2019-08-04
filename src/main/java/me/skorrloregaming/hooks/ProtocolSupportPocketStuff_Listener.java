@@ -34,11 +34,11 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 	}
 
 	public void bakeModals() {
-		loginModal = new ComplexForm("Login").addElement(new ModalLabel("You must login to play on this ServerGet.get().")).addElement(new ModalInput(" ").setPlaceholderText("Password"));
+		loginModal = new ComplexForm("Login").addElement(new ModalLabel("You must login to play on this server.")).addElement(new ModalInput(" ").setPlaceholderText("Password"));
 		faultyLoginModal = loginModal.clone();
 		faultyLoginModal.getElements().get(0).setText("Wrong password, please try again.");
 		closeLoginModal = loginModal.clone();
-		closeLoginModal.getElements().get(0).setText("You must login to play on this ServerGet.get().");
+		closeLoginModal.getElements().get(0).setText("You must login to play on this server.");
 		registerModal = new ComplexForm("Register").addElement(new ModalLabel("You must register to play on here.")).addElement(new ModalInput(" ").setPlaceholderText("Password")).addElement(new ModalInput(" ").setPlaceholderText("Confirm Password"));
 		faultyRegisterModal = registerModal.clone();
 		faultyRegisterModal.getElements().get(0).setText("Your password isn't long enough, try again.");

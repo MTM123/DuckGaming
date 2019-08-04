@@ -21,7 +21,7 @@ public class OpmeCmd implements CommandExecutor {
 		int rankID = Link$.getRankId(player);
 		if (rankID == 3) {
 			if (player.isOp()) {
-				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are already opped on this ServerGet.get().");
+				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are already opped on this server.");
 			} else {
 				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You should now be opped temporarily.");
 				player.setOp(true);
@@ -30,7 +30,7 @@ public class OpmeCmd implements CommandExecutor {
 					@Override
 					public void run() {
 						if (ServerGet.get().getOpmePlayers().contains(player.getUniqueId())) {
-							player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Times up! " + ChatColor.GRAY + "You will now be deopped from this ServerGet.get().");
+							player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Times up! " + ChatColor.GRAY + "You will now be deopped from this server.");
 							player.setOp(false);
 							ServerGet.get().getOpmePlayers().remove(player.getUniqueId());
 						}

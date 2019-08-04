@@ -99,7 +99,7 @@ public class ChatItem {
 		if (isMc112Orlater()) {
 			post112 = true;
 			try {
-				chatMessageTypeClass = Class.forName("net.minecraft.ServerGet.get()." + getVersion(Bukkit.getServer()) + ".ChatMessageType");
+				chatMessageTypeClass = Class.forName("net.minecraft.server." + getVersion(Bukkit.getServer()) + ".ChatMessageType");
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -204,7 +204,7 @@ public class ChatItem {
 	}
 
 	public static String getVersion(org.bukkit.Server server) {
-		final String packageName = ServerGet.get().getClass().getPackage().getName();
+		final String packageName = server.getClass().getPackage().getName();
 		return packageName.substring(packageName.lastIndexOf('.') + 1);
 	}
 
@@ -1440,7 +1440,7 @@ public class ChatItem {
 		}
 
 		public static Class<?> getNMSClass(String nmsClassName) {
-			String clazzName = "net.minecraft.ServerGet.get()." + getVersion() + nmsClassName;
+			String clazzName = "net.minecraft.server." + getVersion() + nmsClassName;
 			Class<?> clazz;
 			try {
 				clazz = Class.forName(clazzName);

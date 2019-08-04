@@ -116,7 +116,7 @@ public class WarningCmd implements CommandExecutor {
 				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pardon " + op.getName());
 			}
 			if (newWarningCount >= 5) {
-				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "ban " + op.getName() + " You have exceeded the maximum warning count for this ServerGet.get().");
+				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "ban " + op.getName() + " You have exceeded the maximum warning count for this server.");
 			}
 		}
 		return true;
