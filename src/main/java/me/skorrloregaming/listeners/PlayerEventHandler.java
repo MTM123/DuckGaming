@@ -47,6 +47,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -276,6 +277,16 @@ public class PlayerEventHandler implements Listener {
 		ServerGet.get().getSkyfight().get(player.getUniqueId()).setHasTeamSelectionGuiOpen(true);
 		ServerGet.get().getSkyfight().get(player.getUniqueId()).setScore(0);
 		player.openInventory(inventory);
+	}
+
+	@EventHandler
+	public void onServerListPing(ServerListPingEvent event) {
+		if (ServerGet.get().getPlugin().getConfig().contains("settings.enable.pingInjector")) {
+			if (!ServerGet.get().getPlugin().getConfig().getBoolean("settings.enable.pingInjector"))
+				event.setMotd(ServerGet.get().getServerMotd());
+		} else {
+			event.setMotd(ServerGet.get().getServerMotd());
+		}
 	}
 
 	@EventHandler

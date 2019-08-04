@@ -6,8 +6,8 @@ import me.skorrloregaming.*;
 
 public class ServerGet {
 
-	public static Server get() {
-		return (Server) Bukkit.getPluginManager().getPlugin("SkorrloreGaming");
+	public static IServer get() {
+		return (IServer) Bukkit.getPluginManager().getPlugin("SkorrloreGaming");
 	}
 
 }

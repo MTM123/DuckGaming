@@ -49,7 +49,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import me.skorrloregaming.*;
 
-public class Server extends JavaPlugin implements Listener {
+public class Server extends JavaPlugin implements IServer {
 
 	public TopVotersHttpServer topVotersHttpServer = null;
 	public PingInjector pingInjector;
@@ -255,7 +255,7 @@ public class Server extends JavaPlugin implements Listener {
 	}
 
 	public void setPluginDebug(boolean enabled) {
-		ServerGet.get().pluginDebug = enabled;
+		pluginDebug = enabled;
 	}
 
 	public boolean getIngameAnticheatDebug() {
@@ -263,7 +263,7 @@ public class Server extends JavaPlugin implements Listener {
 	}
 
 	public void setIngameAnticheatDebug(boolean enabled) {
-		ServerGet.get().ingameAnticheatDebug = enabled;
+		ingameAnticheatDebug = enabled;
 	}
 
 	public boolean isRunning() {
@@ -283,7 +283,7 @@ public class Server extends JavaPlugin implements Listener {
 	}
 
 	public void setDefaultJoinMessage(String defaultJoinMessage) {
-		ServerGet.get().defaultJoinMessage = defaultJoinMessage;
+		this.defaultJoinMessage = defaultJoinMessage;
 	}
 
 	public String setDefaultQuitMessage() {
@@ -291,7 +291,7 @@ public class Server extends JavaPlugin implements Listener {
 	}
 
 	public void setDefaultQuitMessage(String defaultQuitMessage) {
-		ServerGet.get().defaultQuitMessage = defaultQuitMessage;
+		this.defaultQuitMessage = defaultQuitMessage;
 	}
 
 	public String getServerMotd() {
@@ -311,7 +311,7 @@ public class Server extends JavaPlugin implements Listener {
 	}
 
 	public void setLastKnownHubWorld(String lastKnownHubWorld) {
-		ServerGet.get().lastKnownHubWorld = lastKnownHubWorld;
+		this.lastKnownHubWorld = lastKnownHubWorld;
 	}
 
 	public ConcurrentMap<String, Integer> getTimeSinceLastLogin() {
@@ -450,7 +450,7 @@ public class Server extends JavaPlugin implements Listener {
 	}
 
 	public void setTempMotd(String tempMotd) {
-		ServerGet.get().tempMotd = tempMotd;
+		this.tempMotd = tempMotd;
 	}
 
 	public ArrayList<UUID> getDelayedTasks() {
@@ -569,6 +569,14 @@ public class Server extends JavaPlugin implements Listener {
 		return discordVerifyConfig;
 	}
 
+	public GCandAutoDemotion getGarbageCollector() {
+		return garbageCollector;
+	}
+
+	public ChatItem getChatItem() {
+		return chatitem;
+	}
+
 	public SkinStorage getSkinStorage() {
 		return skinStorage;
 	}
@@ -648,7 +656,7 @@ public class Server extends JavaPlugin implements Listener {
 				e.printStackTrace();
 			}
 		}
-		ServerGet.get().chatItemConfig.setup(chatItemConfig);
+		this.chatItemConfig.setup(chatItemConfig);
 		spawnerPrices.put(0, 6500);
 		spawnerPrices.put(1, 6500);
 		spawnerPrices.put(2, 9500);
@@ -676,7 +684,6 @@ public class Server extends JavaPlugin implements Listener {
 		auctioneer = new Auctioneer();
 		shoppe = new LaShoppe();
 		garbageCollector = new GCandAutoDemotion();
-		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(new BlockEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new PlayerEventHandler(), this);
 		getServer().getPluginManager().registerEvents(new EntityEventHandler(), this);
@@ -1028,18 +1035,6 @@ public class Server extends JavaPlugin implements Listener {
 			builder.append(space);
 		}
 		return builder.toString();
-	}
-
-	@EventHandler
-	public void onServerListPing(ServerListPingEvent event) {
-		if (!pingInjector.running) {
-			if (getConfig().contains("settings.enable.pingInjector")) {
-				if (!getConfig().getBoolean("settings.enable.pingInjector"))
-					event.setMotd(serverMotd);
-			} else {
-				event.setMotd(serverMotd);
-			}
-		}
 	}
 
 	public int performBuggedLeave(Player player, boolean noRestore, boolean noLog) {

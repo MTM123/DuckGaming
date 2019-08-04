@@ -30,9 +30,9 @@ public class ReloadConfigCmd implements CommandExecutor {
 		LinkServerGet.get().getGeolocationCache().reloadData();
 		ServerGet.get().getSessionManager().sessionConfig.reloadData();
 		ServerGet.get().getMonthlyVoteConfig().reloadData();
-		if (!(ServerGet.get().chatitem == null))
+		if (!(ServerGet.get().getChatItem() == null))
 			ChatItem.reload(null);
-		ServerGet.get().garbageCollector.run();
+		ServerGet.get().getGarbageCollector().run();
 		ServerGet.get().reload();
 		sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Server configuration successfully reloaded.");
 		return true;
