@@ -45,7 +45,7 @@ public class KitCmd implements CommandExecutor {
 				if (!Server.Survival.getRecruitKitCooldown().containsKey(fPlayer.getUniqueId())) {
 					Server.Survival.getRecruitKitCooldown().put(fPlayer.getUniqueId(), 60 * 5);
 				}
-				new BukkitRunnable() {
+				Server.getBukkitTasks().add(new BukkitRunnable() {
 					int time = 60 * 5;
 
 					public void run() {
@@ -62,7 +62,7 @@ public class KitCmd implements CommandExecutor {
 							cancel();
 						}
 					}
-				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+				}.runTaskTimer(Server.getPlugin(), 20L, 20L));
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Recruit");
 			} else {
 				player.sendMessage(tag + ChatColor.RED + "The specified kit could not be found.");
@@ -91,7 +91,7 @@ public class KitCmd implements CommandExecutor {
 				if (!Server.Factions.getRecruitKitCooldown().containsKey(fPlayer.getUniqueId())) {
 					Server.Factions.getRecruitKitCooldown().put(fPlayer.getUniqueId(), 60 * 5);
 				}
-				new BukkitRunnable() {
+				Server.getBukkitTasks().add(new BukkitRunnable() {
 					int time = 60 * 5;
 
 					public void run() {
@@ -108,7 +108,7 @@ public class KitCmd implements CommandExecutor {
 							cancel();
 						}
 					}
-				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+				}.runTaskTimer(Server.getPlugin(), 20L, 20L));
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Recruit");
 			} else if (args[0].equalsIgnoreCase("donator")) {
 				if (Link$.getDonorRankId(player.getUniqueId()) > -2) {
@@ -128,7 +128,7 @@ public class KitCmd implements CommandExecutor {
 				if (!Server.Factions.getDonatorKitCooldown().containsKey(fPlayer.getUniqueId())) {
 					Server.Factions.getDonatorKitCooldown().put(fPlayer.getUniqueId(), 60 * 15);
 				}
-				new BukkitRunnable() {
+				Server.getBukkitTasks().add(new BukkitRunnable() {
 					int time = 60 * 15;
 
 					public void run() {
@@ -145,7 +145,7 @@ public class KitCmd implements CommandExecutor {
 							cancel();
 						}
 					}
-				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+				}.runTaskTimer(Server.getPlugin(), 20L, 20L));
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Donator");
 			} else if (args[0].equalsIgnoreCase("redstone")) {
 				if (Link$.getDonorRankId(player.getUniqueId()) > -3) {
@@ -165,7 +165,7 @@ public class KitCmd implements CommandExecutor {
 				if (!Server.Factions.getRedstoneKitCooldown().containsKey(fPlayer.getUniqueId())) {
 					Server.Factions.getRedstoneKitCooldown().put(fPlayer.getUniqueId(), 60 * 15);
 				}
-				new BukkitRunnable() {
+				Server.getBukkitTasks().add(new BukkitRunnable() {
 					int time = 60 * 15;
 
 					public void run() {
@@ -182,7 +182,7 @@ public class KitCmd implements CommandExecutor {
 							cancel();
 						}
 					}
-				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+				}.runTaskTimer(Server.getPlugin(), 20L, 20L));
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Redstone");
 			} else if (args[0].equalsIgnoreCase("obsidian")) {
 				if (Link$.getDonorRankId(player.getUniqueId()) > -4) {
@@ -202,7 +202,7 @@ public class KitCmd implements CommandExecutor {
 				if (!Server.Factions.getObsidianKitCooldown().containsKey(fPlayer.getUniqueId())) {
 					Server.Factions.getObsidianKitCooldown().put(fPlayer.getUniqueId(), 60 * 15);
 				}
-				new BukkitRunnable() {
+				Server.getBukkitTasks().add(new BukkitRunnable() {
 					int time = 60 * 15;
 
 					public void run() {
@@ -219,7 +219,7 @@ public class KitCmd implements CommandExecutor {
 							cancel();
 						}
 					}
-				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+				}.runTaskTimer(Server.getPlugin(), 20L, 20L));
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Obsidian");
 			} else if (args[0].equalsIgnoreCase("bedrock")) {
 				if (Link$.getDonorRankId(player.getUniqueId()) > -5) {
@@ -239,7 +239,7 @@ public class KitCmd implements CommandExecutor {
 				if (!Server.Factions.getBedrockKitCooldown().containsKey(fPlayer.getUniqueId())) {
 					Server.Factions.getBedrockKitCooldown().put(fPlayer.getUniqueId(), 60 * 15);
 				}
-				new BukkitRunnable() {
+				Server.getBukkitTasks().add(new BukkitRunnable() {
 					int time = 60 * 15;
 
 					public void run() {
@@ -256,7 +256,7 @@ public class KitCmd implements CommandExecutor {
 							cancel();
 						}
 					}
-				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+				}.runTaskTimer(Server.getPlugin(), 20L, 20L));
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Bedrock");
 			} else {
 				player.sendMessage(tag + ChatColor.RED + "The specified kit could not be found.");
@@ -276,12 +276,12 @@ public class KitCmd implements CommandExecutor {
 				if (Server.Kitpvp.getStarterKitCooldown().containsKey(player.getUniqueId()) && upgradeCount > 0) {
 					if (!Server.getDelayedTasks().contains(player.getUniqueId())) {
 						Server.getDelayedTasks().add(player.getUniqueId());
-						Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+						Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 							@Override
 							public void run() {
 								Server.getDelayedTasks().remove(player.getUniqueId());
 							}
-						}, 20L);
+						}, 20L));
 						player.sendMessage(tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + Server.Kitpvp.getStarterKitCooldown().get(player.getUniqueId()) + ChatColor.GRAY + " seconds before using that kit again.");
 						player.sendMessage(tag + ChatColor.GRAY + "To use the default kit instead, use this kit again.");
 						return true;
@@ -298,7 +298,7 @@ public class KitCmd implements CommandExecutor {
 					if (!Server.Kitpvp.getStarterKitCooldown().containsKey(fPlayer.getUniqueId())) {
 						Server.Kitpvp.getStarterKitCooldown().put(fPlayer.getUniqueId(), 60 * 1);
 					}
-					new BukkitRunnable() {
+					Server.getBukkitTasks().add(new BukkitRunnable() {
 						int time = 60 * 1;
 
 						public void run() {
@@ -315,7 +315,7 @@ public class KitCmd implements CommandExecutor {
 								cancel();
 							}
 						}
-					}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+					}.runTaskTimer(Server.getPlugin(), 20L, 20L));
 				}
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Starter #" + (upgradeCount + 1));
 			} else if (args[0].equalsIgnoreCase("potions")) {
@@ -332,7 +332,7 @@ public class KitCmd implements CommandExecutor {
 				if (!Server.Kitpvp.getPotionsKitCooldown().containsKey(fPlayer.getUniqueId())) {
 					Server.Kitpvp.getPotionsKitCooldown().put(fPlayer.getUniqueId(), 60 * 5);
 				}
-				new BukkitRunnable() {
+				Server.getBukkitTasks().add(new BukkitRunnable() {
 					int time = 60 * 5;
 
 					public void run() {
@@ -349,7 +349,7 @@ public class KitCmd implements CommandExecutor {
 							cancel();
 						}
 					}
-				}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+				}.runTaskTimer(Server.getPlugin(), 20L, 20L));
 				player.sendMessage(tag + ChatColor.GRAY + "You have been given kit " + ChatColor.RED + "Potions");
 			} else {
 				player.sendMessage(tag + ChatColor.RED + "The specified kit could not be found.");

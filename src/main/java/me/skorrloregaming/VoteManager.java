@@ -112,7 +112,7 @@ public class VoteManager {
 	}
 
 	public VoteManager() {
-		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), () -> {
+		Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), () -> {
 			for (String id : Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
 				String username = Server.getPlugin().getConfig().getString("config." + id + ".username");
 				if (username == null || username.equals("null"))
@@ -152,7 +152,7 @@ public class VoteManager {
 					}
 				}
 			}
-		}, 1200L, 1200L);
+		}, 1200L, 1200L));
 	}
 
 	public void updatePlayerPingedDate(UUID id, Date date) {

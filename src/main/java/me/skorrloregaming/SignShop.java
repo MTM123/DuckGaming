@@ -86,12 +86,12 @@ public class SignShop {
 								player.sendMessage(tag + ChatColor.GRAY + "The item you are holding seems to be durable still.");
 								player.sendMessage(tag + ChatColor.GRAY + "Use this shop again to confirm your transaction.");
 								Server.getConfirmRepairShop().add(player.getUniqueId());
-								Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+								Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 									@Override
 									public void run() {
 										Server.getConfirmRepairShop().remove(player.getUniqueId());
 									}
-								}, 45L);
+								}, 45L));
 								return false;
 							}
 						}

@@ -53,7 +53,7 @@ public class AsyncRandomTeleport implements Runnable {
 				teleportLocation.setY(128);
 			player.sendMessage(Link$.Legacy.tag + "Teleport destination: " + ChatColor.RED + teleportLocation.getX() + ChatColor.RESET + ", " + ChatColor.RED + teleportLocation.getY() + ChatColor.RESET + ", " + ChatColor.RED + teleportLocation.getZ() + ChatColor.RESET + ".");
 			DelayedTeleport dt = new DelayedTeleport(player, Server.getTeleportationDelay() * 1.5, teleportLocation, false);
-			dt.runTaskTimerAsynchronously(Server.getPlugin(), 4, 4);
+			Server.getBukkitTasks().add(dt.runTaskTimerAsynchronously(Server.getPlugin(), 4, 4));
 		} else {
 			player.sendMessage(Link$.Legacy.tag + "Unsafe teleport destination, trying again..");
 			execute();

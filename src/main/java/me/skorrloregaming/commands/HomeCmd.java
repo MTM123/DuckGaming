@@ -73,7 +73,7 @@ public class HomeCmd implements CommandExecutor {
 			float pitch = (float) config.getData().getDouble(base + ".pitch");
 			Location homeLocation = new Location(world, x, y, z, yaw, pitch);
 			DelayedTeleport dt = new DelayedTeleport(player, Server.getTeleportationDelay(), homeLocation, false);
-			dt.runTaskTimer(Server.getPlugin(), 4, 4);
+			Server.getBukkitTasks().add(dt.runTaskTimer(Server.getPlugin(), 4, 4));
 		}
 		return true;
 	}

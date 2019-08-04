@@ -16,7 +16,7 @@ public class Factions_Listener implements Listener {
 
 	public void register() {
 		Server.getPlugin().getServer().getPluginManager().registerEvents(this, Server.getPlugin());
-		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
+		Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
 				for (FPlayer fplayer : FPlayers.getInstance().getOnlinePlayers()) {
@@ -27,7 +27,7 @@ public class Factions_Listener implements Listener {
 					}
 				}
 			}
-		}, 20L, 20L);
+		}, 20L, 20L));
 	}
 
 	@EventHandler

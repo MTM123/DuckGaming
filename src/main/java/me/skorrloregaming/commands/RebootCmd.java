@@ -30,7 +30,7 @@ public class RebootCmd implements CommandExecutor {
 				}, 45L);
 				sender.sendMessage("Are you sure you want to /reboot the server? This will fully restart the server. If you are wanting to simply update the server you may want to use /reload instead. Type /reboot again to confirm if you want to restart the server.");
 			} else {
-				Bukkit.getScheduler().runTaskTimerAsynchronously(Server.getPlugin(), new Runnable() {
+				Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskTimerAsynchronously(Server.getPlugin(), new Runnable() {
 					int value = -1;
 
 					public void run() {
@@ -59,7 +59,7 @@ public class RebootCmd implements CommandExecutor {
 							});
 						}
 					}
-				}, 20L, 20L);
+				}, 20L, 20L));
 			}
 		} else {
 			Link$.playLackPermissionMessage(sender);

@@ -98,7 +98,7 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 			Server.getInstance().fetchLobby(event.getPlayer());
 			return;
 		}
-		Bukkit.getScheduler().runTaskLater(Server.getPlugin(), () -> {
+		Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getPlugin(), () -> {
 			if (event.getPlayer() != null && event.getPlayer().isOnline() && !getAuthMeApi().isAuthenticated(event.getPlayer())) {
 				if (getAuthMeApi().isRegistered(event.getPlayer().getName())) {
 					PocketPlayer.sendModal(event.getPlayer(), loginModal, loginCallback);
@@ -106,7 +106,7 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 					PocketPlayer.sendModal(event.getPlayer(), registerModal, registerCallback);
 				}
 			}
-		}, 200L);
+		}, 200L));
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)

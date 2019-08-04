@@ -1174,13 +1174,13 @@ public class $ {
 				if (!(damagee == null)) {
 					final org.bukkit.entity.Player taggedDamagee = damagee;
 					final int taggedDamageeHash = damageeHash;
-					Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+					Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 						@Override
 						public void run() {
 							if (!(damagee == null) && damagee.getName().equals(taggedDamagee.getName()) && damageeHash == taggedDamageeHash)
 								setDamagee(null);
 						}
-					}, 20L * 6L);
+					}, 20L * 6L));
 				}
 			}
 		}

@@ -43,6 +43,7 @@ import org.bukkit.inventory.meta.CrossbowMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 
 import java.io.File;
@@ -172,6 +173,8 @@ public class Server extends JavaPlugin implements Listener {
 	private static ArrayList<UUID> waiverAcceptPlayers = new ArrayList<>();
 
 	private static long lastVoteTime = 0L;
+
+	private static ArrayList<BukkitTask> bukkitTasks = new ArrayList<>();
 
 	public static ServerType getServerType() {
 		try {
@@ -607,6 +610,10 @@ public class Server extends JavaPlugin implements Listener {
 		return voteManager;
 	}
 
+	public static ArrayList<BukkitTask> getBukkitTasks() {
+		return bukkitTasks;
+	}
+
 	@Override
 	public void onLoad() {
 		serverStartTime = System.currentTimeMillis();
@@ -752,7 +759,7 @@ public class Server extends JavaPlugin implements Listener {
 				}
 			}
 		});
-		Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
+		bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
 			@Override
 			public void run() {
 				for (Player player : Bukkit.getOnlinePlayers()) {
@@ -763,8 +770,8 @@ public class Server extends JavaPlugin implements Listener {
 					}
 				}
 			}
-		}, 0L, 6000L);
-		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
+		}, 0L, 6000L));
+		bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
 				for (World world : Bukkit.getWorlds()) {
@@ -776,8 +783,8 @@ public class Server extends JavaPlugin implements Listener {
 					}
 				}
 			}
-		}, 20L, 20L);
-		Bukkit.getScheduler().runTaskTimer(this, garbageCollector, 0L, 36000L);
+		}, 20L, 20L));
+		bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(this, garbageCollector, 0L, 36000L));
 		reload();
 		sessionManager = new SessionManager();
 		sessionManager.setup();
@@ -872,6 +879,8 @@ public class Server extends JavaPlugin implements Listener {
 					scoreboard.unregister(player);
 			}
 		}
+		for (BukkitTask task : bukkitTasks)
+			task.cancel();
 		discordBot.broadcast(":octagonal_sign: **Server has stopped**", Channel.SERVER_CHAT);
 		discordBot.unregister();
 		if (!(lockette == null))
@@ -1585,7 +1594,7 @@ public class Server extends JavaPlugin implements Listener {
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
-			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+			Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 				@Override
 				public void run() {
 					if (creative.contains(player.getUniqueId())) {
@@ -1604,7 +1613,7 @@ public class Server extends JavaPlugin implements Listener {
 						}
 					}
 				}
-			}, 100L);
+			}, 100L));
 			Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.CREATIVE));
 		}
 	}

@@ -81,7 +81,7 @@ public class PlayerEventHandler implements Listener {
 	public int rainbowIndex = 0;
 
 	public PlayerEventHandler() {
-		Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
+		Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
 				for (Player player : Bukkit.getOnlinePlayers()) {
@@ -106,7 +106,7 @@ public class PlayerEventHandler implements Listener {
 					}
 				}
 			}
-		}, 5L, 5L);
+		}, 5L, 5L));
 	}
 
 	public void openSurvivalServerSelectorMenu(Player player) {
@@ -836,7 +836,7 @@ public class PlayerEventHandler implements Listener {
 								if (!Server.getExplosiveFunpowderCooldown().containsKey(fPlayer.getUniqueId())) {
 									Server.getExplosiveFunpowderCooldown().put(fPlayer.getUniqueId(), (int) (60 * 7.5));
 								}
-								new BukkitRunnable() {
+								Server.getBukkitTasks().add(new BukkitRunnable() {
 									int time = (int) (60 * 7.5);
 
 									public void run() {
@@ -854,7 +854,7 @@ public class PlayerEventHandler implements Listener {
 										}
 
 									}
-								}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+								}.runTaskTimer(Server.getPlugin(), 20L, 20L));
 								return;
 							}
 						}
@@ -2766,7 +2766,7 @@ public class PlayerEventHandler implements Listener {
 				}
 				if (!Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
 					CombatTimer ct = new CombatTimer(player, killer, 12, tag);
-					ct.runTaskTimer(Server.getPlugin(), 4, 4);
+					Server.getBukkitTasks().add(ct.runTaskTimer(Server.getPlugin(), 4, 4));
 				} else {
 					SwitchIntDouble existingExtreme = Server.getPlayersInCombat().get(player.getUniqueId());
 					existingExtreme.setArg1(12);
@@ -2774,7 +2774,7 @@ public class PlayerEventHandler implements Listener {
 				}
 				if (!Server.getPlayersInCombat().containsKey(killer.getUniqueId())) {
 					CombatTimer ct = new CombatTimer(killer, player, 12, tag);
-					ct.runTaskTimer(Server.getPlugin(), 4, 4);
+					Server.getBukkitTasks().add(ct.runTaskTimer(Server.getPlugin(), 4, 4));
 				} else {
 					SwitchIntDouble existingExtreme = Server.getPlayersInCombat().get(killer.getUniqueId());
 					existingExtreme.setArg1(12);

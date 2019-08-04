@@ -3,13 +3,15 @@ package me.skorrloregaming;
 import me.skorrloregaming.impl.Service;
 import me.skorrloregaming.impl.Switches;
 import me.skorrloregaming.impl.Switches.SwitchIntString;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
-public class TopVotersHttpServer implements Runnable {
+public class TopVotersHttpServer extends BukkitRunnable {
 	public ServerSocket server = null;
 	public boolean running = false;
 
@@ -17,7 +19,7 @@ public class TopVotersHttpServer implements Runnable {
 		try {
 			server = new ServerSocket(port);
 			Server.getPlugin().getLogger().info("Top voters web server enabled on port " + port + ".");
-			new Thread(this).start();
+			Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), this));
 			running = true;
 		} catch (IOException e) {
 			e.printStackTrace();

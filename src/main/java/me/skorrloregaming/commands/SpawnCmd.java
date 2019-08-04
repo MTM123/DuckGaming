@@ -28,7 +28,7 @@ public class SpawnCmd implements CommandExecutor {
 		String subDomain = $.getMinigameDomain(player);
 		Location zoneLocation = $.getZoneLocation(subDomain);
 		DelayedTeleport dt = new DelayedTeleport(player, Server.getTeleportationDelay(), zoneLocation, false);
-		dt.runTaskTimerAsynchronously(Server.getPlugin(), 4, 4);
+		Server.getBukkitTasks().add(dt.runTaskTimerAsynchronously(Server.getPlugin(), 4, 4));
 		return true;
 	}
 

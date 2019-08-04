@@ -32,7 +32,7 @@ public class UpdateSkinCmd implements CommandExecutor {
 		if (!Server.getDelaySkinUpdate().containsKey(fPlayer.getUniqueId())) {
 			Server.getDelaySkinUpdate().put(fPlayer.getUniqueId(), 60 * 5);
 		}
-		new BukkitRunnable() {
+		Server.getBukkitTasks().add(new BukkitRunnable() {
 			int time = 60 * 5;
 
 			public void run() {
@@ -45,7 +45,7 @@ public class UpdateSkinCmd implements CommandExecutor {
 					cancel();
 				}
 			}
-		}.runTaskTimer(Server.getPlugin(), 20L, 20L);
+		}.runTaskTimer(Server.getPlugin(), 20L, 20L));
 		player.sendMessage("Attempting to fetch the latest skin available..");
 		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
 			@Override

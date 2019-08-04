@@ -148,7 +148,7 @@ public class MarryCmd implements CommandExecutor {
 					float pitch = (float) Server.getMarriageHomesConfig().getData().getDouble(base + ".pitch");
 					Location homeLocation = new Location(world, x, y, z, yaw, pitch);
 					DelayedTeleport dt = new DelayedTeleport(player, Server.getTeleportationDelay(), homeLocation, false);
-					dt.runTaskTimer(Server.getPlugin(), 4, 4);
+					Server.getBukkitTasks().add(dt.runTaskTimer(Server.getPlugin(), 4, 4));
 				} else {
 					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.WHITE + "The definied home is in another minigame.");
 				}

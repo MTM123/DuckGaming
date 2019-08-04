@@ -50,7 +50,7 @@ public class TpacceptCmd implements CommandExecutor {
 								dt.runTask(Server.getPlugin());
 							} else {
 								dt = new DelayedTeleport(targetPlayer, Server.getTeleportationDelay(), zoneLocation, false);
-								dt.runTaskTimer(Server.getPlugin(), 4, 4);
+								Server.getBukkitTasks().add(dt.runTaskTimer(Server.getPlugin(), 4, 4));
 							}
 							player.sendMessage(tag + ChatColor.WHITE + "Teleportation request accepted.");
 							targetPlayer.sendMessage(tag + ChatColor.YELLOW + player.getName() + ChatColor.WHITE + " has accepted your teleport request.");

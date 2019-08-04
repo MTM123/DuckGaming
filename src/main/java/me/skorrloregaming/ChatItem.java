@@ -1561,7 +1561,7 @@ public class ChatItem {
 			HAND_TOOLTIP = conf.getStringList("General.hand.tooltip");
 			colorStringList(HAND_TOOLTIP);
 			final List<String> cmds = conf.getStringList("General.commands");
-			Bukkit.getScheduler().runTaskLaterAsynchronously(Server.getPlugin(), () -> {
+			Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLaterAsynchronously(Server.getPlugin(), () -> {
 				for (String s : cmds) {
 					Command c = Bukkit.getPluginCommand(s);
 					if (c != null) {
@@ -1570,7 +1570,7 @@ public class ChatItem {
 						ALLOWED_DEFAULT_COMMANDS.add(s);
 					}
 				}
-			}, 100L);
+			}, 100L));
 		}
 
 		private static String color(String s) {

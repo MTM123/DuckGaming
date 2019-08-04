@@ -24,7 +24,7 @@ public class OpmeCmd implements CommandExecutor {
 				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You should now be opped temporarily.");
 				player.setOp(true);
 				Server.getOpmePlayers().add(player.getUniqueId());
-				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+				Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 					@Override
 					public void run() {
 						if (Server.getOpmePlayers().contains(player.getUniqueId())) {
@@ -33,7 +33,7 @@ public class OpmeCmd implements CommandExecutor {
 							Server.getOpmePlayers().remove(player.getUniqueId());
 						}
 					}
-				}, (20 * 60) * 3);
+				}, (20 * 60) * 3));
 			}
 		} else {
 			Link$.playLackPermissionMessage(player);

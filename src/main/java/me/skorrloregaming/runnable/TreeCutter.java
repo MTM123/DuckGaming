@@ -102,7 +102,7 @@ public final class TreeCutter extends BukkitRunnable {
 			}
 			return;
 		}
-		new BukkitRunnable() {
+		Server.getBukkitTasks().add(new BukkitRunnable() {
 			public void run() {
 				if (!player.isOnline()) {
 					this.cancel();
@@ -151,7 +151,7 @@ public final class TreeCutter extends BukkitRunnable {
 					}
 				}
 			}
-		}.runTaskTimer(Server.getPlugin(), 0L, 0L);
+		}.runTaskTimer(Server.getPlugin(), 0L, 0L));
 	}
 
 	public boolean updateItemInHand() {

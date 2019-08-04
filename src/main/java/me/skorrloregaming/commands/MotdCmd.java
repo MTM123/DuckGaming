@@ -26,13 +26,13 @@ public class MotdCmd implements CommandExecutor {
 						sb.append(args[i] + " ");
 					}
 					Server.setTempMotd(sb.toString());
-					Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+					Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
 
 						@Override
 						public void run() {
 							Server.setTempMotd("/unspecified");
 						}
-					}, 1200L);
+					}, 1200L));
 					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The motd has been temporarily changed.");
 				}
 			}

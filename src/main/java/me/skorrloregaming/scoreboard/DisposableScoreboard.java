@@ -3,6 +3,7 @@ package me.skorrloregaming.scoreboard;
 import me.skorrloregaming.Server;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -96,7 +97,7 @@ public interface DisposableScoreboard {
 			taskIdentifiers.remove(player);
 			Bukkit.getServer().getLogger().warning("Task identifier for " + player.getName() + " was not unregistered before schedule() call.");
 		}
-		int taskId = Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
+		BukkitTask task = Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
 			private int taskId = 0;
 
 			@Override
@@ -120,7 +121,9 @@ public interface DisposableScoreboard {
 					Bukkit.getServer().getLogger().warning(this.getClass().getName() + " was not properly cancelled.");
 				}
 			}
-		}, delay, delay).getTaskId();
+		}, delay, delay);
+		Server.getBukkitTasks().add(task);
+		int taskId = task.getTaskId();
 		taskIdentifiers.put(player, new ScoreboardTask(primaryScoreboard, taskId, displayType));
 		useSecondaryScoreboard.put(taskId, true);
 		refreshScoreboard(player, false);
