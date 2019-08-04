@@ -3238,6 +3238,8 @@ public class PlayerEventHandler implements Listener {
 				event.setMessage($.replaceCommandLabelInCommand(event.getMessage(), "/plot"));
 			} else if (label.equalsIgnoreCase("/gm")) {
 				event.setMessage($.replaceCommandLabelInCommand(event.getMessage(), "/gamemode"));
+			} else if (label.equalsIgnoreCase("/f")) {
+				event.setMessage($.replaceCommandLabelInCommand(event.getMessage(), "/faction"));
 			} else if (label.equalsIgnoreCase("/gmc")) {
 				event.setMessage($.replaceCommandLabelInCommand(event.getMessage(), "/gamemode 1"));
 			} else if (label.equalsIgnoreCase("/gms")) {
