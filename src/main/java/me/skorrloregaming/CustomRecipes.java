@@ -13,7 +13,7 @@ import java.util.UUID;
 public class CustomRecipes {
 
 	public static void log(NamespacedKey key) {
-		Logger.info("Registered crafting recipe " + key.toString());
+		//Logger.info("Registered crafting recipe " + key.toString());
 	}
 
 	public static void loadRecipes() {
