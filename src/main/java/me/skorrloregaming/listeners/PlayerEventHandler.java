@@ -5,8 +5,8 @@ import com.google.common.io.ByteStreams;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import io.netty.buffer.Unpooled;
-import me.skorrloregaming.*;
 import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
 import me.skorrloregaming.SessionManager.Session;
 import me.skorrloregaming.commands.TrailsCmd;
 import me.skorrloregaming.commands.UpgradeKitCmd;
@@ -20,15 +20,10 @@ import me.skorrloregaming.impl.Switches.SwitchUUIDString;
 import me.skorrloregaming.redis.MapBuilder;
 import me.skorrloregaming.redis.RedisChannel;
 import me.skorrloregaming.runnable.CombatTimer;
-import me.skorrloregaming.scoreboard.DisplayType;
-import me.skorrloregaming.scoreboard.DisposableScoreboard;
-import me.skorrloregaming.scoreboard.boards.Kitpvp_LeaderboardScoreboard;
-import me.skorrloregaming.scoreboard.boards.Kitpvp_StatisticsScoreboard;
 import me.skorrloregaming.shop.LaShoppeEnchant;
 import me.skorrloregaming.shop.LaShoppeFrame;
 import me.skorrloregaming.shop.LaShoppeItem;
 import me.skorrloregaming.shop.events.buy.BuyItemAmountEventHandler;
-import me.skorrloregaming.shop.events.enchant.CreateEnchantTypeEventHandler;
 import me.skorrloregaming.skins.model.SkinModel;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -73,8 +68,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class PlayerEventHandler implements Listener {
 
@@ -88,11 +81,18 @@ public class PlayerEventHandler implements Listener {
 					if ($.isAuthenticated(player) && $.getCurrentMinigame(player) == ServerMinigame.HUB)
 						Server.getInstance().fetchLobby(player);
 					ServerMinigame minigame = $.getCurrentMinigame(player);
-					DisposableScoreboard scoreboard = $.getPrimaryScoreboard(minigame);
-					if (!(scoreboard == null)) {
-						if ($.scoreboardAutoUpdateMinigames.contains(minigame.toString().toLowerCase())) {
-							scoreboard.schedule(player);
-						}
+					switch (minigame) {
+						case KITPVP:
+							$.Kitpvp.refreshScoreboard(player, false);
+							break;
+						case FACTIONS:
+							$.Factions.refreshScoreboard(player, false);
+							break;
+						case SKYBLOCK:
+							$.Skyblock.refreshScoreboard(player, false);
+							break;
+						default:
+							break;
 					}
 					rainbowIndex++;
 					rainbowIndex %= 10;
@@ -1819,7 +1819,7 @@ public class PlayerEventHandler implements Listener {
 			Server.getHubScoreboardTitleIndex().remove(player.getUniqueId());
 		for (Player op : Bukkit.getOnlinePlayers())
 			if (Server.getSkyfight().containsKey(op.getUniqueId()))
-				$.skyfightScoreboard.schedule(op, true);
+				$.Skyfight.refreshScoreboard(op, false);
 		if (Server.getOnlineMode().containsKey(player.getUniqueId()))
 			Server.getOnlineMode().remove(player.getUniqueId());
 	}
@@ -1939,14 +1939,12 @@ public class PlayerEventHandler implements Listener {
 				EconManager.depositCash(k, supplyCash, subDomain);
 				k.sendMessage(tag + ChatColor.GRAY + "You have been given " + ChatColor.RED + "$" + (supplyCash) + ChatColor.GRAY + " for killing " + ChatColor.RED + player.getName());
 				if (subDomain.equals("kitpvp")) {
-					$.kitpvpStatisticsScoreboard.schedule(player);
-					$.kitpvpStatisticsScoreboard.schedule(k);
-					$.kitpvpStatisticsScoreboard.schedule(player, DisplayType.Secondary, Kitpvp_StatisticsScoreboard.class, Kitpvp_LeaderboardScoreboard.class);
-					$.kitpvpStatisticsScoreboard.schedule(k, DisplayType.Secondary, Kitpvp_StatisticsScoreboard.class, Kitpvp_LeaderboardScoreboard.class);
+					$.Kitpvp.refreshScoreboard(player, false);
+					$.Kitpvp.refreshScoreboard(k, false);
 				}
 				if (subDomain.equals("factions")) {
-					$.factionsScoreboard.schedule(player);
-					$.factionsScoreboard.schedule(k);
+					$.Factions.refreshScoreboard(player, false);
+					$.Factions.refreshScoreboard(k, false);
 				}
 				$.playFirework(player.getLocation());
 			}
@@ -2214,7 +2212,7 @@ public class PlayerEventHandler implements Listener {
 									String inventoryName = Server.getShoppe().getInventoryName(LaShoppeFrame.BUY_ITEM);
 									ItemStack purchaseItem = new ItemStack(event.getCurrentItem().getType(), amount, (short) data);
 									try {
-										new AnvilGUI(player, inventoryName, new BuyItemAmountEventHandler(Server.getShoppe(), player, purchaseItem, data,price / amount))
+										new AnvilGUI(player, inventoryName, new BuyItemAmountEventHandler(Server.getShoppe(), player, purchaseItem, data, price / amount))
 												.setInputName("Enter type")
 												.open();
 									} catch (IllegalAccessException e) {

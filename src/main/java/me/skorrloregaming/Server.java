@@ -1,6 +1,5 @@
 package me.skorrloregaming;
 
-import com.comphenix.protocol.ProtocolLib;
 import me.skorrloregaming.auction.Auctioneer;
 import me.skorrloregaming.commands.*;
 import me.skorrloregaming.discord.Channel;
@@ -21,10 +20,6 @@ import me.skorrloregaming.redis.MapBuilder;
 import me.skorrloregaming.redis.RedisChannel;
 import me.skorrloregaming.runnable.DelayedTeleport;
 import me.skorrloregaming.runnable.GCandAutoDemotion;
-import me.skorrloregaming.scoreboard.DisplayType;
-import me.skorrloregaming.scoreboard.DisposableScoreboard;
-import me.skorrloregaming.scoreboard.boards.Kitpvp_LeaderboardScoreboard;
-import me.skorrloregaming.scoreboard.boards.Kitpvp_StatisticsScoreboard;
 import me.skorrloregaming.shop.LaShoppe;
 import me.skorrloregaming.skins.SkinStorage;
 import org.apache.commons.io.FileUtils;
@@ -37,7 +32,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CrossbowMeta;
 import org.bukkit.plugin.Plugin;
@@ -872,13 +866,6 @@ public class Server extends JavaPlugin implements Listener {
 	public void onDisable() {
 		running = false;
 		plugin.saveConfig();
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			for (ServerMinigame minigame : ServerMinigame.values()) {
-				DisposableScoreboard scoreboard = $.getPrimaryScoreboard(minigame);
-				if (scoreboard != null)
-					scoreboard.unregister(player);
-			}
-		}
 		for (BukkitTask task : bukkitTasks)
 			task.cancel();
 		discordBot.broadcast(":octagonal_sign: **Server has stopped**", Channel.SERVER_CHAT);
@@ -1142,7 +1129,7 @@ public class Server extends JavaPlugin implements Listener {
 						, Channel.SERVER_CHAT);
 			}
 			player.setAllowFlight(false);
-			$.kitpvpStatisticsScoreboard.schedule(player, DisplayType.Ten_Second_Period, Kitpvp_StatisticsScoreboard.class, Kitpvp_LeaderboardScoreboard.class);
+			$.Kitpvp.refreshScoreboard(player, false);
 			Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.KITPVP));
 		}
 	}
@@ -1173,7 +1160,6 @@ public class Server extends JavaPlugin implements Listener {
 			}
 			kitpvp.remove(player.getUniqueId());
 			player.setAllowFlight(true);
-			$.kitpvpStatisticsScoreboard.unregister(player);
 			$.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);
 			return 1;
 		}
@@ -1236,7 +1222,7 @@ public class Server extends JavaPlugin implements Listener {
 						, Channel.SERVER_CHAT);
 			}
 			player.setAllowFlight(false);
-			$.factionsScoreboard.schedule(player);
+			$.Factions.refreshScoreboard(player, false);
 			Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.FACTIONS));
 		}
 	}
@@ -1496,7 +1482,7 @@ public class Server extends JavaPlugin implements Listener {
 		CraftGo.Player.clearArrowsInBody(player);
 		for (Player op : Bukkit.getOnlinePlayers()) {
 			if (skyfight.containsKey(op.getUniqueId()))
-				$.skyfightScoreboard.schedule(op, true);
+				$.Skyfight.refreshScoreboard(op, false);
 			$.Scoreboard.configureHealth(op);
 		}
 		if (initialConnect)
@@ -1716,7 +1702,7 @@ public class Server extends JavaPlugin implements Listener {
 						, Channel.SERVER_CHAT);
 			}
 			player.setAllowFlight(false);
-			$.skyblockScoreboard.schedule(player);
+			$.Skyblock.refreshScoreboard(player, false);
 			Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.SKYBLOCK));
 		}
 	}

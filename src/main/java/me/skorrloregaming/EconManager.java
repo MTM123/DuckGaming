@@ -1,7 +1,6 @@
 package me.skorrloregaming;
 
 import me.skorrloregaming.impl.ServerMinigame;
-import me.skorrloregaming.scoreboard.DisposableScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,9 +16,19 @@ public class EconManager {
 		if (player == null)
 			return;
 		ServerMinigame minigame = $.getMinigameFromWorld(player.getWorld());
-		DisposableScoreboard scoreboard = $.getPrimaryScoreboard(minigame);
-		if (!(scoreboard == null))
-			scoreboard.schedule(player);
+		switch (minigame) {
+			case KITPVP:
+				$.Kitpvp.refreshScoreboard(player, false);
+				break;
+			case FACTIONS:
+				$.Factions.refreshScoreboard(player, false);
+				break;
+			case SKYBLOCK:
+				$.Skyblock.refreshScoreboard(player, false);
+				break;
+			default:
+				break;
+		}
 	}
 
 	public static void withdrawCash(UUID id, double amount, String subDomain, boolean updateScoreboard) {

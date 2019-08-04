@@ -134,7 +134,7 @@ public class BlockEventHandler implements Listener {
 			return;
 		if (Server.getSkyblock().contains(player.getUniqueId())) {
 			$.Skyblock.setPlayerPlacedBlocks(player, $.Skyblock.getPlayerPlacedBlocks(player) + 1);
-			$.skyblockScoreboard.schedule(player);
+			$.Skyblock.refreshScoreboard(player, false);
 		}
 		if (!(event.getBlock().getType() == Material.SPAWNER))
 			return;
@@ -222,7 +222,7 @@ public class BlockEventHandler implements Listener {
 				}
 			}
 			$.Skyblock.setPlayerBrokenBlocks(player, $.Skyblock.getPlayerBrokenBlocks(player) + 1);
-			$.skyblockScoreboard.schedule(player);
+			$.Skyblock.refreshScoreboard(player, false);
 		}
 		if (Server.getFactions().contains(player.getUniqueId()) || Server.getSurvival().contains(player.getUniqueId()) || Server.getSkyblock().contains(player.getUniqueId())) {
 			if ($.isWithinUnclaimedLand(blockLoc, player)) {

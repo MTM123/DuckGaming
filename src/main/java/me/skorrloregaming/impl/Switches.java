@@ -1,8 +1,5 @@
 package me.skorrloregaming.impl;
 
-import me.skorrloregaming.scoreboard.DisplayType;
-import me.skorrloregaming.scoreboard.DisposableScoreboard;
-
 import java.util.UUID;
 
 public class Switches {
@@ -54,32 +51,6 @@ public class Switches {
 		}
 
 		public void setArg1(ServerMinigame arg1) {
-			this.arg1 = arg1;
-		}
-	}
-
-	public static class SwitchScoreboardDisplayType {
-		private Class<DisposableScoreboard> arg0;
-		private DisplayType arg1;
-
-		public SwitchScoreboardDisplayType(Class<DisposableScoreboard> arg0, DisplayType arg1) {
-			this.setArg0(arg0);
-			this.setArg1(arg1);
-		}
-
-		public Class<DisposableScoreboard> getArg0() {
-			return arg0;
-		}
-
-		public void setArg0(Class<DisposableScoreboard> arg0) {
-			this.arg0 = arg0;
-		}
-
-		public DisplayType getArg1() {
-			return arg1;
-		}
-
-		public void setArg1(DisplayType arg1) {
 			this.arg1 = arg1;
 		}
 	}

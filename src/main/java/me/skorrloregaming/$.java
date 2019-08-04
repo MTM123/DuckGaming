@@ -1,14 +1,9 @@
 package me.skorrloregaming;
 
-import com.massivecraft.factions.Board;
-import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.*;
 import me.skorrloregaming.impl.MarriageGender;
 import me.skorrloregaming.impl.ServerMinigame;
 import me.skorrloregaming.impl.Switches.SwitchStringMinigame;
-import me.skorrloregaming.scoreboard.DisposableScoreboard;
-import me.skorrloregaming.scoreboard.boards.*;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.*;
@@ -30,6 +25,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.ScoreboardManager;
+import us.talabrek.ultimateskyblock.api.uSkyBlockAPI;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +34,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.jar.JarFile;
@@ -56,27 +53,7 @@ public class $ {
 	public static List<String> betaMinigames = Arrays.asList(new String[]{});
 	public static List<String> daylightMinigames = Arrays.asList(new String[]{"skyblock", "creative", "hub"});
 	public static List<String> nightlightMinigames = Arrays.asList(new String[]{"skyfight", "kitpvp"});
-	public static Kitpvp_LeaderboardScoreboard kitpvpLeaderboardScoreboard = new Kitpvp_LeaderboardScoreboard();
-	public static Kitpvp_StatisticsScoreboard kitpvpStatisticsScoreboard = new Kitpvp_StatisticsScoreboard();
-	public static Skyblock_StatisticsScoreboard skyblockScoreboard = new Skyblock_StatisticsScoreboard();
-	public static Skyfight_LeaderboardScoreboard skyfightScoreboard = new Skyfight_LeaderboardScoreboard();
-	public static Factions_StatisticsScoreboard factionsScoreboard = new Factions_StatisticsScoreboard();
 	public static List<SwitchStringMinigame> playersNotAllowedToJoinSpecificMinigames = Arrays.asList(new SwitchStringMinigame[]{new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.KITPVP), new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.SKYFIGHT)});
-
-	public static DisposableScoreboard getPrimaryScoreboard(ServerMinigame minigame) {
-		switch (minigame) {
-			case KITPVP:
-				return kitpvpStatisticsScoreboard;
-			case SKYBLOCK:
-				return skyblockScoreboard;
-			case SKYFIGHT:
-				return skyfightScoreboard;
-			case FACTIONS:
-				return factionsScoreboard;
-			default:
-				return null;
-		}
-	}
 
 	public static void playForbiddenTeleportMessage(CommandSender player, ServerMinigame minigame) {
 		player.sendMessage("Sorry, teleportation was cancelled, please contact an admin.");
@@ -1184,6 +1161,38 @@ public class $ {
 				}
 			}
 		}
+
+		public static void refreshScoreboard(org.bukkit.entity.Player player, boolean clearValues) {
+			UUID[] skyfightPlayers = Server.getSkyfight().keySet().toArray(new UUID[0]);
+			Hashtable<String, Integer> list = new Hashtable<>();
+			int best = 0;
+			for (UUID id : skyfightPlayers) {
+				org.bukkit.entity.Player otherPlayer = Bukkit.getPlayer(id);
+				int score = Server.getSkyfight().get(otherPlayer.getUniqueId()).getScore();
+				if (score > best)
+					best = score;
+			}
+			list.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Leaderboard", (int) ((Math.floor(best / 5) + 1) * 5));
+			for (int i = 0; i < skyfightPlayers.length; i++) {
+				UUID id = skyfightPlayers[i];
+				org.bukkit.entity.Player otherPlayer = Bukkit.getPlayer(id);
+				Skyfight.Player osfPlayer = Server.getSkyfight().get(otherPlayer.getUniqueId());
+				ChatColor prefix = ChatColor.RESET;
+				if (osfPlayer.getTeamValue() == Skyfight.Team.BLUE) {
+					prefix = ChatColor.BLUE;
+				} else if (osfPlayer.getTeamValue() == Skyfight.Team.RED) {
+					prefix = ChatColor.RED;
+				} else if (osfPlayer.getTeamValue() == Skyfight.Team.GREEN) {
+					prefix = ChatColor.GREEN;
+				} else if (osfPlayer.getTeamValue() == Skyfight.Team.YELLOW) {
+					prefix = ChatColor.YELLOW;
+				} else if (osfPlayer.getTeamValue() == Skyfight.Team.PINK) {
+					prefix = ChatColor.LIGHT_PURPLE;
+				}
+				list.put(ChatColor.GOLD + "│ " + prefix + otherPlayer.getName(), Server.getSkyfight().get(otherPlayer.getUniqueId()).getScore());
+			}
+			$.Scoreboard.configureSidebar(player, "SkorrloreGaming", list, clearValues, true);
+		}
 	}
 
 	public static class Factions {
@@ -1221,6 +1230,33 @@ public class $ {
 		public static void setPlayerDeaths(Player player, int value) {
 			String path = "config." + player.getUniqueId().toString() + ".factions";
 			Server.getPlugin().getConfig().set(path + ".deaths", value + "");
+		}
+
+		public static void refreshScoreboard(Player player, boolean clearValues) {
+			if (Link$.isPluginEnabled("mcMMO")) {
+				try {
+					if (com.gmail.nossr50.util.scoreboards.ScoreboardManager.isBoardShown(player.getName()))
+						return;
+				} catch (Exception ex) {
+				}
+			}
+			DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
+			Hashtable<String, Integer> list = new Hashtable<String, Integer>();
+			int currentPlayerKills = $.Factions.getPlayerKills(player);
+			int currentPlayerDeaths = $.Factions.getPlayerDeaths(player);
+			double currentPlayerCash = EconManager.retrieveCash(player, "factions");
+			FPlayer fplayer = FPlayers.getInstance().getByPlayer(player);
+			Faction faction = fplayer.getFaction();
+			list.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Faction", 9);
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Tag: " + ChatColor.RESET + faction.getTag(), 8);
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Power: " + ChatColor.RESET + faction.getPowerRounded() + "/" + faction.getPowerMaxRounded(), 7);
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Members: " + ChatColor.RESET + faction.getFPlayers().size(), 6);
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Land: " + ChatColor.RESET + faction.getLandRounded(), 5);
+			list.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Statistics", 4);
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Balance: " + ChatColor.RESET + "$" + formatter.format(currentPlayerCash), 3);
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Kills: " + ChatColor.RESET + formatter.format(currentPlayerKills), 2);
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Deaths: " + ChatColor.RESET + formatter.format(currentPlayerDeaths), 1);
+			$.Scoreboard.configureSidebar(player, "SkorrloreGaming", list, clearValues, true);
 		}
 	}
 
@@ -1405,6 +1441,21 @@ public class $ {
 				kitArray.set(0, Link$.createMaterial(Material.DIAMOND_SWORD));
 			return kitArray.toArray(new ItemStack[0]);
 		}
+
+		public static void refreshScoreboard(Player player, boolean clearValues) {
+			DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
+			Hashtable<String, Integer> list = new Hashtable<String, Integer>();
+			int currentPlayerKills = $.Kitpvp.getPlayerKills(player);
+			int currentPlayerDeaths = $.Kitpvp.getPlayerDeaths(player);
+			int currentPlayerDPK = currentPlayerKills / 50;
+			double currentPlayerCash = EconManager.retrieveCash(player, "kitpvp");
+			list.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Statistics", 5);
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Balance: " + ChatColor.RESET + "$" + formatter.format(currentPlayerCash), 4);
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Kills: " + ChatColor.RESET + formatter.format(currentPlayerKills), 3);
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Deaths: " + ChatColor.RESET + formatter.format(currentPlayerDeaths), 2);
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Level: " + ChatColor.RESET + formatter.format(currentPlayerDPK + 1), 1);
+			$.Scoreboard.configureSidebar(player, "SkorrloreGaming", list, clearValues, true);
+		}
 	}
 
 	public static class Creative {
@@ -1440,6 +1491,45 @@ public class $ {
 		public static void setPlayerBrokenBlocks(Player player, int value) {
 			String path = "config." + player.getUniqueId().toString() + ".skyblock";
 			Server.getPlugin().getConfig().set(path + ".broken", value + "");
+		}
+
+		public static void refreshScoreboard(Player player, boolean clearValues) {
+			if (!Link$.isPluginEnabled("uSkyBlock")) {
+				return;
+			}
+			uSkyBlockAPI api = (uSkyBlockAPI) Bukkit.getPluginManager().getPlugin("uSkyBlock");
+			if (Link$.isPluginEnabled("mcMMO")) {
+				try {
+					if (com.gmail.nossr50.util.scoreboards.ScoreboardManager.isBoardShown(player.getName()))
+						return;
+				} catch (Exception ex) {
+				}
+			}
+			int members = 0, maxmembers = 0, level = 0;
+			try {
+				members = api.getIslandInfo(player).getPartySize();
+				maxmembers = api.getIslandInfo(player).getMaxPartySize();
+				level = (int) api.getIslandLevel(player);
+			} catch (Exception ex) {
+			}
+			int placedBlocks = $.Skyblock.getPlayerPlacedBlocks(player);
+			int brokenBlocks = $.Skyblock.getPlayerBrokenBlocks(player);
+			double currentPlayerCash = EconManager.retrieveCash(player, "skyblock");
+			DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
+			Hashtable<String, Integer> list = new Hashtable<String, Integer>();
+			if (maxmembers > 0) {
+				list.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Island", 8);
+				list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Level: " + ChatColor.RESET + level, 7);
+				list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Members: " + ChatColor.RESET + members + "/" + maxmembers, 6);
+				list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Size: " + ChatColor.RESET + "128 x 128", 5);
+				list.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Statistics", 4);
+			} else {
+				list.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Statistics", 4);
+			}
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Balance: " + ChatColor.RESET + "$" + formatter.format(currentPlayerCash), 3);
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Placed: " + ChatColor.RESET + formatter.format(placedBlocks), 2);
+			list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Broken: " + ChatColor.RESET + formatter.format(brokenBlocks), 1);
+			$.Scoreboard.configureSidebar(player, "SkorrloreGaming", list, clearValues, true);
 		}
 	}
 
