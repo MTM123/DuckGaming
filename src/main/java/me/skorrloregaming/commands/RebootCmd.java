@@ -30,7 +30,7 @@ public class RebootCmd implements CommandExecutor {
 						ServerGet.get().getDelayedTasks().remove(UUID.nameUUIDFromBytes(sender.getName().getBytes()));
 					}
 				}, 45L);
-				sender.sendMessage("Are you sure you want to /reboot the server? This will fully restart the ServerGet.get(). If you are wanting to simply update the server you may want to use /reload instead. Type /reboot again to confirm if you want to restart the ServerGet.get().");
+				sender.sendMessage("Are you sure you want to /reboot the server? This will fully restart the server. If you are wanting to simply update the server you may want to use /reload instead. Type /reboot again to confirm if you want to restart the server.");
 			} else {
 				ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskTimerAsynchronously(ServerGet.get().getPlugin(), new Runnable() {
 					int value = -1;
