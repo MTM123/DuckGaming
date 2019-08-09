@@ -49,7 +49,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import me.skorrloregaming.*;
 
-public class Server extends JavaPlugin implements IServer {
+public class Server extends JavaPlugin {
 
 	public TopVotersHttpServer topVotersHttpServer = null;
 	public PingInjector pingInjector;
@@ -74,7 +74,7 @@ public class Server extends JavaPlugin implements IServer {
 	private ConfigurationManager discordVerifyConfig;
 
 	private Plugin plugin;
-	private Server instance;
+	private static Server instance;
 	private SkinStorage skinStorage = null;
 	private SessionManager sessionManager = null;
 	private Auctioneer auctioneer = null;
@@ -441,8 +441,12 @@ public class Server extends JavaPlugin implements IServer {
 		return bedrockKitCooldownFactions;
 	}
 
-	public Server getInstance() {
+	public static Server getInstance() {
 		return instance;
+	}
+	
+	public static void setInstance(Server newInstance) {
+		instance = newInstance;
 	}
 
 	public String getTempMotd() {
@@ -615,7 +619,7 @@ public class Server extends JavaPlugin implements IServer {
 		pluginName = this.getDescription().getName();
 		pluginLabel = Link$.Legacy.tag;
 		plugin = this;
-		instance = this;
+		Server.setInstance(this);
 		String lineOne = ChatColor.RED + pluginName + ChatColor.GRAY + " has been running since late 2013.";
 		String lineTwo = ChatColor.GRAY + "Server has been updated to support 1.14 clients.";
 		serverMotd = lineOne + '\n' + lineTwo;
