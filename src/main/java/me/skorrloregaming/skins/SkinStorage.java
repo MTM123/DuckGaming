@@ -15,14 +15,14 @@ public class SkinStorage {
 	public final boolean ENABLE_ONJOIN_MESSAGE = false;
 
 	public SkinStorage() {
-		File tempFolder = new File(ServerGet.get().getPlugin().getDataFolder().getAbsolutePath() + File.separator + "Skins" + File.separator);
+		File tempFolder = new File(Server.getInstance().getPlugin().getDataFolder().getAbsolutePath() + File.separator + "Skins" + File.separator);
 		tempFolder.mkdirs();
 		this.TIME_EXPIRE_MILLISECOND = TimeUnit.MINUTES.toMillis(1);
 	}
 
 	public Optional<SkinModel> getSkinData(Player player, boolean noUpdate) {
 		String name = player.getName().toLowerCase();
-		File skinFile = new File(ServerGet.get().getPlugin().getDataFolder().getAbsolutePath() + File.separator + "Skins" + File.separator + name + ".skin");
+		File skinFile = new File(Server.getInstance().getPlugin().getDataFolder().getAbsolutePath() + File.separator + "Skins" + File.separator + name + ".skin");
 		try {
 			long timestamp = System.currentTimeMillis();
 			Optional<SkinModel> model = Optional.empty();
@@ -55,7 +55,7 @@ public class SkinStorage {
 	public static Optional<SkinModel> getSkinProperty(String uuid) {
 		if (uuid == null || uuid.equals("null"))
 			return Optional.empty();
-		if (!ServerGet.get().getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
+		if (!Server.getInstance().getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
 			String skinurl = "https://sessionserver.mojang.com/session/minecraft/profile/";
 			String output = null;
 			try {
@@ -89,7 +89,7 @@ public class SkinStorage {
 
 	public long getSkinTimestamp(Player player) {
 		String name = player.getName().toLowerCase();
-		File skinFile = new File(ServerGet.get().getPlugin().getDataFolder().getAbsolutePath() + File.separator + "Skins" + File.separator + name + ".skin");
+		File skinFile = new File(Server.getInstance().getPlugin().getDataFolder().getAbsolutePath() + File.separator + "Skins" + File.separator + name + ".skin");
 		try {
 			if (!skinFile.exists())
 				return System.currentTimeMillis();
@@ -105,7 +105,7 @@ public class SkinStorage {
 
 	public void setSkinData(Player player, SkinModel textures) {
 		String name = player.getName().toLowerCase();
-		File skinFile = new File(ServerGet.get().getPlugin().getDataFolder().getAbsolutePath() + File.separator + "Skins" + File.separator + name + ".skin");
+		File skinFile = new File(Server.getInstance().getPlugin().getDataFolder().getAbsolutePath() + File.separator + "Skins" + File.separator + name + ".skin");
 		ConfigurationManager skinFileData = new ConfigurationManager();
 		skinFileData.setup(skinFile);
 		skinFileData.getData().set("timestamp", System.currentTimeMillis());
@@ -116,14 +116,14 @@ public class SkinStorage {
 
 	public void removePlayerSkin(String name) {
 		name = name.toLowerCase();
-		File playerFile = new File(ServerGet.get().getPlugin().getDataFolder().getAbsolutePath() + File.separator + "Players" + File.separator + name + ".player");
+		File playerFile = new File(Server.getInstance().getPlugin().getDataFolder().getAbsolutePath() + File.separator + "Players" + File.separator + name + ".player");
 		if (playerFile.exists())
 			playerFile.delete();
 	}
 
 	public static void removeSkinData(String name) {
 		name = name.toLowerCase();
-		File skinFile = new File(ServerGet.get().getPlugin().getDataFolder().getAbsolutePath() + File.separator + "Skins" + File.separator + name + ".skin");
+		File skinFile = new File(Server.getInstance().getPlugin().getDataFolder().getAbsolutePath() + File.separator + "Skins" + File.separator + name + ".skin");
 		if (skinFile.exists())
 			skinFile.delete();
 	}

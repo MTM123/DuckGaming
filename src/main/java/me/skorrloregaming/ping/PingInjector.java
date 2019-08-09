@@ -4,7 +4,6 @@ import io.netty.channel.Channel;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Reflection;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -18,8 +17,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-import me.skorrloregaming.*;
-
 public class PingInjector implements Listener {
 
 	private Object server;
@@ -27,7 +24,7 @@ public class PingInjector implements Listener {
 	public boolean running = false;
 
 	public PingInjector() {
-		ServerGet.get().getPlugin().getServer().getPluginManager().registerEvents(this, ServerGet.get().getPlugin());
+		Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	public void register() {
@@ -92,9 +89,9 @@ public class PingInjector implements Listener {
 	public void serverListPing(ServerListPingEvent event) {
 		if (!running)
 			return;
-		String motd = ServerGet.get().getServerMotd();
-		if (!(ServerGet.get().getTempMotd().equals("/unspecified"))) {
-			motd = ServerGet.get().getTempMotd();
+		String motd = Server.getInstance().getServerMotd();
+		if (!(Server.getInstance().getTempMotd().equals("/unspecified"))) {
+			motd = Server.getInstance().getTempMotd();
 		}
 		event.setMotd(motd);
 		injectOpenConnections();

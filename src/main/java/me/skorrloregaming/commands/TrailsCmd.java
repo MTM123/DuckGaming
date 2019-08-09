@@ -35,10 +35,10 @@ public class TrailsCmd implements CommandExecutor {
 		String prefix = ChatColor.RESET + "" + ChatColor.BOLD;
 		String path = "config." + player.getUniqueId().toString();
 		int selectedTrail = -1;
-		if (ServerGet.get().getPlugin().getConfig().contains(path + ".trails.selectedTrail")) {
-			selectedTrail = Integer.parseInt(ServerGet.get().getPlugin().getConfig().getString(path + ".trails.selectedTrail"));
+		if (Server.getInstance().getPlugin().getConfig().contains(path + ".trails.selectedTrail")) {
+			selectedTrail = Integer.parseInt(Server.getInstance().getPlugin().getConfig().getString(path + ".trails.selectedTrail"));
 		} else {
-			ServerGet.get().getPlugin().getConfig().set(path + ".trails.selectedTrail", "-1");
+			Server.getInstance().getPlugin().getConfig().set(path + ".trails.selectedTrail", "-1");
 		}
 		ItemStack disableTrails = Link$.createMaterial(Material.REDSTONE, prefix + "Disable Trails");
 		if (selectedTrail == -1) {
@@ -100,7 +100,7 @@ public class TrailsCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}

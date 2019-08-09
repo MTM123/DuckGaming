@@ -24,7 +24,7 @@ public class SessionManager {
 
 	public void setup() {
 		sessionConfig = new ConfigurationManager();
-		sessionConfig.setup(new File(ServerGet.get().getPlugin().getDataFolder(), "session_storage.yml"));
+		sessionConfig.setup(new File(Server.getInstance().getPlugin().getDataFolder(), "session_storage.yml"));
 	}
 
 	public boolean verifySession(Player player) {
@@ -164,8 +164,8 @@ public class SessionManager {
 		public long getFirstAccessedFromConfig() {
 			String path = player.getUniqueId().toString() + "." + new String(key) + ".firstAccessed";
 			long firstAccessed = lastAccessed;
-			if (ServerGet.get().getSessionManager().sessionConfig.getData().contains(path))
-				firstAccessed = ServerGet.get().getSessionManager().sessionConfig.getData().getLong(path);
+			if (Server.getInstance().getSessionManager().sessionConfig.getData().contains(path))
+				firstAccessed = Server.getInstance().getSessionManager().sessionConfig.getData().getLong(path);
 			return firstAccessed;
 		}
 
@@ -188,8 +188,8 @@ public class SessionManager {
 		public boolean isDiscarded() {
 			String path = player.getUniqueId().toString() + "." + new String(key) + ".discarded";
 			boolean discarded = false;
-			if (ServerGet.get().getSessionManager().sessionConfig.getData().contains(path))
-				discarded = ServerGet.get().getSessionManager().sessionConfig.getData().getBoolean(path);
+			if (Server.getInstance().getSessionManager().sessionConfig.getData().contains(path))
+				discarded = Server.getInstance().getSessionManager().sessionConfig.getData().getBoolean(path);
 			return discarded;
 		}
 	}

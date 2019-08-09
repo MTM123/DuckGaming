@@ -1,16 +1,12 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
 import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.*;
 
 public class StaffChatCmd implements CommandExecutor {
 
@@ -23,11 +19,11 @@ public class StaffChatCmd implements CommandExecutor {
 			Link$.playLackPermissionMessage(player);
 			return true;
 		}
-		if (ServerGet.get().getStaffChatPlayers().contains(player.getUniqueId())) {
-			ServerGet.get().getStaffChatPlayers().remove(player.getUniqueId());
+		if (Server.getInstance().getStaffChatPlayers().contains(player.getUniqueId())) {
+			Server.getInstance().getStaffChatPlayers().remove(player.getUniqueId());
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have left the staff chat.");
 		} else {
-			ServerGet.get().getStaffChatPlayers().add(player.getUniqueId());
+			Server.getInstance().getStaffChatPlayers().add(player.getUniqueId());
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have entered the staff chat.");
 		}
 		return true;

@@ -20,8 +20,8 @@ public class TopVotersHttpServer implements Runnable {
 	public TopVotersHttpServer(int port) {
 		try {
 			server = new ServerSocket(port);
-			ServerGet.get().getPlugin().getLogger().info("Top voters web server enabled on port " + port + ".");
-			ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskAsynchronously(ServerGet.get().getPlugin(), this));
+			Server.getInstance().getPlugin().getLogger().info("Top voters web server enabled on port " + port + ".");
+			Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), this));
 			running = true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -99,10 +99,10 @@ public class TopVotersHttpServer implements Runnable {
 				calendar.setTimeInMillis(System.currentTimeMillis());
 				int year = calendar.get(Calendar.YEAR);
 				int monthId = calendar.get(Calendar.MONTH);
-				String[] keys = ServerGet.get().getMonthlyVoteConfig().getData().getConfigurationSection("config").getKeys(false).toArray(new String[0]);
+				String[] keys = Server.getInstance().getMonthlyVoteConfig().getData().getConfigurationSection("config").getKeys(false).toArray(new String[0]);
 				List<SwitchIntString> validKeys = new ArrayList<SwitchIntString>();
 				for (String username : keys) {
-					int votes = ServerGet.get().getVoteManager().getMonthlyVotes(username, year, monthId);
+					int votes = Server.getInstance().getVoteManager().getMonthlyVotes(username, year, monthId);
 					if (votes > 0) {
 						validKeys.add(new SwitchIntString(votes, username));
 					}
@@ -119,21 +119,21 @@ public class TopVotersHttpServer implements Runnable {
 							Service service = Service.values()[i];
 							long arg0 = service.getPriority().getDelay();
 							if (service.getPriority().isEpoch()) {
-								long timestamp = ServerGet.get().getVoteManager().getLastVoteForService(key.getArg1(), service.getName());
+								long timestamp = Server.getInstance().getVoteManager().getLastVoteForService(key.getArg1(), service.getName());
 								if (!(timestamp == 0)) {
 									switch (service.getPriority()) {
 										case midnight:
-											arg0 = ServerGet.get().getVoteManager().getMidnight(timestamp);
+											arg0 = Server.getInstance().getVoteManager().getMidnight(timestamp);
 											break;
 										case midnightGreenwich:
-											arg0 = ServerGet.get().getVoteManager().getMidnightGreenwich(timestamp);
+											arg0 = Server.getInstance().getVoteManager().getMidnightGreenwich(timestamp);
 											break;
 										default:
 											break;
 									}
 								}
 							}
-							sb.append("<td>" + ServerGet.get().getVoteManager().getFriendlyTimeDifference(key.getArg1(), service.getName(), arg0, service.getPriority().isEpoch()) + "</td>");
+							sb.append("<td>" + Server.getInstance().getVoteManager().getFriendlyTimeDifference(key.getArg1(), service.getName(), arg0, service.getPriority().isEpoch()) + "</td>");
 						}
 						sb.append("</tr>");
 					}

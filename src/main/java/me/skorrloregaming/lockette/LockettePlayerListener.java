@@ -3,7 +3,6 @@ package me.skorrloregaming.lockette;
 import me.skorrloregaming.$;
 import me.skorrloregaming.Logger;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -24,8 +23,6 @@ import org.bukkit.plugin.PluginManager;
 import java.util.List;
 import java.util.Set;
 
-import me.skorrloregaming.*;
-
 public class LockettePlayerListener implements Listener {
 	private static Lockette plugin;
 
@@ -34,8 +31,8 @@ public class LockettePlayerListener implements Listener {
 	}
 
 	protected void registerEvents() {
-		PluginManager pm = ServerGet.get().getPlugin().getServer().getPluginManager();
-		pm.registerEvents(this, ServerGet.get().getPlugin());
+		PluginManager pm = Server.getInstance().getPlugin().getServer().getPluginManager();
+		pm.registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -58,7 +55,7 @@ public class LockettePlayerListener implements Listener {
 				return;
 			}
 			if (command[1].equalsIgnoreCase("version")) {
-				player.sendMessage(ChatColor.RED + "Lockette version " + ServerGet.get().getPlugin().getDescription().getVersion() + " loaded.");
+				player.sendMessage(ChatColor.RED + "Lockette version " + Server.getInstance().getPlugin().getDescription().getVersion() + " loaded.");
 				return;
 			}
 			if (command[1].equalsIgnoreCase("fix")) {

@@ -3,15 +3,12 @@ package me.skorrloregaming.commands;
 import me.skorrloregaming.$;
 import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.*;
 
 public class SpectateCmd implements CommandExecutor {
 
@@ -32,27 +29,27 @@ public class SpectateCmd implements CommandExecutor {
 					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 					return true;
 				}
-				if (!ServerGet.get().getModeratingPlayers().containsKey(player.getUniqueId())) {
+				if (!Server.getInstance().getModeratingPlayers().containsKey(player.getUniqueId())) {
 					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not currently moderating the server.");
 					return true;
 				}
-				ServerGet.get().getSpectatingPlayers().add(player.getUniqueId());
+				Server.getInstance().getSpectatingPlayers().add(player.getUniqueId());
 				String tpDomain = $.getMinigameDomain(targetPlayer);
 				String pDomain = $.getMinigameDomain(player);
 				if (!tpDomain.equals(pDomain))
 					player.performCommand("server " + tpDomain);
-				Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
+				Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 					@Override
 					public void run() {
-						if (ServerGet.get().getVanishedPlayers().containsKey(player.getUniqueId())) {
+						if (Server.getInstance().getVanishedPlayers().containsKey(player.getUniqueId())) {
 							player.performCommand("vanish");
 						}
-						Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
+						Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 							@Override
 							public void run() {
 								player.performCommand("vanish");
 								player.teleport(targetPlayer);
-								ServerGet.get().getSpectatingPlayers().remove(player.getUniqueId());
+								Server.getInstance().getSpectatingPlayers().remove(player.getUniqueId());
 							}
 						}, 10L);
 					}

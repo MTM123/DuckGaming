@@ -3,7 +3,6 @@ package me.skorrloregaming.runnable;
 import me.skorrloregaming.$;
 import me.skorrloregaming.Directory;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -80,7 +79,7 @@ public final class TreeCutter extends BukkitRunnable {
 					startBlock.getWorld().playEffect(center, Effect.STEP_SOUND, (Object) startBlock.getType());
 					startBlock.setType(Material.AIR);
 				}
-			}.runTask(ServerGet.get().getPlugin());
+			}.runTask(Server.getInstance().getPlugin());
 		}
 	}
 
@@ -94,21 +93,21 @@ public final class TreeCutter extends BukkitRunnable {
 
 	public void cutDownTree() {
 		this.blocks = this.blocks.stream().sorted((b, b2) -> b2.getY() - b.getY()).collect(Collectors.toList());
-		if (!ServerGet.get().getCurrentFellers().contains(this.player.getUniqueId())) {
-			ServerGet.get().getCurrentFellers().add(this.player.getUniqueId());
+		if (!Server.getInstance().getCurrentFellers().contains(this.player.getUniqueId())) {
+			Server.getInstance().getCurrentFellers().add(this.player.getUniqueId());
 		}
 		if ((this.player.getInventory().getItemInMainHand() == null || this.player.getInventory().getItemInMainHand().getType() == Material.AIR) && !this.updateItemInHand()) {
-			if (ServerGet.get().getCurrentFellers().contains(this.player.getUniqueId())) {
-				ServerGet.get().getCurrentFellers().remove(this.player.getUniqueId());
+			if (Server.getInstance().getCurrentFellers().contains(this.player.getUniqueId())) {
+				Server.getInstance().getCurrentFellers().remove(this.player.getUniqueId());
 			}
 			return;
 		}
-		ServerGet.get().getBukkitTasks().add(new BukkitRunnable() {
+		Server.getInstance().getBukkitTasks().add(new BukkitRunnable() {
 			public void run() {
 				if (!player.isOnline()) {
 					this.cancel();
-					if (ServerGet.get().getCurrentFellers().contains(player.getUniqueId())) {
-						ServerGet.get().getCurrentFellers().remove(player.getUniqueId());
+					if (Server.getInstance().getCurrentFellers().contains(player.getUniqueId())) {
+						Server.getInstance().getCurrentFellers().remove(player.getUniqueId());
 					}
 					return;
 				}
@@ -118,8 +117,8 @@ public final class TreeCutter extends BukkitRunnable {
 					type = item.getType();
 				if (!Directory.axes.contains(type)) {
 					this.cancel();
-					if (ServerGet.get().getCurrentFellers().contains(player.getUniqueId())) {
-						ServerGet.get().getCurrentFellers().remove(player.getUniqueId());
+					if (Server.getInstance().getCurrentFellers().contains(player.getUniqueId())) {
+						Server.getInstance().getCurrentFellers().remove(player.getUniqueId());
 					}
 					return;
 				}
@@ -147,12 +146,12 @@ public final class TreeCutter extends BukkitRunnable {
 				}
 				if (blocks.size() <= indexed) {
 					this.cancel();
-					if (ServerGet.get().getCurrentFellers().contains(player.getUniqueId())) {
-						ServerGet.get().getCurrentFellers().remove(player.getUniqueId());
+					if (Server.getInstance().getCurrentFellers().contains(player.getUniqueId())) {
+						Server.getInstance().getCurrentFellers().remove(player.getUniqueId());
 					}
 				}
 			}
-		}.runTaskTimer(ServerGet.get().getPlugin(), 0L, 0L));
+		}.runTaskTimer(Server.getInstance().getPlugin(), 0L, 0L));
 	}
 
 	public boolean updateItemInHand() {

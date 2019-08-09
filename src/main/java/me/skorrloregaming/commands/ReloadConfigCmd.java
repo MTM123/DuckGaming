@@ -16,24 +16,24 @@ public class ReloadConfigCmd implements CommandExecutor {
 			Link$.playLackPermissionMessage(sender);
 			return true;
 		}
-		ServerGet.get().getDiscordVerifyConfig().reloadData();
-		ServerGet.get().getChatItemConfig().reloadData();
-		ServerGet.get().getBanConfig().reloadData();
-		ServerGet.get().getWarpConfig().reloadData();
-		ServerGet.get().getSignConfig().reloadData();
-		ServerGet.get().getFactionsConfig().reloadData();
-		ServerGet.get().getShoppeConfig().reloadData();
-		ServerGet.get().getMarriageHomesConfig().reloadData();
-		ServerGet.get().getNpcConfig().reloadData();
-		ServerGet.get().getSpawnerConfig().reloadData();
-		LinkServerGet.get().getUUIDCache().reloadData();
-		LinkServerGet.get().getGeolocationCache().reloadData();
-		ServerGet.get().getSessionManager().sessionConfig.reloadData();
-		ServerGet.get().getMonthlyVoteConfig().reloadData();
-		if (!(ServerGet.get().getChatItem() == null))
+		Server.getInstance().getDiscordVerifyConfig().reloadData();
+		Server.getInstance().getChatItemConfig().reloadData();
+		Server.getInstance().getBanConfig().reloadData();
+		Server.getInstance().getWarpConfig().reloadData();
+		Server.getInstance().getSignConfig().reloadData();
+		Server.getInstance().getFactionsConfig().reloadData();
+		Server.getInstance().getShoppeConfig().reloadData();
+		Server.getInstance().getMarriageHomesConfig().reloadData();
+		Server.getInstance().getNpcConfig().reloadData();
+		Server.getInstance().getSpawnerConfig().reloadData();
+		LinkServer.getInstance().getUUIDCache().reloadData();
+		LinkServer.getInstance().getGeolocationCache().reloadData();
+		Server.getInstance().getSessionManager().sessionConfig.reloadData();
+		Server.getInstance().getMonthlyVoteConfig().reloadData();
+		if (!(Server.getInstance().getChatItem() == null))
 			ChatItem.reload(null);
-		ServerGet.get().getGarbageCollector().run();
-		ServerGet.get().reload();
+		Server.getInstance().getGarbageCollector().run();
+		Server.getInstance().reload();
 		sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Server configuration successfully reloaded.");
 		return true;
 	}

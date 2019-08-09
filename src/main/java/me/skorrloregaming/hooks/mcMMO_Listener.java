@@ -4,18 +4,15 @@ import com.gmail.nossr50.datatypes.skills.AbilityType;
 import com.gmail.nossr50.events.skills.abilities.McMMOPlayerAbilityActivateEvent;
 import me.skorrloregaming.$;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import me.skorrloregaming.impl.ServerMinigame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.skorrloregaming.*;
-
 public class mcMMO_Listener implements Listener {
 
 	public void register() {
-		ServerGet.get().getPlugin().getServer().getPluginManager().registerEvents(this, ServerGet.get().getPlugin());
+		Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	@EventHandler

@@ -8,7 +8,6 @@ import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.*;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import me.skorrloregaming.skins.model.SkinModel;
 import me.skorrloregaming.skins.model.SkinProperty;
 import org.bukkit.Bukkit;
@@ -23,8 +22,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static com.comphenix.protocol.PacketType.Play.Server.*;
-
-import me.skorrloregaming.*;
 
 public class SkinApplier implements Runnable {
 
@@ -53,7 +50,7 @@ public class SkinApplier implements Runnable {
 	}
 
 	public void applySkin() {
-		if (!ServerGet.get().getPlugin().getConfig().getBoolean("settings.bungeecord", false))
+		if (!Server.getInstance().getPlugin().getConfig().getBoolean("settings.bungeecord", false))
 			applyInstantUpdate();
 	}
 
@@ -61,7 +58,7 @@ public class SkinApplier implements Runnable {
 		if (!CraftGo.Player.isPocketPlayer(receiver)) {
 			WrappedGameProfile gameProfile = WrappedGameProfile.fromPlayer(receiver);
 			applyProperties(gameProfile, targetSkin);
-			Bukkit.getScheduler().runTask(ServerGet.get().getPlugin(), new Runnable() {
+			Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
 				@Override
 				public void run() {
 					sendUpdateSelf(WrappedGameProfile.fromPlayer(receiver));
@@ -90,7 +87,7 @@ public class SkinApplier implements Runnable {
 	}
 
 	public void runAsync(Runnable runnable) {
-		Bukkit.getScheduler().runTaskAsynchronously(ServerGet.get().getPlugin(), runnable);
+		Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), runnable);
 	}
 
 	public void sendUpdateOthers() throws FieldAccessException {
@@ -139,8 +136,8 @@ public class SkinApplier implements Runnable {
 	}
 
 	public void hideAndShow(Player other) {
-		other.hidePlayer(ServerGet.get().getPlugin(), receiver);
-		other.showPlayer(ServerGet.get().getPlugin(), receiver);
+		other.hidePlayer(Server.getInstance().getPlugin(), receiver);
+		other.showPlayer(Server.getInstance().getPlugin(), receiver);
 	}
 
 	public void sendPackets(PacketContainer... packets) {

@@ -20,7 +20,7 @@ public class PayCmd implements CommandExecutor {
 		String tag = Link$.Legacy.tag;
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (!ServerGet.get().getKitpvp().contains(player.getUniqueId()) && !ServerGet.get().getSurvival().contains(player.getUniqueId()) && !ServerGet.get().getFactions().contains(player.getUniqueId()) && !ServerGet.get().getSkyblock().contains(player.getUniqueId())) {
+			if (!Server.getInstance().getKitpvp().contains(player.getUniqueId()) && !Server.getInstance().getSurvival().contains(player.getUniqueId()) && !Server.getInstance().getFactions().contains(player.getUniqueId()) && !Server.getInstance().getSkyblock().contains(player.getUniqueId())) {
 				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 				return true;
 			}

@@ -3,7 +3,6 @@ package me.skorrloregaming.commands;
 import me.skorrloregaming.$;
 import me.skorrloregaming.ConfigurationManager;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import me.skorrloregaming.runnable.DelayedTeleport;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,8 +14,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Set;
 
-import me.skorrloregaming.*;
-
 public class HomeCmd implements CommandExecutor {
 
 	@Override
@@ -24,19 +21,19 @@ public class HomeCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!ServerGet.get().getFactions().contains(player.getUniqueId()) && !ServerGet.get().getSurvival().contains(player.getUniqueId())) {
+		if (!Server.getInstance().getFactions().contains(player.getUniqueId()) && !Server.getInstance().getSurvival().contains(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
-		if (ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
 		ConfigurationManager config = null;
-		if (ServerGet.get().getFactions().contains(player.getUniqueId())) {
-			config = ServerGet.get().getFactionsConfig();
-		} else if (ServerGet.get().getSurvival().contains(player.getUniqueId())) {
-			config = ServerGet.get().getSurvivalConfig();
+		if (Server.getInstance().getFactions().contains(player.getUniqueId())) {
+			config = Server.getInstance().getFactionsConfig();
+		} else if (Server.getInstance().getSurvival().contains(player.getUniqueId())) {
+			config = Server.getInstance().getSurvivalConfig();
 		}
 		int count = 0;
 		String home = "familiar";
@@ -68,15 +65,15 @@ public class HomeCmd implements CommandExecutor {
 		if (!config.getData().contains(base)) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You have not yet set a home on this server.");
 		} else {
-			World world = ServerGet.get().getPlugin().getServer().getWorld(config.getData().getString(base + ".world"));
+			World world = Server.getInstance().getPlugin().getServer().getWorld(config.getData().getString(base + ".world"));
 			double x = config.getData().getDouble(base + ".x");
 			double y = config.getData().getDouble(base + ".y");
 			double z = config.getData().getDouble(base + ".z");
 			float yaw = (float) config.getData().getDouble(base + ".yaw");
 			float pitch = (float) config.getData().getDouble(base + ".pitch");
 			Location homeLocation = new Location(world, x, y, z, yaw, pitch);
-			DelayedTeleport dt = new DelayedTeleport(player, ServerGet.get().getTeleportationDelay(), homeLocation, false);
-			ServerGet.get().getBukkitTasks().add(dt.runTaskTimer(ServerGet.get().getPlugin(), 4, 4));
+			DelayedTeleport dt = new DelayedTeleport(player, Server.getInstance().getTeleportationDelay(), homeLocation, false);
+			Server.getInstance().getBukkitTasks().add(dt.runTaskTimer(Server.getInstance().getPlugin(), 4, 4));
 		}
 		return true;
 	}

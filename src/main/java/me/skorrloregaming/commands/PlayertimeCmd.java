@@ -43,7 +43,7 @@ public class PlayertimeCmd implements CommandExecutor {
 				}
 			}
 			player.resetPlayerTime();
-			Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
+			Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 				@Override
 				public void run() {
 					player.setPlayerTime(time, false);

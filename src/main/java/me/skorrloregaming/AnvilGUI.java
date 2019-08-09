@@ -108,7 +108,7 @@ public class AnvilGUI {
 				}
 			}
 		};
-		Bukkit.getPluginManager().registerEvents(listener, ServerGet.get().getPlugin());
+		Bukkit.getPluginManager().registerEvents(listener, Server.getInstance().getPlugin());
 	}
 
 	public Player getPlayer() {

@@ -2,7 +2,6 @@ package me.skorrloregaming.lockette;
 
 import me.skorrloregaming.$;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
@@ -13,15 +12,13 @@ import org.bukkit.plugin.PluginManager;
 
 import java.util.List;
 
-import me.skorrloregaming.*;
-
 public class LocketteWorldListener implements Listener {
 	public LocketteWorldListener(Lockette instance) {
 	}
 
 	protected void registerEvents() {
-		PluginManager pm = ServerGet.get().getPlugin().getServer().getPluginManager();
-		pm.registerEvents(this, ServerGet.get().getPlugin());
+		PluginManager pm = Server.getInstance().getPlugin().getServer().getPluginManager();
+		pm.registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

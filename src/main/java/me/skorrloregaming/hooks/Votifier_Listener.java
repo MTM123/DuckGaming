@@ -29,11 +29,11 @@ import me.skorrloregaming.*;
 public class Votifier_Listener implements Listener {
 
 	public void register() {
-		Bukkit.getPluginManager().registerEvents(this, ServerGet.get().getPlugin());
+		Bukkit.getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	@EventHandler
 	public void onVote(VotifierEvent event) {
-		ServerGet.get().getVoteManager().onVote(event, true);
+		Server.getInstance().getVoteManager().onVote(event, true);
 	}
 }

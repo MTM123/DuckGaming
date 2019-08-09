@@ -30,7 +30,7 @@ public class ServersCmd implements CommandExecutor {
 		}
 		if (s2.length() > 0)
 			s2 = s2.substring(0, s2.lastIndexOf(", "));
-		sender.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + "You are currently connected to " + ServerGet.get().getPluginName().toLowerCase() + ".");
+		sender.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + "You are currently connected to " + Server.getInstance().getPluginName().toLowerCase() + ".");
 		sender.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + "Servers: " + ChatColor.RESET + s1);
 		if (s2.length() > 0)
 			sender.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + "Beta Servers: " + ChatColor.RESET + s2);

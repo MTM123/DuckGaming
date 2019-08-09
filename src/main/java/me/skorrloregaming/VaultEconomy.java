@@ -26,21 +26,21 @@ public class VaultEconomy implements Economy {
 	private boolean isEnabled = false;
 
 	public VaultEconomy() {
-		ServerGet.get().getPlugin().getServer().getPluginManager().registerEvents(new EconomyServerListener(), ServerGet.get().getPlugin());
-		ServerGet.get().getPlugin().getLogger().info("Vault support enabled.");
+		Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(new EconomyServerListener(), Server.getInstance().getPlugin());
+		Server.getInstance().getPlugin().getLogger().info("Vault support enabled.");
 	}
 
 	public void setupVault() {
-		Plugin vault = ServerGet.get().getPlugin().getServer().getPluginManager().getPlugin("Vault");
+		Plugin vault = Server.getInstance().getPlugin().getServer().getPluginManager().getPlugin("Vault");
 		if (vault == null) {
 			return;
 		}
-		ServerGet.get().getPlugin().getServer().getServicesManager().register(Economy.class, this, ServerGet.get().getPlugin(), ServicePriority.Highest);
+		Server.getInstance().getPlugin().getServer().getServicesManager().register(Economy.class, this, Server.getInstance().getPlugin(), ServicePriority.Highest);
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return ServerGet.get().getPlugin() != null;
+		return Server.getInstance().getPlugin() != null;
 	}
 
 	@Override
@@ -351,7 +351,7 @@ public class VaultEconomy implements Economy {
 				Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("SkorrloreGaming");
 				if ((plugin != null) && (plugin.isEnabled())) {
 					VaultEconomy.this.isEnabled = true;
-					ServerGet.get().getPlugin().getLogger().info("Vault support enabled.");
+					Server.getInstance().getPlugin().getLogger().info("Vault support enabled.");
 				}
 			}
 		}

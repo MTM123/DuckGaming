@@ -29,8 +29,8 @@ public class LocketteBlockListener implements Listener {
 	}
 
 	protected void registerEvents() {
-		PluginManager pm = ServerGet.get().getPlugin().getServer().getPluginManager();
-		pm.registerEvents(this, ServerGet.get().getPlugin());
+		PluginManager pm = Server.getInstance().getPlugin().getServer().getPluginManager();
+		pm.registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

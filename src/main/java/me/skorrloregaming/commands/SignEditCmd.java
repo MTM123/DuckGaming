@@ -32,12 +32,12 @@ public class SignEditCmd implements CommandExecutor {
 				sb.append(args[i] + " ");
 			}
 			String text = sb.toString().trim();
-			if (ServerGet.get().getSignEditParam().containsKey(player)) {
-				ServerGet.get().getSignEditParam().put(player, new SignInfo(Integer.parseInt(args[0]), text));
+			if (Server.getInstance().getSignEditParam().containsKey(player)) {
+				Server.getInstance().getSignEditParam().put(player, new SignInfo(Integer.parseInt(args[0]), text));
 				player.sendMessage(tag + ChatColor.RED + "Success." + ChatColor.GRAY + " Sign edit parameters " + ChatColor.ITALIC + "updated in memory" + ChatColor.RESET + ChatColor.GRAY + ".");
 				player.sendMessage(tag + ChatColor.GRAY + "Right click on the sign that you would like to edit.");
 			} else {
-				ServerGet.get().getSignEditParam().put(player, new SignInfo(Integer.parseInt(args[0]), text));
+				Server.getInstance().getSignEditParam().put(player, new SignInfo(Integer.parseInt(args[0]), text));
 				player.sendMessage(tag + ChatColor.RED + "Success." + ChatColor.GRAY + " Sign edit parameters " + ChatColor.ITALIC + "saved to memory" + ChatColor.RESET + ChatColor.GRAY + ".");
 				player.sendMessage(tag + ChatColor.GRAY + "Right click on the sign that you would like to edit.");
 			}

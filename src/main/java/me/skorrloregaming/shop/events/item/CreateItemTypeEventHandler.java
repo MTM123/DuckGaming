@@ -34,12 +34,12 @@ public class CreateItemTypeEventHandler implements AnvilGUI.AnvilClickEventHandl
 			}
 		}
 		final Material fMaterial = material;
-		Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
+		Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					new AnvilGUI(event.getPlayer(), ServerGet.get().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ITEM), new CreateItemPriceEventHandler(shoppe, fMaterial))
+					new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ITEM), new CreateItemPriceEventHandler(shoppe, fMaterial))
 							.setInputName("Enter price")
 							.open();
 				} catch (IllegalAccessException e) {

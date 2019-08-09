@@ -36,7 +36,7 @@ public class SignShop {
 		DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 		Location blockLoc = sign.getLocation();
 		String code = blockLoc.getWorld().getName() + String.valueOf(blockLoc.getBlockX()) + String.valueOf(blockLoc.getBlockY()) + String.valueOf(blockLoc.getBlockZ());
-		if (!ServerGet.get().getSignConfig().getData().contains("signs." + code)) {
+		if (!Server.getInstance().getSignConfig().getData().contains("signs." + code)) {
 			return false;
 		} else {
 			playShopTitlePopup(player, sign.getBlock());
@@ -84,14 +84,14 @@ public class SignShop {
 				if (cash >= price) {
 					if ($.isRepairable(itm)) {
 						if (itm.getDurability() < itm.getType().getMaxDurability() / 2) {
-							if (!ServerGet.get().getConfirmRepairShop().contains(player.getUniqueId())) {
+							if (!Server.getInstance().getConfirmRepairShop().contains(player.getUniqueId())) {
 								player.sendMessage(tag + ChatColor.GRAY + "The item you are holding seems to be durable still.");
 								player.sendMessage(tag + ChatColor.GRAY + "Use this shop again to confirm your transaction.");
-								ServerGet.get().getConfirmRepairShop().add(player.getUniqueId());
-								ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
+								Server.getInstance().getConfirmRepairShop().add(player.getUniqueId());
+								Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 									@Override
 									public void run() {
-										ServerGet.get().getConfirmRepairShop().remove(player.getUniqueId());
+										Server.getInstance().getConfirmRepairShop().remove(player.getUniqueId());
 									}
 								}, 45L));
 								return false;

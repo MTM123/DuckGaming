@@ -3,7 +3,6 @@ package me.skorrloregaming.hooks;
 import fr.xephi.authme.events.FailedLoginEvent;
 import me.skorrloregaming.$;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,8 +14,6 @@ import protocolsupportpocketstuff.api.modals.elements.ElementResponse;
 import protocolsupportpocketstuff.api.modals.elements.complex.ModalInput;
 import protocolsupportpocketstuff.api.modals.elements.complex.ModalLabel;
 import protocolsupportpocketstuff.api.util.PocketPlayer;
-
-import me.skorrloregaming.*;
 
 public class ProtocolSupportPocketStuff_Listener implements Listener {
 	private ComplexForm loginModal;
@@ -30,7 +27,7 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 	private ModalCallback registerCallback;
 
 	public void register() {
-		ServerGet.get().getPlugin().getServer().getPluginManager().registerEvents(this, ServerGet.get().getPlugin());
+		Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	public void bakeModals() {
@@ -58,7 +55,7 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 				ElementResponse password = response.asComplexFormResponse().getResponse(1);
 				if (getAuthMeApi().checkPassword(response.getPlayer().getName(), password.getString().trim())) {
 					getAuthMeApi().forceLogin(response.getPlayer());
-					Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
+					Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 						@Override
 						public void run() {
 						}
@@ -80,10 +77,10 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 					} else {
 						getAuthMeApi().forceRegister(response.getPlayer(), password.getString().trim());
 						getAuthMeApi().forceLogin(response.getPlayer());
-						Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
+						Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 							@Override
 							public void run() {
-								ServerGet.get().fetchLobby(response.getPlayer());
+								Server.getInstance().fetchLobby(response.getPlayer());
 							}
 						}, 20L);
 					}
@@ -98,10 +95,10 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 
 	public void onLogin(PlayerJoinEvent event) {
 		if (!PocketPlayer.isPocketPlayer(event.getPlayer())) {
-			ServerGet.get().fetchLobby(event.getPlayer());
+			Server.getInstance().fetchLobby(event.getPlayer());
 			return;
 		}
-		ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), () -> {
+		Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
 			if (event.getPlayer() != null && event.getPlayer().isOnline() && !getAuthMeApi().isAuthenticated(event.getPlayer())) {
 				if (getAuthMeApi().isRegistered(event.getPlayer().getName())) {
 					PocketPlayer.sendModal(event.getPlayer(), loginModal, loginCallback);

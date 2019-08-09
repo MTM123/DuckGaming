@@ -18,8 +18,8 @@ import me.skorrloregaming.*;
 public class BanCmd implements CommandExecutor {
 
 	public static void ban(String hostName, String reason) {
-		ServerGet.get().getBanConfig().getData().set(hostName.replace(".", "x"), reason);
-		ServerGet.get().getBanConfig().saveData();
+		Server.getInstance().getBanConfig().getData().set(hostName.replace(".", "x"), reason);
+		Server.getInstance().getBanConfig().saveData();
 	}
 
 	@Override
@@ -36,16 +36,16 @@ public class BanCmd implements CommandExecutor {
 			OfflinePlayer offlinePlayer = CraftGo.Player.getOfflinePlayer(args[0]);
 			String path = "config." + offlinePlayer.getUniqueId().toString();
 			String ipAddress = "/unspecified";
-			if (ServerGet.get().getPlugin().getConfig().contains(path)) {
-				ipAddress = ServerGet.get().getPlugin().getConfig().getString(path + ".ip");
+			if (Server.getInstance().getPlugin().getConfig().contains(path)) {
+				ipAddress = Server.getInstance().getPlugin().getConfig().getString(path + ".ip");
 			} else if ($.isValidAddress(args[0])) {
 				ipAddress = args[0].replace(".", "x");
 			} else {
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The provided data does not match any player.");
 			}
 			if (!ipAddress.equals("/unspecified")) {
-				if (ServerGet.get().getPlugin().getConfig().contains("address." + ipAddress)) {
-					for (String section : ServerGet.get().getPlugin().getConfig().getConfigurationSection("address." + ipAddress).getKeys(false)) {
+				if (Server.getInstance().getPlugin().getConfig().contains("address." + ipAddress)) {
+					for (String section : Server.getInstance().getPlugin().getConfig().getConfigurationSection("address." + ipAddress).getKeys(false)) {
 						OfflinePlayer bannedPlayer = CraftGo.Player.getOfflinePlayer(UUID.fromString(section));
 						String msg = ChatColor.translateAlternateColorCodes('&', sb.toString().trim());
 						if (bannedPlayer.isOnline())
@@ -54,14 +54,14 @@ public class BanCmd implements CommandExecutor {
 						String message1 = Link$.italicGray + "Server: Banned " + bannedPlayer.getName() + " '" + sb.toString().trim() + "'";
 						if (!bannedPlayer.hasPlayedBefore() && !bannedPlayer.isOnline()) {
 							Map<String, String> message = new MapBuilder().message(message0).range(0).consoleOnly(true).build();
-							LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+							LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 							Logger.info(message0, true);
 						} else {
 							Map<String, String> message = new MapBuilder().message(message1).range(0).consoleOnly(true).build();
-							LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+							LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 							Logger.info(message1, true);
 						}
-						for (Player otherPlayer : ServerGet.get().getPlugin().getServer().getOnlinePlayers()) {
+						for (Player otherPlayer : Server.getInstance().getPlugin().getServer().getOnlinePlayers()) {
 							if (!bannedPlayer.hasPlayedBefore() && !bannedPlayer.isOnline()) {
 								otherPlayer.sendMessage(message0);
 							} else {

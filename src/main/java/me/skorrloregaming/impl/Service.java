@@ -7,10 +7,10 @@ public enum Service {
 	MinecraftServersOrg(2, "MinecraftServers.org", ServicePriority.midnight),
 	MinecraftServersBiz(3, "MinecraftServers.biz", ServicePriority.delay12hour),
 	MinecraftServerList(4, "MCSL", ServicePriority.midnightGreenwich),
-	MinecraftServerNet(5, "Minecraft-ServerGet.get().net", ServicePriority.midnight),
+	MinecraftServerNet(5, "Minecraft-Server.getInstance().net", ServicePriority.midnight),
 	MinecraftList(6, "MinecraftServersList", ServicePriority.delay24hour),
 	TopG(7, "TopG.org", ServicePriority.delay12hour),
-	Trackyserver(8, "TrackyServerGet.get().com", ServicePriority.delay24hour),
+	Trackyserver(8, "TrackyServer.getInstance().com", ServicePriority.delay24hour),
 	TopMinecraftServers(9, "/Top Minecraft Servers", ServicePriority.delay24hour);
 
 	private int id;

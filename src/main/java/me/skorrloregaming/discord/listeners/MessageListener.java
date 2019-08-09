@@ -40,8 +40,8 @@ public class MessageListener extends ListenerAdapter {
 			return;
 		if (event.getMember().getUser() == null)
 			return;
-		if (ServerGet.get().getPlugin().isEnabled())
-			Bukkit.getScheduler().runTask(ServerGet.get().getPlugin(), new Runnable() {
+		if (Server.getInstance().getPlugin().isEnabled())
+			Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
 
 				@Override
 				public void run() {
@@ -56,20 +56,20 @@ public class MessageListener extends ListenerAdapter {
 								OfflinePlayer op = CraftGo.Player.getOfflinePlayer(memberName);
 								if (op.hasPlayedBefore() || op.isOnline()) {
 									String path = "config." + op.getUniqueId().toString();
-									if (ServerGet.get().getPlugin().getConfig().contains(path + ".ip")) {
-										altAddress = ServerGet.get().getPlugin().getConfig().getString(path + ".ip");
+									if (Server.getInstance().getPlugin().getConfig().contains(path + ".ip")) {
+										altAddress = Server.getInstance().getPlugin().getConfig().getString(path + ".ip");
 									}
 								}
-								if (altAddress == null || ServerGet.get().getBanConfig().getData().contains(altAddress.replace(".", "x")) || !ServerGet.get().getDiscordVerifyConfig().getData().contains("verified." + id)) {
+								if (altAddress == null || Server.getInstance().getBanConfig().getData().contains(altAddress.replace(".", "x")) || !Server.getInstance().getDiscordVerifyConfig().getData().contains("verified." + id)) {
 									event.getMessage().delete().queueAfter(2000, TimeUnit.MILLISECONDS);
 									discordBot.broadcast("Sorry " + mention + ", you are no longer verified as that player.", 2000, Channel.SERVER_CHAT);
-									ServerGet.get().getDiscordVerifyConfig().getData().set("verified." + id, null);
-									ServerGet.get().getDiscordVerifyConfig().saveData();
+									Server.getInstance().getDiscordVerifyConfig().getData().set("verified." + id, null);
+									Server.getInstance().getDiscordVerifyConfig().saveData();
 									event.getGuild().getController().removeRolesFromMember(event.getMember(), event.getJDA().getRolesByName("Verified", true)).complete();
 									event.getGuild().getController().setNickname(event.getMember(), event.getMember().getUser().getName()).complete();
 									return;
 								}
-								rawMessage = LinkServerGet.get().getAntiCheat().processAntiSwear(op, rawMessage, false, true);
+								rawMessage = LinkServer.getInstance().getAntiCheat().processAntiSwear(op, rawMessage, false, true);
 								String displayName = Link$.getFlashPlayerDisplayName(memberName);
 								String username = event.getMember().getUser().getName() + "#" + event.getMember().getUser().getDiscriminator();
 								TextComponent newLine = new TextComponent(ComponentSerializer.parse("{text: \"\n\"}"));
@@ -92,7 +92,7 @@ public class MessageListener extends ListenerAdapter {
 								for (Player player : Bukkit.getOnlinePlayers()) {
 									CraftGo.Player.sendJson(player, json);
 								}
-								LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(json).json(true).build());
+								LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(json).json(true).build());
 							} else if (event.getTextChannel().getName().equals(discordBot.getChannelName(Channel.SERVER_VERIFY))) {
 								String rawMessage = event.getMessage().getContentDisplay();
 								if (rawMessage.startsWith("?verify")) {
@@ -103,11 +103,11 @@ public class MessageListener extends ListenerAdapter {
 											int code = Integer.parseInt(codeString);
 											boolean hit = false;
 											UUID hitUUID = null;
-											for (Map.Entry<Integer, UUID> entry : ServerGet.get().getDiscordVerifyPlayers().entrySet()) {
+											for (Map.Entry<Integer, UUID> entry : Server.getInstance().getDiscordVerifyPlayers().entrySet()) {
 												if (entry.getKey().intValue() == code) {
 													hitUUID = entry.getValue();
-													ServerGet.get().getDiscordVerifyConfig().getData().set("verified." + id, entry.getValue().toString());
-													ServerGet.get().getDiscordVerifyConfig().saveData();
+													Server.getInstance().getDiscordVerifyConfig().getData().set("verified." + id, entry.getValue().toString());
+													Server.getInstance().getDiscordVerifyConfig().saveData();
 													discordBot.broadcast("Thank you for verifying you minecraft account, " + mention + "!", Channel.SERVER_VERIFY);
 													hit = true;
 												}
@@ -116,7 +116,7 @@ public class MessageListener extends ListenerAdapter {
 												event.getMessage().delete().queueAfter(2000, TimeUnit.MILLISECONDS);
 												discordBot.broadcast("That's not a valid code, you can get one with /verify on the server.", 2000, Channel.SERVER_VERIFY);
 											} else {
-												ServerGet.get().getDiscordVerifyPlayers().remove(code, hitUUID);
+												Server.getInstance().getDiscordVerifyPlayers().remove(code, hitUUID);
 												OfflinePlayer player = Bukkit.getOfflinePlayer(hitUUID);
 												event.getGuild().getController().addRolesToMember(event.getMember(), event.getJDA().getRolesByName("Verified", true)).complete();
 												event.getGuild().getController().setNickname(event.getMember(), player.getName()).complete();

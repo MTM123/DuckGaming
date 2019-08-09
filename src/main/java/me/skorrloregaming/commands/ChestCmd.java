@@ -20,17 +20,17 @@ public class ChestCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!ServerGet.get().getKitpvp().contains(player.getUniqueId()) && !ServerGet.get().getFactions().contains(player.getUniqueId()) && !ServerGet.get().getSkyblock().contains(player.getUniqueId()) && !ServerGet.get().getSurvival().contains(player.getUniqueId())) {
+		if (!Server.getInstance().getKitpvp().contains(player.getUniqueId()) && !Server.getInstance().getFactions().contains(player.getUniqueId()) && !Server.getInstance().getSkyblock().contains(player.getUniqueId()) && !Server.getInstance().getSurvival().contains(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
-		if (ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
 		String subDomain = $.getMinigameDomain(player);
-		if (ServerGet.get().getSaveOtherInventory().containsKey(player))
-			ServerGet.get().getSaveOtherInventory().remove(player);
+		if (Server.getInstance().getSaveOtherInventory().containsKey(player))
+			Server.getInstance().getSaveOtherInventory().remove(player);
 		int chestNumber = 1;
 		if (args.length > 0) {
 			try {
@@ -101,7 +101,7 @@ public class ChestCmd implements CommandExecutor {
 				String tpSubDomain = $.getMinigameDomain(player);
 				Inventory inv = SolidStorage.restorePersonalChest(tp, tpSubDomain, hasControl, chestNumber);
 				if (hasControl) {
-					ServerGet.get().getSavePersonalChest().put(player, tp);
+					Server.getInstance().getSavePersonalChest().put(player, tp);
 				}
 				player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
 				player.openInventory(inv);

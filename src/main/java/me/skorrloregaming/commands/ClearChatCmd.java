@@ -19,10 +19,10 @@ public class ClearChatCmd implements CommandExecutor {
 		for (int i = 0; i < 300; i++) {
 			Bukkit.broadcastMessage("");
 		}
-		String message = ServerGet.get().getPluginLabel() + ChatColor.GRAY + "Chat has been cleared by " + ChatColor.RED + playerName;
+		String message = Server.getInstance().getPluginLabel() + ChatColor.GRAY + "Chat has been cleared by " + ChatColor.RED + playerName;
 		Bukkit.broadcastMessage(message);
 		message = message.substring(message.indexOf(ChatColor.GRAY + ""));
-		ServerGet.get().getDiscordBot().broadcast(
+		Server.getInstance().getDiscordBot().broadcast(
 				ChatColor.stripColor(message)
 				, Channel.SERVER_CHAT
 		);

@@ -21,14 +21,14 @@ import me.skorrloregaming.*;
 public class PaperEventHandler implements Listener {
 
 	public PaperEventHandler() {
-		ServerGet.get().getPlugin().getLogger().info("Registered PaperSpigot specific event listener");
-		ServerGet.get().getPlugin().getLogger().info("If issues arise from this, report them immediately.");
+		Server.getInstance().getPlugin().getLogger().info("Registered PaperSpigot specific event listener");
+		Server.getInstance().getPlugin().getLogger().info("If issues arise from this, report them immediately.");
 	}
 
 	@EventHandler
 	public void onPlayerJump(PlayerJumpEvent event) {
 		Player player = event.getPlayer();
-		if (ServerGet.get().getWaiverAcceptPlayers().contains(player.getUniqueId())) {
+		if (Server.getInstance().getWaiverAcceptPlayers().contains(player.getUniqueId())) {
 			event.setCancelled(true);
 			return;
 		}

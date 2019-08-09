@@ -3,7 +3,6 @@ package me.skorrloregaming.runnable;
 import me.skorrloregaming.$;
 import me.skorrloregaming.CraftGo;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import me.skorrloregaming.impl.TitleSubtitle;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,8 +13,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.Callable;
-
-import me.skorrloregaming.*;
 
 public class DelayedTeleport extends BukkitRunnable {
 	public double remainingSeconds;
@@ -45,13 +42,13 @@ public class DelayedTeleport extends BukkitRunnable {
 			return;
 		}
 		instance = this;
-		Bukkit.getScheduler().runTask(ServerGet.get().getPlugin(), new Runnable() {
+		Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
 			@Override
 			public void run() {
-				if (ServerGet.get().getDelayedTeleports().containsKey(player.getUniqueId())) {
-					ServerGet.get().getDelayedTeleports().get(player.getUniqueId()).close();
+				if (Server.getInstance().getDelayedTeleports().containsKey(player.getUniqueId())) {
+					Server.getInstance().getDelayedTeleports().get(player.getUniqueId()).close();
 				}
-				ServerGet.get().getDelayedTeleports().put(player.getUniqueId(), instance);
+				Server.getInstance().getDelayedTeleports().put(player.getUniqueId(), instance);
 				if (!silent) {
 					if ((seconds == Math.floor(seconds)) && !Double.isInfinite(seconds)) {
 						final Double ctSeconds = seconds;
@@ -80,7 +77,7 @@ public class DelayedTeleport extends BukkitRunnable {
 		if (!(reason == null)) {
 			player.sendMessage(reason);
 		}
-		ServerGet.get().getDelayedTeleports().remove(player.getUniqueId());
+		Server.getInstance().getDelayedTeleports().remove(player.getUniqueId());
 		allowed = false;
 	}
 
@@ -100,19 +97,19 @@ public class DelayedTeleport extends BukkitRunnable {
 			remainingSeconds -= 0.20;
 			if (remainingSeconds <= 0) {
 				remainingSeconds = originalSeconds;
-				if (ServerGet.get().getPlugin().getServer().getPlayer(player.getName()) != null) {
+				if (Server.getInstance().getPlugin().getServer().getPlayer(player.getName()) != null) {
 					if (!(finishChatMessage == null) && finishChatMessage.length() > 0)
 						player.sendMessage(finishChatMessage);
 					if (!silent) {
 						player.sendMessage(ChatColor.GRAY + "Teleporting..");
 					}
-					Bukkit.getScheduler().runTask(ServerGet.get().getPlugin(), new Runnable() {
+					Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
 						@Override
 						public void run() {
 							$.teleport(player, teleportLocation);
 							if (!(finishTitleSubtitle == null))
 								CraftGo.Player.sendTimedTitleAndSubtitle(player, finishTitleSubtitle);
-							ServerGet.get().getDelayedTeleports().remove(player.getUniqueId());
+							Server.getInstance().getDelayedTeleports().remove(player.getUniqueId());
 							if (!(finishTask == null)) {
 								try {
 									finishTask.call();
@@ -128,7 +125,7 @@ public class DelayedTeleport extends BukkitRunnable {
 			}
 			if (player.getWorld().getName().equals(originalPlayerLocation.getWorld().getName())) {
 				if (player.getLocation().distance(originalPlayerLocation) >= 0.1) {
-					Bukkit.getScheduler().runTask(ServerGet.get().getPlugin(), new Runnable() {
+					Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
 						@Override
 						public void run() {
 							if (!silent) {
@@ -137,7 +134,7 @@ public class DelayedTeleport extends BukkitRunnable {
 								if (player.hasPotionEffect(PotionEffectType.CONFUSION))
 									player.removePotionEffect(PotionEffectType.CONFUSION);
 							}
-							ServerGet.get().getDelayedTeleports().remove(player.getUniqueId());
+							Server.getInstance().getDelayedTeleports().remove(player.getUniqueId());
 						}
 					});
 					cancel();

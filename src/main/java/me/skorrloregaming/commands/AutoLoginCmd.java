@@ -3,14 +3,11 @@ package me.skorrloregaming.commands;
 import me.skorrloregaming.$;
 import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import me.skorrloregaming.*;
 
 public class AutoLoginCmd implements CommandExecutor {
 
@@ -19,12 +16,12 @@ public class AutoLoginCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		boolean dailyAuth = ServerGet.get().getPlugin().getConfig().getBoolean("settings.enable.authme.dailyAuth");
-		boolean autoLoginCmd = ServerGet.get().getPlugin().getConfig().getBoolean("settings.enable.authme.autoLoginCmd");
+		boolean dailyAuth = Server.getInstance().getPlugin().getConfig().getBoolean("settings.enable.authme.dailyAuth");
+		boolean autoLoginCmd = Server.getInstance().getPlugin().getConfig().getBoolean("settings.enable.authme.autoLoginCmd");
 		if (!dailyAuth && autoLoginCmd) {
 			String ip = player.getAddress().getAddress().getHostAddress().replace(".", "x");
-			if (ServerGet.get().getPlugin().getConfig().contains("autologin." + ip + "." + player.getUniqueId().toString())) {
-				ServerGet.get().getPlugin().getConfig().set("autologin." + ip + "." + player.getUniqueId().toString(), null);
+			if (Server.getInstance().getPlugin().getConfig().contains("autologin." + ip + "." + player.getUniqueId().toString())) {
+				Server.getInstance().getPlugin().getConfig().set("autologin." + ip + "." + player.getUniqueId().toString(), null);
 				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The auto login feature has been disabled.");
 			} else {
 				if (args.length > 0) {
@@ -35,7 +32,7 @@ public class AutoLoginCmd implements CommandExecutor {
 					} else {
 						isCorrectPassword = ((fr.xephi.authme.api.v3.AuthMeApi) authObject).checkPassword(player.getName(), args[0]);
 						if (isCorrectPassword) {
-							ServerGet.get().getPlugin().getConfig().set("autologin." + ip + "." + player.getUniqueId().toString(), args[0]);
+							Server.getInstance().getPlugin().getConfig().set("autologin." + ip + "." + player.getUniqueId().toString(), args[0]);
 							player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The auto login feature has been enabled.");
 						} else {
 							player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified account password is incorrect.");

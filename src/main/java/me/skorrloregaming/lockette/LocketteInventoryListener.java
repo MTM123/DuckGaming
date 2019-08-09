@@ -1,7 +1,6 @@
 package me.skorrloregaming.lockette;
 
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -15,15 +14,13 @@ import org.bukkit.plugin.PluginManager;
 
 import java.util.UUID;
 
-import me.skorrloregaming.*;
-
 public class LocketteInventoryListener implements Listener {
 	public LocketteInventoryListener(Lockette instance) {
 	}
 
 	protected void registerEvents() {
-		PluginManager pm = ServerGet.get().getPlugin().getServer().getPluginManager();
-		pm.registerEvents(this, ServerGet.get().getPlugin());
+		PluginManager pm = Server.getInstance().getPlugin().getServer().getPluginManager();
+		pm.registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	private boolean isProtected(Inventory inv, boolean allowEveryone) {

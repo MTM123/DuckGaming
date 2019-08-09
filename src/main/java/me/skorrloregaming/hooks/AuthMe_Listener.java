@@ -14,7 +14,7 @@ import me.skorrloregaming.*;
 public class AuthMe_Listener implements Listener {
 
 	public void register() {
-		ServerGet.get().getPlugin().getServer().getPluginManager().registerEvents(this, ServerGet.get().getPlugin());
+		Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	public void playWelcomeMessage(Player player) {
@@ -27,7 +27,7 @@ public class AuthMe_Listener implements Listener {
 		if (!CraftGo.Player.getOnlineMode(player)) {
 			playWelcomeMessage(player);
 		}
-		String joinMessage = ServerGet.get().getDefaultJoinMessage().replace("{player}", player.getName());
+		String joinMessage = Server.getInstance().getDefaultJoinMessage().replace("{player}", player.getName());
 		PlayerAuthenticateEvent authEvent = new PlayerAuthenticateEvent(player, joinMessage);
 		Bukkit.getPluginManager().callEvent(authEvent);
 	}
@@ -36,6 +36,6 @@ public class AuthMe_Listener implements Listener {
 	public void onPlayerLogout(LogoutEvent event) {
 		Player player = event.getPlayer();
 		String remoteAddr = player.getAddress().getHostName();
-		ServerGet.get().getSessionManager().invalidateSession(player.getName(), player, LinkSessionManager.encodeHex(remoteAddr), false);
+		Server.getInstance().getSessionManager().invalidateSession(player.getName(), player, LinkSessionManager.encodeHex(remoteAddr), false);
 	}
 }

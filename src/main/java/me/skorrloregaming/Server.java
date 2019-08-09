@@ -614,7 +614,7 @@ public class Server extends JavaPlugin {
 	}
 
 	@Override
-	public void onLoad() {
+	public void onEnable() {
 		serverStartTime = System.currentTimeMillis();
 		pluginName = this.getDescription().getName();
 		pluginLabel = Link$.Legacy.tag;
@@ -639,6 +639,8 @@ public class Server extends JavaPlugin {
 		chestShopConfig = new ConfigurationManager();
 		discordVerifyConfig = new ConfigurationManager();
 		$.createDataFolder();
+		getConfig().options().copyDefaults(true);
+		saveConfig();
 		warpConfig.setup(new File(this.getDataFolder(), "warps.yml"));
 		signConfig.setup(new File(this.getDataFolder(), "shops.yml"));
 		factionsConfig.setup(new File(this.getDataFolder(), "factions.yml"));
@@ -670,12 +672,6 @@ public class Server extends JavaPlugin {
 		spawnerPrices.put(6, 4500);
 		spawnerPrices.put(7, 3000);
 		spawnerPrices.put(8, 3000);
-	}
-
-	@Override
-	public void onEnable() {
-		getConfig().options().copyDefaults(true);
-		saveConfig();
 		for (World world : Bukkit.getWorlds()) {
 			for (Entity entity : world.getEntities())
 				if (entity.getType() == EntityType.ENDER_DRAGON)
@@ -748,7 +744,7 @@ public class Server extends JavaPlugin {
 					player.sendMessage(Link$.modernMsgPrefix + "Psst, did you know the server finished updating?");
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					player.performCommand("hub");
-					LinkServerGet.get().getPlaytimeManager().handle_JoinEvent(player);
+					LinkServer.getInstance().getPlaytimeManager().handle_JoinEvent(player);
 				}
 				List<Entity> entity = new LinkedList<Entity>($.getZoneLocation("creative").getWorld().getEntities());
 				for (Entity e : entity) {
@@ -769,7 +765,7 @@ public class Server extends JavaPlugin {
 				}
 			}
 		}, 0L, 6000L));
-		bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(ServerGet.get().getPlugin(), new Runnable() {
+		bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(Server.getInstance().getPlugin(), new Runnable() {
 			@Override
 			public void run() {
 				for (World world : Bukkit.getWorlds()) {
@@ -894,10 +890,10 @@ public class Server extends JavaPlugin {
 				if (!hub.contains(player.getUniqueId()))
 					hub.add(player.getUniqueId());
 				fetchLobby(player);
-				LinkServerGet.get().getPlaytimeManager().handle_QuitEvent(player);
+				LinkServer.getInstance().getPlaytimeManager().handle_QuitEvent(player);
 			}
 		}
-		LinkServerGet.get().getRedisDatabase().unregister();
+		LinkServer.getInstance().getRedisDatabase().unregister();
 	}
 
 	public void fetchLobby(Player player) {
@@ -1112,9 +1108,9 @@ public class Server extends JavaPlugin {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "KitPvP";
 				Bukkit.broadcastMessage(message);
-				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				ServerGet.get().getDiscordBot().broadcast(
+				Server.getInstance().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1142,9 +1138,9 @@ public class Server extends JavaPlugin {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "KitPvP";
 				Bukkit.broadcastMessage(message);
-				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				ServerGet.get().getDiscordBot().broadcast(
+				Server.getInstance().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1205,9 +1201,9 @@ public class Server extends JavaPlugin {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Factions";
 				Bukkit.broadcastMessage(message);
-				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				ServerGet.get().getDiscordBot().broadcast(
+				Server.getInstance().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1237,16 +1233,16 @@ public class Server extends JavaPlugin {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Factions";
 				Bukkit.broadcastMessage(message);
-				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				ServerGet.get().getDiscordBot().broadcast(
+				Server.getInstance().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
 			factions.remove(player.getUniqueId());
 			player.setAllowFlight(true);
-			if (ServerGet.get().getFactionFlyPlayers().contains(player.getUniqueId()))
-				ServerGet.get().getFactionFlyPlayers().remove(player.getUniqueId());
+			if (Server.getInstance().getFactionFlyPlayers().contains(player.getUniqueId()))
+				Server.getInstance().getFactionFlyPlayers().remove(player.getUniqueId());
 			$.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);
 			return 1;
 		}
@@ -1301,9 +1297,9 @@ public class Server extends JavaPlugin {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Survival";
 				Bukkit.broadcastMessage(message);
-				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				ServerGet.get().getDiscordBot().broadcast(
+				Server.getInstance().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1330,9 +1326,9 @@ public class Server extends JavaPlugin {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Survival";
 				Bukkit.broadcastMessage(message);
-				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				ServerGet.get().getDiscordBot().broadcast(
+				Server.getInstance().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1371,9 +1367,9 @@ public class Server extends JavaPlugin {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Skyfight";
 				Bukkit.broadcastMessage(message);
-				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				ServerGet.get().getDiscordBot().broadcast(
+				Server.getInstance().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1490,9 +1486,9 @@ public class Server extends JavaPlugin {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Skyfight";
 				Bukkit.broadcastMessage(message);
-				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				ServerGet.get().getDiscordBot().broadcast(
+				Server.getInstance().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1564,13 +1560,13 @@ public class Server extends JavaPlugin {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Creative";
 				Bukkit.broadcastMessage(message);
-				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				ServerGet.get().getDiscordBot().broadcast(
+				Server.getInstance().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
-			ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+			Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 				@Override
 				public void run() {
 					if (creative.contains(player.getUniqueId())) {
@@ -1612,9 +1608,9 @@ public class Server extends JavaPlugin {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Creative";
 				Bukkit.broadcastMessage(message);
-				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				ServerGet.get().getDiscordBot().broadcast(
+				Server.getInstance().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1685,9 +1681,9 @@ public class Server extends JavaPlugin {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has logged into " + ChatColor.RED + "Skyblock";
 				Bukkit.broadcastMessage(message);
-				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				ServerGet.get().getDiscordBot().broadcast(
+				Server.getInstance().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}
@@ -1715,9 +1711,9 @@ public class Server extends JavaPlugin {
 			if (!noLog) {
 				String message = pluginLabel + ChatColor.RED + player.getName() + ChatColor.GRAY + " has quit " + ChatColor.RED + "Skyblock";
 				Bukkit.broadcastMessage(message);
-				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+				LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 				message = message.substring(message.indexOf(ChatColor.RED + ""));
-				ServerGet.get().getDiscordBot().broadcast(
+				Server.getInstance().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
 						, Channel.SERVER_CHAT);
 			}

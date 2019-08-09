@@ -24,19 +24,19 @@ public class CombatTimer extends BukkitRunnable {
 	@Override
 	public void run() {
 		if (passes == 0) {
-			ServerGet.get().getPlayersInCombat().put(player.getUniqueId(), new SwitchIntDouble(this.getTaskId(), originalSeconds));
+			Server.getInstance().getPlayersInCombat().put(player.getUniqueId(), new SwitchIntDouble(this.getTaskId(), originalSeconds));
 		}
 		passes = passes + 1;
-		if (!ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (!Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			cancel();
 			return;
 		}
-		SwitchIntDouble existingExtreme = ServerGet.get().getPlayersInCombat().get(player.getUniqueId());
+		SwitchIntDouble existingExtreme = Server.getInstance().getPlayersInCombat().get(player.getUniqueId());
 		existingExtreme.setArg1(existingExtreme.getArg1() - 0.20);
-		ServerGet.get().getPlayersInCombat().put(player.getUniqueId(), existingExtreme);
+		Server.getInstance().getPlayersInCombat().put(player.getUniqueId(), existingExtreme);
 		if (existingExtreme.getArg1() <= 0) {
 			player.sendMessage(prefix + ChatColor.GRAY + "You are no longer engaged in combat.");
-			ServerGet.get().getPlayersInCombat().remove(player.getUniqueId());
+			Server.getInstance().getPlayersInCombat().remove(player.getUniqueId());
 			cancel();
 			return;
 		}

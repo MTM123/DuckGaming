@@ -32,12 +32,12 @@ public class CreateEnchantTypeEventHandler implements AnvilGUI.AnvilClickEventHa
 			return;
 		}
 		final Enchantment fEnchantment = enchantment;
-		Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
+		Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					new AnvilGUI(event.getPlayer(), ServerGet.get().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ENCHANT), new CreateEnchantPriceEventHandler(shoppe, fEnchantment))
+					new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ENCHANT), new CreateEnchantPriceEventHandler(shoppe, fEnchantment))
 							.setInputName("Enter price")
 							.open();
 				} catch (IllegalAccessException e) {

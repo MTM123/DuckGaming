@@ -23,7 +23,7 @@ public class InventorySeeCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
@@ -39,9 +39,9 @@ public class InventorySeeCmd implements CommandExecutor {
 				if (player.isOp()) {
 					inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.CHEST), 54, name);
 					name = ChatColor.BOLD + "Personal Inventory";
-					if (ServerGet.get().getSavePersonalChest().containsKey(player))
-						ServerGet.get().getSavePersonalChest().remove(player);
-					ServerGet.get().getSaveOtherInventory().put(player, tp);
+					if (Server.getInstance().getSavePersonalChest().containsKey(player))
+						Server.getInstance().getSavePersonalChest().remove(player);
+					Server.getInstance().getSaveOtherInventory().put(player, tp);
 				}
 				inv.setContents(tp.getInventory().getContents());
 				player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);

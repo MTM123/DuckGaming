@@ -24,15 +24,15 @@ public class RemoveNpcCmd implements CommandExecutor {
 			return true;
 		}
 		if (args.length == 0) {
-			if (!ServerGet.get().getConfirmUnregisterNpc().contains(player.getUniqueId()))
-				ServerGet.get().getConfirmUnregisterNpc().add(player.getUniqueId());
+			if (!Server.getInstance().getConfirmUnregisterNpc().contains(player.getUniqueId()))
+				Server.getInstance().getConfirmUnregisterNpc().add(player.getUniqueId());
 			player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success." + ChatColor.GRAY + " Npc removal parameters " + ChatColor.ITALIC + "saved in memory" + ChatColor.RESET + ChatColor.GRAY + ".");
 			player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Right click on the npc that you would like to remove.");
-			ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
+			Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 				@Override
 				public void run() {
-					if (ServerGet.get().getConfirmUnregisterNpc().contains(player.getUniqueId()))
-						ServerGet.get().getConfirmUnregisterNpc().remove(player.getUniqueId());
+					if (Server.getInstance().getConfirmUnregisterNpc().contains(player.getUniqueId()))
+						Server.getInstance().getConfirmUnregisterNpc().remove(player.getUniqueId());
 				}
 			}, 100L));
 		}

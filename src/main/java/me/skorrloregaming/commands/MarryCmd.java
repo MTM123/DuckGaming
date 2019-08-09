@@ -3,7 +3,6 @@ package me.skorrloregaming.commands;
 import me.skorrloregaming.$;
 import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import me.skorrloregaming.impl.MarriageGender;
 import me.skorrloregaming.impl.ServerMinigame;
 import me.skorrloregaming.runnable.DelayedTeleport;
@@ -17,8 +16,6 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 import java.util.UUID;
 
-import me.skorrloregaming.*;
-
 public class MarryCmd implements CommandExecutor {
 
 	@Override
@@ -26,7 +23,7 @@ public class MarryCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (ServerGet.get().getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
@@ -35,19 +32,19 @@ public class MarryCmd implements CommandExecutor {
 		} else if (args.length > 0 && !(Bukkit.getPlayer(args[0]) == null)) {
 			Player targetPlayer = Bukkit.getPlayer(args[0]);
 			boolean acceptMarry = false;
-			for (Map.Entry<UUID, UUID> id : ServerGet.get().getMarriageRequests().entrySet()) {
+			for (Map.Entry<UUID, UUID> id : Server.getInstance().getMarriageRequests().entrySet()) {
 				if (id.getKey().equals(targetPlayer.getUniqueId())) {
 					if (id.getValue().equals(player.getUniqueId())) {
-						ServerGet.get().getMarriageRequests().remove(id.getKey());
+						Server.getInstance().getMarriageRequests().remove(id.getKey());
 						acceptMarry = true;
 					}
 				}
 				if (id.getValue().equals(targetPlayer.getUniqueId())) {
-					ServerGet.get().getMarriageRequests().remove(id.getKey());
+					Server.getInstance().getMarriageRequests().remove(id.getKey());
 				}
 			}
-			if (ServerGet.get().getMarriageRequests().containsKey(player.getUniqueId()))
-				ServerGet.get().getMarriageRequests().remove(player.getUniqueId());
+			if (Server.getInstance().getMarriageRequests().containsKey(player.getUniqueId()))
+				Server.getInstance().getMarriageRequests().remove(player.getUniqueId());
 			if (acceptMarry) {
 				player.performCommand("marry divorce");
 				int marriageId = $.Marriage.setPlayerMarriedPlayer(player, targetPlayer);
@@ -57,7 +54,7 @@ public class MarryCmd implements CommandExecutor {
 				targetPlayer.sendMessage(Link$.Legacy.tag + ChatColor.YELLOW + player.getName() + ChatColor.RESET + " has accepted your proposal.");
 				targetPlayer.sendMessage(Link$.Legacy.tag + "You are now married to " + ChatColor.YELLOW + player.getName());
 			} else {
-				ServerGet.get().getMarriageRequests().put(player.getUniqueId(), targetPlayer.getUniqueId());
+				Server.getInstance().getMarriageRequests().put(player.getUniqueId(), targetPlayer.getUniqueId());
 				player.sendMessage(Link$.Legacy.tag + "Marriage proposal sent to " + ChatColor.YELLOW + targetPlayer.getName() + ChatColor.RESET + ".");
 				targetPlayer.sendMessage(Link$.Legacy.tag + "Marriage proposal received from " + ChatColor.YELLOW + player.getName() + ChatColor.RESET + ".");
 				targetPlayer.sendMessage(Link$.Legacy.tag + "To accept, type " + ChatColor.YELLOW + "/marry " + player.getName() + ChatColor.RESET + " in chat.");
@@ -127,13 +124,13 @@ public class MarryCmd implements CommandExecutor {
 					return true;
 				}
 				String base = "homes." + marriageId;
-				ServerGet.get().getMarriageHomesConfig().getData().set(base + ".world", player.getWorld().getName());
-				ServerGet.get().getMarriageHomesConfig().getData().set(base + ".x", player.getLocation().getX());
-				ServerGet.get().getMarriageHomesConfig().getData().set(base + ".y", player.getLocation().getY());
-				ServerGet.get().getMarriageHomesConfig().getData().set(base + ".z", player.getLocation().getZ());
-				ServerGet.get().getMarriageHomesConfig().getData().set(base + ".yaw", (int) player.getLocation().getYaw());
-				ServerGet.get().getMarriageHomesConfig().getData().set(base + ".pitch", (int) player.getLocation().getPitch());
-				ServerGet.get().getMarriageHomesConfig().saveData();
+				Server.getInstance().getMarriageHomesConfig().getData().set(base + ".world", player.getWorld().getName());
+				Server.getInstance().getMarriageHomesConfig().getData().set(base + ".x", player.getLocation().getX());
+				Server.getInstance().getMarriageHomesConfig().getData().set(base + ".y", player.getLocation().getY());
+				Server.getInstance().getMarriageHomesConfig().getData().set(base + ".z", player.getLocation().getZ());
+				Server.getInstance().getMarriageHomesConfig().getData().set(base + ".yaw", (int) player.getLocation().getYaw());
+				Server.getInstance().getMarriageHomesConfig().getData().set(base + ".pitch", (int) player.getLocation().getPitch());
+				Server.getInstance().getMarriageHomesConfig().saveData();
 				player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have set your home on this server.");
 			} else if (args[0].equalsIgnoreCase("home")) {
 				int marriageId = $.Marriage.getPlayerMarriageId(player);
@@ -142,25 +139,25 @@ public class MarryCmd implements CommandExecutor {
 					return true;
 				}
 				String base = "homes." + marriageId;
-				World world = ServerGet.get().getPlugin().getServer().getWorld(ServerGet.get().getMarriageHomesConfig().getData().getString(base + ".world"));
+				World world = Server.getInstance().getPlugin().getServer().getWorld(Server.getInstance().getMarriageHomesConfig().getData().getString(base + ".world"));
 				if ($.getMinigameFromWorld(world) == $.getMinigameFromWorld(player.getWorld())) {
-					double x = ServerGet.get().getMarriageHomesConfig().getData().getDouble(base + ".x");
-					double y = ServerGet.get().getMarriageHomesConfig().getData().getDouble(base + ".y");
-					double z = ServerGet.get().getMarriageHomesConfig().getData().getDouble(base + ".z");
-					float yaw = (float) ServerGet.get().getMarriageHomesConfig().getData().getDouble(base + ".yaw");
-					float pitch = (float) ServerGet.get().getMarriageHomesConfig().getData().getDouble(base + ".pitch");
+					double x = Server.getInstance().getMarriageHomesConfig().getData().getDouble(base + ".x");
+					double y = Server.getInstance().getMarriageHomesConfig().getData().getDouble(base + ".y");
+					double z = Server.getInstance().getMarriageHomesConfig().getData().getDouble(base + ".z");
+					float yaw = (float) Server.getInstance().getMarriageHomesConfig().getData().getDouble(base + ".yaw");
+					float pitch = (float) Server.getInstance().getMarriageHomesConfig().getData().getDouble(base + ".pitch");
 					Location homeLocation = new Location(world, x, y, z, yaw, pitch);
-					DelayedTeleport dt = new DelayedTeleport(player, ServerGet.get().getTeleportationDelay(), homeLocation, false);
-					ServerGet.get().getBukkitTasks().add(dt.runTaskTimer(ServerGet.get().getPlugin(), 4, 4));
+					DelayedTeleport dt = new DelayedTeleport(player, Server.getInstance().getTeleportationDelay(), homeLocation, false);
+					Server.getInstance().getBukkitTasks().add(dt.runTaskTimer(Server.getInstance().getPlugin(), 4, 4));
 				} else {
 					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.WHITE + "The definied home is in another minigame.");
 				}
 			} else if (args[0].equalsIgnoreCase("chat")) {
-				if (ServerGet.get().getMarriageChatPlayers().contains(player.getUniqueId())) {
-					ServerGet.get().getMarriageChatPlayers().remove(player.getUniqueId());
+				if (Server.getInstance().getMarriageChatPlayers().contains(player.getUniqueId())) {
+					Server.getInstance().getMarriageChatPlayers().remove(player.getUniqueId());
 					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have left the marriage chat.");
 				} else {
-					ServerGet.get().getMarriageChatPlayers().add(player.getUniqueId());
+					Server.getInstance().getMarriageChatPlayers().add(player.getUniqueId());
 					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have entered the marriage chat.");
 				}
 			} else if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("list")) {
@@ -187,7 +184,7 @@ public class MarryCmd implements CommandExecutor {
 				}
 				$.Marriage.setPlayerMarriedPlayer(marriedPlayer, null);
 				$.Marriage.setPlayerMarriedPlayer(player, null);
-				ServerGet.get().getMarriageHomesConfig().getData().set("homes." + marriageId, null);
+				Server.getInstance().getMarriageHomesConfig().getData().set("homes." + marriageId, null);
 				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have broke up with your partner.");
 			} else {
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "That marriage command could not be found.");

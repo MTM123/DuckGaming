@@ -76,13 +76,13 @@ public class $ {
 
 	public static void setEnableEffects(Player player, boolean value) {
 		String path = "config." + player.getUniqueId().toString();
-		ServerGet.get().getPlugin().getConfig().set(path + ".effects", value);
+		Server.getInstance().getPlugin().getConfig().set(path + ".effects", value);
 	}
 
 	public static boolean isEffectsEnabled(Player player) {
 		String path = "config." + player.getUniqueId().toString();
-		if (ServerGet.get().getPlugin().getConfig().contains(path + ".effects")) {
-			return ServerGet.get().getPlugin().getConfig().getBoolean(path + ".effects");
+		if (Server.getInstance().getPlugin().getConfig().contains(path + ".effects")) {
+			return Server.getInstance().getPlugin().getConfig().getBoolean(path + ".effects");
 		} else {
 			return true;
 		}
@@ -175,17 +175,17 @@ public class $ {
 		if (minigame == ServerMinigame.UNKNOWN)
 			return false;
 		if (minigame == ServerMinigame.PRISON)
-			if (!ServerGet.get().getPlugin().getConfig().getBoolean("settings.bungeecord", false))
+			if (!Server.getInstance().getPlugin().getConfig().getBoolean("settings.bungeecord", false))
 				return false;
 		if (minigame == ServerMinigame.DATED)
-			if (!ServerGet.get().getPlugin().getConfig().getBoolean("settings.bungeecord", false))
+			if (!Server.getInstance().getPlugin().getConfig().getBoolean("settings.bungeecord", false))
 				return false;
 		if (minigame == ServerMinigame.FACTIONS) {
 			if (!Link$.isPluginEnabled("Factions"))
 				return false;
 		}
-		if (ServerGet.get().getPlugin().getConfig().contains("settings.enable." + minigame.toString().toLowerCase())) {
-			return ServerGet.get().getPlugin().getConfig().getBoolean("settings.enable." + minigame.toString().toLowerCase());
+		if (Server.getInstance().getPlugin().getConfig().contains("settings.enable." + minigame.toString().toLowerCase())) {
+			return Server.getInstance().getPlugin().getConfig().getBoolean("settings.enable." + minigame.toString().toLowerCase());
 		} else {
 			return true;
 		}
@@ -201,24 +201,24 @@ public class $ {
 	}
 
 	public static boolean isWelcomeMessageEnabled() {
-		if (ServerGet.get().getPlugin().getConfig().contains("settings.enable.welcomeMessage")) {
-			return ServerGet.get().getPlugin().getConfig().getBoolean("settings.enable.welcomeMessage");
+		if (Server.getInstance().getPlugin().getConfig().contains("settings.enable.welcomeMessage")) {
+			return Server.getInstance().getPlugin().getConfig().getBoolean("settings.enable.welcomeMessage");
 		} else {
 			return true;
 		}
 	}
 
 	public static boolean isCustomJoinMessageEnabled() {
-		if (ServerGet.get().getPlugin().getConfig().contains("settings.customJoinMessage")) {
-			return ServerGet.get().getPlugin().getConfig().getBoolean("settings.customQuitMessage");
+		if (Server.getInstance().getPlugin().getConfig().contains("settings.customJoinMessage")) {
+			return Server.getInstance().getPlugin().getConfig().getBoolean("settings.customQuitMessage");
 		} else {
 			return true;
 		}
 	}
 
 	public static boolean isCustomQuitMessageEnabled() {
-		if (ServerGet.get().getPlugin().getConfig().contains("settings.customJoinMessage")) {
-			return ServerGet.get().getPlugin().getConfig().getBoolean("settings.customQuitMessage");
+		if (Server.getInstance().getPlugin().getConfig().contains("settings.customJoinMessage")) {
+			return Server.getInstance().getPlugin().getConfig().getBoolean("settings.customQuitMessage");
 		} else {
 			return true;
 		}
@@ -638,21 +638,21 @@ public class $ {
 	}
 
 	public static boolean createDataFolder() {
-		if (!ServerGet.get().getPlugin().getDataFolder().exists()) {
-			ServerGet.get().getPlugin().getDataFolder().mkdir();
+		if (!Server.getInstance().getPlugin().getDataFolder().exists()) {
+			Server.getInstance().getPlugin().getDataFolder().mkdir();
 			return true;
 		}
 		return false;
 	}
 
 	public static Location getZoneLocation(String zone) {
-		if (ServerGet.get().getWarpConfig().getData().contains(zone)) {
-			World world = ServerGet.get().getPlugin().getServer().getWorld(ServerGet.get().getWarpConfig().getData().getString(zone + ".world"));
-			double x = ServerGet.get().getWarpConfig().getData().getDouble(zone + ".x");
-			double y = ServerGet.get().getWarpConfig().getData().getDouble(zone + ".y");
-			double z = ServerGet.get().getWarpConfig().getData().getDouble(zone + ".z");
-			float yaw = (float) ServerGet.get().getWarpConfig().getData().getDouble(zone + ".yaw");
-			float pitch = (float) ServerGet.get().getWarpConfig().getData().getDouble(zone + ".pitch");
+		if (Server.getInstance().getWarpConfig().getData().contains(zone)) {
+			World world = Server.getInstance().getPlugin().getServer().getWorld(Server.getInstance().getWarpConfig().getData().getString(zone + ".world"));
+			double x = Server.getInstance().getWarpConfig().getData().getDouble(zone + ".x");
+			double y = Server.getInstance().getWarpConfig().getData().getDouble(zone + ".y");
+			double z = Server.getInstance().getWarpConfig().getData().getDouble(zone + ".z");
+			float yaw = (float) Server.getInstance().getWarpConfig().getData().getDouble(zone + ".yaw");
+			float pitch = (float) Server.getInstance().getWarpConfig().getData().getDouble(zone + ".pitch");
 			return new Location(world, x, y, z, yaw, pitch);
 		}
 		Bukkit.getConsoleSender().sendMessage("Critical error: Failed to find a saved zone named '" + zone + "'");
@@ -669,7 +669,7 @@ public class $ {
 	}
 
 	public static Player[] getStaffOnline() {
-		return getStaffOnline(ServerGet.get().getPlugin(), null);
+		return getStaffOnline(Server.getInstance().getPlugin(), null);
 	}
 
 	public static Player[] getStaffOnline(Plugin plugin, Player ignorePlayer) {
@@ -695,7 +695,7 @@ public class $ {
 
 	public static void setNickname(Player player, String nickname) {
 		String path = "config." + player.getUniqueId().toString();
-		ServerGet.get().getPlugin().getConfig().set(path + ".nickname", nickname);
+		Server.getInstance().getPlugin().getConfig().set(path + ".nickname", nickname);
 	}
 
 	public static double roundDouble(double value, int places) {
@@ -717,8 +717,8 @@ public class $ {
 	public static ServerMinigame getLastMinigame(UUID uuid) {
 		if (Bukkit.getPlayer(uuid) != null)
 			return getCurrentMinigame(Bukkit.getPlayer(uuid));
-		if (ServerGet.get().getPlugin().getConfig().contains("config." + uuid.toString() + ".lastMinigame")) {
-			String minigameLower = ServerGet.get().getPlugin().getConfig().getString("config." + uuid.toString() + ".lastMinigame");
+		if (Server.getInstance().getPlugin().getConfig().contains("config." + uuid.toString() + ".lastMinigame")) {
+			String minigameLower = Server.getInstance().getPlugin().getConfig().getString("config." + uuid.toString() + ".lastMinigame");
 			return ServerMinigame.valueOf(minigameLower.toUpperCase());
 		}
 		return ServerMinigame.UNKNOWN;
@@ -763,36 +763,36 @@ public class $ {
 
 	public static ArrayList<UUID> getMinigamePlayerList(String domain) {
 		if (domain.equals("factions"))
-			return ServerGet.get().getFactions();
+			return Server.getInstance().getFactions();
 		if (domain.equals("kitpvp"))
-			return ServerGet.get().getKitpvp();
+			return Server.getInstance().getKitpvp();
 		if (domain.equals("skyfight"))
-			return new ArrayList(ServerGet.get().getSkyfight().keySet());
+			return new ArrayList(Server.getInstance().getSkyfight().keySet());
 		if (domain.equals("creative"))
-			return ServerGet.get().getCreative();
+			return Server.getInstance().getCreative();
 		if (domain.equals("survival"))
-			return ServerGet.get().getSurvival();
+			return Server.getInstance().getSurvival();
 		if (domain.equals("skyblock"))
-			return ServerGet.get().getSkyblock();
+			return Server.getInstance().getSkyblock();
 		if (domain.equals("hub"))
-			return ServerGet.get().getHub();
+			return Server.getInstance().getHub();
 		return null;
 	}
 
 	public static String getMinigameDomain(Player player) {
-		if (ServerGet.get().getFactions().contains(player.getUniqueId()))
+		if (Server.getInstance().getFactions().contains(player.getUniqueId()))
 			return "factions";
-		if (ServerGet.get().getKitpvp().contains(player.getUniqueId()))
+		if (Server.getInstance().getKitpvp().contains(player.getUniqueId()))
 			return "kitpvp";
-		if (ServerGet.get().getSkyfight().containsKey(player.getUniqueId()))
+		if (Server.getInstance().getSkyfight().containsKey(player.getUniqueId()))
 			return "skyfight";
-		if (ServerGet.get().getCreative().contains(player.getUniqueId()))
+		if (Server.getInstance().getCreative().contains(player.getUniqueId()))
 			return "creative";
-		if (ServerGet.get().getSurvival().contains(player.getUniqueId()))
+		if (Server.getInstance().getSurvival().contains(player.getUniqueId()))
 			return "survival";
-		if (ServerGet.get().getSkyblock().contains(player.getUniqueId()))
+		if (Server.getInstance().getSkyblock().contains(player.getUniqueId()))
 			return "skyblock";
-		if (ServerGet.get().getHub().contains(player.getUniqueId()))
+		if (Server.getInstance().getHub().contains(player.getUniqueId()))
 			return "hub";
 		return "hub";
 	}
@@ -939,12 +939,12 @@ public class $ {
 			int id = marriageId;
 			String path = "config." + player.getUniqueId().toString();
 			if (targetPlayer == null) {
-				ServerGet.get().getPlugin().getConfig().set(path + ".marry.marriedTo", "0");
-				ServerGet.get().getPlugin().getConfig().set(path + ".marry.marriageId", "0");
+				Server.getInstance().getPlugin().getConfig().set(path + ".marry.marriedTo", "0");
+				Server.getInstance().getPlugin().getConfig().set(path + ".marry.marriageId", "0");
 				id = 0;
 			} else {
-				ServerGet.get().getPlugin().getConfig().set(path + ".marry.marriedTo", targetPlayer.getUniqueId().toString());
-				ServerGet.get().getPlugin().getConfig().set(path + ".marry.marriageId", marriageId);
+				Server.getInstance().getPlugin().getConfig().set(path + ".marry.marriedTo", targetPlayer.getUniqueId().toString());
+				Server.getInstance().getPlugin().getConfig().set(path + ".marry.marriageId", marriageId);
 			}
 			return id;
 		}
@@ -962,34 +962,34 @@ public class $ {
 
 		public static UUID getPlayerMarriedPlayerUUID(Player player) {
 			String path = "config." + player.getUniqueId().toString();
-			if (ServerGet.get().getPlugin().getConfig().contains(path) && ServerGet.get().getPlugin().getConfig().contains(path + ".marry.marriedTo")) {
-				String value = String.valueOf(ServerGet.get().getPlugin().getConfig().getString(path + ".marry.marriedTo"));
+			if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".marry.marriedTo")) {
+				String value = String.valueOf(Server.getInstance().getPlugin().getConfig().getString(path + ".marry.marriedTo"));
 				if (value.equals("0"))
 					return null;
 				return UUID.fromString(value);
 			}
-			ServerGet.get().getPlugin().getConfig().set(path + ".marry", "0");
+			Server.getInstance().getPlugin().getConfig().set(path + ".marry", "0");
 			return null;
 		}
 
 		public static int getPlayerMarriageId(Player player) {
 			String path = "config." + player.getUniqueId().toString();
-			if (ServerGet.get().getPlugin().getConfig().contains(path) && ServerGet.get().getPlugin().getConfig().contains(path + ".marry.marriageId")) {
-				return Integer.parseInt(ServerGet.get().getPlugin().getConfig().getString(path + ".marry.marriageId"));
+			if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".marry.marriageId")) {
+				return Integer.parseInt(Server.getInstance().getPlugin().getConfig().getString(path + ".marry.marriageId"));
 			}
-			ServerGet.get().getPlugin().getConfig().set(path + ".marry.marriageId", "0");
+			Server.getInstance().getPlugin().getConfig().set(path + ".marry.marriageId", "0");
 			return 0;
 		}
 
 		public static void setPlayerGender(Player player, MarriageGender gender) {
 			String path = "config." + player.getUniqueId().toString();
-			ServerGet.get().getPlugin().getConfig().set(path + ".marry.gender", gender.toString().toLowerCase());
+			Server.getInstance().getPlugin().getConfig().set(path + ".marry.gender", gender.toString().toLowerCase());
 		}
 
 		public static MarriageGender getPlayerGender(OfflinePlayer player) {
 			String path = "config." + player.getUniqueId().toString();
-			if (ServerGet.get().getPlugin().getConfig().contains(path) && ServerGet.get().getPlugin().getConfig().contains(path + ".marry.gender")) {
-				String value = String.valueOf(ServerGet.get().getPlugin().getConfig().getString(path + ".marry.gender"));
+			if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".marry.gender")) {
+				String value = String.valueOf(Server.getInstance().getPlugin().getConfig().getString(path + ".marry.gender"));
 				if (value.equals("male")) {
 					return MarriageGender.MALE;
 				} else if (value.equals("female")) {
@@ -1001,13 +1001,13 @@ public class $ {
 
 		public static void setPlayerMarriedPvp(Player player, boolean pvp) {
 			String path = "config." + player.getUniqueId().toString();
-			ServerGet.get().getPlugin().getConfig().set(path + ".marry.marriedPvp", pvp + "");
+			Server.getInstance().getPlugin().getConfig().set(path + ".marry.marriedPvp", pvp + "");
 		}
 
 		public static boolean getPlayerMarriedPvp(Player player) {
 			String path = "config." + player.getUniqueId().toString();
-			if (ServerGet.get().getPlugin().getConfig().contains(path) && ServerGet.get().getPlugin().getConfig().contains(path + ".marry.marriedPvp")) {
-				String value = String.valueOf(ServerGet.get().getPlugin().getConfig().getString(path + ".marry.marriedPvp")).toLowerCase();
+			if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".marry.marriedPvp")) {
+				String value = String.valueOf(Server.getInstance().getPlugin().getConfig().getString(path + ".marry.marriedPvp")).toLowerCase();
 				return Boolean.valueOf(value);
 			}
 			return true;
@@ -1015,13 +1015,13 @@ public class $ {
 
 		public static void setPlayerSwearFilter(Player player, boolean pvp) {
 			String path = "config." + player.getUniqueId().toString();
-			ServerGet.get().getPlugin().getConfig().set(path + ".marry.swearFilter", pvp + "");
+			Server.getInstance().getPlugin().getConfig().set(path + ".marry.swearFilter", pvp + "");
 		}
 
 		public static boolean getPlayerSwearFilter(Player player) {
 			String path = "config." + player.getUniqueId().toString();
-			if (ServerGet.get().getPlugin().getConfig().contains(path) && ServerGet.get().getPlugin().getConfig().contains(path + ".marry.swearFilter")) {
-				String value = String.valueOf(ServerGet.get().getPlugin().getConfig().getString(path + ".marry.swearFilter")).toLowerCase();
+			if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".marry.swearFilter")) {
+				String value = String.valueOf(Server.getInstance().getPlugin().getConfig().getString(path + ".marry.swearFilter")).toLowerCase();
 				return Boolean.valueOf(value);
 			}
 			return true;
@@ -1153,7 +1153,7 @@ public class $ {
 				if (!(damagee == null)) {
 					final org.bukkit.entity.Player taggedDamagee = damagee;
 					final int taggedDamageeHash = damageeHash;
-					ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(ServerGet.get().getPlugin(), new Runnable() {
+					Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 						@Override
 						public void run() {
 							if (!(damagee == null) && damagee.getName().equals(taggedDamagee.getName()) && damageeHash == taggedDamageeHash)
@@ -1165,12 +1165,12 @@ public class $ {
 		}
 
 		public static void refreshScoreboard(org.bukkit.entity.Player player, boolean clearValues) {
-			UUID[] skyfightPlayers = ServerGet.get().getSkyfight().keySet().toArray(new UUID[0]);
+			UUID[] skyfightPlayers = Server.getInstance().getSkyfight().keySet().toArray(new UUID[0]);
 			Hashtable<String, Integer> list = new Hashtable<>();
 			int best = 0;
 			for (UUID id : skyfightPlayers) {
 				org.bukkit.entity.Player otherPlayer = Bukkit.getPlayer(id);
-				int score = ServerGet.get().getSkyfight().get(otherPlayer.getUniqueId()).getScore();
+				int score = Server.getInstance().getSkyfight().get(otherPlayer.getUniqueId()).getScore();
 				if (score > best)
 					best = score;
 			}
@@ -1178,7 +1178,7 @@ public class $ {
 			for (int i = 0; i < skyfightPlayers.length; i++) {
 				UUID id = skyfightPlayers[i];
 				org.bukkit.entity.Player otherPlayer = Bukkit.getPlayer(id);
-				Skyfight.Player osfPlayer = ServerGet.get().getSkyfight().get(otherPlayer.getUniqueId());
+				Skyfight.Player osfPlayer = Server.getInstance().getSkyfight().get(otherPlayer.getUniqueId());
 				ChatColor prefix = ChatColor.RESET;
 				if (osfPlayer.getTeamValue() == Skyfight.Team.BLUE) {
 					prefix = ChatColor.BLUE;
@@ -1191,7 +1191,7 @@ public class $ {
 				} else if (osfPlayer.getTeamValue() == Skyfight.Team.PINK) {
 					prefix = ChatColor.LIGHT_PURPLE;
 				}
-				list.put(ChatColor.GOLD + "│ " + prefix + otherPlayer.getName(), ServerGet.get().getSkyfight().get(otherPlayer.getUniqueId()).getScore());
+				list.put(ChatColor.GOLD + "│ " + prefix + otherPlayer.getName(), Server.getInstance().getSkyfight().get(otherPlayer.getUniqueId()).getScore());
 			}
 			$.Scoreboard.configureSidebar(player, "SkorrloreGaming", list, clearValues, true);
 		}
@@ -1208,30 +1208,30 @@ public class $ {
 
 		public static int getPlayerKills(Player player) {
 			String path = "config." + player.getUniqueId().toString() + ".factions";
-			if (ServerGet.get().getPlugin().getConfig().contains(path) && ServerGet.get().getPlugin().getConfig().contains(path + ".kills")) {
-				return Integer.parseInt(ServerGet.get().getPlugin().getConfig().getString(path + ".kills"));
+			if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".kills")) {
+				return Integer.parseInt(Server.getInstance().getPlugin().getConfig().getString(path + ".kills"));
 			}
-			ServerGet.get().getPlugin().getConfig().set(path + ".kills", "0");
+			Server.getInstance().getPlugin().getConfig().set(path + ".kills", "0");
 			return 0;
 		}
 
 		public static void setPlayerKills(Player player, int value) {
 			String path = "config." + player.getUniqueId().toString() + ".factions";
-			ServerGet.get().getPlugin().getConfig().set(path + ".kills", value + "");
+			Server.getInstance().getPlugin().getConfig().set(path + ".kills", value + "");
 		}
 
 		public static int getPlayerDeaths(Player player) {
 			String path = "config." + player.getUniqueId().toString() + ".factions";
-			if (ServerGet.get().getPlugin().getConfig().contains(path) && ServerGet.get().getPlugin().getConfig().contains(path + ".deaths")) {
-				return Integer.parseInt(ServerGet.get().getPlugin().getConfig().getString(path + ".deaths"));
+			if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".deaths")) {
+				return Integer.parseInt(Server.getInstance().getPlugin().getConfig().getString(path + ".deaths"));
 			}
-			ServerGet.get().getPlugin().getConfig().set(path + ".deaths", "0");
+			Server.getInstance().getPlugin().getConfig().set(path + ".deaths", "0");
 			return 0;
 		}
 
 		public static void setPlayerDeaths(Player player, int value) {
 			String path = "config." + player.getUniqueId().toString() + ".factions";
-			ServerGet.get().getPlugin().getConfig().set(path + ".deaths", value + "");
+			Server.getInstance().getPlugin().getConfig().set(path + ".deaths", value + "");
 		}
 
 		public static void refreshScoreboard(Player player, boolean clearValues) {
@@ -1290,60 +1290,60 @@ public class $ {
 
 		public static int getPreferredWeaponType(Player player) {
 			String path = "config." + player.getUniqueId().toString() + ".kitpvp";
-			if (ServerGet.get().getPlugin().getConfig().contains(path) && ServerGet.get().getPlugin().getConfig().contains(path + ".preferredWeapon")) {
-				String weapon = ServerGet.get().getPlugin().getConfig().getString(path + ".preferredWeapon");
+			if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".preferredWeapon")) {
+				String weapon = Server.getInstance().getPlugin().getConfig().getString(path + ".preferredWeapon");
 				if (weapon.equals("AXE")) {
 					return WEAPON_AXE;
 				} else if (weapon.equals("SWORD")) {
 					return WEAPON_SWORD;
 				}
 			}
-			ServerGet.get().getPlugin().getConfig().set(path + ".preferredWeapon", "AXE");
+			Server.getInstance().getPlugin().getConfig().set(path + ".preferredWeapon", "AXE");
 			return WEAPON_AXE;
 		}
 
 		public static void setPreferredWeaponType(Player player, int type) {
 			String path = "config." + player.getUniqueId().toString() + ".kitpvp";
 			if (type == WEAPON_AXE) {
-				ServerGet.get().getPlugin().getConfig().set(path + ".preferredWeapon", "AXE");
+				Server.getInstance().getPlugin().getConfig().set(path + ".preferredWeapon", "AXE");
 			} else if (type == WEAPON_SWORD) {
-				ServerGet.get().getPlugin().getConfig().set(path + ".preferredWeapon", "SWORD");
+				Server.getInstance().getPlugin().getConfig().set(path + ".preferredWeapon", "SWORD");
 			}
 		}
 
 		public static int getPlayerKills(Player player) {
 			String path = "config." + player.getUniqueId().toString() + ".kitpvp";
-			if (ServerGet.get().getPlugin().getConfig().contains(path) && ServerGet.get().getPlugin().getConfig().contains(path + ".kills")) {
-				return Integer.parseInt(ServerGet.get().getPlugin().getConfig().getString(path + ".kills"));
+			if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".kills")) {
+				return Integer.parseInt(Server.getInstance().getPlugin().getConfig().getString(path + ".kills"));
 			}
-			ServerGet.get().getPlugin().getConfig().set(path + ".kills", "0");
+			Server.getInstance().getPlugin().getConfig().set(path + ".kills", "0");
 			return 0;
 		}
 
 		public static void setPlayerKills(Player player, int value) {
 			String path = "config." + player.getUniqueId().toString() + ".kitpvp";
-			ServerGet.get().getPlugin().getConfig().set(path + ".kills", value + "");
+			Server.getInstance().getPlugin().getConfig().set(path + ".kills", value + "");
 		}
 
 		public static int getPlayerDeaths(Player player) {
 			String path = "config." + player.getUniqueId().toString() + ".kitpvp";
-			if (ServerGet.get().getPlugin().getConfig().contains(path) && ServerGet.get().getPlugin().getConfig().contains(path + ".deaths")) {
-				return Integer.parseInt(ServerGet.get().getPlugin().getConfig().getString(path + ".deaths"));
+			if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".deaths")) {
+				return Integer.parseInt(Server.getInstance().getPlugin().getConfig().getString(path + ".deaths"));
 			}
-			ServerGet.get().getPlugin().getConfig().set(path + ".deaths", "0");
+			Server.getInstance().getPlugin().getConfig().set(path + ".deaths", "0");
 			return 0;
 		}
 
 		public static void setPlayerDeaths(Player player, int value) {
 			String path = "config." + player.getUniqueId().toString() + ".kitpvp";
-			ServerGet.get().getPlugin().getConfig().set(path + ".deaths", value + "");
+			Server.getInstance().getPlugin().getConfig().set(path + ".deaths", value + "");
 		}
 
 		public static int getUpgradeCount(Player player) {
 			String path = "config." + player.getUniqueId().toString();
-			if (!ServerGet.get().getPlugin().getConfig().contains(path + ".kitpvp.upgrades"))
+			if (!Server.getInstance().getPlugin().getConfig().contains(path + ".kitpvp.upgrades"))
 				setUpgradeCount(player, 0);
-			int upgrades = Integer.parseInt(ServerGet.get().getPlugin().getConfig().getString(path + ".kitpvp.upgrades"));
+			int upgrades = Integer.parseInt(Server.getInstance().getPlugin().getConfig().getString(path + ".kitpvp.upgrades"));
 			if (upgrades > DONOR_MAX_UPGRADE_VALUE)
 				upgrades = DONOR_MAX_UPGRADE_VALUE;
 			return upgrades;
@@ -1353,14 +1353,14 @@ public class $ {
 			if (upgrades > DONOR_MAX_UPGRADE_VALUE)
 				upgrades = DONOR_MAX_UPGRADE_VALUE;
 			String path = "config." + player.getUniqueId().toString();
-			ServerGet.get().getPlugin().getConfig().set(path + ".kitpvp.upgrades", upgrades + "");
+			Server.getInstance().getPlugin().getConfig().set(path + ".kitpvp.upgrades", upgrades + "");
 		}
 
 		public static int getPreferredUpgrade(Player player) {
 			String path = "config." + player.getUniqueId().toString();
-			if (!ServerGet.get().getPlugin().getConfig().contains(path + ".kitpvp.preferredUpgrade"))
+			if (!Server.getInstance().getPlugin().getConfig().contains(path + ".kitpvp.preferredUpgrade"))
 				setPreferredUpgrade(player, getUpgradeCount(player));
-			int preferredUpgrade = Integer.parseInt(ServerGet.get().getPlugin().getConfig().getString(path + ".kitpvp.preferredUpgrade"));
+			int preferredUpgrade = Integer.parseInt(Server.getInstance().getPlugin().getConfig().getString(path + ".kitpvp.preferredUpgrade"));
 			int upgradeCount = getUpgradeCount(player);
 			if (preferredUpgrade > upgradeCount) {
 				setPreferredUpgrade(player, upgradeCount);
@@ -1375,7 +1375,7 @@ public class $ {
 			if (upgrade > DONOR_MAX_UPGRADE_VALUE)
 				upgrade = DONOR_MAX_UPGRADE_VALUE;
 			String path = "config." + player.getUniqueId().toString();
-			ServerGet.get().getPlugin().getConfig().set(path + ".kitpvp.preferredUpgrade", upgrade + "");
+			Server.getInstance().getPlugin().getConfig().set(path + ".kitpvp.preferredUpgrade", upgrade + "");
 		}
 
 		public static ItemStack getUpgradeClassWeapon(Player player, int upgrade, boolean axesOnly) {
@@ -1469,30 +1469,30 @@ public class $ {
 
 		public static int getPlayerPlacedBlocks(Player player) {
 			String path = "config." + player.getUniqueId().toString() + ".skyblock";
-			if (ServerGet.get().getPlugin().getConfig().contains(path) && ServerGet.get().getPlugin().getConfig().contains(path + ".placed")) {
-				return Integer.parseInt(ServerGet.get().getPlugin().getConfig().getString(path + ".placed"));
+			if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".placed")) {
+				return Integer.parseInt(Server.getInstance().getPlugin().getConfig().getString(path + ".placed"));
 			}
-			ServerGet.get().getPlugin().getConfig().set(path + ".placed", "0");
+			Server.getInstance().getPlugin().getConfig().set(path + ".placed", "0");
 			return 0;
 		}
 
 		public static void setPlayerPlacedBlocks(Player player, int value) {
 			String path = "config." + player.getUniqueId().toString() + ".skyblock";
-			ServerGet.get().getPlugin().getConfig().set(path + ".placed", value + "");
+			Server.getInstance().getPlugin().getConfig().set(path + ".placed", value + "");
 		}
 
 		public static int getPlayerBrokenBlocks(Player player) {
 			String path = "config." + player.getUniqueId().toString() + ".skyblock";
-			if (ServerGet.get().getPlugin().getConfig().contains(path) && ServerGet.get().getPlugin().getConfig().contains(path + ".broken")) {
-				return Integer.parseInt(ServerGet.get().getPlugin().getConfig().getString(path + ".broken"));
+			if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".broken")) {
+				return Integer.parseInt(Server.getInstance().getPlugin().getConfig().getString(path + ".broken"));
 			}
-			ServerGet.get().getPlugin().getConfig().set(path + ".broken", "0");
+			Server.getInstance().getPlugin().getConfig().set(path + ".broken", "0");
 			return 0;
 		}
 
 		public static void setPlayerBrokenBlocks(Player player, int value) {
 			String path = "config." + player.getUniqueId().toString() + ".skyblock";
-			ServerGet.get().getPlugin().getConfig().set(path + ".broken", value + "");
+			Server.getInstance().getPlugin().getConfig().set(path + ".broken", value + "");
 		}
 
 		public static void refreshScoreboard(Player player, boolean clearValues) {
@@ -1574,18 +1574,18 @@ public class $ {
 			org.bukkit.scoreboard.Scoreboard board;
 			if (player.getScoreboard().getObjective("placeholder") == null) {
 				board = player.getScoreboard();
-				if (ServerGet.get().getPluginDebug())
+				if (Server.getInstance().getPluginDebug())
 					Logger.debug("Using existing scoreboard for " + player.getName());
 			} else {
 				board = manager.getNewScoreboard();
-				if (ServerGet.get().getPluginDebug())
+				if (Server.getInstance().getPluginDebug())
 					Logger.debug("Generated new scoreboard for " + player.getName());
 			}
 			boolean found = false;
 			for (Objective objective : board.getObjectives()) {
 				if (objective.getName().equals("sidebar-obj")) {
 					found = true;
-					if (ServerGet.get().getPluginDebug())
+					if (Server.getInstance().getPluginDebug())
 						Logger.debug("Found sidebar objective for " + player.getName());
 					break;
 				}
@@ -1596,29 +1596,29 @@ public class $ {
 				if (override) {
 					objective.unregister();
 					objective = board.registerNewObjective("sidebar-obj", "dummy", title);
-					if (ServerGet.get().getPluginDebug())
+					if (Server.getInstance().getPluginDebug())
 						Logger.debug("Override! Generating new sidebar objective for " + player.getName());
 				} else {
-					if (ServerGet.get().getPluginDebug())
+					if (Server.getInstance().getPluginDebug())
 						Logger.debug("Using existing sidebar objective for " + player.getName());
 				}
 			} else {
 				objective = board.registerNewObjective("sidebar-obj", "dummy", title);
-				if (ServerGet.get().getPluginDebug())
+				if (Server.getInstance().getPluginDebug())
 					Logger.debug("Generating new sidebar objective for " + player.getName());
 			}
 			if (!(objective.getDisplayName().equals(title))) {
 				objective.unregister();
 				objective = board.registerNewObjective("sidebar-obj", "dummy", title);
-				if (ServerGet.get().getPluginDebug())
+				if (Server.getInstance().getPluginDebug())
 					Logger.debug("Mismatch! Generating new sidebar objective for " + player.getName());
 			}
 			int changed = 0;
 			if (replaceIntScoreValues) {
-				if (ServerGet.get().getPluginDebug())
+				if (Server.getInstance().getPluginDebug())
 					Logger.debug("Recursively replacing appropriate scores on scoreboard for " + player.getName());
 			} else {
-				if (ServerGet.get().getPluginDebug())
+				if (Server.getInstance().getPluginDebug())
 					Logger.debug("Recursively setting all scores on scoreboard for " + player.getName());
 			}
 			for (Entry<String, Integer> score : table.entrySet()) {
@@ -1631,7 +1631,7 @@ public class $ {
 				}
 			}
 			if (changed > 0) {
-				if (ServerGet.get().getPluginDebug())
+				if (Server.getInstance().getPluginDebug())
 					Logger.debug("Changed " + changed + " line(s) on scoreboard for " + player.getName());
 				objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 				player.setScoreboard(board);

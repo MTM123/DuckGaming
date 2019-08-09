@@ -22,13 +22,13 @@ public class VanishCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (ServerGet.get().getVanishedPlayers().containsKey(player.getUniqueId())) {
-			VanishedInfo iVanish = ServerGet.get().getVanishedPlayers().get(player.getUniqueId());
+		if (Server.getInstance().getVanishedPlayers().containsKey(player.getUniqueId())) {
+			VanishedInfo iVanish = Server.getInstance().getVanishedPlayers().get(player.getUniqueId());
 			player.getInventory().setContents(iVanish.getContents());
 			player.setGameMode(iVanish.getGameMode());
-			ServerGet.get().getVanishedPlayers().remove(player.getUniqueId());
-			for (Player p : ServerGet.get().getPlugin().getServer().getOnlinePlayers()) {
-				p.showPlayer(ServerGet.get().getPlugin(), player);
+			Server.getInstance().getVanishedPlayers().remove(player.getUniqueId());
+			for (Player p : Server.getInstance().getPlugin().getServer().getOnlinePlayers()) {
+				p.showPlayer(Server.getInstance().getPlugin(), player);
 			}
 			if (player.hasPotionEffect(PotionEffectType.INVISIBILITY))
 				player.removePotionEffect(PotionEffectType.INVISIBILITY);
@@ -36,13 +36,13 @@ public class VanishCmd implements CommandExecutor {
 			return true;
 		}
 		if (player.isOp() || Link$.getRankId(player) > 1) {
-			if (!ServerGet.get().getModeratingPlayers().containsKey(player.getUniqueId())) {
+			if (!Server.getInstance().getModeratingPlayers().containsKey(player.getUniqueId())) {
 				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not currently moderating the server.");
 				return true;
 			}
-			ServerGet.get().getVanishedPlayers().put(player.getUniqueId(), new VanishedInfo(player.getInventory().getContents(), player.getGameMode()));
-			for (Player p : ServerGet.get().getPlugin().getServer().getOnlinePlayers()) {
-				p.hidePlayer(ServerGet.get().getPlugin(), player);
+			Server.getInstance().getVanishedPlayers().put(player.getUniqueId(), new VanishedInfo(player.getInventory().getContents(), player.getGameMode()));
+			for (Player p : Server.getInstance().getPlugin().getServer().getOnlinePlayers()) {
+				p.hidePlayer(Server.getInstance().getPlugin(), player);
 			}
 			if (player.hasPotionEffect(PotionEffectType.INVISIBILITY))
 				player.removePotionEffect(PotionEffectType.INVISIBILITY);

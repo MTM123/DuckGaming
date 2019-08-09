@@ -2,14 +2,11 @@ package me.skorrloregaming.commands;
 
 import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
-import me.skorrloregaming.ServerGet;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
-
-import me.skorrloregaming.*;
 
 public class EnablePluginCmd implements CommandExecutor {
 
@@ -23,9 +20,9 @@ public class EnablePluginCmd implements CommandExecutor {
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <pluginName>");
 			return true;
 		}
-		Plugin plugin = ServerGet.get().getPlugin().getServer().getPluginManager().getPlugin(args[0]);
+		Plugin plugin = Server.getInstance().getPlugin().getServer().getPluginManager().getPlugin(args[0]);
 		if (!(plugin == null)) {
-			ServerGet.get().getPlugin().getServer().getPluginManager().enablePlugin(plugin);
+			Server.getInstance().getPlugin().getServer().getPluginManager().enablePlugin(plugin);
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Enabled the plugin ... " + ChatColor.RED + plugin.getName());
 		} else {
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified plugin could not be found.");

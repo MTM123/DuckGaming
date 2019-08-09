@@ -43,7 +43,7 @@ public class ListCmd implements CommandExecutor {
 				hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
 			}
 		}
-		for (NpcPlayer player : ServerGet.get().getNpcPlayers()) {
+		for (NpcPlayer player : Server.getInstance().getNpcPlayers()) {
 			length++;
 			hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
 		}

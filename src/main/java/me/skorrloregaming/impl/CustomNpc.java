@@ -33,30 +33,30 @@ public class CustomNpc {
 	}
 
 	public static String getNpcData(Entity entity) {
-		if (!ServerGet.get().getNpcConfig().getData().contains("npc." + entity.getUniqueId().toString()))
+		if (!Server.getInstance().getNpcConfig().getData().contains("npc." + entity.getUniqueId().toString()))
 			return null;
-		String value = ServerGet.get().getNpcConfig().getData().getString("npc." + entity.getUniqueId().toString());
+		String value = Server.getInstance().getNpcConfig().getData().getString("npc." + entity.getUniqueId().toString());
 		if (value.equals("unspecified"))
 			return null;
 		return String.valueOf(value);
 	}
 
 	public boolean register(String npcData) {
-		if (ServerGet.get().getNpcConfig().getData().contains("npc." + entity.getUniqueId().toString()))
+		if (Server.getInstance().getNpcConfig().getData().contains("npc." + entity.getUniqueId().toString()))
 			return false;
 		String hash = "unspecified";
 		if (!(npcData == null))
 			hash = npcData;
-		ServerGet.get().getNpcConfig().getData().set("npc." + entity.getUniqueId().toString(), hash);
-		ServerGet.get().getNpcConfig().saveData();
+		Server.getInstance().getNpcConfig().getData().set("npc." + entity.getUniqueId().toString(), hash);
+		Server.getInstance().getNpcConfig().saveData();
 		return true;
 	}
 
 	public boolean unregister() {
-		if (!ServerGet.get().getNpcConfig().getData().contains("npc." + entity.getUniqueId().toString()))
+		if (!Server.getInstance().getNpcConfig().getData().contains("npc." + entity.getUniqueId().toString()))
 			return false;
-		ServerGet.get().getNpcConfig().getData().set("npc." + entity.getUniqueId().toString(), null);
-		ServerGet.get().getNpcConfig().saveData();
+		Server.getInstance().getNpcConfig().getData().set("npc." + entity.getUniqueId().toString(), null);
+		Server.getInstance().getNpcConfig().saveData();
 		return true;
 	}
 }

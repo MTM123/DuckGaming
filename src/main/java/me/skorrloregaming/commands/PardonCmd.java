@@ -21,8 +21,8 @@ public class PardonCmd implements CommandExecutor {
 			OfflinePlayer offlinePlayer = CraftGo.Player.getOfflinePlayer(args[0]);
 			String path = "config." + offlinePlayer.getUniqueId().toString();
 			String ipAddress = "/unspecified";
-			if (ServerGet.get().getPlugin().getConfig().contains(path)) {
-				ipAddress = ServerGet.get().getPlugin().getConfig().getString(path + ".ip");
+			if (Server.getInstance().getPlugin().getConfig().contains(path)) {
+				ipAddress = Server.getInstance().getPlugin().getConfig().getString(path + ".ip");
 			} else {
 				if (!$.isValidAddress(args[0])) {
 					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The provided data does not match any player.");
@@ -32,10 +32,10 @@ public class PardonCmd implements CommandExecutor {
 				}
 			}
 			if (!ipAddress.equals("/unspecified")) {
-				if (ServerGet.get().getBanConfig().getData().contains(ipAddress)) {
-					ServerGet.get().getBanConfig().getData().set(ipAddress, null);
-					ServerGet.get().getBanConfig().saveData();
-					ServerGet.get().getPlugin().getConfig().set("warning." + ipAddress, null);
+				if (Server.getInstance().getBanConfig().getData().contains(ipAddress)) {
+					Server.getInstance().getBanConfig().getData().set(ipAddress, null);
+					Server.getInstance().getBanConfig().saveData();
+					Server.getInstance().getPlugin().getConfig().set("warning." + ipAddress, null);
 					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The address should no longer be banned.");
 				} else {
 					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The address is not banned from the server.");

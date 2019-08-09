@@ -122,7 +122,7 @@ public class JSONManipulatorCurrent implements JSONManipulator {
 			itemTooltip = wrapper; // Save the tooltip for later use when we encounter a placeholder
 			STACKS.put(p, itemTooltip); // Save it in the cache too so when parsing other packets with the same item
 			// (and client version) we no longer have to create it again
-			ServerGet.get().getBukkitTasks().add(Bukkit.getScheduler().runTaskLaterAsynchronously(ServerGet.get().getPlugin(), () -> STACKS.remove(p), 100L)); // We remove it later when no longer needed to save memory
+			Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLaterAsynchronously(Server.getInstance().getPlugin(), () -> STACKS.remove(p), 100L)); // We remove it later when no longer needed to save memory
 		}
 
 		for (int i = 0; i < array.size(); ++i) {
