@@ -620,6 +620,7 @@ public class Server extends JavaPlugin {
 		pluginLabel = Link$.Legacy.tag;
 		plugin = this;
 		Server.setInstance(this);
+		instance = this;
 		String lineOne = ChatColor.RED + pluginName + ChatColor.GRAY + " has been running since late 2013.";
 		String lineTwo = ChatColor.GRAY + "Server has been updated to support 1.14 clients.";
 		serverMotd = lineOne + '\n' + lineTwo;
@@ -865,7 +866,7 @@ public class Server extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		running = false;
-		plugin.saveConfig();
+		saveConfig();
 		discordBot.broadcast(":octagonal_sign: **Server has stopped**", Channel.SERVER_CHAT);
 		discordBot.unregister();
 		if (!(lockette == null))

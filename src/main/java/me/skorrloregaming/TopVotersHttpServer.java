@@ -169,7 +169,6 @@ public class TopVotersHttpServer implements Runnable {
 				TopVotersHttpClient client = new TopVotersHttpClient(socket);
 				client.bind();
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 	}
