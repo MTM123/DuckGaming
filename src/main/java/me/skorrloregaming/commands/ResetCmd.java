@@ -96,7 +96,7 @@ public class ResetCmd implements CommandExecutor {
 					sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 					return true;
 				}
-				String msg = ChatColor.RED + "You have been forcibly unregistered from the ServerGet.get().";
+				String msg = ChatColor.RED + "You have been forcibly unregistered from the server.";
 				if (op.isOnline())
 					op.getPlayer().kickPlayer(msg);
 				ServerGet.get().getPlugin().getConfig().set("config." + op.getUniqueId().toString(), null);

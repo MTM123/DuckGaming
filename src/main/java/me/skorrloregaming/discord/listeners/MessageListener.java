@@ -114,7 +114,7 @@ public class MessageListener extends ListenerAdapter {
 											}
 											if (!hit) {
 												event.getMessage().delete().queueAfter(2000, TimeUnit.MILLISECONDS);
-												discordBot.broadcast("That's not a valid code, you can get one with /verify on the ServerGet.get().", 2000, Channel.SERVER_VERIFY);
+												discordBot.broadcast("That's not a valid code, you can get one with /verify on the server.", 2000, Channel.SERVER_VERIFY);
 											} else {
 												ServerGet.get().getDiscordVerifyPlayers().remove(code, hitUUID);
 												OfflinePlayer player = Bukkit.getOfflinePlayer(hitUUID);

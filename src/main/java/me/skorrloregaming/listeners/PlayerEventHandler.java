@@ -1309,7 +1309,7 @@ public class PlayerEventHandler implements Listener {
 			if (ServerGet.get().getPlugin().getConfig().getBoolean("settings.bungeecord")) {
 				event.setJoinMessage(null);
 			} else
-				event.setJoinMessage(ChatColor.RED + player.getName() + ChatColor.GRAY + " has joined the ServerGet.get().");
+				event.setJoinMessage(ChatColor.RED + player.getName() + ChatColor.GRAY + " has joined the server.");
 		}
 		if (!(event.getJoinMessage() == null))
 			ServerGet.get().setDefaultJoinMessage(event.getJoinMessage().replace(event.getPlayer().getName(), "{player}"));
@@ -1757,7 +1757,7 @@ public class PlayerEventHandler implements Listener {
 			if (ServerGet.get().getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
 				event.setQuitMessage(null);
 			} else
-				event.setQuitMessage(ChatColor.RED + player.getName() + ChatColor.GRAY + " has left the ServerGet.get().");
+				event.setQuitMessage(ChatColor.RED + player.getName() + ChatColor.GRAY + " has left the server.");
 		}
 		if (!(event.getQuitMessage() == null)) {
 			ServerGet.get().setDefaultQuitMessage(event.getQuitMessage().replace(event.getPlayer().getName(), "{player}"));

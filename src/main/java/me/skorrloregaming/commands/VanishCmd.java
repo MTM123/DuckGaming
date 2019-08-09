@@ -37,7 +37,7 @@ public class VanishCmd implements CommandExecutor {
 		}
 		if (player.isOp() || Link$.getRankId(player) > 1) {
 			if (!ServerGet.get().getModeratingPlayers().containsKey(player.getUniqueId())) {
-				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not currently moderating the ServerGet.get().");
+				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not currently moderating the server.");
 				return true;
 			}
 			ServerGet.get().getVanishedPlayers().put(player.getUniqueId(), new VanishedInfo(player.getInventory().getContents(), player.getGameMode()));

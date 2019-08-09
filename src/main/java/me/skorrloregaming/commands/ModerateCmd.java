@@ -43,7 +43,7 @@ public class ModerateCmd implements CommandExecutor {
 			} else if (minigame == ServerMinigame.HUB || minigame == ServerMinigame.UNKNOWN) {
 				player.performCommand("hub");
 			}
-			player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are no longer moderating the ServerGet.get().");
+			player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are no longer moderating the server.");
 		} else {
 			int rankID = Link$.getRankId(player);
 			if (rankID > 0 || player.isOp()) {
@@ -51,7 +51,7 @@ public class ModerateCmd implements CommandExecutor {
 				ServerGet.get().performBuggedLeave(player, false, true);
 				player.performCommand("hub");
 				ServerGet.get().getModeratingPlayers().put(player.getUniqueId(), minigame);
-				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are now moderating the ServerGet.get().");
+				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are now moderating the server.");
 			} else {
 				Link$.playLackPermissionMessage(player);
 				return true;

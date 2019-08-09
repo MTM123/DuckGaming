@@ -33,7 +33,7 @@ public class SpectateCmd implements CommandExecutor {
 					return true;
 				}
 				if (!ServerGet.get().getModeratingPlayers().containsKey(player.getUniqueId())) {
-					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not currently moderating the ServerGet.get().");
+					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not currently moderating the server.");
 					return true;
 				}
 				ServerGet.get().getSpectatingPlayers().add(player.getUniqueId());

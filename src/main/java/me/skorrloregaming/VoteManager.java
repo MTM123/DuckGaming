@@ -202,7 +202,7 @@ public class VoteManager {
 				);
 				LinkServerGet.get().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
 			} else {
-				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted for the ServerGet.get().";
+				String message = "► " + ChatColor.GREEN + player.getName() + ChatColor.RESET + " has just voted for the server.";
 				Bukkit.broadcastMessage(message);
 				ServerGet.get().getDiscordBot().broadcast(
 						ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
