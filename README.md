@@ -79,4 +79,4 @@ This project uses Maven 3 to manage dependencies, packaging, and shading of nece
 The typical command used to build this project is: `mvn clean package install`
 
 # Copyright
-This project is licensed under the terms of [GNU Affero General Public License v3](https://github.com/java-mandelbrot/mandelbrot/blob/master/LICENSE)
+This project is licensed under the terms of [GNU Affero General Public License v3](LICENSE)
