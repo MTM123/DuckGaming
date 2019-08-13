@@ -9,25 +9,23 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.skorrloregaming.*;
-
 public class ShopCmd implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!(sender instanceof Player))
-			return true;
-		Player player = ((Player) sender);
-		if (!Server.getInstance().getFactions().contains(player.getUniqueId()) && !Server.getInstance().getSkyblock().contains(player.getUniqueId())) {
-			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
-			return true;
-		}
-		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
-			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
-			return true;
-		}
-		Server.getInstance().getShoppe().createInventory(player, LaShoppeFrame.HOME, 1, false);
-		return true;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (!(sender instanceof Player))
+            return true;
+        Player player = ((Player) sender);
+        if (!Server.getInstance().getFactions().contains(player.getUniqueId()) && !Server.getInstance().getSkyblock().contains(player.getUniqueId())) {
+            player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
+            return true;
+        }
+        if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
+            player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
+            return true;
+        }
+        Server.getInstance().getShoppe().createInventory(player, LaShoppeFrame.HOME, 1, false);
+        return true;
+    }
 
 }

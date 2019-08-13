@@ -1,5 +1,5 @@
 package me.skorrloregaming.impl;
 
 public enum MarriageGender {
-	MALE, FEMALE, UNDEFINED
+    MALE, FEMALE, UNDEFINED
 }

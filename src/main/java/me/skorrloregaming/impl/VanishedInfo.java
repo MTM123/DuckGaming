@@ -3,30 +3,28 @@ package me.skorrloregaming.impl;
 import org.bukkit.GameMode;
 import org.bukkit.inventory.ItemStack;
 
-import me.skorrloregaming.*;
-
 public class VanishedInfo {
-	private ItemStack[] contents;
-	private GameMode gameMode;
+    private ItemStack[] contents;
+    private GameMode gameMode;
 
-	public VanishedInfo(ItemStack[] contents, GameMode gameMode) {
-		this.setContents(contents);
-		this.setGameMode(gameMode);
-	}
+    public VanishedInfo(ItemStack[] contents, GameMode gameMode) {
+        this.setContents(contents);
+        this.setGameMode(gameMode);
+    }
 
-	public GameMode getGameMode() {
-		return gameMode;
-	}
+    public GameMode getGameMode() {
+        return gameMode;
+    }
 
-	public void setGameMode(GameMode gameMode) {
-		this.gameMode = gameMode;
-	}
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
+    }
 
-	public ItemStack[] getContents() {
-		return contents;
-	}
+    public ItemStack[] getContents() {
+        return contents;
+    }
 
-	public void setContents(ItemStack[] contents) {
-		this.contents = contents;
-	}
+    public void setContents(ItemStack[] contents) {
+        this.contents = contents;
+    }
 }

@@ -94,7 +94,7 @@ Messages:
 #  Translations
 # Below you can find a set of default values for all items in Minecraft 1.8.
 Translations:
-## Blocks ##
+  ## Blocks ##
   STONE:
     1: "Granite"
   STONE:

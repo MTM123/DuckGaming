@@ -1,51 +1,51 @@
 settings:
-    discordBot:
-        token: TOKEN
-    enable:
-        factions: true
-        survival: true
-        kitpvp: true
-        skyfight: true
-        creative: true
-        skyblock: false
-        welcomeMessage: true
-        pingInjector: true
-        authme:
-            dailyAuth: true
-            autoLoginCmd: true
-        protocolsupport:
-            versions:
-                PC:
-                    1m13: true
-                    1m12: true
-                    1m11: true
-                    1m10: true
-                    1m9: true
-                    1m8: true
-                    1m7: false
-                    1m6: false
-                    1m5: false
-                    1m4: false
-                PE: true
-    ranking:
-        enable: true
-        prefix: true
-    economy:
-        base:
-            SURVIVAL: 'GOLD_INGOT'
-        modifier:
-            SURVIVAL:
-                GOLD_INGOT: 1
-                GOLD_NUGGET: 0.1111111111111111
-                GOLD_BLOCK: 9
-                EMERALD: 2
-                EMERALD_BLOCK: 18
-    customJoinMessage: true
-    customQuitMessage: true
-    topVotersHttpServerPort: 2096
-    bungeecord: false
-    redis:
-        hostname: 'localhost'
-        port: 6379
-        password: ''
+  discordBot:
+    token: TOKEN
+  enable:
+    factions: true
+    survival: true
+    kitpvp: true
+    skyfight: true
+    creative: true
+    skyblock: false
+    welcomeMessage: true
+    pingInjector: true
+    authme:
+      dailyAuth: true
+      autoLoginCmd: true
+    protocolsupport:
+      versions:
+        PC:
+          1m13: true
+          1m12: true
+          1m11: true
+          1m10: true
+          1m9: true
+          1m8: true
+          1m7: false
+          1m6: false
+          1m5: false
+          1m4: false
+        PE: true
+  ranking:
+    enable: true
+    prefix: true
+  economy:
+    base:
+      SURVIVAL: 'GOLD_INGOT'
+    modifier:
+      SURVIVAL:
+        GOLD_INGOT: 1
+        GOLD_NUGGET: 0.1111111111111111
+        GOLD_BLOCK: 9
+        EMERALD: 2
+        EMERALD_BLOCK: 18
+  customJoinMessage: true
+  customQuitMessage: true
+  topVotersHttpServerPort: 2096
+  bungeecord: false
+  redis:
+    hostname: 'localhost'
+    port: 6379
+    password: ''
 config:

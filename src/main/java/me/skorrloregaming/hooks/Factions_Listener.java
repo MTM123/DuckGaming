@@ -14,27 +14,27 @@ import org.bukkit.event.Listener;
 
 public class Factions_Listener implements Listener {
 
-	public void register() {
-		Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
-		Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskTimer(Server.getInstance().getPlugin(), new Runnable() {
-			@Override
-			public void run() {
-				for (FPlayer fplayer : FPlayers.getInstance().getOnlinePlayers()) {
-					if (Link$.getRankId(fplayer.getPlayer()) > -1) {
-						fplayer.setSpyingChat(true);
-					} else {
-						fplayer.setSpyingChat(false);
-					}
-				}
-			}
-		}, 20L, 20L));
-	}
+    public void register() {
+        Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
+        Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskTimer(Server.getInstance().getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                for (FPlayer fplayer : FPlayers.getInstance().getOnlinePlayers()) {
+                    if (Link$.getRankId(fplayer.getPlayer()) > -1) {
+                        fplayer.setSpyingChat(true);
+                    } else {
+                        fplayer.setSpyingChat(false);
+                    }
+                }
+            }
+        }, 20L, 20L));
+    }
 
-	@EventHandler
-	public void onPlayerPowerLoss(PowerLossEvent event) {
-		Player player = event.getfPlayer().getPlayer();
-		if (!($.getCurrentMinigame(player) == ServerMinigame.FACTIONS) || Server.getInstance().getModeratingPlayers().containsKey(player.getUniqueId())) {
-			event.setCancelled(true);
-		}
-	}
+    @EventHandler
+    public void onPlayerPowerLoss(PowerLossEvent event) {
+        Player player = event.getfPlayer().getPlayer();
+        if (!($.getCurrentMinigame(player) == ServerMinigame.FACTIONS) || Server.getInstance().getModeratingPlayers().containsKey(player.getUniqueId())) {
+            event.setCancelled(true);
+        }
+    }
 }

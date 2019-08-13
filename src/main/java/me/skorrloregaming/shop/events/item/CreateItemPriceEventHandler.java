@@ -11,41 +11,41 @@ import java.lang.reflect.InvocationTargetException;
 
 public class CreateItemPriceEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
-	private LaShoppe shoppe;
+    private LaShoppe shoppe;
 
-	private Material material;
+    private Material material;
 
-	public CreateItemPriceEventHandler(LaShoppe shoppe, Material material) {
-		this.shoppe = shoppe;
-		this.material = material;
-	}
+    public CreateItemPriceEventHandler(LaShoppe shoppe, Material material) {
+        this.shoppe = shoppe;
+        this.material = material;
+    }
 
-	@Override
-	public void onAnvilClick(AnvilGUI.AnvilClickEvent event) {
-		String priceString = event.getName().replace("$", "");
-		final int price;
-		try {
-			price = Integer.parseInt(priceString);
-		} catch (Exception ex) {
-			event.getPlayer().sendMessage("Sorry, that's not a valid item price.");
-			return;
-		}
-		Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
+    @Override
+    public void onAnvilClick(AnvilGUI.AnvilClickEvent event) {
+        String priceString = event.getName().replace("$", "");
+        final int price;
+        try {
+            price = Integer.parseInt(priceString);
+        } catch (Exception ex) {
+            event.getPlayer().sendMessage("Sorry, that's not a valid item price.");
+            return;
+        }
+        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 
-			@Override
-			public void run() {
-				try {
-					new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ITEM), new CreateItemAmountEventHandler(shoppe, material, price))
-							.setInputName("Enter amount")
-							.open();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				}
-			}
-		}, 1L);
-	}
+            @Override
+            public void run() {
+                try {
+                    new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ITEM), new CreateItemAmountEventHandler(shoppe, material, price))
+                            .setInputName("Enter amount")
+                            .open();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 1L);
+    }
 }

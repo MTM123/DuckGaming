@@ -19,81 +19,81 @@ import java.util.logging.Logger;
 
 public class PingInjector implements Listener {
 
-	private Object server;
-	private List<?> networkManagers;
-	public boolean running = false;
+    public boolean running = false;
+    private Object server;
+    private List<?> networkManagers;
 
-	public PingInjector() {
-		Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
-	}
+    public PingInjector() {
+        Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
+    }
 
-	public void register() {
-		try {
-			this.networkManagers = Collections.synchronizedList((List<?>) getNetworkManagerList(CraftGo.CraftServer.getServerConnection()));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		running = true;
-	}
+    public void register() {
+        try {
+            this.networkManagers = Collections.synchronizedList((List<?>) getNetworkManagerList(CraftGo.CraftServer.getServerConnection()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        running = true;
+    }
 
-	public void unregister() {
-		server = null;
-		networkManagers = null;
-		running = false;
-	}
+    public void unregister() {
+        server = null;
+        networkManagers = null;
+        running = false;
+    }
 
-	public void injectOpenConnections() {
-		try {
-			Field field = Reflection.getFirstFieldByType(CraftGo.CraftServer.getNetworkManager(), Channel.class);
-			field.setAccessible(true);
-			for (Object manager : this.networkManagers) {
-				Channel channel = (Channel) field.get(manager);
-				try {
-					if ((channel.pipeline().context("ping_handler") == null) && (channel.pipeline().context("packet_handler") != null)) {
-						channel.pipeline().addBefore("packet_handler", "ping_handler", new DuplexHandler());
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-					final SocketAddress address = channel.remoteAddress();
-					if (address instanceof InetSocketAddress) {
-						final InetSocketAddress inetAddress = (InetSocketAddress) address;
-						final String addr = inetAddress.getAddress().getHostAddress();
-						Logger.getGlobal().warning("Duplex processing for /" + addr + ":" + inetAddress.getPort() + ", has failed! This is likely to be caused by premature closing of the stream, but there are other possible causes such as fake packets. If more of these errors come from the same address, you most likely can safely ignore the issue.");
-						return;
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    public void injectOpenConnections() {
+        try {
+            Field field = Reflection.getFirstFieldByType(CraftGo.CraftServer.getNetworkManager(), Channel.class);
+            field.setAccessible(true);
+            for (Object manager : this.networkManagers) {
+                Channel channel = (Channel) field.get(manager);
+                try {
+                    if ((channel.pipeline().context("ping_handler") == null) && (channel.pipeline().context("packet_handler") != null)) {
+                        channel.pipeline().addBefore("packet_handler", "ping_handler", new DuplexHandler());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    final SocketAddress address = channel.remoteAddress();
+                    if (address instanceof InetSocketAddress) {
+                        final InetSocketAddress inetAddress = (InetSocketAddress) address;
+                        final String addr = inetAddress.getAddress().getHostAddress();
+                        Logger.getGlobal().warning("Duplex processing for /" + addr + ":" + inetAddress.getPort() + ", has failed! This is likely to be caused by premature closing of the stream, but there are other possible causes such as fake packets. If more of these errors come from the same address, you most likely can safely ignore the issue.");
+                        return;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	public Object getNetworkManagerList(Object conn) {
-		try {
-			Method[] arrayOfMethod;
-			int j = (arrayOfMethod = conn.getClass().getDeclaredMethods()).length;
-			for (int i = 0; i < j; i++) {
-				Method method = arrayOfMethod[i];
-				method.setAccessible(true);
-				if (method.getReturnType() == List.class) {
-					return method.invoke(null, new Object[]{conn});
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    public Object getNetworkManagerList(Object conn) {
+        try {
+            Method[] arrayOfMethod;
+            int j = (arrayOfMethod = conn.getClass().getDeclaredMethods()).length;
+            for (int i = 0; i < j; i++) {
+                Method method = arrayOfMethod[i];
+                method.setAccessible(true);
+                if (method.getReturnType() == List.class) {
+                    return method.invoke(null, new Object[]{conn});
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void serverListPing(ServerListPingEvent event) {
-		if (!running)
-			return;
-		String motd = Server.getInstance().getServerMotd();
-		if (!(Server.getInstance().getTempMotd().equals("/unspecified"))) {
-			motd = Server.getInstance().getTempMotd();
-		}
-		event.setMotd(motd);
-		injectOpenConnections();
-	}
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void serverListPing(ServerListPingEvent event) {
+        if (!running)
+            return;
+        String motd = Server.getInstance().getServerMotd();
+        if (!(Server.getInstance().getTempMotd().equals("/unspecified"))) {
+            motd = Server.getInstance().getTempMotd();
+        }
+        event.setMotd(motd);
+        injectOpenConnections();
+    }
 }

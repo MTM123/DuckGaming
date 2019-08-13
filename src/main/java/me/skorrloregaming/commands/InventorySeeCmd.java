@@ -14,41 +14,39 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-import me.skorrloregaming.*;
-
 public class InventorySeeCmd implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!(sender instanceof Player))
-			return true;
-		Player player = ((Player) sender);
-		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
-			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
-			return true;
-		}
-		if (args.length == 0) {
-			player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player>");
-		} else {
-			Player tp = Bukkit.getPlayer(args[0]);
-			if (tp == null) {
-				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
-			} else {
-				String name = ChatColor.BOLD + "Temporary Inventory";
-				Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.TEMPORARY), 54, name);
-				if (player.isOp()) {
-					inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.CHEST), 54, name);
-					name = ChatColor.BOLD + "Personal Inventory";
-					if (Server.getInstance().getSavePersonalChest().containsKey(player))
-						Server.getInstance().getSavePersonalChest().remove(player);
-					Server.getInstance().getSaveOtherInventory().put(player, tp);
-				}
-				inv.setContents(tp.getInventory().getContents());
-				player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
-				player.openInventory(inv);
-			}
-		}
-		return true;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (!(sender instanceof Player))
+            return true;
+        Player player = ((Player) sender);
+        if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
+            player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
+            return true;
+        }
+        if (args.length == 0) {
+            player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player>");
+        } else {
+            Player tp = Bukkit.getPlayer(args[0]);
+            if (tp == null) {
+                player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
+            } else {
+                String name = ChatColor.BOLD + "Temporary Inventory";
+                Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.TEMPORARY), 54, name);
+                if (player.isOp()) {
+                    inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.CHEST), 54, name);
+                    name = ChatColor.BOLD + "Personal Inventory";
+                    if (Server.getInstance().getSavePersonalChest().containsKey(player))
+                        Server.getInstance().getSavePersonalChest().remove(player);
+                    Server.getInstance().getSaveOtherInventory().put(player, tp);
+                }
+                inv.setContents(tp.getInventory().getContents());
+                player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
+                player.openInventory(inv);
+            }
+        }
+        return true;
+    }
 
 }

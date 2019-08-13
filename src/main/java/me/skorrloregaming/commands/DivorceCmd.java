@@ -5,17 +5,15 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.skorrloregaming.*;
-
 public class DivorceCmd implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!(sender instanceof Player))
-			return true;
-		Player player = ((Player) sender);
-		player.performCommand("marry divorce");
-		return true;
-	}
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (!(sender instanceof Player))
+            return true;
+        Player player = ((Player) sender);
+        player.performCommand("marry divorce");
+        return true;
+    }
 
 }

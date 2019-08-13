@@ -9,47 +9,45 @@ import org.bukkit.Material;
 
 import java.lang.reflect.InvocationTargetException;
 
-import me.skorrloregaming.*;
-
 public class CreateItemTypeEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
-	private LaShoppe shoppe;
+    private LaShoppe shoppe;
 
-	public CreateItemTypeEventHandler(LaShoppe shoppe) {
-		this.shoppe = shoppe;
-	}
+    public CreateItemTypeEventHandler(LaShoppe shoppe) {
+        this.shoppe = shoppe;
+    }
 
-	@Override
-	public void onAnvilClick(AnvilGUI.AnvilClickEvent event) {
-		String materialName = event.getName().toUpperCase().replace(" ", "_");
-		Material material = null;
-		try {
-			material = Material.getMaterial(materialName);
-		} catch (Exception ex) {
-			try {
-				material = Material.getMaterial(materialName, true);
-			} catch (Exception ex2) {
-				event.getPlayer().sendMessage("Sorry, that's not a valid material name.");
-				return;
-			}
-		}
-		final Material fMaterial = material;
-		Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
+    @Override
+    public void onAnvilClick(AnvilGUI.AnvilClickEvent event) {
+        String materialName = event.getName().toUpperCase().replace(" ", "_");
+        Material material = null;
+        try {
+            material = Material.getMaterial(materialName);
+        } catch (Exception ex) {
+            try {
+                material = Material.getMaterial(materialName, true);
+            } catch (Exception ex2) {
+                event.getPlayer().sendMessage("Sorry, that's not a valid material name.");
+                return;
+            }
+        }
+        final Material fMaterial = material;
+        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 
-			@Override
-			public void run() {
-				try {
-					new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ITEM), new CreateItemPriceEventHandler(shoppe, fMaterial))
-							.setInputName("Enter price")
-							.open();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				}
-			}
-		}, 1L);
-	}
+            @Override
+            public void run() {
+                try {
+                    new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ITEM), new CreateItemPriceEventHandler(shoppe, fMaterial))
+                            .setInputName("Enter price")
+                            .open();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 1L);
+    }
 }

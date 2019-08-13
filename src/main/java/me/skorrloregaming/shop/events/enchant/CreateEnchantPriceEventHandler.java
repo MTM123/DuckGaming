@@ -9,45 +9,43 @@ import org.bukkit.enchantments.Enchantment;
 
 import java.lang.reflect.InvocationTargetException;
 
-import me.skorrloregaming.*;
-
 public class CreateEnchantPriceEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
-	private LaShoppe shoppe;
+    private LaShoppe shoppe;
 
-	private Enchantment enchantment;
+    private Enchantment enchantment;
 
-	public CreateEnchantPriceEventHandler(LaShoppe shoppe, Enchantment enchantment) {
-		this.shoppe = shoppe;
-		this.enchantment = enchantment;
-	}
+    public CreateEnchantPriceEventHandler(LaShoppe shoppe, Enchantment enchantment) {
+        this.shoppe = shoppe;
+        this.enchantment = enchantment;
+    }
 
-	@Override
-	public void onAnvilClick(AnvilGUI.AnvilClickEvent event) {
-		String priceString = event.getName().replace("$", "");
-		final int price;
-		try {
-			price = Integer.parseInt(priceString);
-		} catch (Exception ex) {
-			event.getPlayer().sendMessage("Sorry, that's not a valid enchant price.");
-			return;
-		}
-		Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
+    @Override
+    public void onAnvilClick(AnvilGUI.AnvilClickEvent event) {
+        String priceString = event.getName().replace("$", "");
+        final int price;
+        try {
+            price = Integer.parseInt(priceString);
+        } catch (Exception ex) {
+            event.getPlayer().sendMessage("Sorry, that's not a valid enchant price.");
+            return;
+        }
+        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 
-			@Override
-			public void run() {
-				try {
-					new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ENCHANT), new CreateEnchantTierEventHandler(shoppe, enchantment, price))
-							.setInputName("Enter tier")
-							.open();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				}
-			}
-		}, 1L);
-	}
+            @Override
+            public void run() {
+                try {
+                    new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ENCHANT), new CreateEnchantTierEventHandler(shoppe, enchantment, price))
+                            .setInputName("Enter tier")
+                            .open();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 1L);
+    }
 }

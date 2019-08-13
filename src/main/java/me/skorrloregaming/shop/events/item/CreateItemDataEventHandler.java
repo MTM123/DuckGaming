@@ -5,39 +5,37 @@ import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.shop.LaShoppe;
 import org.bukkit.Material;
 
-import me.skorrloregaming.*;
-
 public class CreateItemDataEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
-	private LaShoppe shoppe;
+    private LaShoppe shoppe;
 
-	private Material material;
+    private Material material;
 
-	private int price;
+    private int price;
 
-	private int amount;
+    private int amount;
 
-	public CreateItemDataEventHandler(LaShoppe shoppe, Material material, int price, int amount) {
-		this.shoppe = shoppe;
-		this.material = material;
-		this.price = price;
-		this.amount = amount;
-	}
+    public CreateItemDataEventHandler(LaShoppe shoppe, Material material, int price, int amount) {
+        this.shoppe = shoppe;
+        this.material = material;
+        this.price = price;
+        this.amount = amount;
+    }
 
-	@Override
-	public void onAnvilClick(AnvilGUI.AnvilClickEvent event) {
-		String dataString = event.getName();
-		final int data;
-		try {
-			data = Integer.parseInt(dataString);
-		} catch (Exception ex) {
-			event.getPlayer().sendMessage("Sorry, that's not a valid item data.");
-			return;
-		}
-		event.getPlayer().sendMessage("Material: " + material.toString());
-		event.getPlayer().sendMessage("Price: $" + price);
-		event.getPlayer().sendMessage("Amount: " + amount + "x");
-		event.getPlayer().sendMessage("Data: " + data);
-		shoppe.createItem($.getCurrentMinigame(event.getPlayer()), material, price, amount, data);
-	}
+    @Override
+    public void onAnvilClick(AnvilGUI.AnvilClickEvent event) {
+        String dataString = event.getName();
+        final int data;
+        try {
+            data = Integer.parseInt(dataString);
+        } catch (Exception ex) {
+            event.getPlayer().sendMessage("Sorry, that's not a valid item data.");
+            return;
+        }
+        event.getPlayer().sendMessage("Material: " + material.toString());
+        event.getPlayer().sendMessage("Price: $" + price);
+        event.getPlayer().sendMessage("Amount: " + amount + "x");
+        event.getPlayer().sendMessage("Data: " + data);
+        shoppe.createItem($.getCurrentMinigame(event.getPlayer()), material, price, amount, data);
+    }
 }

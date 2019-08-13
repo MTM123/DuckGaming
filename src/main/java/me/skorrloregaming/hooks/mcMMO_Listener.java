@@ -11,20 +11,20 @@ import org.bukkit.event.Listener;
 
 public class mcMMO_Listener implements Listener {
 
-	public void register() {
-		Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
-	}
+    public void register() {
+        Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
+    }
 
-	@EventHandler
-	public void onPlayerActivateAbility(McMMOPlayerAbilityActivateEvent event) {
-		Player player = event.getPlayer();
-		ServerMinigame minigame = $.getCurrentMinigame(player);
-		if (minigame == ServerMinigame.SKYBLOCK || minigame == ServerMinigame.FACTIONS || minigame == ServerMinigame.SURVIVAL) {
-			if (event.getAbility() == AbilityType.TREE_FELLER) {
-				event.setCancelled(true);
-			}
-		} else {
-			event.setCancelled(true);
-		}
-	}
+    @EventHandler
+    public void onPlayerActivateAbility(McMMOPlayerAbilityActivateEvent event) {
+        Player player = event.getPlayer();
+        ServerMinigame minigame = $.getCurrentMinigame(player);
+        if (minigame == ServerMinigame.SKYBLOCK || minigame == ServerMinigame.FACTIONS || minigame == ServerMinigame.SURVIVAL) {
+            if (event.getAbility() == AbilityType.TREE_FELLER) {
+                event.setCancelled(true);
+            }
+        } else {
+            event.setCancelled(true);
+        }
+    }
 }

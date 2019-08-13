@@ -25,165 +25,165 @@ import static com.comphenix.protocol.PacketType.Play.Server.*;
 
 public class SkinApplier implements Runnable {
 
-	public final CommandSender invoker;
-	public final Player receiver;
-	public final SkinModel targetSkin;
-	public final boolean keepSkin;
+    public final CommandSender invoker;
+    public final Player receiver;
+    public final SkinModel targetSkin;
+    public final boolean keepSkin;
 
-	public SkinApplier(CommandSender invoker, Player receiver, SkinModel targetSkin, boolean keepSkin) {
-		this.invoker = invoker;
-		this.receiver = receiver;
-		this.targetSkin = targetSkin;
-		this.keepSkin = keepSkin;
-	}
+    public SkinApplier(CommandSender invoker, Player receiver, SkinModel targetSkin, boolean keepSkin) {
+        this.invoker = invoker;
+        this.receiver = receiver;
+        this.targetSkin = targetSkin;
+        this.keepSkin = keepSkin;
+    }
 
-	@Override
-	public void run() {
-		if (!isConnected()) {
-			return;
-		}
-		applySkin();
-	}
+    @Override
+    public void run() {
+        if (!isConnected()) {
+            return;
+        }
+        applySkin();
+    }
 
-	public boolean isConnected() {
-		return receiver != null && receiver.isOnline();
-	}
+    public boolean isConnected() {
+        return receiver != null && receiver.isOnline();
+    }
 
-	public void applySkin() {
-		if (!Server.getInstance().getPlugin().getConfig().getBoolean("settings.bungeecord", false))
-			applyInstantUpdate();
-	}
+    public void applySkin() {
+        if (!Server.getInstance().getPlugin().getConfig().getBoolean("settings.bungeecord", false))
+            applyInstantUpdate();
+    }
 
-	public void applyInstantUpdate() {
-		if (!CraftGo.Player.isPocketPlayer(receiver)) {
-			WrappedGameProfile gameProfile = WrappedGameProfile.fromPlayer(receiver);
-			applyProperties(gameProfile, targetSkin);
-			Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
-				@Override
-				public void run() {
-					sendUpdateSelf(WrappedGameProfile.fromPlayer(receiver));
-					sendUpdateOthers();
-				}
-			});
-		}
-	}
+    public void applyInstantUpdate() {
+        if (!CraftGo.Player.isPocketPlayer(receiver)) {
+            WrappedGameProfile gameProfile = WrappedGameProfile.fromPlayer(receiver);
+            applyProperties(gameProfile, targetSkin);
+            Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
+                @Override
+                public void run() {
+                    sendUpdateSelf(WrappedGameProfile.fromPlayer(receiver));
+                    sendUpdateOthers();
+                }
+            });
+        }
+    }
 
-	public WrappedSignedProperty convertToProperty(SkinModel skinData) {
-		String encodedValue = skinData.getEncodedValue();
-		String signature = skinData.getSignature();
-		return WrappedSignedProperty.fromValues(SkinProperty.SKIN_KEY, encodedValue, signature);
-	}
+    public WrappedSignedProperty convertToProperty(SkinModel skinData) {
+        String encodedValue = skinData.getEncodedValue();
+        String signature = skinData.getSignature();
+        return WrappedSignedProperty.fromValues(SkinProperty.SKIN_KEY, encodedValue, signature);
+    }
 
-	public void applyProperties(WrappedGameProfile profile, SkinModel targetSkin) {
-		profile.getProperties().clear();
-		if (targetSkin != null) {
-			profile.getProperties().put(SkinProperty.SKIN_KEY, convertToProperty(targetSkin));
-		}
-	}
+    public void applyProperties(WrappedGameProfile profile, SkinModel targetSkin) {
+        profile.getProperties().clear();
+        if (targetSkin != null) {
+            profile.getProperties().put(SkinProperty.SKIN_KEY, convertToProperty(targetSkin));
+        }
+    }
 
 
-	public void sendMessage(String key) {
-		invoker.sendMessage(key);
-	}
+    public void sendMessage(String key) {
+        invoker.sendMessage(key);
+    }
 
-	public void runAsync(Runnable runnable) {
-		Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), runnable);
-	}
+    public void runAsync(Runnable runnable) {
+        Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), runnable);
+    }
 
-	public void sendUpdateOthers() throws FieldAccessException {
-		Bukkit.getOnlinePlayers().stream()
-				.filter(onlinePlayer -> onlinePlayer.canSee(receiver))
-				.forEach(this::hideAndShow);
-	}
+    public void sendUpdateOthers() throws FieldAccessException {
+        Bukkit.getOnlinePlayers().stream()
+                .filter(onlinePlayer -> onlinePlayer.canSee(receiver))
+                .forEach(this::hideAndShow);
+    }
 
-	public void sendUpdateSelf(WrappedGameProfile gameProfile) throws FieldAccessException {
-		Optional.ofNullable(receiver.getVehicle()).ifPresent(Entity::eject);
-		sendPacketsSelf(gameProfile);
-		receiver.setExp(receiver.getExp());
-		receiver.setWalkSpeed(receiver.getWalkSpeed());
-		receiver.updateInventory();
-		PlayerInventory inventory = receiver.getInventory();
-		inventory.setHeldItemSlot(inventory.getHeldItemSlot());
-		try {
-			receiver.getClass().getDeclaredMethod("updateScaledHealth").invoke(receiver);
-		} catch (ReflectiveOperationException reflectiveEx) {
-			reflectiveEx.printStackTrace();
-		}
-	}
+    public void sendUpdateSelf(WrappedGameProfile gameProfile) throws FieldAccessException {
+        Optional.ofNullable(receiver.getVehicle()).ifPresent(Entity::eject);
+        sendPacketsSelf(gameProfile);
+        receiver.setExp(receiver.getExp());
+        receiver.setWalkSpeed(receiver.getWalkSpeed());
+        receiver.updateInventory();
+        PlayerInventory inventory = receiver.getInventory();
+        inventory.setHeldItemSlot(inventory.getHeldItemSlot());
+        try {
+            receiver.getClass().getDeclaredMethod("updateScaledHealth").invoke(receiver);
+        } catch (ReflectiveOperationException reflectiveEx) {
+            reflectiveEx.printStackTrace();
+        }
+    }
 
-	public void sendPacketsSelf(WrappedGameProfile gameProfile) {
-		PacketContainer removeInfo;
-		PacketContainer addInfo;
-		PacketContainer respawn;
-		PacketContainer teleport;
-		try {
-			EnumWrappers.NativeGameMode gamemode = EnumWrappers.NativeGameMode.fromBukkit(receiver.getGameMode());
-			WrappedChatComponent displayName = WrappedChatComponent.fromText(receiver.getPlayerListName());
-			PlayerInfoData playerInfoData = new PlayerInfoData(gameProfile, 0, gamemode, displayName);
-			removeInfo = new PacketContainer(PLAYER_INFO);
-			removeInfo.getPlayerInfoAction().write(0, EnumWrappers.PlayerInfoAction.REMOVE_PLAYER);
-			removeInfo.getPlayerInfoDataLists().write(0, Collections.singletonList(playerInfoData));
-			addInfo = removeInfo.deepClone();
-			addInfo.getPlayerInfoAction().write(0, EnumWrappers.PlayerInfoAction.ADD_PLAYER);
-			respawn = createRespawnPacket(gamemode);
-			teleport = createTeleportPacket(receiver.getLocation().clone());
-		} catch (ReflectiveOperationException reflectiveEx) {
-			reflectiveEx.printStackTrace();
-			return;
-		}
+    public void sendPacketsSelf(WrappedGameProfile gameProfile) {
+        PacketContainer removeInfo;
+        PacketContainer addInfo;
+        PacketContainer respawn;
+        PacketContainer teleport;
+        try {
+            EnumWrappers.NativeGameMode gamemode = EnumWrappers.NativeGameMode.fromBukkit(receiver.getGameMode());
+            WrappedChatComponent displayName = WrappedChatComponent.fromText(receiver.getPlayerListName());
+            PlayerInfoData playerInfoData = new PlayerInfoData(gameProfile, 0, gamemode, displayName);
+            removeInfo = new PacketContainer(PLAYER_INFO);
+            removeInfo.getPlayerInfoAction().write(0, EnumWrappers.PlayerInfoAction.REMOVE_PLAYER);
+            removeInfo.getPlayerInfoDataLists().write(0, Collections.singletonList(playerInfoData));
+            addInfo = removeInfo.deepClone();
+            addInfo.getPlayerInfoAction().write(0, EnumWrappers.PlayerInfoAction.ADD_PLAYER);
+            respawn = createRespawnPacket(gamemode);
+            teleport = createTeleportPacket(receiver.getLocation().clone());
+        } catch (ReflectiveOperationException reflectiveEx) {
+            reflectiveEx.printStackTrace();
+            return;
+        }
 
-		sendPackets(removeInfo, addInfo, respawn, teleport);
-	}
+        sendPackets(removeInfo, addInfo, respawn, teleport);
+    }
 
-	public void hideAndShow(Player other) {
-		other.hidePlayer(Server.getInstance().getPlugin(), receiver);
-		other.showPlayer(Server.getInstance().getPlugin(), receiver);
-	}
+    public void hideAndShow(Player other) {
+        other.hidePlayer(Server.getInstance().getPlugin(), receiver);
+        other.showPlayer(Server.getInstance().getPlugin(), receiver);
+    }
 
-	public void sendPackets(PacketContainer... packets) {
-		try {
-			ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-			for (PacketContainer packet : packets) {
-				protocolManager.sendServerPacket(receiver, packet);
-			}
-		} catch (InvocationTargetException ex) {
-			ex.printStackTrace();
-		}
-	}
+    public void sendPackets(PacketContainer... packets) {
+        try {
+            ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+            for (PacketContainer packet : packets) {
+                protocolManager.sendServerPacket(receiver, packet);
+            }
+        } catch (InvocationTargetException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-	public PacketContainer createRespawnPacket(EnumWrappers.NativeGameMode gamemode) throws ReflectiveOperationException {
-		PacketContainer respawn = new PacketContainer(RESPAWN);
+    public PacketContainer createRespawnPacket(EnumWrappers.NativeGameMode gamemode) throws ReflectiveOperationException {
+        PacketContainer respawn = new PacketContainer(RESPAWN);
 
-		EnumWrappers.Difficulty difficulty = EnumWrappers.getDifficultyConverter().getSpecific(receiver.getWorld().getDifficulty());
+        EnumWrappers.Difficulty difficulty = EnumWrappers.getDifficultyConverter().getSpecific(receiver.getWorld().getDifficulty());
 
-		//<= 1.13.1
-		int dimensionId = receiver.getWorld().getEnvironment().getId();
-		respawn.getIntegers().writeSafely(0, dimensionId);
+        //<= 1.13.1
+        int dimensionId = receiver.getWorld().getEnvironment().getId();
+        respawn.getIntegers().writeSafely(0, dimensionId);
 
-		//> 1.13.1
-		if (MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.AQUATIC_UPDATE) > 0) {
-			try {
-				respawn.getDimensions().writeSafely(0, dimensionId);
-			} catch (NoSuchMethodError noSuchMethodError) {
-				noSuchMethodError.printStackTrace();
-			}
-		}
+        //> 1.13.1
+        if (MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.AQUATIC_UPDATE) > 0) {
+            try {
+                respawn.getDimensions().writeSafely(0, dimensionId);
+            } catch (NoSuchMethodError noSuchMethodError) {
+                noSuchMethodError.printStackTrace();
+            }
+        }
 
-		respawn.getDifficulties().write(0, difficulty);
-		respawn.getGameModes().write(0, gamemode);
-		respawn.getWorldTypeModifier().write(0, receiver.getWorld().getWorldType());
-		return respawn;
-	}
+        respawn.getDifficulties().write(0, difficulty);
+        respawn.getGameModes().write(0, gamemode);
+        respawn.getWorldTypeModifier().write(0, receiver.getWorld().getWorldType());
+        return respawn;
+    }
 
-	public PacketContainer createTeleportPacket(Location location) {
-		PacketContainer teleport = new PacketContainer(POSITION);
-		teleport.getModifier().writeDefaults();
-		teleport.getDoubles().write(0, location.getX());
-		teleport.getDoubles().write(1, location.getY());
-		teleport.getDoubles().write(2, location.getZ());
-		teleport.getFloat().write(0, location.getYaw());
-		teleport.getFloat().write(1, location.getPitch());
-		teleport.getIntegers().writeSafely(0, -1337);
-		return teleport;
-	}
+    public PacketContainer createTeleportPacket(Location location) {
+        PacketContainer teleport = new PacketContainer(POSITION);
+        teleport.getModifier().writeDefaults();
+        teleport.getDoubles().write(0, location.getX());
+        teleport.getDoubles().write(1, location.getY());
+        teleport.getDoubles().write(2, location.getZ());
+        teleport.getFloat().write(0, location.getYaw());
+        teleport.getFloat().write(1, location.getPitch());
+        teleport.getIntegers().writeSafely(0, -1337);
+        return teleport;
+    }
 }
