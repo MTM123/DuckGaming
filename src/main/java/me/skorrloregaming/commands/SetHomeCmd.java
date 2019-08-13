@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 
 import java.util.Set;
 
+import me.skorrloregaming.*;
+
 public class SetHomeCmd implements CommandExecutor {
 
 	@Override
@@ -20,19 +22,19 @@ public class SetHomeCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = (Player) sender;
-		if ((!Server.getFactions().contains(player.getUniqueId())) && (!Server.getSurvival().contains(player.getUniqueId()))) {
+		if ((!Server.getInstance().getFactions().contains(player.getUniqueId())) && (!Server.getInstance().getSurvival().contains(player.getUniqueId()))) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
 		ConfigurationManager config = null;
-		if (Server.getFactions().contains(player.getUniqueId())) {
-			config = Server.getFactionsConfig();
-		} else if (Server.getSurvival().contains(player.getUniqueId())) {
-			config = Server.getSurvivalConfig();
+		if (Server.getInstance().getFactions().contains(player.getUniqueId())) {
+			config = Server.getInstance().getFactionsConfig();
+		} else if (Server.getInstance().getSurvival().contains(player.getUniqueId())) {
+			config = Server.getInstance().getSurvivalConfig();
 		}
 		String home = "familiar";
 		if (args.length > 0)

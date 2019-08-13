@@ -1,8 +1,6 @@
 package me.skorrloregaming.lockette;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.CraftGo;
-import me.skorrloregaming.Logger;
+import me.skorrloregaming.*;
 import me.skorrloregaming.Server;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -26,6 +24,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+
+import me.skorrloregaming.*;
 
 public class Lockette {
 	static boolean DEBUG = false;
@@ -106,7 +106,7 @@ public class Lockette {
 	public void onEnable() {
 		if (enabled)
 			return;
-		Logger.debug("[" + Lockette.pluginName + "] Version " + Server.getPlugin().getDescription().getVersion() + " is being enabled!");
+		Logger.debug("[" + Lockette.pluginName + "] Version " + Server.getInstance().getPlugin().getDescription().getVersion() + " is being enabled!");
 		String bukkitVersion = Bukkit.getServer().getClass().getName().split("\\.")[3];
 		float bukkitminver = 1.8F;
 		if (!leqVersion(bukkitVersion, 1, 8)) {
@@ -145,7 +145,7 @@ public class Lockette {
 	}
 
 	public boolean hasPermission(World world, String playerName, String permissionNode) {
-		return (hasPermission(world, Server.getPlugin().getServer().getPlayer(playerName), permissionNode));
+		return (hasPermission(world, Server.getInstance().getPlugin().getServer().getPlayer(playerName), permissionNode));
 	}
 
 	public static BlockFace getPistonFacing(Block block) {
@@ -200,55 +200,55 @@ public class Lockette {
 	public void loadProperties(boolean reload) {
 		if (reload) {
 			Logger.debug("[" + Lockette.pluginName + "] Reloading plugin configuration files.");
-			Server.getLocketteConfig().reloadData();
+			Server.getInstance().getLocketteConfig().reloadData();
 		}
-		uuidSupport = Server.getLocketteConfig().getData().getBoolean("enable-uuid-support", false);
-		Server.getLocketteConfig().getData().set("enable-uuid-support", uuidSupport);
-		msgUser = Server.getLocketteConfig().getData().getBoolean("enable-messages-user", true);
-		Server.getLocketteConfig().getData().set("enable-messages-user", msgUser);
-		msgOwner = Server.getLocketteConfig().getData().getBoolean("enable-messages-owner", false);
-		Server.getLocketteConfig().getData().set("enable-messages-owner", msgOwner);
-		msgAdmin = Server.getLocketteConfig().getData().getBoolean("enable-messages-admin", true);
-		Server.getLocketteConfig().getData().set("enable-messages-admin", msgAdmin);
-		msgError = Server.getLocketteConfig().getData().getBoolean("enable-messages-error", true);
-		Server.getLocketteConfig().getData().set("enable-messages-error", msgError);
-		msgHelp = Server.getLocketteConfig().getData().getBoolean("enable-messages-help", true);
-		Server.getLocketteConfig().getData().set("enable-messages-help", msgHelp);
-		explosionProtectionAll = Server.getLocketteConfig().getData().getBoolean("explosion-protection-all", true);
-		Server.getLocketteConfig().getData().set("explosion-protection-all", explosionProtectionAll);
-		usePermissions = Server.getLocketteConfig().getData().getBoolean("enable-permissions", false);
-		Server.getLocketteConfig().getData().set("enable-permissions", usePermissions);
-		protectDoors = Server.getLocketteConfig().getData().getBoolean("enable-protection-doors", true);
-		Server.getLocketteConfig().getData().set("enable-protection-doors", protectDoors);
-		protectTrapDoors = Server.getLocketteConfig().getData().getBoolean("enable-protection-trapdoors", true);
-		Server.getLocketteConfig().getData().set("enable-protection-trapdoors", protectTrapDoors);
-		adminSnoop = Server.getLocketteConfig().getData().getBoolean("allow-admin-snoop", false);
-		Server.getLocketteConfig().getData().set("allow-admin-snoop", adminSnoop);
-		adminBypass = Server.getLocketteConfig().getData().getBoolean("allow-admin-bypass", true);
-		Server.getLocketteConfig().getData().set("allow-admin-bypass", adminBypass);
-		adminBreak = Server.getLocketteConfig().getData().getBoolean("allow-admin-break", true);
-		Server.getLocketteConfig().getData().set("allow-admin-break", adminBreak);
-		blockHopper = Server.getLocketteConfig().getData().getBoolean("enable-hopper-blocking", true);
-		Server.getLocketteConfig().getData().set("enable-hopper-blocking", blockHopper);
+		uuidSupport = Server.getInstance().getLocketteConfig().getData().getBoolean("enable-uuid-support", false);
+		Server.getInstance().getLocketteConfig().getData().set("enable-uuid-support", uuidSupport);
+		msgUser = Server.getInstance().getLocketteConfig().getData().getBoolean("enable-messages-user", true);
+		Server.getInstance().getLocketteConfig().getData().set("enable-messages-user", msgUser);
+		msgOwner = Server.getInstance().getLocketteConfig().getData().getBoolean("enable-messages-owner", false);
+		Server.getInstance().getLocketteConfig().getData().set("enable-messages-owner", msgOwner);
+		msgAdmin = Server.getInstance().getLocketteConfig().getData().getBoolean("enable-messages-admin", true);
+		Server.getInstance().getLocketteConfig().getData().set("enable-messages-admin", msgAdmin);
+		msgError = Server.getInstance().getLocketteConfig().getData().getBoolean("enable-messages-error", true);
+		Server.getInstance().getLocketteConfig().getData().set("enable-messages-error", msgError);
+		msgHelp = Server.getInstance().getLocketteConfig().getData().getBoolean("enable-messages-help", true);
+		Server.getInstance().getLocketteConfig().getData().set("enable-messages-help", msgHelp);
+		explosionProtectionAll = Server.getInstance().getLocketteConfig().getData().getBoolean("explosion-protection-all", true);
+		Server.getInstance().getLocketteConfig().getData().set("explosion-protection-all", explosionProtectionAll);
+		usePermissions = Server.getInstance().getLocketteConfig().getData().getBoolean("enable-permissions", false);
+		Server.getInstance().getLocketteConfig().getData().set("enable-permissions", usePermissions);
+		protectDoors = Server.getInstance().getLocketteConfig().getData().getBoolean("enable-protection-doors", true);
+		Server.getInstance().getLocketteConfig().getData().set("enable-protection-doors", protectDoors);
+		protectTrapDoors = Server.getInstance().getLocketteConfig().getData().getBoolean("enable-protection-trapdoors", true);
+		Server.getInstance().getLocketteConfig().getData().set("enable-protection-trapdoors", protectTrapDoors);
+		adminSnoop = Server.getInstance().getLocketteConfig().getData().getBoolean("allow-admin-snoop", false);
+		Server.getInstance().getLocketteConfig().getData().set("allow-admin-snoop", adminSnoop);
+		adminBypass = Server.getInstance().getLocketteConfig().getData().getBoolean("allow-admin-bypass", true);
+		Server.getInstance().getLocketteConfig().getData().set("allow-admin-bypass", adminBypass);
+		adminBreak = Server.getInstance().getLocketteConfig().getData().getBoolean("allow-admin-break", true);
+		Server.getInstance().getLocketteConfig().getData().set("allow-admin-break", adminBreak);
+		blockHopper = Server.getInstance().getLocketteConfig().getData().getBoolean("enable-hopper-blocking", true);
+		Server.getInstance().getLocketteConfig().getData().set("enable-hopper-blocking", blockHopper);
 		if (protectDoors || protectTrapDoors) {
 			if (doorCloser.start()) {
 				Logger.debug("[" + Lockette.pluginName + "] Failed to register door closing task!");
 			}
 		} else
 			doorCloser.stop();
-		directPlacement = Server.getLocketteConfig().getData().getBoolean("enable-quick-protect", true);
-		Server.getLocketteConfig().getData().set("enable-quick-protect", directPlacement);
-		colorTags = Server.getLocketteConfig().getData().getBoolean("enable-color-tags", true);
-		Server.getLocketteConfig().getData().set("enable-color-tags", colorTags);
-		debugMode = Server.getLocketteConfig().getData().getBoolean("enable-debug", false);
+		directPlacement = Server.getInstance().getLocketteConfig().getData().getBoolean("enable-quick-protect", true);
+		Server.getInstance().getLocketteConfig().getData().set("enable-quick-protect", directPlacement);
+		colorTags = Server.getInstance().getLocketteConfig().getData().getBoolean("enable-color-tags", true);
+		Server.getInstance().getLocketteConfig().getData().set("enable-color-tags", colorTags);
+		debugMode = Server.getInstance().getLocketteConfig().getData().getBoolean("enable-debug", false);
 		if (debugMode)
 			Logger.debug("[" + Lockette.pluginName + "] Debug mode is enabled, so Lockette chests are NOT secure.");
-		defaultDoorTimer = Server.getLocketteConfig().getData().getInt("default-door-timer", -1);
+		defaultDoorTimer = Server.getInstance().getLocketteConfig().getData().getInt("default-door-timer", -1);
 		if (defaultDoorTimer == -1) {
 			defaultDoorTimer = 0;
-			Server.getLocketteConfig().getData().set("default-door-timer", defaultDoorTimer);
+			Server.getInstance().getLocketteConfig().getData().set("default-door-timer", defaultDoorTimer);
 		}
-		List<String> strCustomBlockList = (List<String>) Server.getLocketteConfig().getData().getList("custom-lockable-block-list");
+		List<String> strCustomBlockList = (List<String>) Server.getInstance().getLocketteConfig().getData().getList("custom-lockable-block-list");
 		if (strCustomBlockList == null) {
 			strCustomBlockList = new ArrayList<String>();
 			strCustomBlockList.add(Material.ENCHANTING_TABLE.toString());
@@ -256,7 +256,7 @@ public class Lockette {
 			strCustomBlockList.add(Material.DIAMOND_BLOCK.toString());
 			strCustomBlockList.add(Material.ANVIL.toString());
 			strCustomBlockList.add(Material.HOPPER.toString());
-			Server.getLocketteConfig().getData().set("custom-lockable-block-list", strCustomBlockList);
+			Server.getInstance().getLocketteConfig().getData().set("custom-lockable-block-list", strCustomBlockList);
 		}
 		if (strCustomBlockList != null) {
 			if (customBlockList == null)
@@ -269,43 +269,43 @@ public class Lockette {
 		if (!customBlockList.isEmpty()) {
 			Logger.debug("[" + Lockette.pluginName + "] Custom lockable block list: " + customBlockList.toString());
 		}
-		disabledPluginList = (List<String>) Server.getLocketteConfig().getData().getList("linked-plugin-ignore-list");
+		disabledPluginList = (List<String>) Server.getInstance().getLocketteConfig().getData().getList("linked-plugin-ignore-list");
 		if (disabledPluginList == null) {
 			disabledPluginList = new ArrayList<String>(1);
 			disabledPluginList.add("mcMMO");
-			Server.getLocketteConfig().getData().set("linked-plugin-ignore-list", disabledPluginList);
+			Server.getInstance().getLocketteConfig().getData().set("linked-plugin-ignore-list", disabledPluginList);
 		}
 		if (!disabledPluginList.isEmpty()) {
 			Logger.debug("[" + Lockette.pluginName + "] Ignoring linked plugins: " + disabledPluginList.toString());
 		}
-		broadcastSnoopTarget = Server.getLocketteConfig().getData().getString("broadcastMessage-snoop-target");
+		broadcastSnoopTarget = Server.getInstance().getLocketteConfig().getData().getString("broadcastMessage-snoop-target");
 		if (broadcastSnoopTarget == null) {
 			broadcastSnoopTarget = "[Everyone]";
-			Server.getLocketteConfig().getData().set("broadcastMessage-snoop-target", broadcastSnoopTarget);
+			Server.getInstance().getLocketteConfig().getData().set("broadcastMessage-snoop-target", broadcastSnoopTarget);
 		}
-		broadcastBreakTarget = Server.getLocketteConfig().getData().getString("broadcastMessage-break-target");
+		broadcastBreakTarget = Server.getInstance().getLocketteConfig().getData().getString("broadcastMessage-break-target");
 		if (broadcastBreakTarget == null) {
 			broadcastBreakTarget = "[Everyone]";
-			Server.getLocketteConfig().getData().set("broadcastMessage-break-target", broadcastBreakTarget);
+			Server.getInstance().getLocketteConfig().getData().set("broadcastMessage-break-target", broadcastBreakTarget);
 		}
-		broadcastReloadTarget = Server.getLocketteConfig().getData().getString("broadcastMessage-reload-target");
+		broadcastReloadTarget = Server.getInstance().getLocketteConfig().getData().getString("broadcastMessage-reload-target");
 		if (broadcastReloadTarget == null) {
 			broadcastReloadTarget = "[Operators]";
-			Server.getLocketteConfig().getData().set("broadcastMessage-reload-target", broadcastReloadTarget);
+			Server.getInstance().getLocketteConfig().getData().set("broadcastMessage-reload-target", broadcastReloadTarget);
 		}
-		String stringsFileName = Server.getLocketteConfig().getData().getString("strings-file-name");
+		String stringsFileName = Server.getInstance().getLocketteConfig().getData().getString("strings-file-name");
 		if ((stringsFileName == null) || stringsFileName.isEmpty()) {
 			stringsFileName = "strings-en.yml";
-			Server.getLocketteConfig().getData().set("strings-file-name", stringsFileName);
+			Server.getInstance().getLocketteConfig().getData().set("strings-file-name", stringsFileName);
 		}
-		Server.getLocketteConfig().saveData();
+		Server.getInstance().getLocketteConfig().saveData();
 		loadStrings(reload, stringsFileName);
 	}
 
 	public void loadStrings(boolean reload, String fileName) {
 		boolean stringChanged = false;
 		String tempString;
-		File stringsFile = new File(Server.getPlugin().getDataFolder(), fileName);
+		File stringsFile = new File(Server.getInstance().getPlugin().getDataFolder(), fileName);
 		if (strings != null) {
 			strings = null;
 		}
@@ -1336,7 +1336,7 @@ public class Lockette {
 		UUID[] uuids = null;
 		if (!sign.hasMetadata(META_KEY) || sign.getMetadata(META_KEY).size() < 1) {
 			uuids = new UUID[3];
-			sign.setMetadata(META_KEY, new FixedMetadataValue(Server.getPlugin(), uuids));
+			sign.setMetadata(META_KEY, new FixedMetadataValue(Server.getInstance().getPlugin(), uuids));
 		} else {
 			List<MetadataValue> list = sign.getMetadata(META_KEY);
 			uuids = (UUID[]) list.get(0).value();
@@ -1363,7 +1363,7 @@ public class Lockette {
 
 	static void removeUUIDMetadata(Sign sign) {
 		if (sign.hasMetadata(META_KEY)) {
-			sign.removeMetadata(META_KEY, Server.getPlugin());
+			sign.removeMetadata(META_KEY, Server.getInstance().getPlugin());
 		}
 	}
 
@@ -1520,7 +1520,7 @@ public class Lockette {
 	}
 
 	public boolean inGroup(World world, String playerName, String groupName) {
-		return (inGroup(world, Server.getPlugin().getServer().getPlayer(playerName), playerName, groupName));
+		return (inGroup(world, Server.getInstance().getPlugin().getServer().getPlayer(playerName), playerName, groupName));
 	}
 
 	public boolean inGroup(World world, Player player, String playerName, String groupName) {

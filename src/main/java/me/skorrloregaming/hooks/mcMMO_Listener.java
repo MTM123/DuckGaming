@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 public class mcMMO_Listener implements Listener {
 
 	public void register() {
-		Server.getPlugin().getServer().getPluginManager().registerEvents(this, Server.getPlugin());
+		Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	@EventHandler

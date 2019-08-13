@@ -2,7 +2,10 @@ package me.skorrloregaming.impl;
 
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class Switches {
+
 	public static class SwitchIntBoolean {
 		private int arg0;
 		private boolean arg1;

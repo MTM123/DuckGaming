@@ -27,7 +27,7 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 	private ModalCallback registerCallback;
 
 	public void register() {
-		Server.getPlugin().getServer().getPluginManager().registerEvents(this, Server.getPlugin());
+		Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	public void bakeModals() {
@@ -55,7 +55,7 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 				ElementResponse password = response.asComplexFormResponse().getResponse(1);
 				if (getAuthMeApi().checkPassword(response.getPlayer().getName(), password.getString().trim())) {
 					getAuthMeApi().forceLogin(response.getPlayer());
-					Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+					Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 						@Override
 						public void run() {
 						}
@@ -77,7 +77,7 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 					} else {
 						getAuthMeApi().forceRegister(response.getPlayer(), password.getString().trim());
 						getAuthMeApi().forceLogin(response.getPlayer());
-						Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+						Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 							@Override
 							public void run() {
 								Server.getInstance().fetchLobby(response.getPlayer());
@@ -98,7 +98,7 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
 			Server.getInstance().fetchLobby(event.getPlayer());
 			return;
 		}
-		Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getPlugin(), () -> {
+		Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
 			if (event.getPlayer() != null && event.getPlayer().isOnline() && !getAuthMeApi().isAuthenticated(event.getPlayer())) {
 				if (getAuthMeApi().isRegistered(event.getPlayer().getName())) {
 					PocketPlayer.sendModal(event.getPlayer(), loginModal, loginCallback);

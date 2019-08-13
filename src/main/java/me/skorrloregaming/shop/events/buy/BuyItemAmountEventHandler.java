@@ -9,6 +9,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.text.DecimalFormat;
 
+import me.skorrloregaming.*;
+
 public class BuyItemAmountEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
 	private LaShoppe shoppe;

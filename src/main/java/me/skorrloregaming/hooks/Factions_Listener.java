@@ -15,8 +15,8 @@ import org.bukkit.event.Listener;
 public class Factions_Listener implements Listener {
 
 	public void register() {
-		Server.getPlugin().getServer().getPluginManager().registerEvents(this, Server.getPlugin());
-		Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskTimer(Server.getPlugin(), new Runnable() {
+		Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
+		Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskTimer(Server.getInstance().getPlugin(), new Runnable() {
 			@Override
 			public void run() {
 				for (FPlayer fplayer : FPlayers.getInstance().getOnlinePlayers()) {
@@ -33,7 +33,7 @@ public class Factions_Listener implements Listener {
 	@EventHandler
 	public void onPlayerPowerLoss(PowerLossEvent event) {
 		Player player = event.getfPlayer().getPlayer();
-		if (!($.getCurrentMinigame(player) == ServerMinigame.FACTIONS) || Server.getModeratingPlayers().containsKey(player.getUniqueId())) {
+		if (!($.getCurrentMinigame(player) == ServerMinigame.FACTIONS) || Server.getInstance().getModeratingPlayers().containsKey(player.getUniqueId())) {
 			event.setCancelled(true);
 		}
 	}

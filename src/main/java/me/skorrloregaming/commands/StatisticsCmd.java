@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 
+import me.skorrloregaming.*;
+
 public class StatisticsCmd implements CommandExecutor {
 
 	@Override
@@ -19,20 +21,20 @@ public class StatisticsCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getKitpvp().contains(player.getUniqueId()) && !Server.getSkyblock().contains(player.getUniqueId())) {
+		if (!Server.getInstance().getKitpvp().contains(player.getUniqueId()) && !Server.getInstance().getSkyblock().contains(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
 		Player targetPlayer = player;
 		if (args.length > 0) {
-			targetPlayer = Server.getPlugin().getServer().getPlayer(args[0]);
+			targetPlayer = Server.getInstance().getPlugin().getServer().getPlayer(args[0]);
 			if (targetPlayer == null) {
 				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 				return true;
 			}
 		}
 		DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-		if (Server.getSkyblock().contains(player.getUniqueId())) {
+		if (Server.getInstance().getSkyblock().contains(player.getUniqueId())) {
 			int currentPlayerPlaced = $.Skyblock.getPlayerPlacedBlocks(targetPlayer);
 			int currentPlayerBroken = $.Skyblock.getPlayerBrokenBlocks(targetPlayer);
 			double currentPlayerCash = EconManager.retrieveCash(targetPlayer, "skyblock");
@@ -41,7 +43,7 @@ public class StatisticsCmd implements CommandExecutor {
 			player.sendMessage(tag + ChatColor.RESET + "Current Balance: " + ChatColor.YELLOW + "$" + formatter.format(currentPlayerCash));
 			player.sendMessage(tag + ChatColor.RESET + "Broken Blocks: " + ChatColor.YELLOW + currentPlayerBroken);
 			player.sendMessage(tag + ChatColor.RESET + "Placed Blocks: " + ChatColor.YELLOW + currentPlayerPlaced);
-		} else if (Server.getKitpvp().contains(player.getUniqueId())) {
+		} else if (Server.getInstance().getKitpvp().contains(player.getUniqueId())) {
 			int currentPlayerKills = $.Kitpvp.getPlayerKills(targetPlayer);
 			int currentPlayerDeaths = $.Kitpvp.getPlayerDeaths(targetPlayer);
 			int currentPlayerDPK = currentPlayerKills / 50;

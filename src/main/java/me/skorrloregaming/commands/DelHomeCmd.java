@@ -1,9 +1,6 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
-import me.skorrloregaming.ConfigurationManager;
-import me.skorrloregaming.Link$;
-import me.skorrloregaming.Server;
+import me.skorrloregaming.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,6 +9,8 @@ import org.bukkit.entity.Player;
 
 import java.util.Set;
 
+import me.skorrloregaming.*;
+
 public class DelHomeCmd implements CommandExecutor {
 
 	@Override
@@ -19,20 +18,20 @@ public class DelHomeCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getFactions().contains(player.getUniqueId()) && !Server.getSurvival().contains(player.getUniqueId())) {
+		if (!Server.getInstance().getFactions().contains(player.getUniqueId()) && !Server.getInstance().getSurvival().contains(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
 
 		ConfigurationManager config = null;
-		if (Server.getFactions().contains(player.getUniqueId())) {
-			config = Server.getFactionsConfig();
-		} else if (Server.getSurvival().contains(player.getUniqueId())) {
-			config = Server.getSurvivalConfig();
+		if (Server.getInstance().getFactions().contains(player.getUniqueId())) {
+			config = Server.getInstance().getFactionsConfig();
+		} else if (Server.getInstance().getSurvival().contains(player.getUniqueId())) {
+			config = Server.getInstance().getSurvivalConfig();
 		}
 		int count = 0;
 		if (config.getData().contains("home." + player.getUniqueId().toString())) {

@@ -13,11 +13,13 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class BanCmd implements CommandExecutor {
 
 	public static void ban(String hostName, String reason) {
-		Server.getBanConfig().getData().set(hostName.replace(".", "x"), reason);
-		Server.getBanConfig().saveData();
+		Server.getInstance().getBanConfig().getData().set(hostName.replace(".", "x"), reason);
+		Server.getInstance().getBanConfig().saveData();
 	}
 
 	@Override
@@ -34,16 +36,16 @@ public class BanCmd implements CommandExecutor {
 			OfflinePlayer offlinePlayer = CraftGo.Player.getOfflinePlayer(args[0]);
 			String path = "config." + offlinePlayer.getUniqueId().toString();
 			String ipAddress = "/unspecified";
-			if (Server.getPlugin().getConfig().contains(path)) {
-				ipAddress = Server.getPlugin().getConfig().getString(path + ".ip");
+			if (Server.getInstance().getPlugin().getConfig().contains(path)) {
+				ipAddress = Server.getInstance().getPlugin().getConfig().getString(path + ".ip");
 			} else if ($.isValidAddress(args[0])) {
 				ipAddress = args[0].replace(".", "x");
 			} else {
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The provided data does not match any player.");
 			}
 			if (!ipAddress.equals("/unspecified")) {
-				if (Server.getPlugin().getConfig().contains("address." + ipAddress)) {
-					for (String section : Server.getPlugin().getConfig().getConfigurationSection("address." + ipAddress).getKeys(false)) {
+				if (Server.getInstance().getPlugin().getConfig().contains("address." + ipAddress)) {
+					for (String section : Server.getInstance().getPlugin().getConfig().getConfigurationSection("address." + ipAddress).getKeys(false)) {
 						OfflinePlayer bannedPlayer = CraftGo.Player.getOfflinePlayer(UUID.fromString(section));
 						String msg = ChatColor.translateAlternateColorCodes('&', sb.toString().trim());
 						if (bannedPlayer.isOnline())
@@ -59,7 +61,7 @@ public class BanCmd implements CommandExecutor {
 							LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
 							Logger.info(message1, true);
 						}
-						for (Player otherPlayer : Server.getPlugin().getServer().getOnlinePlayers()) {
+						for (Player otherPlayer : Server.getInstance().getPlugin().getServer().getOnlinePlayers()) {
 							if (!bannedPlayer.hasPlayedBefore() && !bannedPlayer.isOnline()) {
 								otherPlayer.sendMessage(message0);
 							} else {

@@ -51,6 +51,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import me.skorrloregaming.*;
+
 public class ChatItem {
 	public final static int CFG_VER = 12;
 	private static ChatItem instance;
@@ -69,8 +71,8 @@ public class ChatItem {
 	public static void reload(CommandSender sender) {
 		ChatItem obj = getInstance();
 		obj.pm = ProtocolLibrary.getProtocolManager();
-		Server.getChatItemConfig().reloadData();
-		obj.storage = new Storage(Server.getChatItemConfig().getData());
+		Server.getInstance().getChatItemConfig().reloadData();
+		obj.storage = new Storage(Server.getInstance().getChatItemConfig().getData());
 		obj.packetListener.setStorage(obj.storage);
 		obj.packetValidator.setStorage(obj.storage);
 		obj.chatEventListener.setStorage(obj.storage);
@@ -87,7 +89,7 @@ public class ChatItem {
 	public void onEnable() {
 		instance = this;
 		pm = ProtocolLibrary.getProtocolManager();
-		storage = new Storage(Server.getChatItemConfig().getData());
+		storage = new Storage(Server.getInstance().getChatItemConfig().getData());
 		if (isMc18OrLater()) {
 			post17 = true;
 		}
@@ -102,8 +104,8 @@ public class ChatItem {
 				e.printStackTrace();
 			}
 		}
-		packetListener = new ChatPacketListener(Server.getPlugin(), ListenerPriority.LOW, storage, PacketType.Play.Server.CHAT);
-		packetValidator = new ChatPacketValidator(Server.getPlugin(), ListenerPriority.LOWEST, storage, PacketType.Play.Server.CHAT);
+		packetListener = new ChatPacketListener(Server.getInstance().getPlugin(), ListenerPriority.LOW, storage, PacketType.Play.Server.CHAT);
+		packetValidator = new ChatPacketValidator(Server.getInstance().getPlugin(), ListenerPriority.LOWEST, storage, PacketType.Play.Server.CHAT);
 		pm.addPacketListener(packetValidator);
 		pm.addPacketListener(packetListener);
 		if (Link$.isPluginEnabled("ProtocolSupport")) {
@@ -111,7 +113,7 @@ public class ChatItem {
 		}
 		Bukkit.getPluginCommand("cireload").setExecutor(new ChatItemReloadCmd());
 		chatEventListener = new ChatEventListener(storage);
-		Bukkit.getPluginManager().registerEvents(chatEventListener, Server.getPlugin());
+		Bukkit.getPluginManager().registerEvents(chatEventListener, Server.getInstance().getPlugin());
 		try {
 			Class.forName("net.md_5.bungee.api.chat.BaseComponent");
 		} catch (ClassNotFoundException e) {
@@ -773,7 +775,7 @@ public class ChatItem {
 					return;
 				final boolean usesBaseComponents = (boolean) packet.getMeta("base-component").orElse(null);
 				e.setCancelled(true);
-				Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), () -> {
+				Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), () -> {
 					String json = (String) packet.getMeta("json").orElse(null);
 					int topIndex = -1;
 					String name = null;
@@ -962,7 +964,7 @@ public class ChatItem {
 				return;
 			}
 			final int version = e.getPacket().getIntegers().readSafely(0);
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Server.getPlugin(), () -> ProtocolVersion.getPlayerVersionMap().put(ProtocolVersion.stringifyAdress(e.getPlayer().getAddress()), version), 10L);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Server.getInstance().getPlugin(), () -> ProtocolVersion.getPlayerVersionMap().put(ProtocolVersion.stringifyAdress(e.getPlayer().getAddress()), version), 10L);
 		}
 	}
 
@@ -1561,7 +1563,7 @@ public class ChatItem {
 			HAND_TOOLTIP = conf.getStringList("General.hand.tooltip");
 			colorStringList(HAND_TOOLTIP);
 			final List<String> cmds = conf.getStringList("General.commands");
-			Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLaterAsynchronously(Server.getPlugin(), () -> {
+			Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLaterAsynchronously(Server.getInstance().getPlugin(), () -> {
 				for (String s : cmds) {
 					Command c = Bukkit.getPluginCommand(s);
 					if (c != null) {
@@ -1582,15 +1584,15 @@ public class ChatItem {
 			if (latestVersion != CONFIG_VERSION) {
 				Bukkit.getLogger().log(Level.WARNING, ChatColor.RED + "ChatItem detected an older or invalid configuration file. Replacing it with the default config...");
 				performOverwrite();
-				conf = Server.getChatItemConfig().getData();
+				conf = Server.getInstance().getChatItemConfig().getData();
 				Bukkit.getLogger().log(Level.WARNING, ChatColor.RED + "Replacement complete!");
 			}
 		}
 
 		private void performOverwrite() {
-			File chatItemConfig = new File(Server.getPlugin().getDataFolder(), "chatitem_config.yml");
+			File chatItemConfig = new File(Server.getInstance().getPlugin().getDataFolder(), "chatitem_config.yml");
 			try {
-				FileUtils.copyInputStreamToFile(Server.getPlugin().getResource("chatitem_config.yml"), chatItemConfig);
+				FileUtils.copyInputStreamToFile(Server.getInstance().getPlugin().getResource("chatitem_config.yml"), chatItemConfig);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

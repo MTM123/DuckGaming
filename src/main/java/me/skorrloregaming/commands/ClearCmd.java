@@ -16,7 +16,7 @@ public class ClearCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}

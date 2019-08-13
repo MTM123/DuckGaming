@@ -9,6 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.skorrloregaming.*;
+
 public class PlayertimeCmd implements CommandExecutor {
 
 	@Override
@@ -41,7 +43,7 @@ public class PlayertimeCmd implements CommandExecutor {
 				}
 			}
 			player.resetPlayerTime();
-			Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+			Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 				@Override
 				public void run() {
 					player.setPlayerTime(time, false);

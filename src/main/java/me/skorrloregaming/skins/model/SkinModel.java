@@ -14,166 +14,168 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import me.skorrloregaming.*;
+
 public class SkinModel {
 
-    private static final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(UUID.class, new UUIDTypeAdapter())
-            .create();
+	private static final Gson gson = new GsonBuilder()
+			.registerTypeAdapter(UUID.class, new UUIDTypeAdapter())
+			.create();
 
-    private static final Gson legacyGson = new GsonBuilder()
-            .registerTypeAdapter(UUID.class, new UUIDTypeAdapter())
-            .registerTypeAdapter(TextureModel.class, new LegacyTextureAdapter())
-            .create();
-    private static final long LEGACY_TIMESTAMP = 1516492800000L;
+	private static final Gson legacyGson = new GsonBuilder()
+			.registerTypeAdapter(UUID.class, new UUIDTypeAdapter())
+			.registerTypeAdapter(TextureModel.class, new LegacyTextureAdapter())
+			.create();
+	private static final long LEGACY_TIMESTAMP = 1516492800000L;
 
-    private transient int rowId;
-    private transient String encodedValue;
-    private transient String encodedSignature;
+	private transient int rowId;
+	private transient String encodedValue;
+	private transient String encodedSignature;
 
-    //this can be null if initialized by gson
-    private transient ReadWriteLock lock = new ReentrantReadWriteLock();
+	//this can be null if initialized by gson
+	private transient ReadWriteLock lock = new ReentrantReadWriteLock();
 
-    //the order of these fields are relevant
-    private final long timestamp;
-    private final UUID profileId;
-    private final String profileName;
+	//the order of these fields are relevant
+	private final long timestamp;
+	private final UUID profileId;
+	private final String profileName;
 
-    private final boolean signatureRequired = true;
-    private final Map<TextureType, TextureModel> textures = new EnumMap<>(TextureType.class);
+	private final boolean signatureRequired = true;
+	private final Map<TextureType, TextureModel> textures = new EnumMap<>(TextureType.class);
 
-    public SkinModel(int rowId, long timestamp, UUID uuid, String name
-            , boolean slimModel, String skinURL, String capeURL, byte[] signature) {
-        this.rowId = rowId;
+	public SkinModel(int rowId, long timestamp, UUID uuid, String name
+			, boolean slimModel, String skinURL, String capeURL, byte[] signature) {
+		this.rowId = rowId;
 
-        this.timestamp = timestamp;
-        this.profileId = uuid;
-        this.profileName = name;
-        
-        if (skinURL != null && !skinURL.isEmpty()) {
-            textures.put(TextureType.SKIN, new TextureModel(skinURL, slimModel));
-        }
+		this.timestamp = timestamp;
+		this.profileId = uuid;
+		this.profileName = name;
 
-        if (capeURL != null && !capeURL.isEmpty()) {
-            textures.put(TextureType.CAPE, new TextureModel(capeURL));
-        }
-        
-        this.encodedSignature = Base64.getEncoder().encodeToString(signature);
-        this.encodedValue = serializeData();
-    }
+		if (skinURL != null && !skinURL.isEmpty()) {
+			textures.put(TextureType.SKIN, new TextureModel(skinURL, slimModel));
+		}
 
-    public static SkinModel createSkinFromEncoded(String encodedData, String signature) {
-        byte[] data = Base64.getDecoder().decode(encodedData);
-        String rawJson = new String(data, StandardCharsets.UTF_8);
+		if (capeURL != null && !capeURL.isEmpty()) {
+			textures.put(TextureType.CAPE, new TextureModel(capeURL));
+		}
 
-        SkinModel skinModel = gson.fromJson(rawJson, SkinModel.class);
-        skinModel.setRowId(-1);
-        skinModel.encodedSignature = signature;
-        skinModel.encodedValue = encodedData;
-        return skinModel;
-    }
+		this.encodedSignature = Base64.getEncoder().encodeToString(signature);
+		this.encodedValue = serializeData();
+	}
 
-    public int getRowId() {
-        getLazyLock().readLock().lock();
-        try {
-            return rowId;
-        } finally {
-            getLazyLock().readLock().unlock();
-        }
-    }
+	public static SkinModel createSkinFromEncoded(String encodedData, String signature) {
+		byte[] data = Base64.getDecoder().decode(encodedData);
+		String rawJson = new String(data, StandardCharsets.UTF_8);
 
-    public boolean isSaved() {
-        getLazyLock().readLock().lock();
-        try {
-            return rowId >= 0;
-        } finally {
-            getLazyLock().readLock().unlock();
-        }
-    }
+		SkinModel skinModel = gson.fromJson(rawJson, SkinModel.class);
+		skinModel.setRowId(-1);
+		skinModel.encodedSignature = signature;
+		skinModel.encodedValue = encodedData;
+		return skinModel;
+	}
 
-    public void setRowId(int rowId) {
-        getLazyLock().writeLock().lock();
-        try {
-            this.rowId = rowId;
-        } finally {
-            getLazyLock().writeLock().unlock();
-        }
-    }
+	public int getRowId() {
+		getLazyLock().readLock().lock();
+		try {
+			return rowId;
+		} finally {
+			getLazyLock().readLock().unlock();
+		}
+	}
 
-    private ReadWriteLock getLazyLock() {
-        if (lock == null) {
-            lock = new ReentrantReadWriteLock();
-        }
+	public boolean isSaved() {
+		getLazyLock().readLock().lock();
+		try {
+			return rowId >= 0;
+		} finally {
+			getLazyLock().readLock().unlock();
+		}
+	}
 
-        return lock;
-    }
+	public void setRowId(int rowId) {
+		getLazyLock().writeLock().lock();
+		try {
+			this.rowId = rowId;
+		} finally {
+			getLazyLock().writeLock().unlock();
+		}
+	}
 
-    public boolean isOutdated(Duration autoUpdateDiff) {
-        Duration difference = Duration.between(Instant.ofEpochMilli(timestamp), Instant.now());
-        return !autoUpdateDiff.isNegative() && difference.compareTo(autoUpdateDiff) >= 0;
-    }
+	private ReadWriteLock getLazyLock() {
+		if (lock == null) {
+			lock = new ReentrantReadWriteLock();
+		}
 
-    public Lock getSaveLock() {
-        return getLazyLock().writeLock();
-    }
+		return lock;
+	}
 
-    public String getEncodedValue() {
-        return encodedValue;
-    }
+	public boolean isOutdated(Duration autoUpdateDiff) {
+		Duration difference = Duration.between(Instant.ofEpochMilli(timestamp), Instant.now());
+		return !autoUpdateDiff.isNegative() && difference.compareTo(autoUpdateDiff) >= 0;
+	}
 
-    public String getSignature() {
-        return encodedSignature;
-    }
+	public Lock getSaveLock() {
+		return getLazyLock().writeLock();
+	}
 
-    public long getTimestamp() {
-        return timestamp;
-    }
+	public String getEncodedValue() {
+		return encodedValue;
+	}
 
-    public UUID getProfileId() {
-        return profileId;
-    }
+	public String getSignature() {
+		return encodedSignature;
+	}
 
-    public String getProfileName() {
-        return profileName;
-    }
+	public long getTimestamp() {
+		return timestamp;
+	}
 
-    public Map<TextureType, TextureModel> getTextures() {
-        return textures;
-    }
+	public UUID getProfileId() {
+		return profileId;
+	}
 
-    private String serializeData() {
-        String json;
+	public String getProfileName() {
+		return profileName;
+	}
 
-        //at ~21 january 2018 Mojang changed the encoding format from metadata + url to url + metadata. This means
-        //the signature is no longer valid
-        if (timestamp <= LEGACY_TIMESTAMP) {
-            json = legacyGson.toJson(this);
-        } else {
-            json = gson.toJson(this);
-        }
+	public Map<TextureType, TextureModel> getTextures() {
+		return textures;
+	}
 
-        return Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
-    }
+	private String serializeData() {
+		String json;
 
-    @Override
-    public String toString() {
-        int rowId;
+		//at ~21 january 2018 Mojang changed the encoding format from metadata + url to url + metadata. This means
+		//the signature is no longer valid
+		if (timestamp <= LEGACY_TIMESTAMP) {
+			json = legacyGson.toJson(this);
+		} else {
+			json = gson.toJson(this);
+		}
 
-        getLazyLock().readLock().lock();
-        try {
-            rowId = this.rowId;
-        } finally {
-            getLazyLock().readLock().unlock();
-        }
+		return Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
+	}
 
-        return this.getClass().getSimpleName() + '{' +
-                "rowId=" + rowId +
-                ", encodedValue='" + encodedValue + '\'' +
-                ", encodedSignature='" + encodedSignature + '\'' +
-                ", timestamp=" + timestamp +
-                ", profileId=" + profileId +
-                ", profileName='" + profileName + '\'' +
-                ", signatureRequired=" + signatureRequired +
-                ", textures=" + textures +
-                '}';
-    }
+	@Override
+	public String toString() {
+		int rowId;
+
+		getLazyLock().readLock().lock();
+		try {
+			rowId = this.rowId;
+		} finally {
+			getLazyLock().readLock().unlock();
+		}
+
+		return this.getClass().getSimpleName() + '{' +
+				"rowId=" + rowId +
+				", encodedValue='" + encodedValue + '\'' +
+				", encodedSignature='" + encodedSignature + '\'' +
+				", timestamp=" + timestamp +
+				", profileId=" + profileId +
+				", profileName='" + profileName + '\'' +
+				", signatureRequired=" + signatureRequired +
+				", textures=" + textures +
+				'}';
+	}
 }

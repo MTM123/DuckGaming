@@ -17,14 +17,14 @@ public class ModerateCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
-		if (Server.getModeratingPlayers().containsKey(player.getUniqueId())) {
-			ServerMinigame minigame = Server.getModeratingPlayers().get(player.getUniqueId());
+		if (Server.getInstance().getModeratingPlayers().containsKey(player.getUniqueId())) {
+			ServerMinigame minigame = Server.getInstance().getModeratingPlayers().get(player.getUniqueId());
 			Server.getInstance().performBuggedLeave(player, true, true);
-			Server.getModeratingPlayers().remove(player.getUniqueId());
+			Server.getInstance().getModeratingPlayers().remove(player.getUniqueId());
 			if (minigame == ServerMinigame.FACTIONS) {
 				Server.getInstance().enterFactions(player, false, true);
 			} else if (minigame == ServerMinigame.KITPVP) {
@@ -47,7 +47,7 @@ public class ModerateCmd implements CommandExecutor {
 				ServerMinigame minigame = $.getCurrentMinigame(player);
 				Server.getInstance().performBuggedLeave(player, false, true);
 				player.performCommand("hub");
-				Server.getModeratingPlayers().put(player.getUniqueId(), minigame);
+				Server.getInstance().getModeratingPlayers().put(player.getUniqueId(), minigame);
 				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You are now moderating the server.");
 			} else {
 				Link$.playLackPermissionMessage(player);

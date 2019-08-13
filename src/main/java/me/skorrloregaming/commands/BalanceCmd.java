@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 
+import me.skorrloregaming.*;
+
 public class BalanceCmd implements CommandExecutor {
 
 	@Override
@@ -19,7 +21,7 @@ public class BalanceCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getKitpvp().contains(player.getUniqueId()) && !Server.getSurvival().contains(player.getUniqueId()) && !Server.getFactions().contains(player.getUniqueId()) && !Server.getSkyblock().contains(player.getUniqueId())) {
+		if (!Server.getInstance().getKitpvp().contains(player.getUniqueId()) && !Server.getInstance().getSurvival().contains(player.getUniqueId()) && !Server.getInstance().getFactions().contains(player.getUniqueId()) && !Server.getInstance().getSkyblock().contains(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}

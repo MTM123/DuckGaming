@@ -11,6 +11,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.skorrloregaming.*;
+
 public class ServerCmd implements CommandExecutor {
 
 	@Override
@@ -18,7 +20,7 @@ public class ServerCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
@@ -32,7 +34,7 @@ public class ServerCmd implements CommandExecutor {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
 				return true;
 			}
-			if (Server.getKitpvp().contains(player.getUniqueId())) {
+			if (Server.getInstance().getKitpvp().contains(player.getUniqueId())) {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
 				return true;
 			}
@@ -42,7 +44,7 @@ public class ServerCmd implements CommandExecutor {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
 				return true;
 			}
-			if (Server.getFactions().contains(player.getUniqueId())) {
+			if (Server.getInstance().getFactions().contains(player.getUniqueId())) {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
 				return true;
 			}
@@ -52,7 +54,7 @@ public class ServerCmd implements CommandExecutor {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
 				return true;
 			}
-			if (Server.getSurvival().contains(player.getUniqueId())) {
+			if (Server.getInstance().getSurvival().contains(player.getUniqueId())) {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
 				return true;
 			}
@@ -62,7 +64,7 @@ public class ServerCmd implements CommandExecutor {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
 				return true;
 			}
-			if (Server.getSkyfight().containsKey(player.getUniqueId())) {
+			if (Server.getInstance().getSkyfight().containsKey(player.getUniqueId())) {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
 				return true;
 			}
@@ -72,7 +74,7 @@ public class ServerCmd implements CommandExecutor {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
 				return true;
 			}
-			if (Server.getCreative().contains(player.getUniqueId())) {
+			if (Server.getInstance().getCreative().contains(player.getUniqueId())) {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
 				return true;
 			}
@@ -82,7 +84,7 @@ public class ServerCmd implements CommandExecutor {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
 				return true;
 			}
-			if (Server.getSkyblock().contains(player.getUniqueId())) {
+			if (Server.getInstance().getSkyblock().contains(player.getUniqueId())) {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. You are already on that server!");
 				return true;
 			}
@@ -95,7 +97,7 @@ public class ServerCmd implements CommandExecutor {
 			ByteArrayDataOutput out = ByteStreams.newDataOutput();
 			out.writeUTF("Connect");
 			out.writeUTF("prison");
-			player.sendPluginMessage(Server.getPlugin(), "BungeeCord", out.toByteArray());
+			player.sendPluginMessage(Server.getInstance().getPlugin(), "BungeeCord", out.toByteArray());
 		} else if ("dated".startsWith(args[0].toLowerCase())) {
 			if (!$.isMinigameEnabled(ServerMinigame.DATED)) {
 				player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
@@ -104,7 +106,7 @@ public class ServerCmd implements CommandExecutor {
 			ByteArrayDataOutput out = ByteStreams.newDataOutput();
 			out.writeUTF("Connect");
 			out.writeUTF("dated");
-			player.sendPluginMessage(Server.getPlugin(), "BungeeCord", out.toByteArray());
+			player.sendPluginMessage(Server.getInstance().getPlugin(), "BungeeCord", out.toByteArray());
 		} else {
 			player.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + ChatColor.RED + "Error. That server could not be found.");
 			player.performCommand("servers");

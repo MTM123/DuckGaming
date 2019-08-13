@@ -7,6 +7,8 @@ import org.bukkit.World;
 
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class NpcPlayer {
 
 	private String name;

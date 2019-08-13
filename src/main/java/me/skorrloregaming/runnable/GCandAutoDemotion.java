@@ -8,20 +8,22 @@ import org.bukkit.OfflinePlayer;
 import java.io.File;
 import java.util.*;
 
+import me.skorrloregaming.*;
+
 public class GCandAutoDemotion implements Runnable {
 
 	public void processPlayerData() {
-		String[] keys = Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false).toArray(new String[0]);
+		String[] keys = Server.getInstance().getPlugin().getConfig().getConfigurationSection("config").getKeys(false).toArray(new String[0]);
 		for (String id : keys) {
 			String configPath = "config." + id;
 			OfflinePlayer player = CraftGo.Player.getOfflinePlayer(UUID.fromString(id));
 			if (!player.hasPlayedBefore() && !player.isOnline()) {
-				if (Server.getPlugin().getConfig().contains(configPath + ".username")) {
-					String username = Server.getPlugin().getConfig().getString(configPath + ".username");
+				if (Server.getInstance().getPlugin().getConfig().contains(configPath + ".username")) {
+					String username = Server.getInstance().getPlugin().getConfig().getString(configPath + ".username");
 					OfflinePlayer player2 = CraftGo.Player.getOfflinePlayer(username);
 					if (!player2.hasPlayedBefore() && !player.isOnline()) {
-						Server.getPlugin().getConfig().set(configPath, null);
-						Server.getPlugin().getConfig().set("config." + player2.getUniqueId(), null);
+						Server.getInstance().getPlugin().getConfig().set(configPath, null);
+						Server.getInstance().getPlugin().getConfig().set("config." + player2.getUniqueId(), null);
 						String rawMessage = "Cleared old records (1) of " + username + ".";
 						Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
 						LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
@@ -34,7 +36,7 @@ public class GCandAutoDemotion implements Runnable {
 						process(player2.getUniqueId().toString());
 					}
 				} else {
-					Server.getPlugin().getConfig().set(configPath, null);
+					Server.getInstance().getPlugin().getConfig().set(configPath, null);
 					String rawMessage = "Cleared old records (1) of " + id + ".";
 					Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
 					LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
@@ -43,8 +45,8 @@ public class GCandAutoDemotion implements Runnable {
 						SolidStorage.clearPlayerSave(player, domain);
 				}
 			} else {
-				if (!Server.getPlugin().getConfig().contains(configPath + ".username")) {
-					Server.getPlugin().getConfig().set(configPath, null);
+				if (!Server.getInstance().getPlugin().getConfig().contains(configPath + ".username")) {
+					Server.getInstance().getPlugin().getConfig().set(configPath, null);
 					String rawMessage = "Cleared old records (1) of " + player.getName() + ".";
 					Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
 					LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
@@ -61,7 +63,7 @@ public class GCandAutoDemotion implements Runnable {
 				String id = names.get(i);
 				if (id.contains("."))
 					id = id.substring(0, id.indexOf("."));
-				if (!Server.getPlugin().getConfig().contains("config." + id)) {
+				if (!Server.getInstance().getPlugin().getConfig().contains("config." + id)) {
 					new File("plugins/uSkyBlock/players", names.get(i)).delete();
 					String rawMessage = "Cleared skyblock records (1) of " + id + ".";
 					Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
@@ -77,7 +79,7 @@ public class GCandAutoDemotion implements Runnable {
 		String configPath = "config." + id;
 		OfflinePlayer player = CraftGo.Player.getOfflinePlayer(UUID.fromString(id));
 		if (player.hasPlayedBefore() || player.isOnline()) {
-			if (Server.getPlugin().getConfig().contains(configPath + ".username")) {
+			if (Server.getInstance().getPlugin().getConfig().contains(configPath + ".username")) {
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTimeInMillis(System.currentTimeMillis());
 				int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
@@ -131,9 +133,9 @@ public class GCandAutoDemotion implements Runnable {
 
 	@Override
 	public void run() {
-		if (!Server.getPlugin().getConfig().contains("config"))
+		if (!Server.getInstance().getPlugin().getConfig().contains("config"))
 			return;
-		Set<String> keys = Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false);
+		Set<String> keys = Server.getInstance().getPlugin().getConfig().getConfigurationSection("config").getKeys(false);
 		for (String id : keys) {
 			process(id);
 		}
@@ -142,10 +144,10 @@ public class GCandAutoDemotion implements Runnable {
 			uuid2nameFile.delete();
 			ConfigurationManager uuidConfig = new ConfigurationManager();
 			uuidConfig.setup(uuid2nameFile);
-			keys = Server.getPlugin().getConfig().getConfigurationSection("config").getKeys(false);
+			keys = Server.getInstance().getPlugin().getConfig().getConfigurationSection("config").getKeys(false);
 			for (String id : keys) {
-				if (Server.getPlugin().getConfig().contains("config." + id + ".username")) {
-					String username = Server.getPlugin().getConfig().getString("config." + id + ".username");
+				if (Server.getInstance().getPlugin().getConfig().contains("config." + id + ".username")) {
+					String username = Server.getInstance().getPlugin().getConfig().getString("config." + id + ".username");
 					uuidConfig.getData().set(id + ".name", username);
 					uuidConfig.getData().set(id + ".displayName", username);
 					uuidConfig.getData().set(id + ".updated", System.currentTimeMillis());
@@ -153,7 +155,7 @@ public class GCandAutoDemotion implements Runnable {
 			}
 			uuidConfig.saveData();
 			if (Link$.isPluginEnabled("uSkyBlock"))
-				Server.getPlugin().getServer().dispatchCommand(Server.getPlugin().getServer().getConsoleSender(), "usb reload");
+				Server.getInstance().getPlugin().getServer().dispatchCommand(Server.getInstance().getPlugin().getServer().getConsoleSender(), "usb reload");
 		} else {
 		}
 	}

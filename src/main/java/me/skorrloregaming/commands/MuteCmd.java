@@ -1,6 +1,5 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
 import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
 import org.bukkit.Bukkit;
@@ -24,14 +23,14 @@ public class MuteCmd implements CommandExecutor {
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 				return true;
 			}
-			if (Server.getMutedPlayers().contains(player.getUniqueId())) {
-				Server.getMutedPlayers().remove(player.getUniqueId());
+			if (Server.getInstance().getMutedPlayers().contains(player.getUniqueId())) {
+				Server.getInstance().getMutedPlayers().remove(player.getUniqueId());
 				if (sender instanceof Player)
 					((Player) sender).getName();
 				player.sendMessage(Link$.modernMsgPrefix + "Psst, you are no longer muted in chat.");
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Unmuted player " + ChatColor.RED + player.getName());
 			} else {
-				Server.getMutedPlayers().add(player.getUniqueId());
+				Server.getInstance().getMutedPlayers().add(player.getUniqueId());
 				String name = "CONSOLE";
 				if (sender instanceof Player)
 					name = ((Player) sender).getName();

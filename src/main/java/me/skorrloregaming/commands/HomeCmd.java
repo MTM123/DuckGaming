@@ -21,19 +21,19 @@ public class HomeCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getFactions().contains(player.getUniqueId()) && !Server.getSurvival().contains(player.getUniqueId())) {
+		if (!Server.getInstance().getFactions().contains(player.getUniqueId()) && !Server.getInstance().getSurvival().contains(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
 		ConfigurationManager config = null;
-		if (Server.getFactions().contains(player.getUniqueId())) {
-			config = Server.getFactionsConfig();
-		} else if (Server.getSurvival().contains(player.getUniqueId())) {
-			config = Server.getSurvivalConfig();
+		if (Server.getInstance().getFactions().contains(player.getUniqueId())) {
+			config = Server.getInstance().getFactionsConfig();
+		} else if (Server.getInstance().getSurvival().contains(player.getUniqueId())) {
+			config = Server.getInstance().getSurvivalConfig();
 		}
 		int count = 0;
 		String home = "familiar";
@@ -65,15 +65,15 @@ public class HomeCmd implements CommandExecutor {
 		if (!config.getData().contains(base)) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You have not yet set a home on this server.");
 		} else {
-			World world = Server.getPlugin().getServer().getWorld(config.getData().getString(base + ".world"));
+			World world = Server.getInstance().getPlugin().getServer().getWorld(config.getData().getString(base + ".world"));
 			double x = config.getData().getDouble(base + ".x");
 			double y = config.getData().getDouble(base + ".y");
 			double z = config.getData().getDouble(base + ".z");
 			float yaw = (float) config.getData().getDouble(base + ".yaw");
 			float pitch = (float) config.getData().getDouble(base + ".pitch");
 			Location homeLocation = new Location(world, x, y, z, yaw, pitch);
-			DelayedTeleport dt = new DelayedTeleport(player, Server.getTeleportationDelay(), homeLocation, false);
-			Server.getBukkitTasks().add(dt.runTaskTimer(Server.getPlugin(), 4, 4));
+			DelayedTeleport dt = new DelayedTeleport(player, Server.getInstance().getTeleportationDelay(), homeLocation, false);
+			Server.getInstance().getBukkitTasks().add(dt.runTaskTimer(Server.getInstance().getPlugin(), 4, 4));
 		}
 		return true;
 	}

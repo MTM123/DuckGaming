@@ -24,7 +24,7 @@ public class PingInjector implements Listener {
 	public boolean running = false;
 
 	public PingInjector() {
-		Server.getPlugin().getServer().getPluginManager().registerEvents(this, Server.getPlugin());
+		Server.getInstance().getPlugin().getServer().getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	public void register() {
@@ -89,9 +89,9 @@ public class PingInjector implements Listener {
 	public void serverListPing(ServerListPingEvent event) {
 		if (!running)
 			return;
-		String motd = Server.getServerMotd();
-		if (!(Server.getTempMotd().equals("/unspecified"))) {
-			motd = Server.getTempMotd();
+		String motd = Server.getInstance().getServerMotd();
+		if (!(Server.getInstance().getTempMotd().equals("/unspecified"))) {
+			motd = Server.getInstance().getTempMotd();
 		}
 		event.setMotd(motd);
 		injectOpenConnections();

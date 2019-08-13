@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class BlockEventHandler implements Listener {
 
 	@EventHandler
@@ -52,7 +54,7 @@ public class BlockEventHandler implements Listener {
 					player.sendMessage("Failed to parse shop code on line 2 of the sign.");
 					return;
 				}
-				if (!Server.getSignConfig().getData().contains("signs." + code)) {
+				if (!Server.getInstance().getSignConfig().getData().contains("signs." + code)) {
 					player.sendMessage("The shop code is invalid or target shop has not been activated.");
 					return;
 				}
@@ -98,8 +100,8 @@ public class BlockEventHandler implements Listener {
 				}
 				DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 				String code = blockLoc.getWorld().getName() + String.valueOf(blockLoc.getBlockX()) + String.valueOf(blockLoc.getBlockY()) + String.valueOf(blockLoc.getBlockZ());
-				Server.getSignConfig().getData().set("signs." + code, 1);
-				Server.getSignConfig().saveData();
+				Server.getInstance().getSignConfig().getData().set("signs." + code, 1);
+				Server.getInstance().getSignConfig().saveData();
 				player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Successfully processed shop " + ChatColor.RED + code + ChatColor.GRAY + ".");
 				player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Type: " + ChatColor.RED + s[0] + " Shop");
 				player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "ID: " + ChatColor.RED + s[1]);
@@ -132,7 +134,7 @@ public class BlockEventHandler implements Listener {
 			event.setCancelled(LinkServer.getInstance().getAntiCheat().onBlockPlace(event.getBlock(), player));
 		if (event.isCancelled())
 			return;
-		if (Server.getSkyblock().contains(player.getUniqueId())) {
+		if (Server.getInstance().getSkyblock().contains(player.getUniqueId())) {
 			$.Skyblock.setPlayerPlacedBlocks(player, $.Skyblock.getPlayerPlacedBlocks(player) + 1);
 			$.Skyblock.refreshScoreboard(player, false);
 		}
@@ -156,9 +158,9 @@ public class BlockEventHandler implements Listener {
 			selectedUpgradeInt = Integer.parseInt(String.valueOf(selectedUpgradeStr));
 		Location loc = event.getBlock().getLocation();
 		String code = loc.getWorld().getName() + String.valueOf(loc.getBlockX()) + String.valueOf(loc.getBlockY()) + String.valueOf(loc.getBlockZ());
-		Server.getSpawnerConfig().getData().set(code + ".upgrade", upgradeInt + "");
-		Server.getSpawnerConfig().getData().set(code + ".selectedUpgrade", selectedUpgradeInt + "");
-		Server.getSpawnerConfig().saveData();
+		Server.getInstance().getSpawnerConfig().getData().set(code + ".upgrade", upgradeInt + "");
+		Server.getInstance().getSpawnerConfig().getData().set(code + ".selectedUpgrade", selectedUpgradeInt + "");
+		Server.getInstance().getSpawnerConfig().saveData();
 		CraftGo.MobSpawner.setSpawnerEntityType(event.getBlock(), type);
 	}
 
@@ -173,58 +175,58 @@ public class BlockEventHandler implements Listener {
 		Location blockLoc = block.getLocation();
 		Material blockType = block.getType();
 		ItemStack item = player.getInventory().getItemInMainHand();
-		if (Server.getSkyblock().contains(player.getUniqueId())) {
+		if (Server.getInstance().getSkyblock().contains(player.getUniqueId())) {
 			if (Directory.pickaxes.contains(player.getInventory().getItemInMainHand().getType())) {
 				switch (blockType) {
-				case NETHERRACK:
-					ExperienceOrb orba = player.getWorld().spawn(player.getEyeLocation(), ExperienceOrb.class);
-					orba.setExperience(1);
-					return;
-				case COBBLESTONE:
-					event.setCancelled(true);
-					ExperienceOrb orbb = player.getWorld().spawn(player.getEyeLocation(), ExperienceOrb.class);
-					orbb.setExperience(3);
-					block.setType(Material.AIR);
-					block.getState().update();
-					player.getWorld().dropItem(block.getLocation().add(0.5, 0.5, 0.5), Link$.createMaterial(Material.COBBLESTONE));
-					item.setDurability((short) (item.getDurability() + 1));
-					if (item.getType().getMaxDurability() == item.getDurability()) {
-						player.getInventory().setItemInMainHand(null);
-					} else {
-						player.getInventory().setItemInMainHand(item);
-					}
-					player.updateInventory();
-					int emerald = new Random(UUID.randomUUID().hashCode()).nextInt(110);
-					int diamond = new Random(UUID.randomUUID().hashCode()).nextInt(75);
-					int gold = new Random(UUID.randomUUID().hashCode()).nextInt(30);
-					int iron = new Random(UUID.randomUUID().hashCode()).nextInt(30);
-					int coal = new Random(UUID.randomUUID().hashCode()).nextInt(10);
-					boolean anyHit = emerald == 0 || diamond == 0 || gold == 0 || iron == 0 || coal == 0;
-					if (anyHit) {
-						Material dropItemType = null;
-						if (emerald == 0) {
-							dropItemType = Material.EMERALD;
-						} else if (diamond == 0) {
-							dropItemType = Material.DIAMOND;
-						} else if (gold == 0) {
-							dropItemType = Material.GOLD_INGOT;
-						} else if (iron == 0) {
-							dropItemType = Material.IRON_INGOT;
-						} else if (coal == 0) {
-							dropItemType = Material.COAL;
+					case NETHERRACK:
+						ExperienceOrb orba = player.getWorld().spawn(player.getEyeLocation(), ExperienceOrb.class);
+						orba.setExperience(1);
+						return;
+					case COBBLESTONE:
+						event.setCancelled(true);
+						ExperienceOrb orbb = player.getWorld().spawn(player.getEyeLocation(), ExperienceOrb.class);
+						orbb.setExperience(3);
+						block.setType(Material.AIR);
+						block.getState().update();
+						player.getWorld().dropItem(block.getLocation().add(0.5, 0.5, 0.5), Link$.createMaterial(Material.COBBLESTONE));
+						item.setDurability((short) (item.getDurability() + 1));
+						if (item.getType().getMaxDurability() == item.getDurability()) {
+							player.getInventory().setItemInMainHand(null);
+						} else {
+							player.getInventory().setItemInMainHand(item);
 						}
-						player.getWorld().dropItem(block.getLocation().add(0.5, 0.5, 0.5), Link$.createMaterial(dropItemType));
-						player.playSound(blockLoc, Sound.BLOCK_LAVA_POP, 1, 1);
-					}
-					break;
-				default:
-					break;
+						player.updateInventory();
+						int emerald = new Random(UUID.randomUUID().hashCode()).nextInt(110);
+						int diamond = new Random(UUID.randomUUID().hashCode()).nextInt(75);
+						int gold = new Random(UUID.randomUUID().hashCode()).nextInt(30);
+						int iron = new Random(UUID.randomUUID().hashCode()).nextInt(30);
+						int coal = new Random(UUID.randomUUID().hashCode()).nextInt(10);
+						boolean anyHit = emerald == 0 || diamond == 0 || gold == 0 || iron == 0 || coal == 0;
+						if (anyHit) {
+							Material dropItemType = null;
+							if (emerald == 0) {
+								dropItemType = Material.EMERALD;
+							} else if (diamond == 0) {
+								dropItemType = Material.DIAMOND;
+							} else if (gold == 0) {
+								dropItemType = Material.GOLD_INGOT;
+							} else if (iron == 0) {
+								dropItemType = Material.IRON_INGOT;
+							} else if (coal == 0) {
+								dropItemType = Material.COAL;
+							}
+							player.getWorld().dropItem(block.getLocation().add(0.5, 0.5, 0.5), Link$.createMaterial(dropItemType));
+							player.playSound(blockLoc, Sound.BLOCK_LAVA_POP, 1, 1);
+						}
+						break;
+					default:
+						break;
 				}
 			}
 			$.Skyblock.setPlayerBrokenBlocks(player, $.Skyblock.getPlayerBrokenBlocks(player) + 1);
 			$.Skyblock.refreshScoreboard(player, false);
 		}
-		if (Server.getFactions().contains(player.getUniqueId()) || Server.getSurvival().contains(player.getUniqueId()) || Server.getSkyblock().contains(player.getUniqueId())) {
+		if (Server.getInstance().getFactions().contains(player.getUniqueId()) || Server.getInstance().getSurvival().contains(player.getUniqueId()) || Server.getInstance().getSkyblock().contains(player.getUniqueId())) {
 			if ($.isWithinUnclaimedLand(blockLoc, player)) {
 				if ($.isBlockLog(block)) {
 					ItemStack heldItem = player.getInventory().getItemInMainHand();
@@ -232,10 +234,10 @@ public class BlockEventHandler implements Listener {
 					if (!(heldItem == null))
 						type = heldItem.getType();
 					if (Directory.axes.contains(type)) {
-						if (!Server.getCurrentFellers().contains(player.getUniqueId())) {
+						if (!Server.getInstance().getCurrentFellers().contains(player.getUniqueId())) {
 							if (!player.isSneaking()) {
 								event.setCancelled(true);
-								new TreeCutter(player, block).runTaskAsynchronously(Server.getPlugin());
+								new TreeCutter(player, block).runTaskAsynchronously(Server.getInstance().getPlugin());
 								return;
 							}
 						}
@@ -250,14 +252,14 @@ public class BlockEventHandler implements Listener {
 								Location loc = block.getLocation();
 								String code = loc.getWorld().getName() + String.valueOf(loc.getBlockX()) + String.valueOf(loc.getBlockY()) + String.valueOf(loc.getBlockZ());
 								int upgrade = 0;
-								if (Server.getSpawnerConfig().getData().contains(code + ".upgrade"))
-									upgrade = Integer.parseInt(Server.getSpawnerConfig().getData().getString(code + ".upgrade"));
+								if (Server.getInstance().getSpawnerConfig().getData().contains(code + ".upgrade"))
+									upgrade = Integer.parseInt(Server.getInstance().getSpawnerConfig().getData().getString(code + ".upgrade"));
 								int selectedUpgrade = 0;
-								if (Server.getSpawnerConfig().getData().contains(code + ".selectedUpgrade"))
-									selectedUpgrade = Integer.parseInt(Server.getSpawnerConfig().getData().getString(code + ".selectedUpgrade"));
-								Server.getSpawnerConfig().getData().set(code, null);
-								Server.getSpawnerConfig().saveData();
-								stack = Link$.appendLore(stack, new String[] { ChatColor.RESET + "Upgrade: " + upgrade, ChatColor.RESET + "Selected Upgrade: " + selectedUpgrade });
+								if (Server.getInstance().getSpawnerConfig().getData().contains(code + ".selectedUpgrade"))
+									selectedUpgrade = Integer.parseInt(Server.getInstance().getSpawnerConfig().getData().getString(code + ".selectedUpgrade"));
+								Server.getInstance().getSpawnerConfig().getData().set(code, null);
+								Server.getInstance().getSpawnerConfig().saveData();
+								stack = Link$.appendLore(stack, new String[]{ChatColor.RESET + "Upgrade: " + upgrade, ChatColor.RESET + "Selected Upgrade: " + selectedUpgrade});
 								event.setCancelled(true);
 								block.setType(Material.AIR);
 								block.getState().update();
@@ -274,7 +276,7 @@ public class BlockEventHandler implements Listener {
 					event.setCancelled(true);
 					block.setType(Material.WATER);
 				}
-				if (Server.getSkyblock().contains(player.getUniqueId()))
+				if (Server.getInstance().getSkyblock().contains(player.getUniqueId()))
 					return;
 				if (blockType == Material.TNT && !(player.getGameMode() == GameMode.CREATIVE)) {
 					event.setCancelled(true);
@@ -339,15 +341,15 @@ public class BlockEventHandler implements Listener {
 			}
 			if (s[0].equals("Buy") || s[0].equals("Sell") || s[0].equals("Enchant") || s[0].equals("Repair") || s[1].equals("Kit")) {
 				String code = blockLoc.getWorld().getName() + String.valueOf(blockLoc.getBlockX()) + String.valueOf(blockLoc.getBlockY()) + String.valueOf(blockLoc.getBlockZ());
-				if (Server.getSignConfig().getData().contains("signs." + code)) {
+				if (Server.getInstance().getSignConfig().getData().contains("signs." + code)) {
 					if (!event.getPlayer().isOp()) {
 						player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "You do not have permission to deactivate this shop.");
 						Link$.playLackPermissionMessage(player);
 						event.setCancelled(true);
 						return;
 					}
-					Server.getSignConfig().getData().set("signs." + code, null);
-					Server.getSignConfig().saveData();
+					Server.getInstance().getSignConfig().getData().set("signs." + code, null);
+					Server.getInstance().getSignConfig().saveData();
 					if (s[1].equals("Kit")) {
 						sign.setLine(1, s[1]);
 						sign.update();

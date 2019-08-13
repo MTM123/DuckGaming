@@ -50,7 +50,7 @@ public class SkinApplier implements Runnable {
 	}
 
 	public void applySkin() {
-		if (!Server.getPlugin().getConfig().getBoolean("settings.bungeecord", false))
+		if (!Server.getInstance().getPlugin().getConfig().getBoolean("settings.bungeecord", false))
 			applyInstantUpdate();
 	}
 
@@ -58,7 +58,7 @@ public class SkinApplier implements Runnable {
 		if (!CraftGo.Player.isPocketPlayer(receiver)) {
 			WrappedGameProfile gameProfile = WrappedGameProfile.fromPlayer(receiver);
 			applyProperties(gameProfile, targetSkin);
-			Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
+			Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
 				@Override
 				public void run() {
 					sendUpdateSelf(WrappedGameProfile.fromPlayer(receiver));
@@ -87,7 +87,7 @@ public class SkinApplier implements Runnable {
 	}
 
 	public void runAsync(Runnable runnable) {
-		Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), runnable);
+		Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), runnable);
 	}
 
 	public void sendUpdateOthers() throws FieldAccessException {
@@ -136,8 +136,8 @@ public class SkinApplier implements Runnable {
 	}
 
 	public void hideAndShow(Player other) {
-		other.hidePlayer(Server.getPlugin(), receiver);
-		other.showPlayer(Server.getPlugin(), receiver);
+		other.hidePlayer(Server.getInstance().getPlugin(), receiver);
+		other.showPlayer(Server.getInstance().getPlugin(), receiver);
 	}
 
 	public void sendPackets(PacketContainer... packets) {

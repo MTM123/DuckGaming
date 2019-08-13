@@ -29,27 +29,27 @@ public class SpectateCmd implements CommandExecutor {
 					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 					return true;
 				}
-				if (!Server.getModeratingPlayers().containsKey(player.getUniqueId())) {
+				if (!Server.getInstance().getModeratingPlayers().containsKey(player.getUniqueId())) {
 					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You are not currently moderating the server.");
 					return true;
 				}
-				Server.getSpectatingPlayers().add(player.getUniqueId());
+				Server.getInstance().getSpectatingPlayers().add(player.getUniqueId());
 				String tpDomain = $.getMinigameDomain(targetPlayer);
 				String pDomain = $.getMinigameDomain(player);
 				if (!tpDomain.equals(pDomain))
 					player.performCommand("server " + tpDomain);
-				Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+				Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 					@Override
 					public void run() {
-						if (Server.getVanishedPlayers().containsKey(player.getUniqueId())) {
+						if (Server.getInstance().getVanishedPlayers().containsKey(player.getUniqueId())) {
 							player.performCommand("vanish");
 						}
-						Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+						Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 							@Override
 							public void run() {
 								player.performCommand("vanish");
 								player.teleport(targetPlayer);
-								Server.getSpectatingPlayers().remove(player.getUniqueId());
+								Server.getInstance().getSpectatingPlayers().remove(player.getUniqueId());
 							}
 						}, 10L);
 					}

@@ -11,6 +11,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.skorrloregaming.*;
+
 public class WhoisCmd implements CommandExecutor {
 
 	@Override
@@ -38,7 +40,7 @@ public class WhoisCmd implements CommandExecutor {
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Current server-side rank: " + ChatColor.RED + rank);
 			if (sender.isOp()) {
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Defined ip address: " + ChatColor.RED + player.getAddress().getAddress().getHostAddress());
-				Bukkit.getScheduler().runTaskAsynchronously(Server.getPlugin(), new Runnable() {
+				Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), new Runnable() {
 					@Override
 					public void run() {
 						IpLocationQuery query = CraftGo.Player.queryIpLocation(player);

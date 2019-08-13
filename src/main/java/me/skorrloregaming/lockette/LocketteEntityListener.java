@@ -16,8 +16,8 @@ public class LocketteEntityListener implements Listener {
 	}
 
 	protected void registerEvents() {
-		PluginManager pm = Server.getPlugin().getServer().getPluginManager();
-		pm.registerEvents(this, Server.getPlugin());
+		PluginManager pm = Server.getInstance().getPlugin().getServer().getPluginManager();
+		pm.registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

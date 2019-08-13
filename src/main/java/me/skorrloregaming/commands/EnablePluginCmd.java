@@ -20,9 +20,9 @@ public class EnablePluginCmd implements CommandExecutor {
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <pluginName>");
 			return true;
 		}
-		Plugin plugin = Server.getPlugin().getServer().getPluginManager().getPlugin(args[0]);
+		Plugin plugin = Server.getInstance().getPlugin().getServer().getPluginManager().getPlugin(args[0]);
 		if (!(plugin == null)) {
-			Server.getPlugin().getServer().getPluginManager().enablePlugin(plugin);
+			Server.getInstance().getPlugin().getServer().getPluginManager().enablePlugin(plugin);
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Enabled the plugin ... " + ChatColor.RED + plugin.getName());
 		} else {
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified plugin could not be found.");

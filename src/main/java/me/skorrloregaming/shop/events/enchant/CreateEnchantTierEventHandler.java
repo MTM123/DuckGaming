@@ -5,6 +5,8 @@ import me.skorrloregaming.AnvilGUI;
 import me.skorrloregaming.shop.LaShoppe;
 import org.bukkit.enchantments.Enchantment;
 
+import me.skorrloregaming.*;
+
 public class CreateEnchantTierEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
 	private LaShoppe shoppe;

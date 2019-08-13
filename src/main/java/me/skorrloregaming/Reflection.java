@@ -7,8 +7,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import me.skorrloregaming.*;
+
 public class Reflection {
 	public static final String serverVersion = null;
+
 	static {
 		try {
 			Class.forName("org.bukkit.Bukkit");
@@ -149,7 +152,7 @@ public class Reflection {
 	}
 
 	public static Object invokeMethod(Class<?> clazz, Object obj, String method) throws Exception {
-		return getMethod(clazz, method).invoke(obj, new Object[] {});
+		return getMethod(clazz, method).invoke(obj, new Object[]{});
 	}
 
 	public static Object invokeMethod(Class<?> clazz, Object obj, String method, Class<?>[] args, Object... initargs) throws Exception {
@@ -161,7 +164,7 @@ public class Reflection {
 	}
 
 	public static Object invokeMethod(Object obj, String method) throws Exception {
-		return getMethod(obj.getClass(), method).invoke(obj, new Object[] {});
+		return getMethod(obj.getClass(), method).invoke(obj, new Object[]{});
 	}
 
 	public static Object invokeMethod(Object obj, String method, Object[] initargs) throws Exception {

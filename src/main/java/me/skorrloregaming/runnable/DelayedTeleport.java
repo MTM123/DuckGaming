@@ -42,13 +42,13 @@ public class DelayedTeleport extends BukkitRunnable {
 			return;
 		}
 		instance = this;
-		Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
+		Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
 			@Override
 			public void run() {
-				if (Server.getDelayedTeleports().containsKey(player.getUniqueId())) {
-					Server.getDelayedTeleports().get(player.getUniqueId()).close();
+				if (Server.getInstance().getDelayedTeleports().containsKey(player.getUniqueId())) {
+					Server.getInstance().getDelayedTeleports().get(player.getUniqueId()).close();
 				}
-				Server.getDelayedTeleports().put(player.getUniqueId(), instance);
+				Server.getInstance().getDelayedTeleports().put(player.getUniqueId(), instance);
 				if (!silent) {
 					if ((seconds == Math.floor(seconds)) && !Double.isInfinite(seconds)) {
 						final Double ctSeconds = seconds;
@@ -77,7 +77,7 @@ public class DelayedTeleport extends BukkitRunnable {
 		if (!(reason == null)) {
 			player.sendMessage(reason);
 		}
-		Server.getDelayedTeleports().remove(player.getUniqueId());
+		Server.getInstance().getDelayedTeleports().remove(player.getUniqueId());
 		allowed = false;
 	}
 
@@ -97,19 +97,19 @@ public class DelayedTeleport extends BukkitRunnable {
 			remainingSeconds -= 0.20;
 			if (remainingSeconds <= 0) {
 				remainingSeconds = originalSeconds;
-				if (Server.getPlugin().getServer().getPlayer(player.getName()) != null) {
+				if (Server.getInstance().getPlugin().getServer().getPlayer(player.getName()) != null) {
 					if (!(finishChatMessage == null) && finishChatMessage.length() > 0)
 						player.sendMessage(finishChatMessage);
 					if (!silent) {
 						player.sendMessage(ChatColor.GRAY + "Teleporting..");
 					}
-					Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
+					Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
 						@Override
 						public void run() {
 							$.teleport(player, teleportLocation);
 							if (!(finishTitleSubtitle == null))
 								CraftGo.Player.sendTimedTitleAndSubtitle(player, finishTitleSubtitle);
-							Server.getDelayedTeleports().remove(player.getUniqueId());
+							Server.getInstance().getDelayedTeleports().remove(player.getUniqueId());
 							if (!(finishTask == null)) {
 								try {
 									finishTask.call();
@@ -125,7 +125,7 @@ public class DelayedTeleport extends BukkitRunnable {
 			}
 			if (player.getWorld().getName().equals(originalPlayerLocation.getWorld().getName())) {
 				if (player.getLocation().distance(originalPlayerLocation) >= 0.1) {
-					Bukkit.getScheduler().runTask(Server.getPlugin(), new Runnable() {
+					Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
 						@Override
 						public void run() {
 							if (!silent) {
@@ -134,7 +134,7 @@ public class DelayedTeleport extends BukkitRunnable {
 								if (player.hasPotionEffect(PotionEffectType.CONFUSION))
 									player.removePotionEffect(PotionEffectType.CONFUSION);
 							}
-							Server.getDelayedTeleports().remove(player.getUniqueId());
+							Server.getInstance().getDelayedTeleports().remove(player.getUniqueId());
 						}
 					});
 					cancel();

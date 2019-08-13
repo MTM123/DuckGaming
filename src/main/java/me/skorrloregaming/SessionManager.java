@@ -16,13 +16,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import me.skorrloregaming.*;
+
 public class SessionManager {
 	public ConfigurationManager sessionConfig;
 	private final static int DAYS_TILL_SESSION_EXPIRATION = 3;
 
 	public void setup() {
 		sessionConfig = new ConfigurationManager();
-		sessionConfig.setup(new File(Server.getPlugin().getDataFolder(), "session_storage.yml"));
+		sessionConfig.setup(new File(Server.getInstance().getPlugin().getDataFolder(), "session_storage.yml"));
 	}
 
 	public boolean verifySession(Player player) {
@@ -162,8 +164,8 @@ public class SessionManager {
 		public long getFirstAccessedFromConfig() {
 			String path = player.getUniqueId().toString() + "." + new String(key) + ".firstAccessed";
 			long firstAccessed = lastAccessed;
-			if (Server.getSessionManager().sessionConfig.getData().contains(path))
-				firstAccessed = Server.getSessionManager().sessionConfig.getData().getLong(path);
+			if (Server.getInstance().getSessionManager().sessionConfig.getData().contains(path))
+				firstAccessed = Server.getInstance().getSessionManager().sessionConfig.getData().getLong(path);
 			return firstAccessed;
 		}
 
@@ -186,8 +188,8 @@ public class SessionManager {
 		public boolean isDiscarded() {
 			String path = player.getUniqueId().toString() + "." + new String(key) + ".discarded";
 			boolean discarded = false;
-			if (Server.getSessionManager().sessionConfig.getData().contains(path))
-				discarded = Server.getSessionManager().sessionConfig.getData().getBoolean(path);
+			if (Server.getInstance().getSessionManager().sessionConfig.getData().contains(path))
+				discarded = Server.getInstance().getSessionManager().sessionConfig.getData().getBoolean(path);
 			return discarded;
 		}
 	}

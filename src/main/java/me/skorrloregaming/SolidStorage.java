@@ -16,9 +16,11 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class SolidStorage {
 	private static String getDataFolder() {
-		return "plugins" + File.separator + Server.getPlugin().getDescription().getName() + File.separator + "Players";
+		return "plugins" + File.separator + Server.getInstance().getPlugin().getDescription().getName() + File.separator + "Players";
 	}
 
 	public static boolean clearPlayerSave(OfflinePlayer player, String data) {
@@ -263,13 +265,13 @@ public class SolidStorage {
 		String folder = getDataFolder() + File.separator + "PotionEffects";
 		String file = player.getUniqueId().toString() + "_" + data + ".yml";
 		File potFile = new File(folder, file);
-		Server.getRamConfig().setup(potFile);
-		Server.getRamConfig().clearData();
+		Server.getInstance().getRamConfig().setup(potFile);
+		Server.getInstance().getRamConfig().clearData();
 		for (PotionEffect p : player.getActivePotionEffects()) {
-			Server.getRamConfig().getData().set("potion." + p.getType().getName() + ".type", p.getType().getName());
-			Server.getRamConfig().getData().set("potion." + p.getType().getName() + ".level", p.getAmplifier());
-			Server.getRamConfig().getData().set("potion." + p.getType().getName() + ".duration", p.getDuration());
-			Server.getRamConfig().saveData();
+			Server.getInstance().getRamConfig().getData().set("potion." + p.getType().getName() + ".type", p.getType().getName());
+			Server.getInstance().getRamConfig().getData().set("potion." + p.getType().getName() + ".level", p.getAmplifier());
+			Server.getInstance().getRamConfig().getData().set("potion." + p.getType().getName() + ".duration", p.getDuration());
+			Server.getInstance().getRamConfig().saveData();
 		}
 	}
 
@@ -280,12 +282,12 @@ public class SolidStorage {
 		if (potFile.exists()) {
 			for (PotionEffect effect : player.getActivePotionEffects())
 				player.removePotionEffect(effect.getType());
-			Server.getRamConfig().setup(potFile);
-			if (Server.getRamConfig().getData().contains("potion")) {
-				for (String l : Server.getRamConfig().getData().getConfigurationSection("potion").getKeys(false)) {
-					String s = Server.getRamConfig().getData().getString("potion." + l + ".type");
-					int n = Server.getRamConfig().getData().getInt("potion." + l + ".level");
-					int i = Server.getRamConfig().getData().getInt("potion." + l + ".duration");
+			Server.getInstance().getRamConfig().setup(potFile);
+			if (Server.getInstance().getRamConfig().getData().contains("potion")) {
+				for (String l : Server.getInstance().getRamConfig().getData().getConfigurationSection("potion").getKeys(false)) {
+					String s = Server.getInstance().getRamConfig().getData().getString("potion." + l + ".type");
+					int n = Server.getInstance().getRamConfig().getData().getInt("potion." + l + ".level");
+					int i = Server.getInstance().getRamConfig().getData().getInt("potion." + l + ".duration");
 					player.addPotionEffect(new PotionEffect(PotionEffectType.getByName(s), i, n));
 				}
 			}

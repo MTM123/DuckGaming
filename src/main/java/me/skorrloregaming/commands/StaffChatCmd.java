@@ -1,6 +1,5 @@
 package me.skorrloregaming.commands;
 
-import me.skorrloregaming.$;
 import me.skorrloregaming.Link$;
 import me.skorrloregaming.Server;
 import org.bukkit.ChatColor;
@@ -20,11 +19,11 @@ public class StaffChatCmd implements CommandExecutor {
 			Link$.playLackPermissionMessage(player);
 			return true;
 		}
-		if (Server.getStaffChatPlayers().contains(player.getUniqueId())) {
-			Server.getStaffChatPlayers().remove(player.getUniqueId());
+		if (Server.getInstance().getStaffChatPlayers().contains(player.getUniqueId())) {
+			Server.getInstance().getStaffChatPlayers().remove(player.getUniqueId());
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have left the staff chat.");
 		} else {
-			Server.getStaffChatPlayers().add(player.getUniqueId());
+			Server.getInstance().getStaffChatPlayers().add(player.getUniqueId());
 			sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You have entered the staff chat.");
 		}
 		return true;

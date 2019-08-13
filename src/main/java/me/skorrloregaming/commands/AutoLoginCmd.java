@@ -16,12 +16,12 @@ public class AutoLoginCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		boolean dailyAuth = Server.getPlugin().getConfig().getBoolean("settings.enable.authme.dailyAuth");
-		boolean autoLoginCmd = Server.getPlugin().getConfig().getBoolean("settings.enable.authme.autoLoginCmd");
+		boolean dailyAuth = Server.getInstance().getPlugin().getConfig().getBoolean("settings.enable.authme.dailyAuth");
+		boolean autoLoginCmd = Server.getInstance().getPlugin().getConfig().getBoolean("settings.enable.authme.autoLoginCmd");
 		if (!dailyAuth && autoLoginCmd) {
 			String ip = player.getAddress().getAddress().getHostAddress().replace(".", "x");
-			if (Server.getPlugin().getConfig().contains("autologin." + ip + "." + player.getUniqueId().toString())) {
-				Server.getPlugin().getConfig().set("autologin." + ip + "." + player.getUniqueId().toString(), null);
+			if (Server.getInstance().getPlugin().getConfig().contains("autologin." + ip + "." + player.getUniqueId().toString())) {
+				Server.getInstance().getPlugin().getConfig().set("autologin." + ip + "." + player.getUniqueId().toString(), null);
 				player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The auto login feature has been disabled.");
 			} else {
 				if (args.length > 0) {
@@ -32,7 +32,7 @@ public class AutoLoginCmd implements CommandExecutor {
 					} else {
 						isCorrectPassword = ((fr.xephi.authme.api.v3.AuthMeApi) authObject).checkPassword(player.getName(), args[0]);
 						if (isCorrectPassword) {
-							Server.getPlugin().getConfig().set("autologin." + ip + "." + player.getUniqueId().toString(), args[0]);
+							Server.getInstance().getPlugin().getConfig().set("autologin." + ip + "." + player.getUniqueId().toString(), args[0]);
 							player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The auto login feature has been enabled.");
 						} else {
 							player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified account password is incorrect.");

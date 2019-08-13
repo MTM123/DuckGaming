@@ -24,14 +24,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class Votifier_Listener implements Listener {
 
 	public void register() {
-		Bukkit.getPluginManager().registerEvents(this, Server.getPlugin());
+		Bukkit.getPluginManager().registerEvents(this, Server.getInstance().getPlugin());
 	}
 
 	@EventHandler
 	public void onVote(VotifierEvent event) {
-		Server.getVoteManager().onVote(event, true);
+		Server.getInstance().getVoteManager().onVote(event, true);
 	}
 }

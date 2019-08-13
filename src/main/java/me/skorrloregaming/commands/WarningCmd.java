@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 
 import java.util.Date;
 
+import me.skorrloregaming.*;
+
 public class WarningCmd implements CommandExecutor {
 
 	@Override
@@ -39,16 +41,16 @@ public class WarningCmd implements CommandExecutor {
 				return true;
 			}
 			String path = "config." + op.getUniqueId().toString();
-			if (!Server.getPlugin().getConfig().contains(path + ".ip")) {
+			if (!Server.getInstance().getPlugin().getConfig().contains(path + ".ip")) {
 				sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 				return true;
 			}
-			String ipAddress = Server.getPlugin().getConfig().getString(path + ".ip");
+			String ipAddress = Server.getInstance().getPlugin().getConfig().getString(path + ".ip");
 			String configPath = "warning." + ipAddress + ".count";
-			if (!Server.getPlugin().getConfig().contains(configPath)) {
-				Server.getPlugin().getConfig().set(configPath, "0");
+			if (!Server.getInstance().getPlugin().getConfig().contains(configPath)) {
+				Server.getInstance().getPlugin().getConfig().set(configPath, "0");
 			}
-			int oldWarningCount = Integer.parseInt(Server.getPlugin().getConfig().getString(configPath));
+			int oldWarningCount = Integer.parseInt(Server.getInstance().getPlugin().getConfig().getString(configPath));
 			int newWarningCount = oldWarningCount + id;
 			int rankId = 3;
 			if (sender instanceof Player)
@@ -66,7 +68,7 @@ public class WarningCmd implements CommandExecutor {
 				newWarningCount = 0;
 			if (newWarningCount > 5)
 				newWarningCount = 5;
-			Server.getPlugin().getConfig().set(configPath, newWarningCount + "");
+			Server.getInstance().getPlugin().getConfig().set(configPath, newWarningCount + "");
 			if (args.length > 2) {
 				StringBuilder sb = new StringBuilder();
 				for (int i = 2; i < args.length; i++) {
@@ -76,18 +78,18 @@ public class WarningCmd implements CommandExecutor {
 				if (op.isOnline() && id > 0)
 					op.getPlayer().kickPlayer(msg);
 				sender.sendMessage(Link$.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5) '" + sb.toString().trim() + "'");
-				for (Player pl : Server.getPlugin().getServer().getOnlinePlayers()) {
+				for (Player pl : Server.getInstance().getPlugin().getServer().getOnlinePlayers()) {
 					if (pl.getName().equals(sender.getName()))
 						continue;
 					pl.sendMessage(Link$.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5) '" + sb.toString().trim() + "'");
 				}
 				if (id > 0) {
 					for (int i = oldWarningCount + 1; i < newWarningCount + 1; i++) {
-						Server.getPlugin().getConfig().set("warning." + ipAddress + "." + i, msg);
+						Server.getInstance().getPlugin().getConfig().set("warning." + ipAddress + "." + i, msg);
 					}
 				} else if (id < 0) {
 					for (int i = oldWarningCount + 1; i >= newWarningCount + 1; i--) {
-						Server.getPlugin().getConfig().set("warning." + ipAddress + "." + i, null);
+						Server.getInstance().getPlugin().getConfig().set("warning." + ipAddress + "." + i, null);
 					}
 				}
 			} else {
@@ -95,18 +97,18 @@ public class WarningCmd implements CommandExecutor {
 				if (op.isOnline() && id > 0)
 					op.getPlayer().kickPlayer(msg);
 				sender.sendMessage(Link$.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5)");
-				for (Player pl : Server.getPlugin().getServer().getOnlinePlayers()) {
+				for (Player pl : Server.getInstance().getPlugin().getServer().getOnlinePlayers()) {
 					if (pl.getName().equals(sender.getName()))
 						continue;
 					pl.sendMessage(Link$.italicGray + "Server: Warned " + op.getName() + " (" + newWarningCount + " / 5)");
 				}
 				if (id > 0) {
 					for (int i = oldWarningCount + 1; i < newWarningCount + 1; i++) {
-						Server.getPlugin().getConfig().set("warning." + ipAddress + "." + i, msg);
+						Server.getInstance().getPlugin().getConfig().set("warning." + ipAddress + "." + i, msg);
 					}
 				} else if (id < 0) {
 					for (int i = oldWarningCount + 1; i >= newWarningCount + 1; i--) {
-						Server.getPlugin().getConfig().set("warning." + ipAddress + "." + i, null);
+						Server.getInstance().getPlugin().getConfig().set("warning." + ipAddress + "." + i, null);
 					}
 				}
 			}

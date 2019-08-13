@@ -19,7 +19,7 @@ public class LocketteDoorCloser implements Runnable {
 	protected boolean start() {
 		if (doorTask != -1)
 			return (false);
-		doorTask = Server.getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(Server.getPlugin(), this, 100, 10);
+		doorTask = Server.getInstance().getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(Server.getInstance().getPlugin(), this, 100, 10);
 		if (doorTask == -1)
 			return (true);
 		return (false);
@@ -28,7 +28,7 @@ public class LocketteDoorCloser implements Runnable {
 	protected boolean stop() {
 		if (doorTask == -1)
 			return (false);
-		Server.getPlugin().getServer().getScheduler().cancelTask(doorTask);
+		Server.getInstance().getPlugin().getServer().getScheduler().cancelTask(doorTask);
 		doorTask = -1;
 		cleanup();
 		return (false);

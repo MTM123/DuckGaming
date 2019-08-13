@@ -6,6 +6,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import me.skorrloregaming.*;
+
 public class ReloadConfigCmd implements CommandExecutor {
 
 	@Override
@@ -14,23 +16,23 @@ public class ReloadConfigCmd implements CommandExecutor {
 			Link$.playLackPermissionMessage(sender);
 			return true;
 		}
-		Server.getDiscordVerifyConfig().reloadData();
-		Server.getChatItemConfig().reloadData();
-		Server.getBanConfig().reloadData();
-		Server.getWarpConfig().reloadData();
-		Server.getSignConfig().reloadData();
-		Server.getFactionsConfig().reloadData();
-		Server.getShoppeConfig().reloadData();
-		Server.getMarriageHomesConfig().reloadData();
-		Server.getNpcConfig().reloadData();
-		Server.getSpawnerConfig().reloadData();
+		Server.getInstance().getDiscordVerifyConfig().reloadData();
+		Server.getInstance().getChatItemConfig().reloadData();
+		Server.getInstance().getBanConfig().reloadData();
+		Server.getInstance().getWarpConfig().reloadData();
+		Server.getInstance().getSignConfig().reloadData();
+		Server.getInstance().getFactionsConfig().reloadData();
+		Server.getInstance().getShoppeConfig().reloadData();
+		Server.getInstance().getMarriageHomesConfig().reloadData();
+		Server.getInstance().getNpcConfig().reloadData();
+		Server.getInstance().getSpawnerConfig().reloadData();
 		LinkServer.getInstance().getUUIDCache().reloadData();
 		LinkServer.getInstance().getGeolocationCache().reloadData();
-		Server.getSessionManager().sessionConfig.reloadData();
-		Server.getMonthlyVoteConfig().reloadData();
-		if (!(Server.getInstance().chatitem == null))
+		Server.getInstance().getSessionManager().sessionConfig.reloadData();
+		Server.getInstance().getMonthlyVoteConfig().reloadData();
+		if (!(Server.getInstance().getChatItem() == null))
 			ChatItem.reload(null);
-		Server.getInstance().garbageCollector.run();
+		Server.getInstance().getGarbageCollector().run();
 		Server.getInstance().reload();
 		sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Server configuration successfully reloaded.");
 		return true;

@@ -1,5 +1,7 @@
 package me.skorrloregaming.impl;
 
+import me.skorrloregaming.*;
+
 public class InventoryType {
 
 	public static final String NULL = "null";

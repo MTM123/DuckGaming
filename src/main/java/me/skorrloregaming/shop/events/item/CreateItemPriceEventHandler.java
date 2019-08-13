@@ -30,12 +30,12 @@ public class CreateItemPriceEventHandler implements AnvilGUI.AnvilClickEventHand
 			event.getPlayer().sendMessage("Sorry, that's not a valid item price.");
 			return;
 		}
-		Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+		Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					new AnvilGUI(event.getPlayer(), Server.getShoppe().getInventoryName(LaShoppeFrame.CREATE_ITEM), new CreateItemAmountEventHandler(shoppe, material, price))
+					new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ITEM), new CreateItemAmountEventHandler(shoppe, material, price))
 							.setInputName("Enter amount")
 							.open();
 				} catch (IllegalAccessException e) {

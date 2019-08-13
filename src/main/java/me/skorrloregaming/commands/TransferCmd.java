@@ -10,6 +10,8 @@ import org.bukkit.command.CommandSender;
 import java.util.Set;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class TransferCmd implements CommandExecutor {
 
 	@Override
@@ -40,11 +42,11 @@ public class TransferCmd implements CommandExecutor {
 				if (player.isOnline())
 					player.getPlayer().performCommand("hub");
 				String uuid = targetPlayer.getUniqueId().toString();
-				Set<String> array = Server.getPlugin().getConfig().getConfigurationSection("config." + uuid).getKeys(true);
+				Set<String> array = Server.getInstance().getPlugin().getConfig().getConfigurationSection("config." + uuid).getKeys(true);
 				for (String value : array) {
 					String valuePath = "config." + player.getUniqueId().toString() + "." + value;
 					String oldValuePath = "config." + uuid + "." + value;
-					Server.getPlugin().getConfig().set(valuePath, Server.getPlugin().getConfig().get(oldValuePath));
+					Server.getInstance().getPlugin().getConfig().set(valuePath, Server.getInstance().getPlugin().getConfig().get(oldValuePath));
 				}
 				if (LinkServer.getInstance().getRedisDatabase().contains("playtime.total", uuid)) {
 					for (int day = 0; day <= 365; day++) {
@@ -65,29 +67,29 @@ public class TransferCmd implements CommandExecutor {
 						LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", uuid, null);
 					}
 				}
-				if (Server.getSurvivalConfig().getData().contains("homes." + uuid)) {
-					Set<String> array1 = Server.getSurvivalConfig().getData().getConfigurationSection("homes." + uuid).getKeys(true);
+				if (Server.getInstance().getSurvivalConfig().getData().contains("homes." + uuid)) {
+					Set<String> array1 = Server.getInstance().getSurvivalConfig().getData().getConfigurationSection("homes." + uuid).getKeys(true);
 					for (String value : array1) {
 						String valuePath = "homes." + player.getUniqueId().toString() + "." + value;
 						String oldValuePath = "homes." + uuid + "." + value;
-						Server.getSurvivalConfig().getData().set(valuePath, Server.getSurvivalConfig().getData().get(oldValuePath));
+						Server.getInstance().getSurvivalConfig().getData().set(valuePath, Server.getInstance().getSurvivalConfig().getData().get(oldValuePath));
 					}
-					Server.getSurvivalConfig().getData().set("homes." + uuid, null);
-					Server.getSurvivalConfig().saveData();
+					Server.getInstance().getSurvivalConfig().getData().set("homes." + uuid, null);
+					Server.getInstance().getSurvivalConfig().saveData();
 				}
-				if (Server.getFactionsConfig().getData().contains("homes." + uuid)) {
-					Set<String> array1 = Server.getFactionsConfig().getData().getConfigurationSection("homes." + uuid).getKeys(true);
+				if (Server.getInstance().getFactionsConfig().getData().contains("homes." + uuid)) {
+					Set<String> array1 = Server.getInstance().getFactionsConfig().getData().getConfigurationSection("homes." + uuid).getKeys(true);
 					for (String value : array1) {
 						String valuePath = "homes." + player.getUniqueId().toString() + "." + value;
 						String oldValuePath = "homes." + uuid + "." + value;
-						Server.getFactionsConfig().getData().set(valuePath, Server.getFactionsConfig().getData().get(oldValuePath));
+						Server.getInstance().getFactionsConfig().getData().set(valuePath, Server.getInstance().getFactionsConfig().getData().get(oldValuePath));
 					}
-					Server.getFactionsConfig().getData().set("homes." + uuid, null);
-					Server.getFactionsConfig().saveData();
+					Server.getInstance().getFactionsConfig().getData().set("homes." + uuid, null);
+					Server.getInstance().getFactionsConfig().saveData();
 				}
 				for (String domain : $.validStorageMinigames)
 					SolidStorage.dataUUIDtoUUID(UUID.fromString(uuid), player.getUniqueId(), domain);
-				Server.getPlugin().getConfig().set("config." + uuid, null);
+				Server.getInstance().getPlugin().getConfig().set("config." + uuid, null);
 				if (player.isOnline())
 					player.getPlayer().sendMessage("Operation completed, you may now play as usual.");
 				sender.sendMessage("Operation completed, " + player.getName() + " data has been modified.");

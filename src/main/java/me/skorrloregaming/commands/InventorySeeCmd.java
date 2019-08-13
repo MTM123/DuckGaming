@@ -14,6 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import me.skorrloregaming.*;
+
 public class InventorySeeCmd implements CommandExecutor {
 
 	@Override
@@ -21,7 +23,7 @@ public class InventorySeeCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
@@ -37,9 +39,9 @@ public class InventorySeeCmd implements CommandExecutor {
 				if (player.isOp()) {
 					inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.CHEST), 54, name);
 					name = ChatColor.BOLD + "Personal Inventory";
-					if (Server.getSavePersonalChest().containsKey(player))
-						Server.getSavePersonalChest().remove(player);
-					Server.getSaveOtherInventory().put(player, tp);
+					if (Server.getInstance().getSavePersonalChest().containsKey(player))
+						Server.getInstance().getSavePersonalChest().remove(player);
+					Server.getInstance().getSaveOtherInventory().put(player, tp);
 				}
 				inv.setContents(tp.getInventory().getContents());
 				player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);

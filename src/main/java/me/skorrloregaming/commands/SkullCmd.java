@@ -21,7 +21,7 @@ public class SkullCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (player.isOp() || Server.getCreative().contains(player.getUniqueId())) {
+		if (player.isOp() || Server.getInstance().getCreative().contains(player.getUniqueId())) {
 			if (args.length < 1) {
 				if (player.isOp()) {
 					player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " [player] <skullOwner>");

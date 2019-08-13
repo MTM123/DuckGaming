@@ -15,6 +15,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class SignShop {
 	public static void playShopTitlePopup(Player player, Block block) {
 		if (player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR) {
@@ -34,7 +36,7 @@ public class SignShop {
 		DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
 		Location blockLoc = sign.getLocation();
 		String code = blockLoc.getWorld().getName() + String.valueOf(blockLoc.getBlockX()) + String.valueOf(blockLoc.getBlockY()) + String.valueOf(blockLoc.getBlockZ());
-		if (!Server.getSignConfig().getData().contains("signs." + code)) {
+		if (!Server.getInstance().getSignConfig().getData().contains("signs." + code)) {
 			return false;
 		} else {
 			playShopTitlePopup(player, sign.getBlock());
@@ -82,14 +84,14 @@ public class SignShop {
 				if (cash >= price) {
 					if ($.isRepairable(itm)) {
 						if (itm.getDurability() < itm.getType().getMaxDurability() / 2) {
-							if (!Server.getConfirmRepairShop().contains(player.getUniqueId())) {
+							if (!Server.getInstance().getConfirmRepairShop().contains(player.getUniqueId())) {
 								player.sendMessage(tag + ChatColor.GRAY + "The item you are holding seems to be durable still.");
 								player.sendMessage(tag + ChatColor.GRAY + "Use this shop again to confirm your transaction.");
-								Server.getConfirmRepairShop().add(player.getUniqueId());
-								Server.getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getPlugin(), new Runnable() {
+								Server.getInstance().getConfirmRepairShop().add(player.getUniqueId());
+								Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
 									@Override
 									public void run() {
-										Server.getConfirmRepairShop().remove(player.getUniqueId());
+										Server.getInstance().getConfirmRepairShop().remove(player.getUniqueId());
 									}
 								}, 45L));
 								return false;

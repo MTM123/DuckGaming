@@ -9,6 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.skorrloregaming.*;
+
 public class KitsCmd implements CommandExecutor {
 
 	@Override
@@ -16,12 +18,12 @@ public class KitsCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getKitpvp().contains(player.getUniqueId()) && !Server.getFactions().contains(player.getUniqueId()) && !Server.getSurvival().contains(player.getUniqueId())) {
+		if (!Server.getInstance().getKitpvp().contains(player.getUniqueId()) && !Server.getInstance().getFactions().contains(player.getUniqueId()) && !Server.getInstance().getSurvival().contains(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
 		String tag = $.getMinigameTag(player);
-		if (Server.getSurvival().contains(player.getUniqueId())) {
+		if (Server.getInstance().getSurvival().contains(player.getUniqueId())) {
 			String s = "";
 			for (String str : $.Survival.validKits) {
 				s += ChatColor.RED + WordUtils.capitalize(str) + ChatColor.GRAY + ", ";
@@ -30,7 +32,7 @@ public class KitsCmd implements CommandExecutor {
 			sender.sendMessage(tag + ChatColor.GRAY + "Kits: " + ChatColor.RED + s);
 			return true;
 		}
-		if (Server.getFactions().contains(player.getUniqueId())) {
+		if (Server.getInstance().getFactions().contains(player.getUniqueId())) {
 			String s = "";
 			for (String str : $.Factions.validKits) {
 				s += ChatColor.RED + WordUtils.capitalize(str) + ChatColor.GRAY + ", ";
@@ -39,7 +41,7 @@ public class KitsCmd implements CommandExecutor {
 			sender.sendMessage(tag + ChatColor.GRAY + "Kits: " + ChatColor.RED + s);
 			return true;
 		}
-		if (Server.getKitpvp().contains(player.getUniqueId())) {
+		if (Server.getInstance().getKitpvp().contains(player.getUniqueId())) {
 			String s = "";
 			for (String str : $.Kitpvp.validKits) {
 				s += ChatColor.RED + WordUtils.capitalize(str) + ChatColor.GRAY + ", ";

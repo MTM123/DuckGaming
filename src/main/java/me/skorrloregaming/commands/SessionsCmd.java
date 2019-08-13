@@ -10,6 +10,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.skorrloregaming.*;
+
 public class SessionsCmd implements CommandExecutor {
 
 	@Override
@@ -25,7 +27,7 @@ public class SessionsCmd implements CommandExecutor {
 			OfflinePlayer op = CraftGo.Player.getOfflinePlayer(args[0]);
 			if (player.getName().equals(op.getName()) || player.isOp() || Link$.getRankId(player) > 1) {
 				if (op.isOnline() || op.hasPlayedBefore()) {
-					Server.getSessionManager().openComplexInventory(player, op);
+					Server.getInstance().getSessionManager().openComplexInventory(player, op);
 				} else {
 					player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "The specified player could not be found.");
 				}

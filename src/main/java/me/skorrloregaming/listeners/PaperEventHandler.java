@@ -16,17 +16,19 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CrossbowMeta;
 
+import me.skorrloregaming.*;
+
 public class PaperEventHandler implements Listener {
 
 	public PaperEventHandler() {
-		Server.getPlugin().getLogger().info("Registered PaperSpigot specific event listener");
-		Server.getPlugin().getLogger().info("If issues arise from this, report them immediately.");
+		Server.getInstance().getPlugin().getLogger().info("Registered PaperSpigot specific event listener");
+		Server.getInstance().getPlugin().getLogger().info("If issues arise from this, report them immediately.");
 	}
 
 	@EventHandler
 	public void onPlayerJump(PlayerJumpEvent event) {
 		Player player = event.getPlayer();
-		if (Server.getWaiverAcceptPlayers().contains(player.getUniqueId())) {
+		if (Server.getInstance().getWaiverAcceptPlayers().contains(player.getUniqueId())) {
 			event.setCancelled(true);
 			return;
 		}

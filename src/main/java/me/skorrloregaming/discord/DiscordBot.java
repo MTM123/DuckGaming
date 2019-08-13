@@ -13,6 +13,8 @@ import net.dv8tion.jda.core.requests.restaction.MessageAction;
 
 import java.util.concurrent.TimeUnit;
 
+import me.skorrloregaming.*;
+
 public class DiscordBot {
 
 	private String name;

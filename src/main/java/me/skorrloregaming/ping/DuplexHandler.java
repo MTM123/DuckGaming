@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import me.skorrloregaming.*;
+
 public class DuplexHandler extends ChannelDuplexHandler {
 
 	private final Field serverPingField = Reflection.getFirstFieldByType(CraftGo.Packet.Ping.getPacketType(), CraftGo.Packet.Ping.getServerPing());
@@ -55,7 +57,7 @@ public class DuplexHandler extends ChannelDuplexHandler {
 
 	private Object constructPacket(PingReply reply) {
 		try {
-			int playerCount = reply.getOnlinePlayers() + Server.getNpcPlayers().size();
+			int playerCount = reply.getOnlinePlayers() + Server.getInstance().getNpcPlayers().size();
 			Object sample = Array.newInstance(CraftGo.GameProfile.getComponentType(), playerCount);
 			for (int i = 0; i < reply.getPlayerSample().size(); i++) {
 				String profile = reply.getPlayerSample().get(i);
@@ -64,15 +66,15 @@ public class DuplexHandler extends ChannelDuplexHandler {
 					throw new Exception("Failed to retrieve online-mode uuid for player \"" + profile + "\".");
 				Array.set(sample, i, CraftGo.GameProfile.newInstance(id, profile).get());
 			}
-			for (int i = 0; i < Server.getNpcPlayers().size(); i++) {
-				NpcPlayer profile = Server.getNpcPlayers().get(i);
+			for (int i = 0; i < Server.getInstance().getNpcPlayers().size(); i++) {
+				NpcPlayer profile = Server.getInstance().getNpcPlayers().get(i);
 				Object gameProfile = CraftGo.GameProfile.newInstance(profile.getOnlineId(), profile.getName()).get();
 				Array.set(sample, reply.getPlayerSample().size() + i, gameProfile);
 			}
 			Object ping = CraftGo.Packet.Ping.getServerPing().newInstance();
 			CraftGo.Packet.Ping.setMOTD(ping, reply.getMOTD());
 			CraftGo.Packet.Ping.setPlayerSample(ping, new CraftGo.Packet.Ping.PlayerSample(reply.getMaxPlayers(), playerCount, sample));
-			if (Server.getBanConfig().getData().contains(reply.getHostAddress().replace(".", "x"))) {
+			if (Server.getInstance().getBanConfig().getData().contains(reply.getHostAddress().replace(".", "x"))) {
 				CraftGo.Packet.Ping.setServerInfo(ping, new CraftGo.Packet.Ping.ServerInfo("You are banned.", -1));
 			} else {
 				CraftGo.Packet.Ping.setServerInfo(ping, new CraftGo.Packet.Ping.ServerInfo(reply.getProtocolName(), reply.getProtocolVersion()));

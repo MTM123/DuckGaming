@@ -17,6 +17,8 @@ import org.bukkit.inventory.ItemStack;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
+import me.skorrloregaming.*;
+
 public class WithdrawCmd implements CommandExecutor {
 
 	@Override
@@ -24,11 +26,11 @@ public class WithdrawCmd implements CommandExecutor {
 		if (!(sender instanceof Player))
 			return true;
 		Player player = ((Player) sender);
-		if (!Server.getSurvival().contains(player.getUniqueId())) {
+		if (!Server.getInstance().getSurvival().contains(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "This minigame prevents use of this command.");
 			return true;
 		}
-		if (Server.getPlayersInCombat().containsKey(player.getUniqueId())) {
+		if (Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
 			player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "You cannot use this command during combat.");
 			return true;
 		}
@@ -36,7 +38,7 @@ public class WithdrawCmd implements CommandExecutor {
 		ServerMinigame minigame = $.getCurrentMinigame(player);
 		String tag = $.getMinigameTag(player);
 		DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-		Material material = Material.getMaterial(Server.getPlugin().getConfig().getString("settings.economy.base." + minigame.toString()));
+		Material material = Material.getMaterial(Server.getInstance().getPlugin().getConfig().getString("settings.economy.base." + minigame.toString()));
 		String materialName = Link$.formatMaterial(material);
 		int amount = 1;
 		if (args.length > 0) {
