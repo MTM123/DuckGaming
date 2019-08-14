@@ -18,7 +18,6 @@ public class PaperEventHandler implements Listener {
         Player player = event.getPlayer();
         if (Server.getInstance().getWaiverAcceptPlayers().contains(player.getUniqueId())) {
             event.setCancelled(true);
-            return;
         }
     }
 }

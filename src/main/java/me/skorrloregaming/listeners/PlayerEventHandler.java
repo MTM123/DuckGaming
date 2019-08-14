@@ -63,7 +63,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.util.Vector;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
-import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -75,36 +74,33 @@ public class PlayerEventHandler implements Listener {
     public int rainbowIndex = 0;
 
     public PlayerEventHandler() {
-        Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskTimer(Server.getInstance().getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if ($.isAuthenticated(player) && $.getCurrentMinigame(player) == ServerMinigame.HUB)
-                        Server.getInstance().fetchLobby(player);
-                    ServerMinigame minigame = $.getCurrentMinigame(player);
-                    switch (minigame) {
-                        case KITPVP:
-                            $.Kitpvp.refreshScoreboard(player, false);
-                            break;
-                        case FACTIONS:
-                            $.Factions.refreshScoreboard(player, false);
-                            break;
-                        case SKYBLOCK:
-                            $.Skyblock.refreshScoreboard(player, false);
-                            break;
-                        default:
-                            break;
-                    }
-                    rainbowIndex++;
-                    rainbowIndex %= 10;
-                    try {
-                        CraftGo.Packet.DataSerializer dataSerializer = CraftGo.Packet.DataSerializer.newInstance(Unpooled.buffer());
-                        Object serializedData = dataSerializer.serializePacketData($.getRainbowColor(rainbowIndex) + "play.skorrloregaming.com" + ChatColor.RESET);
-                        Object packet = CraftGo.Packet.Payload.newInstance(CraftGo.Packet.Payload.BRAND, serializedData);
-                        CraftGo.Packet.sendPacket(CraftGo.Player.getPlayerConnection(player), packet);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+        Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskTimer(Server.getInstance().getPlugin(), () -> {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if ($.isAuthenticated(player) && $.getCurrentMinigame(player) == ServerMinigame.HUB)
+                    Server.getInstance().fetchLobby(player);
+                ServerMinigame minigame = $.getCurrentMinigame(player);
+                switch (minigame) {
+                    case KITPVP:
+                        $.Kitpvp.refreshScoreboard(player, false);
+                        break;
+                    case FACTIONS:
+                        $.Factions.refreshScoreboard(player, false);
+                        break;
+                    case SKYBLOCK:
+                        $.Skyblock.refreshScoreboard(player, false);
+                        break;
+                    default:
+                        break;
+                }
+                rainbowIndex++;
+                rainbowIndex %= 10;
+                try {
+                    CraftGo.Packet.DataSerializer dataSerializer = CraftGo.Packet.DataSerializer.newInstance(Unpooled.buffer());
+                    Object serializedData = dataSerializer.serializePacketData($.getRainbowColor(rainbowIndex) + "play.skorrloregaming.com" + ChatColor.RESET);
+                    Object packet = CraftGo.Packet.Payload.newInstance(CraftGo.Packet.Payload.BRAND, serializedData);
+                    CraftGo.Packet.sendPacket(CraftGo.Player.getPlayerConnection(player), packet);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }, 5L, 5L));
@@ -116,31 +112,28 @@ public class PlayerEventHandler implements Listener {
             player.closeInventory();
             delay = Server.getInstance().getInventoryUpdateDelay();
         }
-        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                ItemStack factions = Link$.createMaterial(Material.DIAMOND_SWORD, 1, ChatColor.LIGHT_PURPLE + "Factions");
-                ItemStack survival = Link$.createMaterial(Material.STONE_PICKAXE, 1, ChatColor.LIGHT_PURPLE + "Survival");
-                survival = CraftGo.ItemStack.removeAttributes(survival);
-                factions = CraftGo.ItemStack.removeAttributes(factions);
-                survival = Link$.addLore(survival, new String[]{ChatColor.GOLD + "/server survival"});
-                factions = Link$.addLore(factions, new String[]{ChatColor.GOLD + "/server factions"});
-                int invSize = 9;
-                if (CraftGo.Player.isPocketPlayer(player))
-                    invSize = 27;
-                Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SERVER_SELECTOR, 1), invSize, "Server Selector");
-                int add = 0;
-                if (CraftGo.Player.isPocketPlayer(player))
-                    add = 9;
-                if ($.isMinigameEnabled(ServerMinigame.FACTIONS)) {
-                    inv.setItem(3 + add, factions);
-                }
-                if ($.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
-                    inv.setItem(5 + add, survival);
-                }
-                player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
-                player.openInventory(inv);
+        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
+            ItemStack factions = Link$.createMaterial(Material.DIAMOND_SWORD, 1, ChatColor.LIGHT_PURPLE + "Factions");
+            ItemStack survival = Link$.createMaterial(Material.STONE_PICKAXE, 1, ChatColor.LIGHT_PURPLE + "Survival");
+            survival = CraftGo.ItemStack.removeAttributes(survival);
+            factions = CraftGo.ItemStack.removeAttributes(factions);
+            survival = Link$.addLore(survival, new String[]{ChatColor.GOLD + "/server survival"});
+            factions = Link$.addLore(factions, new String[]{ChatColor.GOLD + "/server factions"});
+            int invSize = 9;
+            if (CraftGo.Player.isPocketPlayer(player))
+                invSize = 27;
+            Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SERVER_SELECTOR, 1), invSize, "Server Selector");
+            int add = 0;
+            if (CraftGo.Player.isPocketPlayer(player))
+                add = 9;
+            if ($.isMinigameEnabled(ServerMinigame.FACTIONS)) {
+                inv.setItem(3 + add, factions);
             }
+            if ($.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
+                inv.setItem(5 + add, survival);
+            }
+            player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1, 1);
+            player.openInventory(inv);
         }, delay);
     }
 
@@ -148,7 +141,7 @@ public class PlayerEventHandler implements Listener {
         if (block.getType() == Material.SPAWNER) {
             CreatureSpawner spawner = (CreatureSpawner) block.getState();
             Location loc = spawner.getLocation();
-            String code = loc.getWorld().getName() + String.valueOf(loc.getBlockX()) + String.valueOf(loc.getBlockY()) + String.valueOf(loc.getBlockZ());
+            String code = loc.getWorld().getName() + loc.getBlockX() + loc.getBlockY() + loc.getBlockZ();
             if (!Server.getInstance().getSpawnerConfig().getData().contains(code)) {
                 Server.getInstance().getSpawnerConfig().getData().set(code + ".upgrade", "0");
                 Server.getInstance().getSpawnerConfig().getData().set(code + ".selectedUpgrade", "0");
@@ -166,7 +159,7 @@ public class PlayerEventHandler implements Listener {
             String prefix = ChatColor.RESET + "" + ChatColor.BOLD;
             ItemStack performUpgradeItem = Link$.createMaterial(Material.REDSTONE, prefix + "Perform Upgrade (" + ChatColor.RED + "$" + requiredAmount + prefix + ")");
             ItemStack spawnerItem = CraftGo.MobSpawner.newSpawnerItem(spawner.getSpawnedType(), 1);
-            List<String> spawnerItemLore = new ArrayList<String>();
+            List<String> spawnerItemLore = new ArrayList<>();
             spawnerItemLore.add("");
             spawnerItemLore.add(ChatColor.RESET + "code: " + code);
             spawnerItemLore.add(ChatColor.RESET + "world: " + spawner.getWorld().getName());
@@ -179,7 +172,7 @@ public class PlayerEventHandler implements Listener {
             int passes = -1;
             for (int i = 9; i < 18; i += 2) {
                 passes++;
-                List<String> lore = new ArrayList<String>();
+                List<String> lore = new ArrayList<>();
                 ItemStack item;
                 if (upgradeCount >= passes) {
                     item = Link$.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select spawner upgrade #" + passes);
@@ -317,35 +310,22 @@ public class PlayerEventHandler implements Listener {
                     event.setCancelled(true);
                 } else {
                     Server.getInstance().getDelayedTasks().add(player.getUniqueId());
-                    Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                        @Override
-                        public void run() {
-                            Server.getInstance().getDelayedTasks().remove(player.getUniqueId());
-                        }
-                    }, 7L);
+                    Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getDelayedTasks().remove(player.getUniqueId()), 7L);
                 }
             } else if (event.getEntity() instanceof Arrow) {
                 if ($.getCurrentMinigame(player) == ServerMinigame.SKYFIGHT)
-                    Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-
-                        @Override
-                        public void run() {
-                            ItemStack mainHand = player.getInventory().getItemInMainHand();
-                            if (mainHand.getType() == Material.CROSSBOW) {
-                                CrossbowMeta crossBowMeta = (CrossbowMeta) mainHand.getItemMeta();
-                                crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
-                                crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
-                                crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
-                                mainHand.setItemMeta(crossBowMeta);
-                                player.getInventory().setItemInMainHand(mainHand);
-                            }
+                    Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
+                        ItemStack mainHand = player.getInventory().getItemInMainHand();
+                        if (mainHand.getType() == Material.CROSSBOW) {
+                            CrossbowMeta crossBowMeta = (CrossbowMeta) mainHand.getItemMeta();
+                            crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+                            crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+                            crossBowMeta.addChargedProjectile(Link$.createMaterial(Material.ARROW));
+                            mainHand.setItemMeta(crossBowMeta);
+                            player.getInventory().setItemInMainHand(mainHand);
                         }
-                    }, 2l);
-                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                    public void run() {
-                        Server.getInstance().doReturnItem(player);
-                    }
-                }, 5L);
+                    }, 2L);
+                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().doReturnItem(player), 5L);
             }
         }
     }
@@ -402,12 +382,10 @@ public class PlayerEventHandler implements Listener {
                             default:
                                 if (player.isOp())
                                     player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Invalid data was assigned to this npc.");
-                                return;
                         }
                     }
                 }
             }
-            return;
         }
     }
 
@@ -442,12 +420,7 @@ public class PlayerEventHandler implements Listener {
                         if (!Server.getInstance().getDelayedTasks().contains(player.getUniqueId())) {
                             event.getRightClicked().remove();
                             Server.getInstance().getDelayedTasks().add(player.getUniqueId());
-                            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                                @Override
-                                public void run() {
-                                    Server.getInstance().getDelayedTasks().remove(player.getUniqueId());
-                                }
-                            }, 20L);
+                            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getDelayedTasks().remove(player.getUniqueId()), 20L);
                             if (player.getGameMode() == GameMode.SURVIVAL) {
                                 if (itm.getAmount() < 2) {
                                     player.getInventory().setItemInMainHand(Link$.createMaterial(Material.AIR));
@@ -465,7 +438,6 @@ public class PlayerEventHandler implements Listener {
                 }
             }
         }
-        return;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -492,12 +464,7 @@ public class PlayerEventHandler implements Listener {
                             if (!hit) {
                                 if (!Server.getInstance().getDelayedTasks().contains(player.getUniqueId())) {
                                     Server.getInstance().getDelayedTasks().add(player.getUniqueId());
-                                    Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Server.getInstance().getDelayedTasks().remove(player.getUniqueId());
-                                        }
-                                    }, 20L);
+                                    Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getDelayedTasks().remove(player.getUniqueId()), 20L);
                                     player.sendMessage($.Skyfight.tag + ChatColor.RED + "Sorry, you need a donor rank to use this item.");
                                     player.sendMessage($.Skyfight.tag + ChatColor.RED + "Or during the 5 min grace period following a vote.");
                                     player.sendMessage($.Skyfight.tag + ChatColor.RED + "This will also work if someone else online has it.");
@@ -532,7 +499,7 @@ public class PlayerEventHandler implements Listener {
                                 return;
                             }
                             DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-                            String code = blockLoc.getWorld().getName() + String.valueOf(blockLoc.getBlockX()) + String.valueOf(blockLoc.getBlockY()) + String.valueOf(blockLoc.getBlockZ());
+                            String code = blockLoc.getWorld().getName() + blockLoc.getBlockX() + blockLoc.getBlockY() + blockLoc.getBlockZ();
                             Server.getInstance().getSignConfig().getData().set("signs." + code, 1);
                             Server.getInstance().getSignConfig().saveData();
                             player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Successfully processed shop " + ChatColor.RED + code + ChatColor.GRAY + ".");
@@ -579,9 +546,9 @@ public class PlayerEventHandler implements Listener {
                     return;
                 }
                 if (ChatColor.stripColor(sign.getLines()[0]).equals("[Shop]")) {
-                    String code = null;
+                    String code;
                     String[] s = sign.getLines();
-                    int x = 0, y = 0, z = 0;
+                    int x, y, z;
                     try {
                         String[] split = s[1].split(",");
                         x = Integer.parseInt(split[0]);
@@ -607,7 +574,7 @@ public class PlayerEventHandler implements Listener {
                     }
                 }
                 for (int i = 0; i < sign.getLines().length; i++) {
-                    String line = String.valueOf(sign.getLines()[i]);
+                    String line = sign.getLines()[i];
                     if (line.startsWith(ChatColor.BOLD + "/")) {
                         player.performCommand(line.substring(line.indexOf("/") + 1));
                         return;
@@ -639,7 +606,7 @@ public class PlayerEventHandler implements Listener {
             if ($.isPostSign(block.getType()) || $.isWallSign(block.getType())) {
                 Sign sign = (Sign) block.getState();
                 Location blockLoc = sign.getLocation();
-                String code = String.valueOf(blockLoc.getBlockX()) + ";" + String.valueOf(blockLoc.getBlockY()) + ";" + String.valueOf(blockLoc.getBlockZ());
+                String code = blockLoc.getBlockX() + ";" + blockLoc.getBlockY() + ";" + blockLoc.getBlockZ();
                 if (ChatColor.stripColor(sign.getLine(0)).equals("Sell")) {
                     if (!Server.getInstance().getSignConfig().getData().contains("signs." + blockLoc.getWorld().getName() + code.replace(";", ""))) {
                         return;
@@ -651,9 +618,9 @@ public class PlayerEventHandler implements Listener {
                         return;
                     }
                 } else if (ChatColor.stripColor(sign.getLine(0)).equals("[Shop]")) {
-                    String targetCode = null;
+                    String targetCode;
                     String[] s = sign.getLines();
-                    int x = 0, y = 0, z = 0;
+                    int x, y, z;
                     try {
                         String[] split = s[1].split(",");
                         x = Integer.parseInt(split[0]);
@@ -691,12 +658,7 @@ public class PlayerEventHandler implements Listener {
                 if (itm.getType() == Material.LEATHER_CHESTPLATE) {
                     if (!Server.getInstance().getDelayedTasks().contains(event.getPlayer().getUniqueId())) {
                         Server.getInstance().getDelayedTasks().add(event.getPlayer().getUniqueId());
-                        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                            @Override
-                            public void run() {
-                                Server.getInstance().getDelayedTasks().remove(event.getPlayer().getUniqueId());
-                            }
-                        }, 20L);
+                        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getDelayedTasks().remove(event.getPlayer().getUniqueId()), 20L);
                         openSkyfightTeamSelectionInventory(player);
                         return;
                     }
@@ -733,7 +695,7 @@ public class PlayerEventHandler implements Listener {
                     if (CraftGo.Player.isPocketPlayer(player))
                         add = 9;
                     if ($.isMinigameEnabled(ServerMinigame.KITPVP)) {
-                        inv.setItem(0 + add, kitpvp);
+                        inv.setItem(add, kitpvp);
                     }
                     if ($.isMinigameEnabled(ServerMinigame.FACTIONS) && $.isMinigameEnabled(ServerMinigame.SURVIVAL)) {
                         inv.setItem(2 + add, survivalFactions);
@@ -775,13 +737,7 @@ public class PlayerEventHandler implements Listener {
                     if (player.getGameMode() == GameMode.SURVIVAL && !Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
                         if (!Server.getInstance().getDelayedTasks().contains(event.getPlayer().getUniqueId())) {
                             Server.getInstance().getDelayedTasks().add(event.getPlayer().getUniqueId());
-                            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    Server.getInstance().getDelayedTasks().remove(event.getPlayer().getUniqueId());
-                                }
-                            }, 20L);
+                            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getDelayedTasks().remove(event.getPlayer().getUniqueId()), 20L);
                             event.setCancelled(true);
                             if (itm.getAmount() < 2) {
                                 player.getInventory().setItemInMainHand(Link$.createMaterial(Material.AIR));
@@ -815,12 +771,11 @@ public class PlayerEventHandler implements Listener {
                         w.playSound(exactLoc, Sound.BLOCK_PORTAL_TRAVEL, 1, 1);
                         if ($.isEffectsEnabled(player)) {
                             for (int i = 0; i < 360; i += 2) {
-                                Location flameloc = exactLoc;
                                 double cos = Math.cos(i) * 2;
                                 double sin = Math.sin(i) * 2;
-                                double x = flameloc.getZ() - cos - cos + cos;
-                                double z = flameloc.getX() - sin - sin + sin;
-                                player.getWorld().spawnParticle(Particle.PORTAL, x, flameloc.getY() - 1, z, 5);
+                                double x = exactLoc.getZ() - cos - cos + cos;
+                                double z = exactLoc.getX() - sin - sin + sin;
+                                player.getWorld().spawnParticle(Particle.PORTAL, x, exactLoc.getY() - 1, z, 5);
                             }
                         }
                         return;
@@ -858,9 +813,7 @@ public class PlayerEventHandler implements Listener {
                                             if (!(checkPlayer == null)) {
                                                 checkPlayer.sendMessage($.getMinigameTag(checkPlayer) + ChatColor.GRAY + "You can now use the " + ChatColor.RED + "Funpowder");
                                             }
-                                            if (Server.getInstance().getExplosiveFunpowderCooldown().containsKey(fPlayer.getUniqueId())) {
-                                                Server.getInstance().getExplosiveFunpowderCooldown().remove(fPlayer.getUniqueId());
-                                            }
+                                            Server.getInstance().getExplosiveFunpowderCooldown().remove(fPlayer.getUniqueId());
                                             cancel();
                                         }
 
@@ -920,12 +873,7 @@ public class PlayerEventHandler implements Listener {
                         if (!(type == Material.SPAWNER)) {
                             if (!Server.getInstance().getDelayedTasks().contains(event.getPlayer().getUniqueId())) {
                                 Server.getInstance().getDelayedTasks().add(event.getPlayer().getUniqueId());
-                                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Server.getInstance().getDelayedTasks().remove(event.getPlayer().getUniqueId());
-                                    }
-                                }, 20L);
+                                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getDelayedTasks().remove(event.getPlayer().getUniqueId()), 20L);
                                 String entityName = itm.getType().toString();
                                 entityName = entityName.substring(0, entityName.lastIndexOf("_"));
                                 if (player.getGameMode() == GameMode.SURVIVAL) {
@@ -969,13 +917,7 @@ public class PlayerEventHandler implements Listener {
                     if (!Server.getInstance().getPlayersInCombat().containsKey(player.getUniqueId())) {
                         if (!Server.getInstance().getDelayedTasks().contains(event.getPlayer().getUniqueId())) {
                             Server.getInstance().getDelayedTasks().add(event.getPlayer().getUniqueId());
-                            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    Server.getInstance().getDelayedTasks().remove(event.getPlayer().getUniqueId());
-                                }
-                            }, 20L);
+                            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getDelayedTasks().remove(event.getPlayer().getUniqueId()), 20L);
                             if (player.isInsideVehicle() && player.getVehicle() instanceof EnderPearl)
                                 player.getVehicle().remove();
                             player.launchProjectile(EnderPearl.class).addPassenger(player);
@@ -987,7 +929,6 @@ public class PlayerEventHandler implements Listener {
                             player.setFoodLevel(foodLevel);
                         }
                     }
-                    return;
                 }
             }
         }
@@ -1109,12 +1050,7 @@ public class PlayerEventHandler implements Listener {
             if (!Server.getInstance().getDelayedTasks().contains(player.getUniqueId())) {
                 player.sendMessage("Sorry, you are not allowed to drop items in creative.");
                 Server.getInstance().getDelayedTasks().add(player.getUniqueId());
-                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        Server.getInstance().getDelayedTasks().remove(player.getUniqueId());
-                    }
-                }, 20L);
+                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getDelayedTasks().remove(player.getUniqueId()), 20L);
             }
             event.setCancelled(true);
         }
@@ -1127,7 +1063,7 @@ public class PlayerEventHandler implements Listener {
             if (event.getEntity().getShooter() instanceof Player) {
                 if (event.getHitEntity() != null)
                     if (event.getHitEntity() instanceof Player) {
-                        if (Server.getInstance().getSkyfight().containsKey(((Player) event.getHitEntity()).getUniqueId()))
+                        if (Server.getInstance().getSkyfight().containsKey(event.getHitEntity().getUniqueId()))
                             event.getHitEntity().getWorld().createExplosion(event.getEntity().getLocation(), 0.0f);
                     }
                 Player player = (Player) event.getEntity().getShooter();
@@ -1190,7 +1126,7 @@ public class PlayerEventHandler implements Listener {
         boolean proxyAddress = false;
         if (Server.getInstance().getBanConfig().getData().contains(address.replace(".", "x")) || (!(altAddress == null) && Server.getInstance().getBanConfig().getData().contains(altAddress.replace(".", "x"))) || (proxyAddress = CraftGo.Player.isProxyAddress(event.getAddress().getHostAddress()))) {
             System.out.println("Complete banned signature found, disallowing connection..");
-            String kickMessage = null;
+            String kickMessage;
             if (proxyAddress) {
                 IpLocationQuery query = CraftGo.Player.queryIpLocationNoCache(event.getAddress().getHostAddress());
                 String uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + event.getName()).getBytes()).toString();
@@ -1209,25 +1145,24 @@ public class PlayerEventHandler implements Listener {
             }
             event.disallow(Result.KICK_BANNED, ChatColor.translateAlternateColorCodes('&', kickMessage));
             boolean consoleOnly = false;
-            if (Server.getInstance().getHideLoginMessage().containsKey(Integer.valueOf(uuidHash))) {
-                long epoch = Server.getInstance().getHideLoginMessage().get(Integer.valueOf(uuidHash)).longValue();
+            if (Server.getInstance().getHideLoginMessage().containsKey(uuidHash)) {
+                long epoch = Server.getInstance().getHideLoginMessage().get(uuidHash);
                 if (epoch > Instant.now().getEpochSecond()) {
                     consoleOnly = true;
-                    Server.getInstance().getHideLoginMessage().put(Integer.valueOf(uuidHash), epoch + 30);
+                    Server.getInstance().getHideLoginMessage().put(uuidHash, epoch + 30);
                     System.out.println("Connection was attempted within the future epoch, adding time..");
                 } else {
-                    Server.getInstance().getHideLoginMessage().put(Integer.valueOf(uuidHash), Long.valueOf(Instant.now().getEpochSecond()) + 10);
+                    Server.getInstance().getHideLoginMessage().put(uuidHash, Instant.now().getEpochSecond() + 10);
                 }
             } else {
-                Server.getInstance().getHideLoginMessage().put(Integer.valueOf(uuidHash), Long.valueOf(Instant.now().getEpochSecond()) + 30);
+                Server.getInstance().getHideLoginMessage().put(uuidHash, Instant.now().getEpochSecond() + 30);
             }
             String rawMessage = Link$.italicGray + "Server: Disallow " + event.getName() + " '" + kickMessage + "'";
             Map<String, String> message = new MapBuilder().message(rawMessage).range(0).consoleOnly(consoleOnly).build();
             LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
             Logger.info(rawMessage, consoleOnly);
         } else {
-            if (Server.getInstance().getHideLoginMessage().containsKey(Integer.valueOf(uuidHash)))
-                Server.getInstance().getHideLoginMessage().remove(Integer.valueOf(uuidHash));
+            Server.getInstance().getHideLoginMessage().remove(uuidHash);
         }
     }
 
@@ -1236,34 +1171,27 @@ public class PlayerEventHandler implements Listener {
         Player player = event.getPlayer();
         for (NpcPlayer npc : Server.getInstance().getNpcPlayers())
             CraftGo.Packet.PlayerInfo.spawnNpc(player, npc.getWorld(), npc.getLocation(), npc.getName());
-        Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                IpLocationQuery query = CraftGo.Player.queryIpLocation(player);
-                {
-                    String rawMessage = "Defined country of " + player.getName() + ": " + query.getCountry();
-                    Map<String, String> message = new MapBuilder().message(rawMessage).range(0).consoleOnly(true).build();
-                    LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
-                    Logger.info(rawMessage, true);
-                }
-                {
-                    String rawMessage = "Defined geo-location of " + player.getName() + ": " + query.getCity() + ", " + query.getState();
-                    Map<String, String> message = new MapBuilder().message(rawMessage).range(0).consoleOnly(true).build();
-                    LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
-                    Logger.info(rawMessage, true);
-                }
+        Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), () -> {
+            IpLocationQuery query = CraftGo.Player.queryIpLocation(player);
+            {
+                String rawMessage = "Defined country of " + player.getName() + ": " + query.getCountry();
+                Map<String, String> message = new MapBuilder().message(rawMessage).range(0).consoleOnly(true).build();
+                LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+                Logger.info(rawMessage, true);
+            }
+            {
+                String rawMessage = "Defined geo-location of " + player.getName() + ": " + query.getCity() + ", " + query.getState();
+                Map<String, String> message = new MapBuilder().message(rawMessage).range(0).consoleOnly(true).build();
+                LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
+                Logger.info(rawMessage, true);
             }
         });
         CraftGo.Player.getUUID(player.getName(), false, true);
         if (Server.getInstance().getSkinStorage() != null) {
-            Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    if (!Bukkit.getOnlineMode()) {
-                        Optional<SkinModel> model = Server.getInstance().getSkinStorage().getSkinData(player, true);
-                        if (model.isPresent())
-                            Server.getInstance().getSkinStorage().getFactory(player, model.get()).applySkin();
-                    }
+            Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), () -> {
+                if (!Bukkit.getOnlineMode()) {
+                    Optional<SkinModel> model = Server.getInstance().getSkinStorage().getSkinData(player, true);
+                    model.ifPresent(skinModel -> Server.getInstance().getSkinStorage().getFactory(player, skinModel).applySkin());
                 }
             });
         }
@@ -1286,12 +1214,9 @@ public class PlayerEventHandler implements Listener {
         if (!Server.getInstance().getUseFactionsAsHub()) {
             if (player.isDead()) {
                 player.spigot().respawn();
-                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        Location hubLocation = $.getZoneLocation("hub");
-                        $.teleport(player, hubLocation);
-                    }
+                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
+                    Location hubLocation = $.getZoneLocation("hub");
+                    $.teleport(player, hubLocation);
                 }, 10L);
             } else {
                 Location hubLocation = $.getZoneLocation("hub");
@@ -1302,7 +1227,7 @@ public class PlayerEventHandler implements Listener {
         if (Server.getInstance().getProtoSupportPocketApi() == null)
             Server.getInstance().fetchLobby(player);
         player.setAllowFlight(true);
-        Server.getInstance().setLastKnownHubWorld($.getZoneLocation("hub").getWorld().getName().toString());
+        Server.getInstance().setLastKnownHubWorld($.getZoneLocation("hub").getWorld().getName());
         if ($.isCustomJoinMessageEnabled()) {
             if (Server.getInstance().getPlugin().getConfig().getBoolean("settings.bungeecord")) {
                 event.setJoinMessage(null);
@@ -1322,7 +1247,7 @@ public class PlayerEventHandler implements Listener {
                 int lastKnownWarningCt = Server.getInstance().getPlugin().getConfig().getInt("config." + player.getUniqueId().toString() + ".lastKnownWarningCt");
                 if (warningCt > lastKnownWarningCt) {
                     String[] messages = new String[warningCt - lastKnownWarningCt];
-                    ArrayList<String> quotedReasons = new ArrayList<String>();
+                    ArrayList<String> quotedReasons = new ArrayList<>();
                     for (int i = 0; i < messages.length; i++) {
                         messages[i] = Server.getInstance().getPlugin().getConfig().getString("warning." + ipAddress + "." + (i + lastKnownWarningCt + 1));
                         String quotedReason = messages[i].substring(messages[i].indexOf("\""));
@@ -1334,13 +1259,10 @@ public class PlayerEventHandler implements Listener {
                         String[] lines = messages[i].split("[\\r?\\n]+");
                         for (int l = 0; l < lines.length; l++) {
                             String line = lines[l];
-                            switch (l) {
-                                case 1:
-                                    player.sendMessage("► " + ChatColor.BOLD + line.replace("\"", ""));
-                                    break;
-                                default:
-                                    player.sendMessage(line);
-                                    break;
+                            if (l == 1) {
+                                player.sendMessage("► " + ChatColor.BOLD + line.replace("\"", ""));
+                            } else {
+                                player.sendMessage(line);
                             }
                         }
                     }
@@ -1376,104 +1298,101 @@ public class PlayerEventHandler implements Listener {
                 Bukkit.getPluginManager().callEvent(authEvent);
             }
         } else {
-            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        boolean bypass = CraftGo.Player.getOnlineMode(player);
-                        if (bypass) {
-                            Object authObject = $.getAuthenticationSuite();
-                            if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
-                                ((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
-                            } else {
-                                ((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceRegister(player, UUID.nameUUIDFromBytes(player.getName().getBytes()).toString().substring(0, 30), true);
-                            }
-                            return;
-                        }
-                        boolean dailyAuth = Server.getInstance().getPlugin().getConfig().getBoolean("settings.enable.authme.dailyAuth");
-                        boolean autoLoginCmd = Server.getInstance().getPlugin().getConfig().getBoolean("settings.enable.authme.autoLoginCmd");
+            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
+                try {
+                    boolean bypass = CraftGo.Player.getOnlineMode(player);
+                    if (bypass) {
                         Object authObject = $.getAuthenticationSuite();
-                        if (player.getName().equalsIgnoreCase("Player")) {
-                            if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
-                                ((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
-                            } else {
-                                ((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceRegister(player, "password123", true);
-                            }
+                        if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
+                            ((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
                         } else {
-                            String hostAddr = player.getAddress().getAddress().getHostAddress();
-                            Session session = Server.getInstance().getSessionManager().getStoredSession(player, hostAddr);
-                            if (!(session == null)) {
-                                long lastAccessed = session.getLastAccessed();
-                                Calendar cal = Calendar.getInstance();
-                                cal.setTimeInMillis(lastAccessed);
-                                int year = cal.get(Calendar.YEAR);
-                                int month = cal.get(Calendar.MONTH);
-                                int day = cal.get(Calendar.DAY_OF_MONTH);
-                                String message = Link$.italicGray + "Player " + player.getName() + " previously logged in on " + Link$.formatMonthIdAbbrev(month) + " " + day + Link$.formatDayOfMonthSuffix(day) + " " + year;
-                                Bukkit.broadcastMessage(message);
-                                LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
-                                Server.getInstance().getDiscordBot().broadcast(
-                                        ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-                                        , Channel.SERVER_CHAT);
-                                if (Server.getInstance().getSessionManager().verifySession(player) && dailyAuth) {
-                                    if (session.isDiscarded()) {
-                                        player.sendMessage(Link$.italicGray + "Your session was invalidated, please login to your account again.");
-                                    } else {
-                                        try {
-                                            if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
-                                                ((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
-                                                Server.getInstance().fetchLobby(player);
-                                            }
-                                            return;
-                                        } catch (Exception ex) {
-                                            ex.printStackTrace();
-                                            Server.getInstance().getAuthListener().onPlayerAuth(new fr.xephi.authme.events.LoginEvent(player));
-                                        }
-                                    }
-                                }
-                            }
-                            if (!Server.getInstance().getPlugin().getConfig().contains("config." + player.getUniqueId().toString())) {
-                                String message = Link$.italicGray + "Player " + player.getName() + " has yet to register for the server";
-                                Bukkit.broadcastMessage(message);
-                                LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
-                                Server.getInstance().getDiscordBot().broadcast(
-                                        ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-                                        , Channel.SERVER_CHAT);
-                            }
-                            if (Server.getInstance().getSessionManager().getStoredSession(player, hostAddr) == null) {
-                                String message = Link$.italicGray + "Player " + player.getName() + " has yet to register new session";
-                                Bukkit.broadcastMessage(message);
-                                LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
-                                Server.getInstance().getDiscordBot().broadcast(
-                                        ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
-                                        , Channel.SERVER_CHAT);
-                            }
-                            if (!dailyAuth && autoLoginCmd) {
-                                String ip = player.getAddress().getAddress().getHostAddress().replace(".", "x");
-                                if (Server.getInstance().getPlugin().getConfig().contains("autologin." + ip + "." + player.getUniqueId().toString())) {
-                                    String password = Server.getInstance().getPlugin().getConfig().getString("autologin." + ip + "." + player.getUniqueId().toString());
-                                    boolean isCorrectPassword = false;
-                                    if (!(authObject == null)) {
-                                        isCorrectPassword = ((fr.xephi.authme.api.v3.AuthMeApi) authObject).checkPassword(player.getName(), password);
-                                    }
-                                    if (isCorrectPassword) {
-                                        ((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
-                                        Server.getInstance().fetchLobby(player);
-                                        return;
-                                    } else {
-                                        Server.getInstance().getPlugin().getConfig().set("autologin." + ip + "." + player.getUniqueId().toString(), null);
-                                    }
-                                }
-                            }
+                            ((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceRegister(player, UUID.nameUUIDFromBytes(player.getName().getBytes()).toString().substring(0, 30), true);
                         }
-                        if (!(Server.getInstance().getProtoSupportPocketApi() == null)) {
-                            Server.getInstance().getProtoSupportPocketApi().onLogin(event);
-                        } else {
-                            Server.getInstance().fetchLobby(player);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                        return;
                     }
+                    boolean dailyAuth = Server.getInstance().getPlugin().getConfig().getBoolean("settings.enable.authme.dailyAuth");
+                    boolean autoLoginCmd = Server.getInstance().getPlugin().getConfig().getBoolean("settings.enable.authme.autoLoginCmd");
+                    Object authObject = $.getAuthenticationSuite();
+                    if (player.getName().equalsIgnoreCase("Player")) {
+                        if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
+                            ((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
+                        } else {
+                            ((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceRegister(player, "password123", true);
+                        }
+                    } else {
+                        String hostAddr = player.getAddress().getAddress().getHostAddress();
+                        Session session = Server.getInstance().getSessionManager().getStoredSession(player, hostAddr);
+                        if (!(session == null)) {
+                            long lastAccessed = session.getLastAccessed();
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTimeInMillis(lastAccessed);
+                            int year = cal.get(Calendar.YEAR);
+                            int month = cal.get(Calendar.MONTH);
+                            int day = cal.get(Calendar.DAY_OF_MONTH);
+                            String message = Link$.italicGray + "Player " + player.getName() + " previously logged in on " + Link$.formatMonthIdAbbrev(month) + " " + day + Link$.formatDayOfMonthSuffix(day) + " " + year;
+                            Bukkit.broadcastMessage(message);
+                            LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+                            Server.getInstance().getDiscordBot().broadcast(
+                                    ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+                                    , Channel.SERVER_CHAT);
+                            if (Server.getInstance().getSessionManager().verifySession(player) && dailyAuth) {
+                                if (session.isDiscarded()) {
+                                    player.sendMessage(Link$.italicGray + "Your session was invalidated, please login to your account again.");
+                                } else {
+                                    try {
+                                        if (((fr.xephi.authme.api.v3.AuthMeApi) authObject).isRegistered(player.getName())) {
+                                            ((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
+                                            Server.getInstance().fetchLobby(player);
+                                        }
+                                        return;
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                        Server.getInstance().getAuthListener().onPlayerAuth(new fr.xephi.authme.events.LoginEvent(player));
+                                    }
+                                }
+                            }
+                        }
+                        if (!Server.getInstance().getPlugin().getConfig().contains("config." + player.getUniqueId().toString())) {
+                            String message = Link$.italicGray + "Player " + player.getName() + " has yet to register for the server";
+                            Bukkit.broadcastMessage(message);
+                            LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+                            Server.getInstance().getDiscordBot().broadcast(
+                                    ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+                                    , Channel.SERVER_CHAT);
+                        }
+                        if (Server.getInstance().getSessionManager().getStoredSession(player, hostAddr) == null) {
+                            String message = Link$.italicGray + "Player " + player.getName() + " has yet to register new session";
+                            Bukkit.broadcastMessage(message);
+                            LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
+                            Server.getInstance().getDiscordBot().broadcast(
+                                    ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
+                                    , Channel.SERVER_CHAT);
+                        }
+                        if (!dailyAuth && autoLoginCmd) {
+                            String ip = player.getAddress().getAddress().getHostAddress().replace(".", "x");
+                            if (Server.getInstance().getPlugin().getConfig().contains("autologin." + ip + "." + player.getUniqueId().toString())) {
+                                String password = Server.getInstance().getPlugin().getConfig().getString("autologin." + ip + "." + player.getUniqueId().toString());
+                                boolean isCorrectPassword = false;
+                                if (!(authObject == null)) {
+                                    isCorrectPassword = ((fr.xephi.authme.api.v3.AuthMeApi) authObject).checkPassword(player.getName(), password);
+                                }
+                                if (isCorrectPassword) {
+                                    ((fr.xephi.authme.api.v3.AuthMeApi) authObject).forceLogin(player);
+                                    Server.getInstance().fetchLobby(player);
+                                    return;
+                                } else {
+                                    Server.getInstance().getPlugin().getConfig().set("autologin." + ip + "." + player.getUniqueId().toString(), null);
+                                }
+                            }
+                        }
+                    }
+                    if (!(Server.getInstance().getProtoSupportPocketApi() == null)) {
+                        Server.getInstance().getProtoSupportPocketApi().onLogin(event);
+                    } else {
+                        Server.getInstance().fetchLobby(player);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             }, 20);
         }
@@ -1487,15 +1406,12 @@ public class PlayerEventHandler implements Listener {
         player.setWalkSpeed(0.2F);
         player.setFlySpeed(0.1F);
         if (Server.getInstance().getSkinStorage() != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    if (!Bukkit.getOnlineMode()) {
-                        Optional<SkinModel> model = Server.getInstance().getSkinStorage().getSkinData(player, false);
-                        if (!model.isPresent())
-                            return;
-                        Server.getInstance().getSkinStorage().getFactory(player, model.get()).applySkin();
-                    }
+            Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), () -> {
+                if (!Bukkit.getOnlineMode()) {
+                    Optional<SkinModel> model = Server.getInstance().getSkinStorage().getSkinData(player, false);
+                    if (!model.isPresent())
+                        return;
+                    Server.getInstance().getSkinStorage().getFactory(player, model.get()).applySkin();
                 }
             });
         }
@@ -1543,13 +1459,9 @@ public class PlayerEventHandler implements Listener {
         }
         Server.getInstance().getPlugin().getConfig().set(path + ".ip", ipAddress);
         Server.getInstance().getPlugin().getConfig().set("address." + ipAddress + "." + player.getUniqueId().toString(), "0");
-        Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
-
-            @Override
-            public void run() {
-                if (Link$.isPrefixedRankingEnabled())
-                    Link$.flashPlayerDisplayName(player);
-            }
+        Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), () -> {
+            if (Link$.isPrefixedRankingEnabled())
+                Link$.flashPlayerDisplayName(player);
         });
         if ($.isWelcomeMessageEnabled()) {
             player.sendMessage(ChatColor.GRAY + "/ Welcome to the server " + ChatColor.RED + player.getName());
@@ -1570,17 +1482,13 @@ public class PlayerEventHandler implements Listener {
             }
         }
         if (Server.getInstance().getModeratingPlayers().containsKey(player.getUniqueId())) {
-            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-
-                @Override
-                public void run() {
-                    int rankID = Link$.getRankId(player);
-                    if (rankID > 0 || player.isOp()) {
-                        player.sendMessage(ChatColor.RED + "Notice. " + ChatColor.GRAY + "You are currently still moderating the server.");
-                    } else {
-                        if (!(player == null) && player.isOnGround())
-                            player.performCommand("moderate");
-                    }
+            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
+                int rankID = Link$.getRankId(player);
+                if (rankID > 0 || player.isOp()) {
+                    player.sendMessage(ChatColor.RED + "Notice. " + ChatColor.GRAY + "You are currently still moderating the server.");
+                } else {
+                    if (!(player == null) && player.isOnGround())
+                        player.performCommand("moderate");
                 }
             }, 10L);
         }
@@ -1589,128 +1497,111 @@ public class PlayerEventHandler implements Listener {
         CraftGo.Player.setPlayerListHeaderFooter(player, "SkorrloreGaming", "play.skorrloregaming.com");
         CraftGo.Player.sendTimedTitleAndSubtitle(player, new TitleSubtitle("SkorrloreGaming", "Welcome to our minecraft server.", 10, 40, 5));
         Bukkit.getPluginManager().callEvent(new PlayerMinigameChangeEvent(player, ServerMinigame.HUB));
-        Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                final UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + player.getName()).getBytes());
-                String offlinePath = "config." + offlineUUID.toString();
-                String onlineUUID = null;
-                if (!Bukkit.getServer().getOnlineMode()) {
-                    onlineUUID = CraftGo.Player.getUUID(player.getName(), true);
-                    if (onlineUUID == null)
-                        return;
+        Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), () -> {
+            final UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + player.getName()).getBytes());
+            String offlinePath = "config." + offlineUUID.toString();
+            String onlineUUID = null;
+            if (!Bukkit.getServer().getOnlineMode()) {
+                onlineUUID = CraftGo.Player.getUUID(player.getName(), true);
+                if (onlineUUID == null)
+                    return;
+            }
+            final String fOnlineUUID = onlineUUID;
+            String onlinePath = null;
+            if (!(onlineUUID == null))
+                onlinePath = "config." + onlineUUID;
+            if (!path.equals(offlinePath) && Server.getInstance().getPlugin().getConfig().contains(offlinePath)) {
+                Set<String> array = Server.getInstance().getPlugin().getConfig().getConfigurationSection(offlinePath).getKeys(true);
+                for (String value : array) {
+                    String valuePath = "config." + player.getUniqueId().toString() + "." + value;
+                    String offlineValuePath = offlinePath + "." + value;
+                    Server.getInstance().getPlugin().getConfig().set(valuePath, Server.getInstance().getPlugin().getConfig().get(offlineValuePath));
                 }
-                final String fOnlineUUID = onlineUUID;
-                String onlinePath = null;
-                if (!(onlineUUID == null))
-                    onlinePath = "config." + onlineUUID.toString();
-                if (!path.equals(offlinePath) && Server.getInstance().getPlugin().getConfig().contains(offlinePath)) {
-                    Set<String> array = Server.getInstance().getPlugin().getConfig().getConfigurationSection(offlinePath).getKeys(true);
-                    for (String value : array) {
-                        String valuePath = "config." + player.getUniqueId().toString() + "." + value;
-                        String offlineValuePath = offlinePath + "." + value;
-                        Server.getInstance().getPlugin().getConfig().set(valuePath, Server.getInstance().getPlugin().getConfig().get(offlineValuePath));
+                Server.getInstance().getPlugin().getConfig().set(offlinePath, null);
+            }
+            if (path.equals(offlinePath) && !(onlinePath == null) && Server.getInstance().getPlugin().getConfig().contains(onlinePath)) {
+                Set<String> array = Server.getInstance().getPlugin().getConfig().getConfigurationSection(onlinePath).getKeys(true);
+                for (String value : array) {
+                    String valuePath = "config." + player.getUniqueId().toString() + "." + value;
+                    String onlineValuePath = onlinePath + "." + value;
+                    Server.getInstance().getPlugin().getConfig().set(valuePath, Server.getInstance().getPlugin().getConfig().get(onlineValuePath));
+                }
+                Server.getInstance().getPlugin().getConfig().set(onlinePath, null);
+            }
+            String uuid = offlineUUID.toString();
+            if (!Bukkit.getOnlineMode())
+                uuid = onlineUUID;
+            final String fUUID = uuid;
+            Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), () -> {
+                if (LinkServer.getInstance().getRedisDatabase().contains("playtime.total", fUUID)) {
+                    for (int day = 0; day <= 365; day++) {
+                        if (LinkServer.getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, fUUID)) {
+                            String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.dayOfYear." + day, fUUID);
+                            LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
+                            LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, fUUID, null);
+                        }
                     }
-                    Server.getInstance().getPlugin().getConfig().set(offlinePath, null);
-                }
-                if (path.equals(offlinePath) && !(onlinePath == null) && Server.getInstance().getPlugin().getConfig().contains(onlinePath)) {
-                    Set<String> array = Server.getInstance().getPlugin().getConfig().getConfigurationSection(onlinePath).getKeys(true);
-                    for (String value : array) {
-                        String valuePath = "config." + player.getUniqueId().toString() + "." + value;
-                        String onlineValuePath = onlinePath + "." + value;
-                        Server.getInstance().getPlugin().getConfig().set(valuePath, Server.getInstance().getPlugin().getConfig().get(onlineValuePath));
+                    {
+                        String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.total", fUUID);
+                        LinkServer.getInstance().getRedisDatabase().set("playtime.total", player.getUniqueId().toString(), value);
+                        LinkServer.getInstance().getRedisDatabase().set("playtime.total", fUUID, null);
                     }
-                    Server.getInstance().getPlugin().getConfig().set(onlinePath, null);
+                    {
+                        String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.lastKnownDayOfYear", fUUID);
+                        LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
+                        LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", fUUID, null);
+                    }
                 }
-                String uuid = offlineUUID.toString();
-                if (!Bukkit.getOnlineMode())
-                    uuid = onlineUUID;
-                final String fUUID = uuid;
-                Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
+                if (Server.getInstance().getSurvivalConfig().getData().contains("homes." + fUUID)) {
+                    Set<String> array1 = Server.getInstance().getSurvivalConfig().getData().getConfigurationSection("homes." + fUUID).getKeys(true);
+                    for (String value : array1) {
+                        String valuePath = "homes." + player.getUniqueId().toString() + "." + value;
+                        String oldValuePath = "homes." + fUUID + "." + value;
+                        Server.getInstance().getSurvivalConfig().getData().set(valuePath, Server.getInstance().getSurvivalConfig().getData().get(oldValuePath));
+                    }
+                    Server.getInstance().getSurvivalConfig().getData().set("homes." + fUUID, null);
+                    Server.getInstance().getSurvivalConfig().saveData();
+                }
+                if (Server.getInstance().getFactionsConfig().getData().contains("homes." + fUUID)) {
+                    Set<String> array1 = Server.getInstance().getFactionsConfig().getData().getConfigurationSection("homes." + fUUID).getKeys(true);
+                    for (String value : array1) {
+                        String valuePath = "homes." + player.getUniqueId().toString() + "." + value;
+                        String oldValuePath = "homes." + fUUID + "." + value;
+                        Server.getInstance().getFactionsConfig().getData().set(valuePath, Server.getInstance().getFactionsConfig().getData().get(oldValuePath));
+                    }
+                    Server.getInstance().getFactionsConfig().getData().set("homes." + fUUID, null);
+                    Server.getInstance().getFactionsConfig().saveData();
+                }
+                for (String storageMinigame : $.validStorageMinigames) {
+                    if (Bukkit.getServer().getOnlineMode()) {
+                        if (SolidStorage.dataOfflineModeToOnlineMode(player, storageMinigame)) {
+                            Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), () -> player.performCommand("hub -nosave"));
+                        }
+                    } else {
+                        if (SolidStorage.dataOnlineModeToOfflineMode(player, storageMinigame, fOnlineUUID)) {
+                            Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), () -> player.performCommand("hub -nosave"));
+                        }
+                    }
+                }
+            });
 
-                    @Override
-                    public void run() {
-                        if (LinkServer.getInstance().getRedisDatabase().contains("playtime.total", fUUID)) {
-                            for (int day = 0; day <= 365; day++) {
-                                if (LinkServer.getInstance().getRedisDatabase().contains("playtime.dayOfYear." + day, fUUID)) {
-                                    String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.dayOfYear." + day, fUUID);
-                                    LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, player.getUniqueId().toString(), value);
-                                    LinkServer.getInstance().getRedisDatabase().set("playtime.dayOfYear." + day, fUUID, null);
-                                }
-                            }
-                            {
-                                String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.total", fUUID);
-                                LinkServer.getInstance().getRedisDatabase().set("playtime.total", player.getUniqueId().toString(), value);
-                                LinkServer.getInstance().getRedisDatabase().set("playtime.total", fUUID, null);
-                            }
-                            {
-                                String value = LinkServer.getInstance().getRedisDatabase().getString("playtime.lastKnownDayOfYear", fUUID);
-                                LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", player.getUniqueId().toString(), value);
-                                LinkServer.getInstance().getRedisDatabase().set("playtime.lastKnownDayOfYear", fUUID, null);
-                            }
-                        }
-                        if (Server.getInstance().getSurvivalConfig().getData().contains("homes." + fUUID)) {
-                            Set<String> array1 = Server.getInstance().getSurvivalConfig().getData().getConfigurationSection("homes." + fUUID).getKeys(true);
-                            for (String value : array1) {
-                                String valuePath = "homes." + player.getUniqueId().toString() + "." + value;
-                                String oldValuePath = "homes." + fUUID + "." + value;
-                                Server.getInstance().getSurvivalConfig().getData().set(valuePath, Server.getInstance().getSurvivalConfig().getData().get(oldValuePath));
-                            }
-                            Server.getInstance().getSurvivalConfig().getData().set("homes." + fUUID, null);
-                            Server.getInstance().getSurvivalConfig().saveData();
-                        }
-                        if (Server.getInstance().getFactionsConfig().getData().contains("homes." + fUUID)) {
-                            Set<String> array1 = Server.getInstance().getFactionsConfig().getData().getConfigurationSection("homes." + fUUID).getKeys(true);
-                            for (String value : array1) {
-                                String valuePath = "homes." + player.getUniqueId().toString() + "." + value;
-                                String oldValuePath = "homes." + fUUID + "." + value;
-                                Server.getInstance().getFactionsConfig().getData().set(valuePath, Server.getInstance().getFactionsConfig().getData().get(oldValuePath));
-                            }
-                            Server.getInstance().getFactionsConfig().getData().set("homes." + fUUID, null);
-                            Server.getInstance().getFactionsConfig().saveData();
-                        }
-                        for (String storageMinigame : $.validStorageMinigames) {
-                            if (Bukkit.getServer().getOnlineMode()) {
-                                if (SolidStorage.dataOfflineModeToOnlineMode(player, storageMinigame)) {
-                                    Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            player.performCommand("hub -nosave");
-                                        }
-                                    });
-                                }
-                            } else {
-                                if (SolidStorage.dataOnlineModeToOfflineMode(player, storageMinigame, fOnlineUUID)) {
-                                    Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            player.performCommand("hub -nosave");
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    }
-                });
-
-                String[] rawNameChanges = null;
-                if (Bukkit.getOnlineMode()) {
-                    rawNameChanges = CraftGo.Player.getNameHistory(player.getUniqueId().toString());
-                } else {
-                    rawNameChanges = CraftGo.Player.getNameHistory(uuid);
-                }
-                if (!(rawNameChanges == null)) {
-                    List<String> nameChangeHistory = Arrays.asList(rawNameChanges);
-                    for (String uuid2 : Server.getInstance().getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
-                        if (Server.getInstance().getPlugin().getConfig().contains("config." + uuid2 + ".username")) {
-                            if (!Server.getInstance().getPlugin().getConfig().contains("denyDataTransfer." + uuid2)) {
-                                String username = Server.getInstance().getPlugin().getConfig().getString("config." + uuid2 + ".username");
-                                if (!username.equals(player.getName())) {
-                                    if (nameChangeHistory.contains(username)) {
-                                        Server.getInstance().getTransferAcceptPlayers().put(player.getUniqueId(), new SwitchUUIDString(UUID.fromString(uuid2), username));
-                                        player.sendMessage(Link$.modernMsgPrefix + "Data from your old username, " + username + ", is ready to be transferred into your current username. This will overwrite all data on your current username. If you changed your name since the last time you played, this is normal and won't damage anything if you accept. Type /tfaccept to accept and transfer the data under your old username, or type /tfdeny to clear the data under the old username and stop future notifications like this.");
-                                        break;
-                                    }
+            String[] rawNameChanges;
+            if (Bukkit.getOnlineMode()) {
+                rawNameChanges = CraftGo.Player.getNameHistory(player.getUniqueId().toString());
+            } else {
+                rawNameChanges = CraftGo.Player.getNameHistory(uuid);
+            }
+            if (!(rawNameChanges == null)) {
+                List<String> nameChangeHistory = Arrays.asList(rawNameChanges);
+                for (String uuid2 : Server.getInstance().getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
+                    if (Server.getInstance().getPlugin().getConfig().contains("config." + uuid2 + ".username")) {
+                        if (!Server.getInstance().getPlugin().getConfig().contains("denyDataTransfer." + uuid2)) {
+                            String username = Server.getInstance().getPlugin().getConfig().getString("config." + uuid2 + ".username");
+                            if (!username.equals(player.getName())) {
+                                if (nameChangeHistory.contains(username)) {
+                                    Server.getInstance().getTransferAcceptPlayers().put(player.getUniqueId(), new SwitchUUIDString(UUID.fromString(uuid2), username));
+                                    player.sendMessage(Link$.modernMsgPrefix + "Data from your old username, " + username + ", is ready to be transferred into your current username. This will overwrite all data on your current username. If you changed your name since the last time you played, this is normal and won't damage anything if you accept. Type /tfaccept to accept and transfer the data under your old username, or type /tfdeny to clear the data under the old username and stop future notifications like this.");
+                                    break;
                                 }
                             }
                         }
@@ -1732,8 +1623,7 @@ public class PlayerEventHandler implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (Server.getInstance().getWaiverAcceptPlayers().contains(player.getUniqueId()))
-            Server.getInstance().getWaiverAcceptPlayers().remove(player.getUniqueId());
+        Server.getInstance().getWaiverAcceptPlayers().remove(player.getUniqueId());
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (!onlinePlayer.getName().equals(player.getName())) {
                 onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.ENTITY_CHICKEN_EGG, 1, 1);
@@ -1787,12 +1677,8 @@ public class PlayerEventHandler implements Listener {
             player.setOp(false);
             Server.getInstance().getOpmePlayers().remove(player.getUniqueId());
         }
-        if (Server.getInstance().getTransferAcceptPlayers().containsKey(player.getUniqueId())) {
-            Server.getInstance().getTransferAcceptPlayers().remove(player.getUniqueId());
-        }
-        if (Server.getInstance().getHubScoreboardTitleIndex().containsKey(player.getUniqueId())) {
-            Server.getInstance().getHubScoreboardTitleIndex().remove(player.getUniqueId());
-        }
+        Server.getInstance().getTransferAcceptPlayers().remove(player.getUniqueId());
+        Server.getInstance().getHubScoreboardTitleIndex().remove(player.getUniqueId());
         Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
         Server.getInstance().performBuggedLeave(player, false, false);
         if (Server.getInstance().getUseFactionsAsHub()) {
@@ -1826,13 +1712,11 @@ public class PlayerEventHandler implements Listener {
                 }
             }
         }
-        if (Server.getInstance().getHubScoreboardTitleIndex().containsKey(player.getUniqueId()))
-            Server.getInstance().getHubScoreboardTitleIndex().remove(player.getUniqueId());
+        Server.getInstance().getHubScoreboardTitleIndex().remove(player.getUniqueId());
         for (Player op : Bukkit.getOnlinePlayers())
             if (Server.getInstance().getSkyfight().containsKey(op.getUniqueId()))
                 $.Skyfight.refreshScoreboard(op, false);
-        if (Server.getInstance().getOnlineMode().containsKey(player.getUniqueId()))
-            Server.getInstance().getOnlineMode().remove(player.getUniqueId());
+        Server.getInstance().getOnlineMode().remove(player.getUniqueId());
     }
 
     @EventHandler
@@ -1845,7 +1729,7 @@ public class PlayerEventHandler implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = (Player) event.getEntity();
+        Player player = event.getEntity();
         CraftGo.Player.clearArrowsInBody(player);
         String subDomain = $.getMinigameDomain(player);
         String tag = $.getMinigameTag(subDomain);
@@ -1855,7 +1739,7 @@ public class PlayerEventHandler implements Listener {
         }
         {
             String message = event.getDeathMessage().replace(player.getName(), ChatColor.RED + player.getName() + ChatColor.GRAY);
-            boolean playerKiller = true;
+            boolean playerKiller;
             Player k = null;
             if (event.getEntity().getKiller() instanceof Arrow) {
                 ProjectileSource source = ((Arrow) event.getEntity().getKiller()).getShooter();
@@ -1867,7 +1751,7 @@ public class PlayerEventHandler implements Listener {
                 }
             } else if (event.getEntity().getKiller() instanceof Player) {
                 playerKiller = true;
-                k = (Player) event.getEntity().getKiller();
+                k = event.getEntity().getKiller();
             } else {
                 playerKiller = false;
             }
@@ -1891,12 +1775,7 @@ public class PlayerEventHandler implements Listener {
             event.setDeathMessage(tag + message);
             if (playerKiller) {
                 player.setVelocity(new Vector(0, 0, 0));
-                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        player.spigot().respawn();
-                    }
-                }, 10L);
+                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> player.spigot().respawn(), 10L);
             }
         }
         try {
@@ -1918,7 +1797,7 @@ public class PlayerEventHandler implements Listener {
                         return;
                     }
                 } else if (event.getEntity().getKiller() instanceof Player) {
-                    k = (Player) event.getEntity().getKiller();
+                    k = event.getEntity().getKiller();
                 } else {
                     String discordMsg = event.getDeathMessage().substring(tag.length()).replace(ChatColor.RED + "", "**")
                             .replace(ChatColor.GRAY + "", "**").replace(ChatColor.DARK_RED + "", "");
@@ -1928,8 +1807,8 @@ public class PlayerEventHandler implements Listener {
                 }
                 double baseHealth = $.roundDouble(k.getHealth() / 2, 1);
                 event.setDeathMessage(tag + ChatColor.RED + player.getName() + ChatColor.GRAY + " has been killed by " + ChatColor.RED + k.getName() + ChatColor.GRAY + " [" + ChatColor.RED + baseHealth + ChatColor.DARK_RED + " \u2764" + ChatColor.GRAY + "]");
-                int supplyCash = 10;
-                int currentPlayerKills = 0, currentPlayerDeaths = 0;
+                int supplyCash;
+                int currentPlayerKills = 0, currentPlayerDeaths;
                 if (subDomain.equals("kitpvp")) {
                     currentPlayerKills = $.Kitpvp.getPlayerKills(k);
                     $.Kitpvp.setPlayerKills(k, currentPlayerKills + 1);
@@ -2057,11 +1936,11 @@ public class PlayerEventHandler implements Listener {
                             if (state instanceof Sign) {
                                 Sign sign = (Sign) state;
                                 if (ChatColor.stripColor(sign.getLine(0)).equals("Sell")) {
-                                    material = Material.getMaterial(String.valueOf(sign.getLine(1)).replace(" ", "_").toUpperCase().split(":")[0]);
+                                    material = Material.getMaterial(sign.getLine(1).replace(" ", "_").toUpperCase().split(":")[0]);
                                     amount = event.getCurrentItem().getAmount();
                                     data = 0;
                                     try {
-                                        data = Integer.parseInt(String.valueOf(sign.getLine(1)).split(":")[1]);
+                                        data = Integer.parseInt(sign.getLine(1).split(":")[1]);
                                     } catch (Exception ig) {
                                     }
                                 }
@@ -2138,12 +2017,7 @@ public class PlayerEventHandler implements Listener {
                                         Server.getInstance().getShoppeConfig().getData().set(prefix + "enchant." + index, null);
                                         Server.getInstance().getShoppeConfig().saveData();
                                         final boolean fRemoveMode = removeMode;
-                                        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Server.getInstance().getShoppe().createInventory(player, LaShoppeFrame.HOME, page, fRemoveMode);
-                                            }
-                                        }, 1L);
+                                        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getShoppe().createInventory(player, LaShoppeFrame.HOME, page, fRemoveMode), 1L);
                                     }
                                 }
                                 if (event.isRightClick()) {
@@ -2154,7 +2028,7 @@ public class PlayerEventHandler implements Listener {
                                         double cash = EconManager.retrieveCash(player, subDomain);
                                         ItemStack currentItem = player.getInventory().getItemInMainHand();
                                         String tag = $.getMinigameTag(player);
-                                        String enchantName = Link$.formatEnchantment(String.valueOf(enchant.getEnchantment().getKey().getKey().trim()), tier);
+                                        String enchantName = Link$.formatEnchantment(enchant.getEnchantment().getKey().getKey().trim(), tier);
                                         price *= currentItem.getAmount();
                                         if (cash >= price) {
                                             if (currentItem.getType() == Material.AIR || currentItem == null || currentItem.getType() == null) {
@@ -2207,12 +2081,7 @@ public class PlayerEventHandler implements Listener {
                                         Server.getInstance().getShoppeConfig().getData().set(prefix + "items." + index, null);
                                         Server.getInstance().getShoppeConfig().saveData();
                                         final boolean fRemoveMode = removeMode;
-                                        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Server.getInstance().getShoppe().createInventory(player, LaShoppeFrame.HOME, page, fRemoveMode);
-                                            }
-                                        }, 1L);
+                                        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getShoppe().createInventory(player, LaShoppeFrame.HOME, page, fRemoveMode), 1L);
                                     }
                                 }
                                 if (event.isLeftClick()) {
@@ -2222,17 +2091,9 @@ public class PlayerEventHandler implements Listener {
                                 } else if (event.isRightClick()) {
                                     String inventoryName = Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.BUY_ITEM);
                                     ItemStack purchaseItem = new ItemStack(event.getCurrentItem().getType(), amount, (short) data);
-                                    try {
-                                        new AnvilGUI(player, inventoryName, new BuyItemAmountEventHandler(Server.getInstance().getShoppe(), player, purchaseItem, data, price / amount))
-                                                .setInputName("Enter type")
-                                                .open();
-                                    } catch (IllegalAccessException e) {
-                                        e.printStackTrace();
-                                    } catch (InvocationTargetException e) {
-                                        e.printStackTrace();
-                                    } catch (InstantiationException e) {
-                                        e.printStackTrace();
-                                    }
+                                    new AnvilGUI(player, inventoryName, new BuyItemAmountEventHandler(Server.getInstance().getShoppe(), player, purchaseItem, data, price / amount))
+                                            .setInputName("Enter type")
+                                            .open();
                                 }
                             }
                         }
@@ -2299,13 +2160,13 @@ public class PlayerEventHandler implements Listener {
                             TrailsCmd.openTrailManagementInventory(player);
                         } else if (item.getType() == Material.LEATHER_BOOTS) {
                             int trailType = -1;
-                            if (String.valueOf(meta.getDisplayName()).contains("Smoke")) {
+                            if (meta.getDisplayName().contains("Smoke")) {
                                 trailType = 0;
-                            } else if (String.valueOf(meta.getDisplayName()).contains("Emerald")) {
+                            } else if (meta.getDisplayName().contains("Emerald")) {
                                 trailType = 1;
-                            } else if (String.valueOf(meta.getDisplayName()).contains("Redstone")) {
+                            } else if (meta.getDisplayName().contains("Redstone")) {
                                 trailType = 2;
-                            } else if (String.valueOf(meta.getDisplayName()).contains("Enchanting")) {
+                            } else if (meta.getDisplayName().contains("Enchanting")) {
                                 trailType = 3;
                             }
                             Server.getInstance().getPlugin().getConfig().set(path + ".trails.selectedTrail", trailType + "");
@@ -2409,7 +2270,7 @@ public class PlayerEventHandler implements Listener {
                                     player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
                                 }
                             } else if (meta.getDisplayName().contains("Select preferred weapon")) {
-                                int type = -1;
+                                int type;
                                 if (item.getType() == Material.STONE_AXE || item.getType() == Material.IRON_AXE) {
                                     type = 0;
                                 } else {
@@ -2456,36 +2317,36 @@ public class PlayerEventHandler implements Listener {
                 String domain = $.getMinigameDomain(player);
                 String tag = $.getMinigameTag(player);
                 EntityType entityType = CraftGo.MobSpawner.getStoredSpawnerItemEntityType(event.getCurrentItem());
-                int price = 0;
+                int price;
                 double cash = EconManager.retrieveCash(player, domain);
                 int amount = 1;
                 switch (entityType) {
                     case SKELETON:
-                        price = Server.getInstance().getSpawnerPrices().get(0).intValue();
+                        price = Server.getInstance().getSpawnerPrices().get(0);
                         break;
                     case ZOMBIE:
-                        price = Server.getInstance().getSpawnerPrices().get(1).intValue();
+                        price = Server.getInstance().getSpawnerPrices().get(1);
                         break;
                     case SPIDER:
-                        price = Server.getInstance().getSpawnerPrices().get(2).intValue();
+                        price = Server.getInstance().getSpawnerPrices().get(2);
                         break;
                     case BLAZE:
-                        price = Server.getInstance().getSpawnerPrices().get(3).intValue();
+                        price = Server.getInstance().getSpawnerPrices().get(3);
                         break;
                     case CREEPER:
-                        price = Server.getInstance().getSpawnerPrices().get(4).intValue();
+                        price = Server.getInstance().getSpawnerPrices().get(4);
                         break;
                     case IRON_GOLEM:
-                        price = Server.getInstance().getSpawnerPrices().get(5).intValue();
+                        price = Server.getInstance().getSpawnerPrices().get(5);
                         break;
                     case COW:
-                        price = Server.getInstance().getSpawnerPrices().get(6).intValue();
+                        price = Server.getInstance().getSpawnerPrices().get(6);
                         break;
                     case PIG:
-                        price = Server.getInstance().getSpawnerPrices().get(7).intValue();
+                        price = Server.getInstance().getSpawnerPrices().get(7);
                         break;
                     case CHICKEN:
-                        price = Server.getInstance().getSpawnerPrices().get(8).intValue();
+                        price = Server.getInstance().getSpawnerPrices().get(8);
                         break;
                     default:
                         player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1, 1);
@@ -2604,7 +2465,7 @@ public class PlayerEventHandler implements Listener {
                 double totalWorth = 0.0;
                 for (ItemStack itm : event.getInventory().getContents()) {
                     if (!(itm == null)) {
-                        double singleItemWorth = 0.0;
+                        double singleItemWorth;
                         if ((singleItemWorth = EconManager.getWorth(itm.getType(), minigame)) > 0.0)
                             totalWorth += singleItemWorth * itm.getAmount();
                     }
@@ -2632,12 +2493,12 @@ public class PlayerEventHandler implements Listener {
                         if (state instanceof Sign) {
                             Sign sign = (Sign) state;
                             if (ChatColor.stripColor(sign.getLine(0)).equals("Sell")) {
-                                material = Material.getMaterial(String.valueOf(sign.getLine(1)).replace(" ", "_").toUpperCase().split(":")[0]);
-                                amount = Integer.parseInt(String.valueOf(sign.getLine(3)));
-                                price = Integer.parseInt(String.valueOf(sign.getLine(2).replace("$", "").replace(",", "")));
+                                material = Material.getMaterial(sign.getLine(1).replace(" ", "_").toUpperCase().split(":")[0]);
+                                amount = Integer.parseInt(sign.getLine(3));
+                                price = Integer.parseInt(sign.getLine(2).replace("$", "").replace(",", ""));
                                 data = 0;
                                 try {
-                                    data = Integer.parseInt(String.valueOf(sign.getLine(1)).split(":")[1]);
+                                    data = Integer.parseInt(sign.getLine(1).split(":")[1]);
                                 } catch (Exception ig) {
                                 }
                             }
@@ -2680,9 +2541,7 @@ public class PlayerEventHandler implements Listener {
                     player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Sold " + ChatColor.RED + materialName + " x" + totalAmount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(totalPrice));
                 }
                 if (virtualShop)
-                    Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
-                        Server.getInstance().getShoppe().createInventory(player, LaShoppeFrame.HOME, 1, false);
-                    }, 2L);
+                    Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getShoppe().createInventory(player, LaShoppeFrame.HOME, 1, false), 2L);
             }
         if (event.getInventory().getHolder() instanceof InventoryMenu)
             if (((InventoryMenu) event.getInventory().getHolder()).getName().equals(InventoryType.CHEST)) {
@@ -2830,12 +2689,9 @@ public class PlayerEventHandler implements Listener {
         Player player = event.getPlayer();
         if (Server.getInstance().getSkyfight().containsKey(player.getUniqueId()))
             Server.getInstance().enterSkyfight(player, false, false);
-        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                for (Player op : Bukkit.getOnlinePlayers()) {
-                    $.Scoreboard.configureHealth(op);
-                }
+        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
+            for (Player op : Bukkit.getOnlinePlayers()) {
+                $.Scoreboard.configureHealth(op);
             }
         }, 20L);
     }
@@ -2882,12 +2738,9 @@ public class PlayerEventHandler implements Listener {
                 }
             }
         }
-        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                for (Player op : Bukkit.getOnlinePlayers()) {
-                    $.Scoreboard.configureHealth(op);
-                }
+        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
+            for (Player op : Bukkit.getOnlinePlayers()) {
+                $.Scoreboard.configureHealth(op);
             }
         }, 5L);
     }
@@ -2953,7 +2806,7 @@ public class PlayerEventHandler implements Listener {
                 default:
                     break;
             }
-            boolean isPlayerInHub = false;
+            boolean isPlayerInHub;
             if (isPlayerInHub = Server.getInstance().getHub().contains(player.getUniqueId()) || Server.getInstance().getSkyfight().containsKey(player.getUniqueId())) {
                 if (isPlayerInHub || Server.getInstance().getFactions().contains(player.getUniqueId())) {
                     if (Server.getInstance().getFactions().contains(player.getUniqueId()) && !Server.getInstance().getUseFactionsAsHub())
@@ -2979,12 +2832,7 @@ public class PlayerEventHandler implements Listener {
                                     if (player.getLocation().distance(portal) < 10) {
                                         if (!Server.getInstance().getDelayedTasks().contains(player.getUniqueId())) {
                                             Server.getInstance().getDelayedTasks().add(player.getUniqueId());
-                                            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    Server.getInstance().getDelayedTasks().remove(player.getUniqueId());
-                                                }
-                                            }, 20L);
+                                            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getDelayedTasks().remove(player.getUniqueId()), 20L);
                                             switch (minigame) {
                                                 case "factions":
                                                     if ($.isMinigameEnabled(ServerMinigame.FACTIONS)) {
@@ -3065,12 +2913,7 @@ public class PlayerEventHandler implements Listener {
                     if (player.getHealth() < 5 || (player.getLocation().getBlockY() < 5 && player.getGameMode() == GameMode.SURVIVAL)) {
                         if (!Server.getInstance().getDelayedTasks().contains(player.getUniqueId())) {
                             Server.getInstance().getDelayedTasks().add(player.getUniqueId());
-                            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                                @Override
-                                public void run() {
-                                    Server.getInstance().getDelayedTasks().remove(player.getUniqueId());
-                                }
-                            }, 20L);
+                            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getDelayedTasks().remove(player.getUniqueId()), 20L);
                             Server.getInstance().getSkyfight().get(player.getUniqueId()).getTag().setDamagee(null);
                             Server.getInstance().getSkyfight().get(player.getUniqueId()).setScore(0);
                             Server.getInstance().enterSkyfight(player, false, false);
@@ -3112,7 +2955,6 @@ public class PlayerEventHandler implements Listener {
                         LinkServer.getInstance().getAntiCheat().handleVelocity(player, vec);
                     }
                 }
-                return;
             }
         }
     }
@@ -3176,7 +3018,7 @@ public class PlayerEventHandler implements Listener {
             player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Our buycraft: " + ChatColor.RED + "https://shop.skorrloregaming.com/");
             event.setCancelled(true);
         } else if (label.equalsIgnoreCase("/plugins") || label.equalsIgnoreCase("/pl")) {
-            List<Plugin> plugins = new LinkedList<Plugin>(Arrays.asList(Bukkit.getPluginManager().getPlugins()));
+            List<Plugin> plugins = new LinkedList<>(Arrays.asList(Bukkit.getPluginManager().getPlugins()));
             if (!player.hasPermission("bukkit.command.plugins") || Link$.getRankId(player) < 0) {
                 if (CraftGo.Player.getOnlineMode(player))
                     if (Link$.isPluginEnabled("AuthMe"))
@@ -3191,9 +3033,9 @@ public class PlayerEventHandler implements Listener {
             StringBuilder sb = new StringBuilder(Link$.Legacy.tag + "Plugins (" + plugins.size() + "): ");
             for (Plugin plugin : plugins) {
                 if (plugin.isEnabled()) {
-                    sb.append(ChatColor.GREEN + plugin.getName() + ChatColor.WHITE + ", ");
+                    sb.append(ChatColor.GREEN).append(plugin.getName()).append(ChatColor.WHITE).append(", ");
                 } else {
-                    sb.append(ChatColor.RED + plugin.getName() + ChatColor.WHITE + ", ");
+                    sb.append(ChatColor.RED).append(plugin.getName()).append(ChatColor.WHITE).append(", ");
                 }
             }
             String message = sb.toString();

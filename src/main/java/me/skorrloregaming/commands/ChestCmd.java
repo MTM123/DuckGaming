@@ -29,8 +29,7 @@ public class ChestCmd implements CommandExecutor {
             return true;
         }
         String subDomain = $.getMinigameDomain(player);
-        if (Server.getInstance().getSaveOtherInventory().containsKey(player))
-            Server.getInstance().getSaveOtherInventory().remove(player);
+        Server.getInstance().getSaveOtherInventory().remove(player);
         int chestNumber = 1;
         if (args.length > 0) {
             try {

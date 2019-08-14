@@ -7,8 +7,6 @@ import me.skorrloregaming.shop.LaShoppeFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class CreateItemTypeEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
     private LaShoppe shoppe;
@@ -20,7 +18,7 @@ public class CreateItemTypeEventHandler implements AnvilGUI.AnvilClickEventHandl
     @Override
     public void onAnvilClick(AnvilGUI.AnvilClickEvent event) {
         String materialName = event.getName().toUpperCase().replace(" ", "_");
-        Material material = null;
+        Material material;
         try {
             material = Material.getMaterial(materialName);
         } catch (Exception ex) {
@@ -32,22 +30,8 @@ public class CreateItemTypeEventHandler implements AnvilGUI.AnvilClickEventHandl
             }
         }
         final Material fMaterial = material;
-        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ITEM), new CreateItemPriceEventHandler(shoppe, fMaterial))
-                            .setInputName("Enter price")
-                            .open();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, 1L);
+        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ITEM), new CreateItemPriceEventHandler(shoppe, fMaterial))
+                .setInputName("Enter price")
+                .open(), 1L);
     }
 }

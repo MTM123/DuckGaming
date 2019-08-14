@@ -23,12 +23,7 @@ public class RebootCmd implements CommandExecutor {
         if (sender.isOp()) {
             if (!Server.getInstance().getDelayedTasks().contains(UUID.nameUUIDFromBytes(sender.getName().getBytes()))) {
                 Server.getInstance().getDelayedTasks().add(UUID.nameUUIDFromBytes(sender.getName().getBytes()));
-                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        Server.getInstance().getDelayedTasks().remove(UUID.nameUUIDFromBytes(sender.getName().getBytes()));
-                    }
-                }, 45L);
+                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getDelayedTasks().remove(UUID.nameUUIDFromBytes(sender.getName().getBytes())), 45L);
                 sender.sendMessage("Are you sure you want to /reboot the server? This will fully restart the server. If you are wanting to simply update the server you may want to use /reload instead. Type /reboot again to confirm if you want to restart the server.");
             } else {
                 Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskTimerAsynchronously(Server.getInstance().getPlugin(), new Runnable() {
@@ -41,22 +36,13 @@ public class RebootCmd implements CommandExecutor {
                         LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, new MapBuilder().message(message).build());
                         if (value > 4) {
                             value = 0;
-                            Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
-                                @Override
-                                public void run() {
-                                    for (Player player : Bukkit.getOnlinePlayers()) {
-                                        Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
-                                        Server.getInstance().performBuggedLeave(player, false, true);
-                                        player.kickPlayer(Server.getInstance().getPluginName() + ChatColor.AQUA + " " + '\u00BB' + " " + ChatColor.RESET + "Server restarting, please rejoin soon.");
-                                    }
-                                    Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-
-                                        @Override
-                                        public void run() {
-                                            Bukkit.shutdown();
-                                        }
-                                    }, 20L);
+                            Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), () -> {
+                                for (Player player : Bukkit.getOnlinePlayers()) {
+                                    Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
+                                    Server.getInstance().performBuggedLeave(player, false, true);
+                                    player.kickPlayer(Server.getInstance().getPluginName() + ChatColor.AQUA + " " + '\u00BB' + " " + ChatColor.RESET + "Server restarting, please rejoin soon.");
                                 }
+                                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), Bukkit::shutdown, 20L);
                             });
                         }
                     }

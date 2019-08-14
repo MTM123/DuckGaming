@@ -21,7 +21,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.List;
-import java.util.Set;
 
 public class LockettePlayerListener implements Listener {
     private static Lockette plugin;
@@ -136,7 +135,7 @@ public class LockettePlayerListener implements Listener {
     }
 
     private static boolean fixDoor(Player player) {
-        Block block = player.getTargetBlock((Set<Material>) null, 10);
+        Block block = player.getTargetBlock(null, 10);
         Material type = block.getType();
         boolean doCheck = false;
         if (Lockette.protectTrapDoors) {
@@ -161,7 +160,7 @@ public class LockettePlayerListener implements Listener {
 
     public static boolean hasAttachedTrapDoor(Block block) {
         Block checkBlock;
-        Material type = Material.AIR;
+        Material type;
         int face;
         checkBlock = block.getRelative(BlockFace.NORTH);
         type = checkBlock.getType();
@@ -188,8 +187,7 @@ public class LockettePlayerListener implements Listener {
         type = checkBlock.getType();
         if (BlockUtil.isInList(type, BlockUtil.materialListTrapDoors)) {
             face = checkBlock.getData() & 0x3;
-            if (face == 1)
-                return (true);
+            return face == 1;
         }
         return (false);
     }
@@ -381,7 +379,6 @@ public class LockettePlayerListener implements Listener {
                         }
                         if (hasAttachedTrapDoor(block)) {
                             event.setUseInteractedBlock(Result.DENY);
-                            return;
                         }
                     }
                 }
@@ -400,7 +397,6 @@ public class LockettePlayerListener implements Listener {
                         return;
                     event.setUseInteractedBlock(Result.DENY);
                     event.setUseItemInHand(Result.DENY);
-                    return;
                 }
         }
     }

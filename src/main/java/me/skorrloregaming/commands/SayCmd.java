@@ -25,7 +25,7 @@ public class SayCmd implements CommandExecutor {
             } else {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 1; i < args.length; i++) {
-                    sb.append(args[i] + " ");
+                    sb.append(args[i]).append(" ");
                 }
                 if (args[0].split("/")[1].equals(".")) {
                     if (Link$.isPrefixedRankingEnabled()) {

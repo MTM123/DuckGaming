@@ -17,7 +17,7 @@ public class PayCmd implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        String subDomain = "";
+        String subDomain;
         String tag = Link$.Legacy.tag;
         if (sender instanceof Player) {
             Player player = (Player) sender;

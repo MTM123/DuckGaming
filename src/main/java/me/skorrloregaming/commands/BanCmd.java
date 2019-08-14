@@ -29,7 +29,7 @@ public class BanCmd implements CommandExecutor {
             }
             StringBuilder sb = new StringBuilder();
             for (int i = 1; i < args.length; i++) {
-                sb.append(args[i] + " ");
+                sb.append(args[i]).append(" ");
             }
             OfflinePlayer offlinePlayer = CraftGo.Player.getOfflinePlayer(args[0]);
             String path = "config." + offlinePlayer.getUniqueId().toString();

@@ -26,7 +26,7 @@ public class SkinStorage {
             return Optional.empty();
         if (!Server.getInstance().getPlugin().getConfig().getBoolean("settings.bungeecord", false)) {
             String skinurl = "https://sessionserver.mojang.com/session/minecraft/profile/";
-            String output = null;
+            String output;
             try {
                 output = CraftGo.Player.readURL(skinurl + uuid + "?unsigned=false");
                 String signature = output.substring(output.indexOf("\"signature\":\"") + "\"signature\":\"".length());
@@ -54,8 +54,8 @@ public class SkinStorage {
         try {
             long timestamp = System.currentTimeMillis();
             Optional<SkinModel> model = Optional.empty();
-            String signature = null;
-            String encoded = null;
+            String signature;
+            String encoded;
             if (skinFile.exists()) {
                 ConfigurationManager skinFileData = new ConfigurationManager();
                 skinFileData.setup(skinFile);
@@ -64,7 +64,7 @@ public class SkinStorage {
                 encoded = skinFileData.getData().getString("encoded");
                 model = Optional.of(SkinModel.createSkinFromEncoded(signature, encoded));
             }
-            if (!noUpdate && (!skinFile.exists() || Link$.isOld(Long.valueOf(timestamp), TIME_EXPIRE_MILLISECOND))) {
+            if (!noUpdate && (!skinFile.exists() || Link$.isOld(timestamp, TIME_EXPIRE_MILLISECOND))) {
                 String uid = CraftGo.Player.getUUID(name, false);
                 Optional<SkinModel> skin = getSkinProperty(uid);
                 if (skin.isPresent()) {
@@ -85,8 +85,7 @@ public class SkinStorage {
         try {
             String uid = CraftGo.Player.getUUID(name, false);
             Optional<SkinModel> model = getSkinProperty(uid);
-            if (model.isPresent())
-                setSkinData(player, model.get());
+            model.ifPresent(skinModel -> setSkinData(player, skinModel));
             return model;
         } catch (Exception e) {
             e.printStackTrace();

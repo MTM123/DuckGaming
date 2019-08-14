@@ -16,8 +16,8 @@ public class BlockUtil {
     public static final Material[] materialListGates = {Material.OAK_FENCE_GATE, Material.ACACIA_FENCE_GATE, Material.BIRCH_FENCE_GATE, Material.DARK_OAK_FENCE_GATE, Material.JUNGLE_FENCE_GATE, Material.SPRUCE_FENCE_GATE,};
     public static final Material[] materialListBad = {Material.TORCH, Material.ACACIA_SIGN, Material.ACACIA_WALL_SIGN, Material.SPRUCE_SIGN, Material.SPRUCE_WALL_SIGN, Material.BIRCH_SIGN, Material.BIRCH_WALL_SIGN, Material.DARK_OAK_SIGN, Material.DARK_OAK_WALL_SIGN, Material.JUNGLE_SIGN, Material.JUNGLE_WALL_SIGN, Material.OAK_SIGN, Material.OAK_WALL_SIGN, Material.LEGACY_WOODEN_DOOR, Material.LADDER, Material.IRON_DOOR, Material.LEGACY_REDSTONE_TORCH_OFF, Material.LEGACY_REDSTONE_TORCH_ON, Material.LEGACY_TRAP_DOOR};
     public static final Material[] materialListSigns = {Material.ACACIA_SIGN, Material.ACACIA_WALL_SIGN, Material.SPRUCE_SIGN, Material.SPRUCE_WALL_SIGN, Material.BIRCH_SIGN, Material.BIRCH_WALL_SIGN, Material.DARK_OAK_SIGN, Material.DARK_OAK_WALL_SIGN, Material.JUNGLE_SIGN, Material.JUNGLE_WALL_SIGN, Material.OAK_SIGN, Material.OAK_WALL_SIGN};
-    public static byte faceList[] = {5, 3, 4, 2};
-    public static byte attachList[] = {1, 2, 0, 3};
+    public static byte[] faceList = {5, 3, 4, 2};
+    public static byte[] attachList = {1, 2, 0, 3};
 
     static {
         if (BlockFace.NORTH.getModX() != -1) {
@@ -35,8 +35,8 @@ public class BlockUtil {
     public static boolean isInList(Material target, Material[] list) {
         if (list == null)
             return false;
-        for (int x = 0; x < list.length; x++)
-            if (target == list[x])
+        for (Material material : list)
+            if (target == material)
                 return true;
         return false;
     }

@@ -26,14 +26,14 @@ public class MuteCmd implements CommandExecutor {
             if (Server.getInstance().getMutedPlayers().contains(player.getUniqueId())) {
                 Server.getInstance().getMutedPlayers().remove(player.getUniqueId());
                 if (sender instanceof Player)
-                    ((Player) sender).getName();
+                    sender.getName();
                 player.sendMessage(Link$.modernMsgPrefix + "Psst, you are no longer muted in chat.");
                 sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Unmuted player " + ChatColor.RED + player.getName());
             } else {
                 Server.getInstance().getMutedPlayers().add(player.getUniqueId());
                 String name = "CONSOLE";
                 if (sender instanceof Player)
-                    name = ((Player) sender).getName();
+                    name = sender.getName();
                 player.sendMessage(Link$.modernMsgPrefix + "Psst, you have been muted by " + name + ".");
                 sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Muted player " + ChatColor.RED + player.getName());
             }

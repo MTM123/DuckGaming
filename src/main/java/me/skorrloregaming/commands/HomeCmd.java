@@ -35,7 +35,7 @@ public class HomeCmd implements CommandExecutor {
         } else if (Server.getInstance().getSurvival().contains(player.getUniqueId())) {
             config = Server.getInstance().getSurvivalConfig();
         }
-        int count = 0;
+        int count;
         String home = "familiar";
         if (config.getData().contains("home." + player.getUniqueId().toString())) {
             Set<String> values = config.getData().getConfigurationSection("home." + player.getUniqueId().toString()).getKeys(false);
@@ -43,9 +43,9 @@ public class HomeCmd implements CommandExecutor {
             if (count > 0) {
                 home = values.toArray(new String[0])[0];
                 StringBuilder homes = new StringBuilder();
-                String homesString = null;
+                String homesString;
                 for (String homeValue : values) {
-                    homes.append(ChatColor.RED + homeValue + ChatColor.GRAY + ", ");
+                    homes.append(ChatColor.RED).append(homeValue).append(ChatColor.GRAY).append(", ");
                 }
                 if (homes.length() > 0) {
                     homesString = homes.toString().substring(0, homes.toString().length() - 2);

@@ -36,7 +36,6 @@ public class CombatTimer extends BukkitRunnable {
             player.sendMessage(prefix + ChatColor.GRAY + "You are no longer engaged in combat.");
             Server.getInstance().getPlayersInCombat().remove(player.getUniqueId());
             cancel();
-            return;
         }
     }
 }

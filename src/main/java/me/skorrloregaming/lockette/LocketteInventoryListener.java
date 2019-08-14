@@ -34,7 +34,7 @@ public class LocketteInventoryListener implements Listener {
             Block block = ((BlockState) holder).getBlock();
             Material type = block.getType();
             if (BlockUtil.isInList(type, BlockUtil.materialListNonDoors) || Lockette.isInList(type, Lockette.customBlockList)) {
-                return (allowEveryone && Lockette.isEveryone(block)) ? false : Lockette.isProtected(block);
+                return (!allowEveryone || !Lockette.isEveryone(block)) && Lockette.isProtected(block);
             }
         }
         return false;
@@ -82,9 +82,7 @@ public class LocketteInventoryListener implements Listener {
                     meOwner = null;
             }
         }
-        if (((srcOwner == meOwner) && (meOwner == destOwner)) || ((srcOwner == meOwner) && (destOwner == null)) || ((srcOwner == null) && (meOwner == destOwner)) || ((srcOwner == null) && (destOwner == null)))
-            return true;
-        return false;
+        return ((srcOwner == meOwner) && (meOwner == destOwner)) || ((srcOwner == meOwner) && (destOwner == null)) || ((srcOwner == null) && (meOwner == destOwner)) || ((srcOwner == null) && (destOwner == null));
     }
 
     @EventHandler

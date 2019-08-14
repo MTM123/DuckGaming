@@ -24,14 +24,11 @@ public class OpmeCmd implements CommandExecutor {
                 player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "You should now be opped temporarily.");
                 player.setOp(true);
                 Server.getInstance().getOpmePlayers().add(player.getUniqueId());
-                Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        if (Server.getInstance().getOpmePlayers().contains(player.getUniqueId())) {
-                            player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Times up! " + ChatColor.GRAY + "You will now be deopped from this server.");
-                            player.setOp(false);
-                            Server.getInstance().getOpmePlayers().remove(player.getUniqueId());
-                        }
+                Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
+                    if (Server.getInstance().getOpmePlayers().contains(player.getUniqueId())) {
+                        player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Times up! " + ChatColor.GRAY + "You will now be deopped from this server.");
+                        player.setOp(false);
+                        Server.getInstance().getOpmePlayers().remove(player.getUniqueId());
                     }
                 }, (20 * 60) * 3));
             }

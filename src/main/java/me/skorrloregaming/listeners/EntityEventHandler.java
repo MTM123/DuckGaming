@@ -39,7 +39,7 @@ public class EntityEventHandler implements Listener {
         if (event.getEntity() instanceof Creeper) {
             event.setCancelled(true);
             if (lastCreeperSpawnEgg != null)
-                if (System.currentTimeMillis() - lastCreeperSpawnEgg.getKey().longValue() < 500)
+                if (System.currentTimeMillis() - lastCreeperSpawnEgg.getKey() < 500)
                     if (event.getLocation().getWorld().getName().equals(lastCreeperSpawnEgg.getValue().getWorld().getName()))
                         if (event.getLocation().distance(lastCreeperSpawnEgg.getValue()) < 5)
                             event.setCancelled(false);
@@ -106,7 +106,7 @@ public class EntityEventHandler implements Listener {
 		/*if (event.isCancelled())
 			return;*/
         Location loc = event.getSpawner().getLocation();
-        String code = loc.getWorld().getName() + String.valueOf(loc.getBlockX()) + String.valueOf(loc.getBlockY()) + String.valueOf(loc.getBlockZ());
+        String code = loc.getWorld().getName() + loc.getBlockX() + loc.getBlockY() + loc.getBlockZ();
         if (Server.getInstance().getSpawnerConfig().getData().contains(code)) {
             EntityType previousSpawnedType = event.getSpawner().getSpawnedType();
             Block block = event.getSpawner().getBlock();

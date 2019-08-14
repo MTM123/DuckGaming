@@ -26,7 +26,7 @@ public class AutoLoginCmd implements CommandExecutor {
             } else {
                 if (args.length > 0) {
                     Object authObject = $.getAuthenticationSuite();
-                    boolean isCorrectPassword = false;
+                    boolean isCorrectPassword;
                     if (authObject == null) {
                         player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "There is no need to toggle this feature.");
                     } else {

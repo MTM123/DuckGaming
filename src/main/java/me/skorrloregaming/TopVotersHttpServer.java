@@ -47,11 +47,7 @@ public class TopVotersHttpServer implements Runnable {
     }
 
     public class TopVotersHttpClient implements Runnable {
-        Comparator<Switches.SwitchIntString> myComparator = new Comparator<Switches.SwitchIntString>() {
-            public int compare(Switches.SwitchIntString o1, Switches.SwitchIntString o2) {
-                return Integer.compare(o2.getArg0(), o1.getArg0());
-            }
-        };
+        Comparator<Switches.SwitchIntString> myComparator = (o1, o2) -> Integer.compare(o2.getArg0(), o1.getArg0());
         private Socket socket;
 
         public TopVotersHttpClient(Socket socket) {
@@ -113,7 +109,7 @@ public class TopVotersHttpServer implements Runnable {
                 int year = calendar.get(Calendar.YEAR);
                 int monthId = calendar.get(Calendar.MONTH);
                 String[] keys = Server.getInstance().getMonthlyVoteConfig().getData().getConfigurationSection("config").getKeys(false).toArray(new String[0]);
-                List<SwitchIntString> validKeys = new ArrayList<SwitchIntString>();
+                List<SwitchIntString> validKeys = new ArrayList<>();
                 for (String username : keys) {
                     int votes = Server.getInstance().getVoteManager().getMonthlyVotes(username, year, monthId);
                     if (votes > 0) {
@@ -126,8 +122,8 @@ public class TopVotersHttpServer implements Runnable {
                         sb.append("<tr><td></td><td></td></tr>");
                     } else {
                         sb.append("<tr>");
-                        sb.append("<td>" + key.getArg1() + "</td>");
-                        sb.append("<td>" + key.getArg0() + "</td>");
+                        sb.append("<td>").append(key.getArg1()).append("</td>");
+                        sb.append("<td>").append(key.getArg0()).append("</td>");
                         for (int i = 0; i < 10; i++) {
                             Service service = Service.values()[i];
                             long arg0 = service.getPriority().getDelay();
@@ -146,7 +142,7 @@ public class TopVotersHttpServer implements Runnable {
                                     }
                                 }
                             }
-                            sb.append("<td>" + Server.getInstance().getVoteManager().getFriendlyTimeDifference(key.getArg1(), service.getName(), arg0, service.getPriority().isEpoch()) + "</td>");
+                            sb.append("<td>").append(Server.getInstance().getVoteManager().getFriendlyTimeDifference(key.getArg1(), service.getName(), arg0, service.getPriority().isEpoch())).append("</td>");
                         }
                         sb.append("</tr>");
                     }

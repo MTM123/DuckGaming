@@ -162,12 +162,9 @@ public class ChatItem {
     private boolean isMc18OrLater() {
         switch (getVersion(Bukkit.getServer())) {
             case "v1_7_R1":
-                return false;
-            case "v1_7_R2":
-                return false;
-            case "v1_7_R3":
-                return false;
             case "v1_7_R4":
+            case "v1_7_R3":
+            case "v1_7_R2":
                 return false;
             default:
                 return true;
@@ -177,26 +174,16 @@ public class ChatItem {
     private boolean isMc111OrLater() {
         switch (getVersion(Bukkit.getServer())) {
             case "v1_7_R1":
-                return false;
-            case "v1_7_R2":
-                return false;
-            case "v1_7_R3":
-                return false;
-            case "v1_7_R4":
-                return false;
-            case "v1_8_R1":
-                return false;
-            case "v1_8_R2":
-                return false;
-            case "v1_8_R3":
-                return false;
-            case "v1_9_R1":
-                return false;
-            case "v1_9_R2":
-                return false;
-            case "v1_10_R1":
-                return false;
             case "v1_10_R2":
+            case "v1_10_R1":
+            case "v1_9_R2":
+            case "v1_9_R1":
+            case "v1_8_R3":
+            case "v1_8_R2":
+            case "v1_8_R1":
+            case "v1_7_R4":
+            case "v1_7_R3":
+            case "v1_7_R2":
                 return false;
             default:
                 return true;
@@ -206,35 +193,24 @@ public class ChatItem {
     private boolean isMc112Orlater() {
         switch (getVersion(Bukkit.getServer())) {
             case "v1_7_R1":
-                return false;
-            case "v1_7_R2":
-                return false;
-            case "v1_7_R3":
-                return false;
-            case "v1_7_R4":
-                return false;
-            case "v1_8_R1":
-                return false;
-            case "v1_8_R2":
-                return false;
-            case "v1_8_R3":
-                return false;
-            case "v1_9_R1":
-                return false;
-            case "v1_9_R2":
-                return false;
-            case "v1_10_R1":
-                return false;
-            case "v1_10_R2":
-                return false;
             case "v1_11_R1":
+            case "v1_10_R2":
+            case "v1_10_R1":
+            case "v1_9_R2":
+            case "v1_9_R1":
+            case "v1_8_R3":
+            case "v1_8_R2":
+            case "v1_8_R1":
+            case "v1_7_R4":
+            case "v1_7_R3":
+            case "v1_7_R2":
                 return false;
             default:
                 return true;
         }
     }
 
-    public static enum ProtocolVersion {
+    public enum ProtocolVersion {
         PRE_1_8(0, 5, 0), V1_8_X(6, 47, 1), V1_9_X(49, 110, 2), V1_10_X(201, 210, 3), V1_11_X(301, 316, 4), V1_12_X(317, 340, 5), V1_13_X(383, 404, 5), V1_14_X(477, Integer.MAX_VALUE, 6), INVALID(-1, -1, 6);
         private static ProtocolVersion serverVersion;
         private static ConcurrentHashMap<String, Integer> PLAYER_VERSION_MAP = new ConcurrentHashMap<>();
@@ -262,32 +238,20 @@ public class ChatItem {
                 String version = ChatItem.getVersion(Bukkit.getServer());
                 switch (version) {
                     case "v1_7_R1":
-                        serverVersion = PRE_1_8;
-                        break;
+                    case "v1_7_R3":
                     case "v1_7_R2":
                         serverVersion = PRE_1_8;
                         break;
-                    case "v1_7_R3":
-                        serverVersion = PRE_1_8;
-                        break;
                     case "v1_8_R1":
-                        serverVersion = V1_8_X;
-                        break;
+                    case "v1_8_R3":
                     case "v1_8_R2":
                         serverVersion = V1_8_X;
                         break;
-                    case "v1_8_R3":
-                        serverVersion = V1_8_X;
-                        break;
                     case "v1_9_R1":
-                        serverVersion = V1_9_X;
-                        break;
                     case "v1_9_R2":
                         serverVersion = V1_9_X;
                         break;
                     case "v1_10_R1":
-                        serverVersion = V1_10_X;
-                        break;
                     case "v1_10_R2":
                         serverVersion = V1_10_X;
                         break;
@@ -295,14 +259,10 @@ public class ChatItem {
                         serverVersion = V1_11_X;
                         break;
                     case "v1_12_R1":
-                        serverVersion = V1_12_X;
-                        break;
                     case "v1_12_R2":
                         serverVersion = V1_12_X;
                         break;
                     case "v1_13_R1":
-                        serverVersion = V1_13_X;
-                        break;
                     case "v1_13_R2":
                         serverVersion = V1_13_X;
                         break;
@@ -339,10 +299,7 @@ public class ChatItem {
             if ((version1 >= V1_9_X.MIN_VER && version2 <= V1_8_X.MAX_VER) || (version2 >= V1_9_X.MIN_VER && version1 <= V1_8_X.MAX_VER)) {
                 return false;
             }
-            if ((version1 <= V1_10_X.MAX_VER && version2 >= V1_11_X.MIN_VER) || (version1 <= V1_10_X.MAX_VER && version2 >= V1_11_X.MIN_VER)) {
-                return false;
-            }
-            return true;
+            return (version1 > V1_10_X.MAX_VER || version2 < V1_11_X.MIN_VER) && (version1 > V1_10_X.MAX_VER || version2 < V1_11_X.MIN_VER);
         }
 
         public static int getClientVersion(final Player p) {
@@ -611,9 +568,7 @@ public class ChatItem {
                 return;
             }
             String oldmsg = e.getMessage();
-            StringBuilder sb = new StringBuilder(oldmsg);
-            sb.append(SEPARATOR).append(e.getPlayer().getName());
-            e.setMessage(sb.toString());
+            e.setMessage(oldmsg + SEPARATOR + e.getPlayer().getName());
             Bukkit.getConsoleSender().sendMessage(String.format(e.getFormat(), e.getPlayer().getDisplayName(), oldmsg));
             if (!p.hasPermission("chatitem.ignore-cooldown")) {
                 COOLDOWNS.put(p.getName(), System.currentTimeMillis() / 1000);
@@ -698,9 +653,7 @@ public class ChatItem {
                 e.getPlayer().sendMessage(c.LIMIT_MESSAGE);
                 return;
             }
-            StringBuilder sb = new StringBuilder(e.getMessage());
-            sb.append(SEPARATOR).append(e.getPlayer().getName());
-            e.setMessage(sb.toString());
+            e.setMessage(e.getMessage() + SEPARATOR + e.getPlayer().getName());
             if (!p.hasPermission("chatitem.ignore-cooldown")) {
                 COOLDOWNS.put(p.getName(), System.currentTimeMillis() / 1000);
             }
@@ -750,7 +703,7 @@ public class ChatItem {
         public static String styleItem(ItemStack item, Storage c) {
             String replacer = c.NAME_FORMAT;
             String amount = c.AMOUNT_FORMAT;
-            boolean dname = item.hasItemMeta() ? item.getItemMeta().hasDisplayName() : false;
+            boolean dname = item.hasItemMeta() && item.getItemMeta().hasDisplayName();
             if (item.getAmount() == 1) {
                 if (c.FORCE_ADD_AMOUNT) {
                     amount = amount.replace(TIMES, "1");
@@ -1043,9 +996,7 @@ public class ChatItem {
                 if (item != null && item.getId().equals("minecraft:spawn_egg")) {
                     CompoundTag tag = item.getTag();
                     if (tag != null && tag.contains("EntityTag") && tag.get("EntityTag") instanceof CompoundTag) {
-                        if (((CompoundTag) tag.get("EntityTag")).get("id") instanceof StringTag) {
-                            return true;
-                        }
+                        return ((CompoundTag) tag.get("EntityTag")).get("id") instanceof StringTag;
                     }
                 }
                 return false;
@@ -1512,8 +1463,7 @@ public class ChatItem {
         }
 
         private void checkConfigVersion() {
-            int latestVersion = ChatItem.CFG_VER;
-            if (latestVersion != CONFIG_VERSION) {
+            if (ChatItem.CFG_VER != CONFIG_VERSION) {
                 Bukkit.getLogger().log(Level.WARNING, ChatColor.RED + "ChatItem detected an older or invalid configuration file. Replacing it with the default config...");
                 performOverwrite();
                 conf = Server.getInstance().getChatItemConfig().getData();

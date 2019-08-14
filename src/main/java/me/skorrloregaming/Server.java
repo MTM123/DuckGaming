@@ -88,7 +88,7 @@ public class Server extends JavaPlugin {
     private ArrayList<UUID> confirmRepairShop = new ArrayList<>();
     private ArrayList<UUID> confirmUnregisterNpc = new ArrayList<>();
     private ArrayList<UUID> currentFellers = new ArrayList<>();
-    private ArrayList<String> disabledVersions = new ArrayList<String>();
+    private ArrayList<String> disabledVersions = new ArrayList<>();
     private ArrayList<NpcPlayer> npcPlayers = new ArrayList<>();
     private ConcurrentMap<UUID, Integer> explosiveFunpowderCooldown = new ConcurrentHashMap<>();
     private ConcurrentMap<UUID, Integer> potionsKitCooldownKitpvp = new ConcurrentHashMap<>();
@@ -111,10 +111,10 @@ public class Server extends JavaPlugin {
     private ArrayList<UUID> staffChatPlayers = new ArrayList<>();
     private ArrayList<UUID> marriageChatPlayers = new ArrayList<>();
     private ArrayList<UUID> spectatingPlayers = new ArrayList<>();
-    private ArrayList<UUID> mutedPlayers = new ArrayList<UUID>();
-    private ArrayList<UUID> opmePlayers = new ArrayList<UUID>();
-    private ArrayList<UUID> factionFlyPlayers = new ArrayList<UUID>();
-    private ArrayList<UUID> survivalFlyPlayers = new ArrayList<UUID>();
+    private ArrayList<UUID> mutedPlayers = new ArrayList<>();
+    private ArrayList<UUID> opmePlayers = new ArrayList<>();
+    private ArrayList<UUID> factionFlyPlayers = new ArrayList<>();
+    private ArrayList<UUID> survivalFlyPlayers = new ArrayList<>();
     private ConcurrentMap<String, Integer> timeSinceLastLogin = new ConcurrentHashMap<>();
     private ConcurrentMap<UUID, SwitchUUIDString> transferAcceptPlayers = new ConcurrentHashMap<>();
     private ConcurrentMap<Integer, UUID> discordVerifyPlayers = new ConcurrentHashMap<>();
@@ -145,7 +145,7 @@ public class Server extends JavaPlugin {
 
     private VoteManager voteManager;
 
-    private ConcurrentMap<Player, ItemStack> storedItem = new ConcurrentHashMap<Player, ItemStack>();
+    private ConcurrentMap<Player, ItemStack> storedItem = new ConcurrentHashMap<>();
 
     private ArrayList<UUID> waiverAcceptPlayers = new ArrayList<>();
 
@@ -689,7 +689,7 @@ public class Server extends JavaPlugin {
         } else {
             pingInjector.register();
         }
-        lastKnownHubWorld = $.getZoneLocation("hub").getWorld().getName().toString();
+        lastKnownHubWorld = $.getZoneLocation("hub").getWorld().getName();
         if (Link$.isPluginEnabled("Vault")) {
             new VaultEconomy().setupVault();
         }
@@ -715,48 +715,39 @@ public class Server extends JavaPlugin {
             voteListener.register();
             voteManager = new VoteManager();
         }
-        Bukkit.getScheduler().runTask(this, new Runnable() {
-            @Override
-            public void run() {
-                if (Link$.isPluginEnabled("Factions")) {
-                    factionsListener = new Factions_Listener();
-                    factionsListener.register();
-                }
-                for (Player player : Bukkit.getOnlinePlayers())
-                    player.sendMessage(Link$.modernMsgPrefix + "Psst, did you know the server finished updating?");
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.performCommand("hub");
-                    LinkServer.getInstance().getPlaytimeManager().handle_JoinEvent(player);
-                }
-                List<Entity> entity = new LinkedList<Entity>($.getZoneLocation("creative").getWorld().getEntities());
-                for (Entity e : entity) {
-                    if (e instanceof Item)
-                        e.remove();
-                }
+        Bukkit.getScheduler().runTask(this, () -> {
+            if (Link$.isPluginEnabled("Factions")) {
+                factionsListener = new Factions_Listener();
+                factionsListener.register();
+            }
+            for (Player player : Bukkit.getOnlinePlayers())
+                player.sendMessage(Link$.modernMsgPrefix + "Psst, did you know the server finished updating?");
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.performCommand("hub");
+                LinkServer.getInstance().getPlaytimeManager().handle_JoinEvent(player);
+            }
+            List<Entity> entity = new LinkedList<>($.getZoneLocation("creative").getWorld().getEntities());
+            for (Entity e : entity) {
+                if (e instanceof Item)
+                    e.remove();
             }
         });
-        bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
-            @Override
-            public void run() {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    plugin.saveConfig();
-                    try {
-                        SolidStorage.savePlayerData(player, $.getMinigameDomain(player));
-                    } catch (Exception e) {
-                    }
+        bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(this, () -> {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                plugin.saveConfig();
+                try {
+                    SolidStorage.savePlayerData(player, $.getMinigameDomain(player));
+                } catch (Exception e) {
                 }
             }
         }, 0L, 6000L));
-        bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(Server.getInstance().getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                for (World world : Bukkit.getWorlds()) {
-                    ServerMinigame minigame = $.getMinigameFromWorld(world);
-                    if ($.daylightMinigames.contains(minigame.toString().toLowerCase())) {
-                        world.setTime(8000L);
-                    } else if ($.nightlightMinigames.contains(minigame.toString().toLowerCase())) {
-                        world.setTime(14000L);
-                    }
+        bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(Server.getInstance().getPlugin(), () -> {
+            for (World world : Bukkit.getWorlds()) {
+                ServerMinigame minigame = $.getMinigameFromWorld(world);
+                if ($.daylightMinigames.contains(minigame.toString().toLowerCase())) {
+                    world.setTime(8000L);
+                } else if ($.nightlightMinigames.contains(minigame.toString().toLowerCase())) {
+                    world.setTime(14000L);
                 }
             }
         }, 20L, 20L));
@@ -903,7 +894,7 @@ public class Server extends JavaPlugin {
                 String message = "SkorrloreGaming";// " Welcome " + player.getName() + ", to our Minecraft server! ";
                 if (message.length() > 16)
                     message += message.substring(0, 16);
-                Hashtable<String, Integer> array = new Hashtable<String, Integer>();
+                Hashtable<String, Integer> array = new Hashtable<>();
                 array.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Servers", 2019);
                 if ($.isMinigameEnabled(ServerMinigame.KITPVP))
                     array.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Kitpvp", kitpvp.size());
@@ -1223,8 +1214,7 @@ public class Server extends JavaPlugin {
             }
             factions.remove(player.getUniqueId());
             player.setAllowFlight(true);
-            if (Server.getInstance().getFactionFlyPlayers().contains(player.getUniqueId()))
-                Server.getInstance().getFactionFlyPlayers().remove(player.getUniqueId());
+            Server.getInstance().getFactionFlyPlayers().remove(player.getUniqueId());
             $.Scoreboard.clearDisplaySlot(player, DisplaySlot.SIDEBAR);
             return 1;
         }
@@ -1548,22 +1538,19 @@ public class Server extends JavaPlugin {
                         ChatColor.stripColor(message.replace(player.getName(), "**" + player.getName() + "**"))
                         , Channel.SERVER_CHAT);
             }
-            Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-                @Override
-                public void run() {
-                    if (creative.contains(player.getUniqueId())) {
-                        if (!(player.getGameMode() == GameMode.CREATIVE))
-                            player.setGameMode(GameMode.CREATIVE);
-                        if (!player.getAllowFlight())
-                            player.setAllowFlight(true);
-                        player.addAttachment(plugin, "plots.use", true);
-                        player.addAttachment(plugin, "plots.permpack.basic", true);
-                        player.addAttachment(plugin, "plots.plot.1", true);
-                        player.addAttachment(plugin, "plots.visit.other", true);
-                        if (Link$.getDonorRankId(player) < -1 || Link$.getRankId(player) > -1) {
-                            for (String permission : Directory.basicWorldEditPermissions) {
-                                player.addAttachment(plugin, permission, true);
-                            }
+            Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(this, () -> {
+                if (creative.contains(player.getUniqueId())) {
+                    if (!(player.getGameMode() == GameMode.CREATIVE))
+                        player.setGameMode(GameMode.CREATIVE);
+                    if (!player.getAllowFlight())
+                        player.setAllowFlight(true);
+                    player.addAttachment(plugin, "plots.use", true);
+                    player.addAttachment(plugin, "plots.permpack.basic", true);
+                    player.addAttachment(plugin, "plots.plot.1", true);
+                    player.addAttachment(plugin, "plots.visit.other", true);
+                    if (Link$.getDonorRankId(player) < -1 || Link$.getRankId(player) > -1) {
+                        for (String permission : Directory.basicWorldEditPermissions) {
+                            player.addAttachment(plugin, permission, true);
                         }
                     }
                 }

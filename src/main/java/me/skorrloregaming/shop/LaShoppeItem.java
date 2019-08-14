@@ -51,7 +51,7 @@ public class LaShoppeItem {
     }
 
     public ItemStack toItemStack() {
-        ItemStack itemStack = null;
+        ItemStack itemStack;
         if (material == Material.SPAWNER) {
             String entityName = CraftGo.MobSpawner.convertEntityIdToEntityType(data).toString().toLowerCase();
             String displayName = ChatColor.RESET + Link$.capitalizeAll(WordUtils.capitalize(entityName) + " Spawner", "_");
@@ -59,7 +59,7 @@ public class LaShoppeItem {
         } else {
             itemStack = Link$.createMaterial(material);
         }
-        List<String> lore = new ArrayList<String>();
+        List<String> lore = new ArrayList<>();
         lore.add(ChatColor.RESET + "Index: " + index);
         lore.add(ChatColor.RESET + "Price: $" + price);
         lore.add(ChatColor.RESET + "Amount: " + amount + "x");

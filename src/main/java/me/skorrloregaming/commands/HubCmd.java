@@ -31,7 +31,7 @@ public class HubCmd implements CommandExecutor {
         boolean perform = false;
         if (!($.getCurrentMinigame(player) == ServerMinigame.HUB) && !($.getCurrentMinigame(player) == ServerMinigame.UNKNOWN))
             Bukkit.getPluginManager().callEvent(new PlayerPreMinigameChangeEvent(player, ServerMinigame.HUB));
-        int changes = 0;
+        int changes;
         if ((changes = Server.getInstance().performBuggedLeave(player, !save, false)) > 0) {
             perform = true;
         } else if (minigame == ServerMinigame.HUB || minigame == ServerMinigame.UNKNOWN || (minigame == ServerMinigame.FACTIONS && Server.getInstance().getUseFactionsAsHub())) {
@@ -39,8 +39,7 @@ public class HubCmd implements CommandExecutor {
         }
         if (perform) {
             if (Server.getInstance().getUseFactionsAsHub()) {
-                if (Server.getInstance().getHub().contains(player.getUniqueId()))
-                    Server.getInstance().getHub().remove(player.getUniqueId());
+                Server.getInstance().getHub().remove(player.getUniqueId());
                 Server.getInstance().enterFactions(player, false, true);
             } else {
                 if (!Server.getInstance().getHub().contains(player.getUniqueId()))

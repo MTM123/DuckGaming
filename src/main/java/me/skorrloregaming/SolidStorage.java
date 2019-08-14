@@ -330,11 +330,7 @@ public class SolidStorage {
         String folder = getDataFolder() + File.separator + "Inventory";
         String file = player.getUniqueId().toString() + "_" + data + ".yml";
         File fileSave = new File(folder, file);
-        if (fileSave.exists()) {
-            return true;
-        } else {
-            return false;
-        }
+        return fileSave.exists();
     }
 
     public static boolean doesInformationSaveExist(OfflinePlayer player, String data) {
@@ -343,11 +339,7 @@ public class SolidStorage {
         String folder = getDataFolder() + File.separator + "Information";
         String file = player.getUniqueId().toString() + "_" + data + ".yml";
         File fileSave = new File(folder, file);
-        if (fileSave.exists()) {
-            return true;
-        } else {
-            return false;
-        }
+        return fileSave.exists();
     }
 
     public static boolean doesLocationSaveExist(OfflinePlayer player, String data) {
@@ -356,11 +348,7 @@ public class SolidStorage {
         String folder = getDataFolder() + File.separator + "Location";
         String file = player.getUniqueId().toString() + "_" + data + ".yml";
         File fileSave = new File(folder, file);
-        if (fileSave.exists()) {
-            return true;
-        } else {
-            return false;
-        }
+        return fileSave.exists();
     }
 
     public static boolean doesPotionEffectSaveExist(OfflinePlayer player, String data) {
@@ -369,11 +357,7 @@ public class SolidStorage {
         String folder = getDataFolder() + File.separator + "PotionEffects";
         String file = player.getUniqueId().toString() + "_" + data + ".yml";
         File fileSave = new File(folder, file);
-        if (fileSave.exists()) {
-            return true;
-        } else {
-            return false;
-        }
+        return fileSave.exists();
     }
 
     public static boolean doesPlayerSaveExist(OfflinePlayer player, String data) {
@@ -381,9 +365,7 @@ public class SolidStorage {
         boolean inventorySave = doesInventorySaveExist(player, data);
         boolean locationSave = doesLocationSaveExist(player, data);
         boolean potionSave = doesPotionEffectSaveExist(player, data);
-        if (informationSave && inventorySave && locationSave && potionSave)
-            return true;
-        return false;
+        return informationSave && inventorySave && locationSave && potionSave;
     }
 
     public static boolean dataUUIDtoUUID(UUID uuidFrom, UUID uuidTo, String data) {
@@ -463,10 +445,7 @@ public class SolidStorage {
                 moved++;
             }
         }
-        if (moved > 0) {
-            return true;
-        }
-        return false;
+        return moved > 0;
     }
 
     public static boolean dataOfflineModeToOnlineMode(Player player, String data) {
@@ -547,10 +526,7 @@ public class SolidStorage {
                 moved++;
             }
         }
-        if (moved > 0) {
-            return true;
-        }
-        return false;
+        return moved > 0;
     }
 
     public static String readUrl(String urlString) throws Exception {
@@ -562,7 +538,7 @@ public class SolidStorage {
             con.setReadTimeout(2000);
             InputStream in = con.getInputStream();
             reader = new BufferedReader(new InputStreamReader(in));
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             int read;
             char[] chars = new char[1024];
             while ((read = reader.read(chars)) != -1)
@@ -588,7 +564,7 @@ public class SolidStorage {
             String offlineFile = player.getUniqueId().toString() + "_" + data + ".yml";
             File offlineFileSave = new File(offlineFolder, offlineFile);
             String onlineFolder = getDataFolder() + File.separator + "PotionEffects";
-            String onlineFile = onlineUUID.toString() + "_" + data + ".yml";
+            String onlineFile = onlineUUID + "_" + data + ".yml";
             File onlineFileSave = new File(onlineFolder, onlineFile);
             if (onlineFileSave.exists()) {
                 if (offlineFileSave.exists())
@@ -603,7 +579,7 @@ public class SolidStorage {
             String offlineFile = player.getUniqueId().toString() + "_" + data + ".yml";
             File offlineFileSave = new File(offlineFolder, offlineFile);
             String onlineFolder = getDataFolder() + File.separator + "Location";
-            String onlineFile = onlineUUID.toString() + "_" + data + ".yml";
+            String onlineFile = onlineUUID + "_" + data + ".yml";
             File onlineFileSave = new File(onlineFolder, onlineFile);
             if (onlineFileSave.exists()) {
                 if (offlineFileSave.exists())
@@ -618,7 +594,7 @@ public class SolidStorage {
             String offlineFile = player.getUniqueId().toString() + "_" + data + ".yml";
             File offlineFileSave = new File(offlineFolder, offlineFile);
             String onlineFolder = getDataFolder() + File.separator + "Information";
-            String onlineFile = onlineUUID.toString() + "_" + data + ".yml";
+            String onlineFile = onlineUUID + "_" + data + ".yml";
             File onlineFileSave = new File(onlineFolder, onlineFile);
             if (onlineFileSave.exists()) {
                 if (offlineFileSave.exists())
@@ -633,7 +609,7 @@ public class SolidStorage {
             String offlineFile = player.getUniqueId().toString() + "_" + data + ".yml";
             File offlineFileSave = new File(offlineFolder, offlineFile);
             String onlineFolder = getDataFolder() + File.separator + "Inventory";
-            String onlineFile = onlineUUID.toString() + "_" + data + ".yml";
+            String onlineFile = onlineUUID + "_" + data + ".yml";
             File onlineFileSave = new File(onlineFolder, onlineFile);
             if (onlineFileSave.exists()) {
                 if (offlineFileSave.exists())
@@ -648,7 +624,7 @@ public class SolidStorage {
             String offlineFile = player.getUniqueId().toString() + "_" + data + ".yml";
             File offlineFileSave = new File(offlineFolder, offlineFile);
             String onlineFolder = getDataFolder() + File.separator + "Chest";
-            String onlineFile = onlineUUID.toString() + "_" + data + ".yml";
+            String onlineFile = onlineUUID + "_" + data + ".yml";
             File onlineFileSave = new File(onlineFolder, onlineFile);
             if (onlineFileSave.exists()) {
                 if (offlineFileSave.exists())
@@ -658,21 +634,14 @@ public class SolidStorage {
                 moved++;
             }
         }
-        if (moved > 0) {
-            return true;
-        }
-        return false;
+        return moved > 0;
     }
 
     public static boolean isForbiddenWorld(World world, ServerMinigame minigame) {
-        if ($.getMinigameFromWorld(world) == minigame)
-            return false;
-        return true;
+        return $.getMinigameFromWorld(world) != minigame;
     }
 
     public static boolean isForbiddenWorld(String worldName, UUID playerId) {
-        if ($.getMinigameFromWorld(Bukkit.getWorld(worldName)) == $.getCurrentMinigame(Bukkit.getPlayer(playerId)))
-            return false;
-        return true;
+        return $.getMinigameFromWorld(Bukkit.getWorld(worldName)) != $.getCurrentMinigame(Bukkit.getPlayer(playerId));
     }
 }

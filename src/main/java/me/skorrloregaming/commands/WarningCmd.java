@@ -25,7 +25,7 @@ public class WarningCmd implements CommandExecutor {
             sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Syntax " + ChatColor.RED + "/" + label + " <player> <amount> [message]");
             return true;
         } else {
-            int id = 0;
+            int id;
             try {
                 id = Integer.parseInt(args[1]);
             } catch (Exception ex) {
@@ -69,7 +69,7 @@ public class WarningCmd implements CommandExecutor {
             if (args.length > 2) {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 2; i < args.length; i++) {
-                    sb.append(args[i] + " ");
+                    sb.append(args[i]).append(" ");
                 }
                 String msg = "You have been warned for disrespecting the server rules." + '\n' + "\"" + sb.toString() + "\"" + '\n' + "You are now at warning value " + newWarningCount + " out of 5." + '\n' + '\n' + "Issued by " + sender.getName() + " at " + new Date().toString();
                 if (op.isOnline() && id > 0)

@@ -25,13 +25,7 @@ public class RemoveNpcCmd implements CommandExecutor {
                 Server.getInstance().getConfirmUnregisterNpc().add(player.getUniqueId());
             player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success." + ChatColor.GRAY + " Npc removal parameters " + ChatColor.ITALIC + "saved in memory" + ChatColor.RESET + ChatColor.GRAY + ".");
             player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Right click on the npc that you would like to remove.");
-            Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    if (Server.getInstance().getConfirmUnregisterNpc().contains(player.getUniqueId()))
-                        Server.getInstance().getConfirmUnregisterNpc().remove(player.getUniqueId());
-                }
-            }, 100L));
+            Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getConfirmUnregisterNpc().remove(player.getUniqueId()), 100L));
         }
         return true;
     }

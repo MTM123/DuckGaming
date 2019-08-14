@@ -32,7 +32,7 @@ public class SpoofVoteCmd implements CommandExecutor {
                 return true;
             } else {
                 int count = Integer.parseInt(args[1]);
-                String minigame = "";
+                String minigame;
                 String serviceName = Server.class.getName();
                 boolean doJackpots = true;
                 if (args.length >= 3) {

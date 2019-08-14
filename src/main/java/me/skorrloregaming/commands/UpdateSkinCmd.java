@@ -38,25 +38,20 @@ public class UpdateSkinCmd implements CommandExecutor {
                 time--;
                 Server.getInstance().getDelaySkinUpdate().put(fPlayer.getUniqueId(), time);
                 if (time <= 0) {
-                    if (Server.getInstance().getDelaySkinUpdate().containsKey(fPlayer.getUniqueId())) {
-                        Server.getInstance().getDelaySkinUpdate().remove(fPlayer.getUniqueId());
-                    }
+                    Server.getInstance().getDelaySkinUpdate().remove(fPlayer.getUniqueId());
                     cancel();
                 }
             }
         }.runTaskTimer(Server.getInstance().getPlugin(), 20L, 20L));
         player.sendMessage("Attempting to fetch the latest skin available..");
-        Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                Optional<SkinModel> model = Server.getInstance().getSkinStorage().forceSkinUpdate(player);
-                if (!model.isPresent()) {
-                    player.sendMessage("Failed to fetch your latest skin from mojang " + "\u2639" + ".");
-                    return;
-                }
-                Server.getInstance().getSkinStorage().getFactory(player, model.get()).applySkin();
-                player.sendMessage("Skin updated. You are now using the latest skin available.");
+        Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), () -> {
+            Optional<SkinModel> model = Server.getInstance().getSkinStorage().forceSkinUpdate(player);
+            if (!model.isPresent()) {
+                player.sendMessage("Failed to fetch your latest skin from mojang " + "\u2639" + ".");
+                return;
             }
+            Server.getInstance().getSkinStorage().getFactory(player, model.get()).applySkin();
+            player.sendMessage("Skin updated. You are now using the latest skin available.");
         });
         return true;
     }

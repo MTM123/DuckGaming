@@ -44,7 +44,7 @@ public class DuplexHandler extends ChannelDuplexHandler {
             Object profiles = playerSample.getProfiles();
             List<String> list = new ArrayList<>();
             for (int i = 0; i < Array.getLength(profiles); i++) {
-                list.add((String) CraftGo.GameProfile.valueOf(Array.get(profiles, i)).getName());
+                list.add(CraftGo.GameProfile.valueOf(Array.get(profiles, i)).getName());
             }
             return new PingReply(ctx, motd, online, max, protocolVersion, protocolName, list);
         } catch (Exception e) {

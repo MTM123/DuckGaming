@@ -55,10 +55,7 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
                 ElementResponse password = response.asComplexFormResponse().getResponse(1);
                 if (getAuthMeApi().checkPassword(response.getPlayer().getName(), password.getString().trim())) {
                     getAuthMeApi().forceLogin(response.getPlayer());
-                    Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                        @Override
-                        public void run() {
-                        }
+                    Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
                     }, 20L);
                 } else {
                     PocketPlayer.sendModal(response.getPlayer(), faultyLoginModal, loginCallback);
@@ -77,12 +74,7 @@ public class ProtocolSupportPocketStuff_Listener implements Listener {
                     } else {
                         getAuthMeApi().forceRegister(response.getPlayer(), password.getString().trim());
                         getAuthMeApi().forceLogin(response.getPlayer());
-                        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                            @Override
-                            public void run() {
-                                Server.getInstance().fetchLobby(response.getPlayer());
-                            }
-                        }, 20L);
+                        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().fetchLobby(response.getPlayer()), 20L);
                     }
                 } else {
                     PocketPlayer.sendModal(response.getPlayer(), notMatchRegisterModal, registerCallback);

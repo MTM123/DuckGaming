@@ -43,8 +43,7 @@ public class MarryCmd implements CommandExecutor {
                     Server.getInstance().getMarriageRequests().remove(id.getKey());
                 }
             }
-            if (Server.getInstance().getMarriageRequests().containsKey(player.getUniqueId()))
-                Server.getInstance().getMarriageRequests().remove(player.getUniqueId());
+            Server.getInstance().getMarriageRequests().remove(player.getUniqueId());
             if (acceptMarry) {
                 player.performCommand("marry divorce");
                 int marriageId = $.Marriage.setPlayerMarriedPlayer(player, targetPlayer);

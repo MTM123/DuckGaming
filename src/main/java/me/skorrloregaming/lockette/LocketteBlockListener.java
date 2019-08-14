@@ -56,8 +56,7 @@ public class LocketteBlockListener implements Listener {
         }
         checkBlock = block.getRelative(BlockFace.WEST);
         if (checkBlock.getType() == block.getType()) {
-            if (!Lockette.isOwner(checkBlock, player))
-                return (false);
+            return Lockette.isOwner(checkBlock, player);
         }
         return (true);
     }
@@ -167,7 +166,6 @@ public class LocketteBlockListener implements Listener {
         checkBlock = block.getRelative(Lockette.getPistonFacing(block), event.getBlocks().size() + 1);
         if (Lockette.isProtected(checkBlock)) {
             event.setCancelled(true);
-            return;
         }
     }
 
@@ -283,7 +281,6 @@ public class LocketteBlockListener implements Listener {
                 if (!validateOwner(checkBlock, player)) {
                     event.setCancelled(true);
                     plugin.localizedMessage(player, null, "msg-user-denied");
-                    return;
                 }
             }
         }
@@ -324,9 +321,7 @@ public class LocketteBlockListener implements Listener {
         if (signBlock == null)
             return true;
         Sign sign = (Sign) signBlock.getState();
-        if (Lockette.isOwner(sign, player))
-            return true;
-        return false;
+        return Lockette.isOwner(sign, player);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -370,7 +365,7 @@ public class LocketteBlockListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
+    @EventHandler(priority = EventPriority.LOW)
     public void onSignChange(SignChangeEvent event) {
         Player player = event.getPlayer();
         if (!$.validLocketteMinigames.contains($.getCurrentMinigame(player).toString().toLowerCase()))
@@ -393,9 +388,9 @@ public class LocketteBlockListener implements Listener {
         }
         String text = ChatColor.stripColor(event.getLine(0));
         if (text.equalsIgnoreCase("[Private]") || text.equalsIgnoreCase(Lockette.altPrivate)) {
-            boolean doChests = true, doFurnaces = true, doDispensers = true, doDroppers = true;
-            boolean doBrewingStands = true, doCustoms = true;
-            boolean doTrapDoors = true, doDoors = true;
+            boolean doChests, doFurnaces, doDispensers, doDroppers;
+            boolean doBrewingStands, doCustoms;
+            boolean doTrapDoors, doDoors;
             boolean create = false;
             doChests = false;
             doFurnaces = false;
@@ -455,7 +450,7 @@ public class LocketteBlockListener implements Listener {
                 return;
             }
             int x;
-            Block checkBlock[] = new Block[4];
+            Block[] checkBlock = new Block[4];
             BlockFace face = null;
             int type = 0;
             boolean conflict = false;
@@ -534,7 +529,7 @@ public class LocketteBlockListener implements Listener {
                             }
                         }
                 }
-            if (conflict == true) {
+            if (conflict) {
                 face = null;
                 type = 0;
             }
@@ -715,8 +710,8 @@ public class LocketteBlockListener implements Listener {
             }
         } else if (text.equalsIgnoreCase("[More Users]") || text.equalsIgnoreCase(Lockette.altMoreUsers)) {
             int x;
-            Block checkBlock[] = new Block[4];
-            Block signBlock = null;
+            Block[] checkBlock = new Block[4];
+            Block signBlock;
             Sign sign = null;
             BlockFace face = null;
             if (Lockette.protectDoors || Lockette.protectTrapDoors) {

@@ -69,9 +69,9 @@ public class ComplexParticle {
     public static ComplexParticle DOLPHIN = ComplexParticle.get(Particle.DOLPHIN);
     private final float extra = 0.001f;
     private Particle particleType;
-    private int particleCount = 0;
+    private int particleCount;
     private float radius = 4f;
-    private Class<?> requiredDataClass = null;
+    private Class<?> requiredDataClass;
     private Object particleData = null;
 
     public ComplexParticle(Particle particleType, int particleCount) {
@@ -118,10 +118,8 @@ public class ComplexParticle {
             case "ITEM_CRACK":
                 return ItemStack.class;
             case "BLOCK_CRACK":
-                return BlockData.class;
-            case "BLOCK_DUST":
-                return BlockData.class;
             case "FALLING_DUST":
+            case "BLOCK_DUST":
                 return BlockData.class;
             default:
                 return null;

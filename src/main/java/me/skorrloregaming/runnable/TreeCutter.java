@@ -9,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.inventory.ItemStack;
@@ -24,9 +23,9 @@ public final class TreeCutter extends BukkitRunnable {
     private Block startBlock;
     private Location startBlockCenter;
     private int searchSquareSize = 25;
-    private List<String> comparisonBlockArray = new ArrayList<String>();
-    private List<String> comparisonBlockArrayLeaves = new ArrayList<String>();
-    private List<Block> blocks = new ArrayList<Block>();
+    private List<String> comparisonBlockArray = new ArrayList<>();
+    private List<String> comparisonBlockArrayLeaves = new ArrayList<>();
+    private List<Block> blocks = new ArrayList<>();
     private int indexed = 0;
 
     public TreeCutter(Player cutter, Block startBlock) {
@@ -76,7 +75,7 @@ public final class TreeCutter extends BukkitRunnable {
                     for (final ItemStack stack : startBlock.getDrops()) {
                         startBlock.getWorld().dropItem(center, stack);
                     }
-                    startBlock.getWorld().playEffect(center, Effect.STEP_SOUND, (Object) startBlock.getType());
+                    startBlock.getWorld().playEffect(center, Effect.STEP_SOUND, startBlock.getType());
                     startBlock.setType(Material.AIR);
                 }
             }.runTask(Server.getInstance().getPlugin());
@@ -97,18 +96,14 @@ public final class TreeCutter extends BukkitRunnable {
             Server.getInstance().getCurrentFellers().add(this.player.getUniqueId());
         }
         if ((this.player.getInventory().getItemInMainHand() == null || this.player.getInventory().getItemInMainHand().getType() == Material.AIR) && !this.updateItemInHand()) {
-            if (Server.getInstance().getCurrentFellers().contains(this.player.getUniqueId())) {
-                Server.getInstance().getCurrentFellers().remove(this.player.getUniqueId());
-            }
+            Server.getInstance().getCurrentFellers().remove(this.player.getUniqueId());
             return;
         }
         Server.getInstance().getBukkitTasks().add(new BukkitRunnable() {
             public void run() {
                 if (!player.isOnline()) {
                     this.cancel();
-                    if (Server.getInstance().getCurrentFellers().contains(player.getUniqueId())) {
-                        Server.getInstance().getCurrentFellers().remove(player.getUniqueId());
-                    }
+                    Server.getInstance().getCurrentFellers().remove(player.getUniqueId());
                     return;
                 }
                 final ItemStack item = player.getInventory().getItemInMainHand();
@@ -117,9 +112,7 @@ public final class TreeCutter extends BukkitRunnable {
                     type = item.getType();
                 if (!Directory.axes.contains(type)) {
                     this.cancel();
-                    if (Server.getInstance().getCurrentFellers().contains(player.getUniqueId())) {
-                        Server.getInstance().getCurrentFellers().remove(player.getUniqueId());
-                    }
+                    Server.getInstance().getCurrentFellers().remove(player.getUniqueId());
                     return;
                 }
                 if (blocks.size() < indexed - 2) {
@@ -128,9 +121,9 @@ public final class TreeCutter extends BukkitRunnable {
                 }
                 final Block block = blocks.get(indexed++);
                 final PlayerAnimationEvent animationEvent = new PlayerAnimationEvent(player);
-                Bukkit.getPluginManager().callEvent((Event) animationEvent);
+                Bukkit.getPluginManager().callEvent(animationEvent);
                 final BlockBreakEvent event = new BlockBreakEvent(block, player);
-                Bukkit.getPluginManager().callEvent((Event) event);
+                Bukkit.getPluginManager().callEvent(event);
                 if (!event.isCancelled()) {
                     final Location center = block.getLocation().add(0.5, 0.5, 0.5);
                     startBlock.getWorld().playEffect(center, Effect.STEP_SOUND, block.getType());
@@ -146,9 +139,7 @@ public final class TreeCutter extends BukkitRunnable {
                 }
                 if (blocks.size() <= indexed) {
                     this.cancel();
-                    if (Server.getInstance().getCurrentFellers().contains(player.getUniqueId())) {
-                        Server.getInstance().getCurrentFellers().remove(player.getUniqueId());
-                    }
+                    Server.getInstance().getCurrentFellers().remove(player.getUniqueId());
                 }
             }
         }.runTaskTimer(Server.getInstance().getPlugin(), 0L, 0L));

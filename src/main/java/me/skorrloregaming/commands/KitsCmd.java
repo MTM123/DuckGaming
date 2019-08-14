@@ -22,29 +22,29 @@ public class KitsCmd implements CommandExecutor {
         }
         String tag = $.getMinigameTag(player);
         if (Server.getInstance().getSurvival().contains(player.getUniqueId())) {
-            String s = "";
+            StringBuilder s = new StringBuilder();
             for (String str : $.Survival.validKits) {
-                s += ChatColor.RED + WordUtils.capitalize(str) + ChatColor.GRAY + ", ";
+                s.append(ChatColor.RED).append(WordUtils.capitalize(str)).append(ChatColor.GRAY).append(", ");
             }
-            s = s.substring(0, s.lastIndexOf(", "));
+            s = new StringBuilder(s.substring(0, s.lastIndexOf(", ")));
             sender.sendMessage(tag + ChatColor.GRAY + "Kits: " + ChatColor.RED + s);
             return true;
         }
         if (Server.getInstance().getFactions().contains(player.getUniqueId())) {
-            String s = "";
+            StringBuilder s = new StringBuilder();
             for (String str : $.Factions.validKits) {
-                s += ChatColor.RED + WordUtils.capitalize(str) + ChatColor.GRAY + ", ";
+                s.append(ChatColor.RED).append(WordUtils.capitalize(str)).append(ChatColor.GRAY).append(", ");
             }
-            s = s.substring(0, s.lastIndexOf(", "));
+            s = new StringBuilder(s.substring(0, s.lastIndexOf(", ")));
             sender.sendMessage(tag + ChatColor.GRAY + "Kits: " + ChatColor.RED + s);
             return true;
         }
         if (Server.getInstance().getKitpvp().contains(player.getUniqueId())) {
-            String s = "";
+            StringBuilder s = new StringBuilder();
             for (String str : $.Kitpvp.validKits) {
-                s += ChatColor.RED + WordUtils.capitalize(str) + ChatColor.GRAY + ", ";
+                s.append(ChatColor.RED).append(WordUtils.capitalize(str)).append(ChatColor.GRAY).append(", ");
             }
-            s = s.substring(0, s.lastIndexOf(", "));
+            s = new StringBuilder(s.substring(0, s.lastIndexOf(", ")));
             sender.sendMessage(tag + ChatColor.GRAY + "Kits: " + ChatColor.RED + s);
             return true;
         }

@@ -197,7 +197,6 @@ public class JSONManipulatorCurrent implements JSONManipulator {
                 }
             } else {
                 if (array.get(i).isJsonNull()) {
-                    continue;
                 } else {
                     if (array.get(i).isJsonArray()) {
                         JsonArray jar = array.get(i).getAsJsonArray();
@@ -276,7 +275,7 @@ public class JSONManipulatorCurrent implements JSONManipulator {
         JsonArray use = Translator.toJson(repl.replace("{name}", sender.getName()).replace("{display-name}", sender.getDisplayName()));
         JsonObject hover = PARSER.parse("{\"action\":\"show_text\", \"value\": \"\"}").getAsJsonObject();
 
-        StringBuilder oneLineTooltip = new StringBuilder("");
+        StringBuilder oneLineTooltip = new StringBuilder();
         int index = 0;
         for (String m : tooltip) {
             oneLineTooltip.append(m.replace("{name}", sender.getName()).replace("{display-name}", sender.getDisplayName()));
@@ -366,7 +365,6 @@ public class JSONManipulatorCurrent implements JSONManipulator {
                 }
             } else {
                 if (array.get(i).isJsonNull()) {
-                    continue;
                 } else {
                     if (array.get(i).isJsonArray()) {
                         JsonArray jar = array.get(i).getAsJsonArray();
@@ -488,7 +486,6 @@ public class JSONManipulatorCurrent implements JSONManipulator {
                 }
             } else {
                 if (arr.get(i).isJsonNull()) {
-                    continue;
                 } else {
                     if (arr.get(i).isJsonArray()) {
                         JsonArray jar = arr.get(i).getAsJsonArray();
@@ -607,7 +604,6 @@ public class JSONManipulatorCurrent implements JSONManipulator {
                 }
             } else {
                 if (arr.get(i).isJsonNull()) {
-                    continue;
                 } else {
                     if (arr.get(i).isJsonArray()) {
                         JsonArray jar = arr.get(i).getAsJsonArray();
@@ -768,7 +764,7 @@ public class JSONManipulatorCurrent implements JSONManipulator {
         }
     }
 
-    private String stringifyItem(ItemStack stack) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchFieldException, NoSuchMethodException {
+    private String stringifyItem(ItemStack stack) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
         Item item = toItem(stack);
         ProtocolVersion.remapIds(ProtocolVersion.getServerVersion().MAX_VER, protocolVersion.MAX_VER, item);
         StringBuilder sb = new StringBuilder("{id:");

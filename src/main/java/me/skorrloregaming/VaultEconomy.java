@@ -186,7 +186,7 @@ public class VaultEconomy implements Economy {
 
     @Override
     public List<String> getBanks() {
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     @Override
@@ -197,16 +197,12 @@ public class VaultEconomy implements Economy {
     @Override
     public boolean hasAccount(String playerName) {
         OfflinePlayer player = CraftGo.Player.getOfflinePlayer(playerName);
-        if (player.hasPlayedBefore() || player.isOnline())
-            return true;
-        return false;
+        return player.hasPlayedBefore() || player.isOnline();
     }
 
     @Override
     public boolean hasAccount(OfflinePlayer offlinePlayer) {
-        if (offlinePlayer.hasPlayedBefore() || offlinePlayer.isOnline())
-            return true;
-        return false;
+        return offlinePlayer.hasPlayedBefore() || offlinePlayer.isOnline();
     }
 
     @Override
@@ -240,7 +236,7 @@ public class VaultEconomy implements Economy {
 
     @Override
     public double getBalance(String playerName, String worldName) {
-        UUID uid = UUID.randomUUID();
+        UUID uid;
         try {
             uid = UUID.fromString(playerName);
         } catch (IllegalArgumentException ex) {
@@ -250,34 +246,28 @@ public class VaultEconomy implements Economy {
             uid = UUID.fromString(uidString);
         }
         ServerMinigame minigame = $.getMinigameFromWorld(Bukkit.getWorld(worldName));
-        double cash = EconManager.retrieveCash(uid, minigame.toString().toLowerCase());
-        return cash;
+        return EconManager.retrieveCash(uid, minigame.toString().toLowerCase());
     }
 
     @Override
     public double getBalance(OfflinePlayer offlinePlayer, String worldName) {
         ServerMinigame minigame = $.getMinigameFromWorld(Bukkit.getWorld(worldName));
-        double cash = EconManager.retrieveCash(offlinePlayer.getUniqueId(), minigame.toString().toLowerCase());
-        return cash;
+        return EconManager.retrieveCash(offlinePlayer.getUniqueId(), minigame.toString().toLowerCase());
     }
 
     @Override
     public boolean has(String playerName, String worldName, double amount) {
-        if (getBalance(playerName, worldName) >= amount)
-            return true;
-        return false;
+        return getBalance(playerName, worldName) >= amount;
     }
 
     @Override
     public boolean has(OfflinePlayer offlinePlayer, String worldName, double amount) {
-        if (getBalance(offlinePlayer, worldName) >= amount)
-            return true;
-        return false;
+        return getBalance(offlinePlayer, worldName) >= amount;
     }
 
     @Override
     public EconomyResponse withdrawPlayer(String playerName, String worldName, double amount) {
-        UUID uid = UUID.randomUUID();
+        UUID uid;
         try {
             uid = UUID.fromString(playerName);
         } catch (IllegalArgumentException ex) {
@@ -308,7 +298,7 @@ public class VaultEconomy implements Economy {
 
     @Override
     public EconomyResponse depositPlayer(String playerName, String worldName, double amount) {
-        UUID uid = UUID.randomUUID();
+        UUID uid;
         try {
             uid = UUID.fromString(playerName);
         } catch (IllegalArgumentException ex) {

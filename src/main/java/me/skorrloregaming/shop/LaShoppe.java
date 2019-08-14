@@ -12,8 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class LaShoppe {
 
     public int getTotalItems(ServerMinigame minigame) {
@@ -28,11 +26,9 @@ public class LaShoppe {
     public void createItem(ServerMinigame minigame, Material material, int price, int amount, int data) {
         String prefix = minigame.toString().toLowerCase() + ".";
         int index = 0;
-        while (true) {
+        do {
             index++;
-            if (!Server.getInstance().getShoppeConfig().getData().contains(prefix + "items." + index))
-                break;
-        }
+        } while (Server.getInstance().getShoppeConfig().getData().contains(prefix + "items." + index));
         Server.getInstance().getShoppeConfig().getData().set(prefix + "items." + index + ".material", material.toString());
         Server.getInstance().getShoppeConfig().getData().set(prefix + "items." + index + ".price", price);
         Server.getInstance().getShoppeConfig().getData().set(prefix + "items." + index + ".amount", amount);
@@ -43,11 +39,9 @@ public class LaShoppe {
     public void createEnchant(ServerMinigame minigame, Enchantment enchantment, int price, int tier) {
         String prefix = minigame.toString().toLowerCase() + ".";
         int index = 0;
-        while (true) {
+        do {
             index++;
-            if (!Server.getInstance().getShoppeConfig().getData().contains(prefix + "enchant." + index))
-                break;
-        }
+        } while (Server.getInstance().getShoppeConfig().getData().contains(prefix + "enchant." + index));
         Server.getInstance().getShoppeConfig().getData().set(prefix + "enchant." + index + ".enchant", enchantment.getName());
         Server.getInstance().getShoppeConfig().getData().set(prefix + "enchant." + index + ".price", price);
         Server.getInstance().getShoppeConfig().getData().set(prefix + "enchant." + index + ".tier", tier);
@@ -92,7 +86,7 @@ public class LaShoppe {
         switch (frame) {
             case HOME:
                 int startIndex = 0;
-                Inventory inventory = null;
+                Inventory inventory;
                 if (player.isOp()) {
                     inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.LA_SHOPPE, page), 45, "La Shoppe, page " + page);
                     ItemStack removeItemModeItem = Link$.createMaterial(Material.RED_DYE, "Remove items from shop");
@@ -142,30 +136,14 @@ public class LaShoppe {
                 player.openInventory(inventory);
                 break;
             case CREATE_ITEM:
-                try {
-                    new AnvilGUI(player, getInventoryName(frame), new CreateItemTypeEventHandler(this))
-                            .setInputName("Enter type")
-                            .open();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                }
+                new AnvilGUI(player, getInventoryName(frame), new CreateItemTypeEventHandler(this))
+                        .setInputName("Enter type")
+                        .open();
                 break;
             case CREATE_ENCHANT:
-                try {
-                    new AnvilGUI(player, getInventoryName(frame), new CreateEnchantTypeEventHandler(this))
-                            .setInputName("Enter type")
-                            .open();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                }
+                new AnvilGUI(player, getInventoryName(frame), new CreateEnchantTypeEventHandler(this))
+                        .setInputName("Enter type")
+                        .open();
                 break;
             default:
                 break;

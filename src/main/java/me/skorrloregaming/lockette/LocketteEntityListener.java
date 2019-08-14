@@ -36,7 +36,6 @@ public class LocketteEntityListener implements Listener {
                 }
                 if (BlockUtil.isInList(block.getType(), BlockUtil.materialListNonDoors)) {
                     it.remove();
-                    continue;
                 }
             }
         }

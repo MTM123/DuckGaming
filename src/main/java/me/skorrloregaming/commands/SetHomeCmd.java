@@ -96,11 +96,11 @@ public class SetHomeCmd implements CommandExecutor {
         float yaw = player.getLocation().getYaw();
         float pitch = player.getLocation().getPitch();
         config.getData().set(base + ".world", world.getName());
-        config.getData().set(base + ".x", Double.valueOf(x));
-        config.getData().set(base + ".y", Double.valueOf(y));
-        config.getData().set(base + ".z", Double.valueOf(z));
-        config.getData().set(base + ".yaw", Integer.valueOf((int) yaw));
-        config.getData().set(base + ".pitch", Integer.valueOf((int) pitch));
+        config.getData().set(base + ".x", x);
+        config.getData().set(base + ".y", y);
+        config.getData().set(base + ".z", z);
+        config.getData().set(base + ".yaw", (int) yaw);
+        config.getData().set(base + ".pitch", (int) pitch);
         config.saveData();
         player.sendMessage($.getMinigameTag(player) + ChatColor.RED + "Success. " + ChatColor.GRAY + "Home " + ChatColor.RED + home + ChatColor.GRAY + " has been set.");
         return true;

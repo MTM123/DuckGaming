@@ -36,9 +36,7 @@ public class InventorySeeCmd implements CommandExecutor {
                 Inventory inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.TEMPORARY), 54, name);
                 if (player.isOp()) {
                     inv = Bukkit.createInventory(new InventoryMenu(player, InventoryType.CHEST), 54, name);
-                    name = ChatColor.BOLD + "Personal Inventory";
-                    if (Server.getInstance().getSavePersonalChest().containsKey(player))
-                        Server.getInstance().getSavePersonalChest().remove(player);
+                    Server.getInstance().getSavePersonalChest().remove(player);
                     Server.getInstance().getSaveOtherInventory().put(player, tp);
                 }
                 inv.setContents(tp.getInventory().getContents());

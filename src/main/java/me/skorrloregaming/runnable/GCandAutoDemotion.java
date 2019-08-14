@@ -56,13 +56,12 @@ public class GCandAutoDemotion implements Runnable {
         }
         File f = new File("plugins/uSkyBlock/players");
         if (f.exists()) {
-            ArrayList<String> names = new ArrayList<String>(Arrays.asList(f.list()));
-            for (int i = 0; i < names.size(); i++) {
-                String id = names.get(i);
+            ArrayList<String> names = new ArrayList<>(Arrays.asList(f.list()));
+            for (String id : names) {
                 if (id.contains("."))
                     id = id.substring(0, id.indexOf("."));
                 if (!Server.getInstance().getPlugin().getConfig().contains("config." + id)) {
-                    new File("plugins/uSkyBlock/players", names.get(i)).delete();
+                    new File("plugins/uSkyBlock/players", id).delete();
                     String rawMessage = "Cleared skyblock records (1) of " + id + ".";
                     Map<String, String> message = new MapBuilder().message(rawMessage).range(0).build();
                     LinkServer.getInstance().getRedisMessenger().broadcast(RedisChannel.CHAT, message);
@@ -89,8 +88,7 @@ public class GCandAutoDemotion implements Runnable {
                     long totalPlaytime = LinkServer.getInstance().getPlaytimeManager().getStoredPlayerPlaytime(player);
                     long[] range = LinkServer.getInstance().getPlaytimeManager().getRangeOfStoredPlayerPlaytime(player, dayOfYear - 6, dayOfYear + 1);
                     long totalTimePlayedInSeconds = 0L;
-                    for (int i = 0; i < range.length; i++)
-                        totalTimePlayedInSeconds += range[i];
+                    for (long l : range) totalTimePlayedInSeconds += l;
                     int playtimeRequirementPerWeek = 60 * 60 * 4;
                     if (rankId > 0)
                         playtimeRequirementPerWeek = 60 * 60 * 7;

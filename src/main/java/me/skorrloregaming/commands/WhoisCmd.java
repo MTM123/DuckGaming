@@ -38,13 +38,10 @@ public class WhoisCmd implements CommandExecutor {
             sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Current server-side rank: " + ChatColor.RED + rank);
             if (sender.isOp()) {
                 sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Defined ip address: " + ChatColor.RED + player.getAddress().getAddress().getHostAddress());
-                Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        IpLocationQuery query = CraftGo.Player.queryIpLocation(player);
-                        sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Defined country: " + ChatColor.RED + query.getCountry());
-                        sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Defined geo-location: " + ChatColor.RED + query.getCity() + ", " + query.getState());
-                    }
+                Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), () -> {
+                    IpLocationQuery query = CraftGo.Player.queryIpLocation(player);
+                    sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Defined country: " + ChatColor.RED + query.getCountry());
+                    sender.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Defined geo-location: " + ChatColor.RED + query.getCity() + ", " + query.getState());
                 });
             }
         }

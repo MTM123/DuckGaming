@@ -29,7 +29,7 @@ public class SpawnNpcCmd implements CommandExecutor {
             if (args.length > 1) {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 1; i < args.length; i++) {
-                    sb.append(args[i] + " ");
+                    sb.append(args[i]).append(" ");
                 }
                 name = sb.toString();
             }

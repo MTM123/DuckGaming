@@ -76,7 +76,7 @@ public class PingInjector implements Listener {
                 Method method = arrayOfMethod[i];
                 method.setAccessible(true);
                 if (method.getReturnType() == List.class) {
-                    return method.invoke(null, new Object[]{conn});
+                    return method.invoke(null, conn);
                 }
             }
         } catch (Exception e) {

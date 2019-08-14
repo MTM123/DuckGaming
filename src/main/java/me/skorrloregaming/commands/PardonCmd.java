@@ -21,7 +21,7 @@ public class PardonCmd implements CommandExecutor {
             }
             OfflinePlayer offlinePlayer = CraftGo.Player.getOfflinePlayer(args[0]);
             String path = "config." + offlinePlayer.getUniqueId().toString();
-            String ipAddress = "/unspecified";
+            String ipAddress;
             if (Server.getInstance().getPlugin().getConfig().contains(path)) {
                 ipAddress = Server.getInstance().getPlugin().getConfig().getString(path + ".ip");
             } else {

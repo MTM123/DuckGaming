@@ -54,7 +54,7 @@ public class SpawnerCmd implements CommandExecutor {
         pigSpawner = Link$.appendLore(pigSpawner, new String[]{"", $.pricePrefix + Server.getInstance().getSpawnerPrices().get(7)});
         ItemStack chickenSpawner = CraftGo.MobSpawner.newSpawnerItem(EntityType.CHICKEN, 1);
         chickenSpawner = Link$.appendLore(chickenSpawner, new String[]{"", $.pricePrefix + Server.getInstance().getSpawnerPrices().get(8)});
-        inventory.setItem(0 + add, skeletonSpawner);
+        inventory.setItem(add, skeletonSpawner);
         inventory.setItem(1 + add, zombieSpawner);
         inventory.setItem(2 + add, spiderSpawner);
         inventory.setItem(3 + add, blazeSpawner);

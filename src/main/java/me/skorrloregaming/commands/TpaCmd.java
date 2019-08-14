@@ -45,8 +45,7 @@ public class TpaCmd implements CommandExecutor {
                                 Server.getInstance().getTpaRequests().remove(id.getKey());
                             }
                         }
-                        if (Server.getInstance().getTpaRequests().containsKey(player.getUniqueId()))
-                            Server.getInstance().getTpaRequests().remove(player.getUniqueId());
+                        Server.getInstance().getTpaRequests().remove(player.getUniqueId());
                         Server.getInstance().getTpaRequests().put(player.getUniqueId(), targetPlayer.getUniqueId());
                         player.sendMessage(tag + ChatColor.WHITE + "Teleport request sent to " + ChatColor.YELLOW + targetPlayer.getName() + ChatColor.WHITE + ".");
                         targetPlayer.sendMessage(tag + ChatColor.WHITE + "Teleport request received from " + ChatColor.YELLOW + player.getName() + ChatColor.WHITE + ".");

@@ -20,7 +20,7 @@ public class DelayedTeleport extends BukkitRunnable {
     private final Location teleportLocation;
     public double remainingSeconds;
     public double originalSeconds;
-    private boolean silent = false;
+    private boolean silent;
     private boolean allowed = true;
     private DelayedTeleport instance;
     private Callable<?> finishTask = null;
@@ -42,25 +42,21 @@ public class DelayedTeleport extends BukkitRunnable {
             return;
         }
         instance = this;
-        Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                if (Server.getInstance().getDelayedTeleports().containsKey(player.getUniqueId())) {
-                    Server.getInstance().getDelayedTeleports().get(player.getUniqueId()).close();
-                }
-                Server.getInstance().getDelayedTeleports().put(player.getUniqueId(), instance);
-                if (!silent) {
-                    if ((seconds == Math.floor(seconds)) && !Double.isInfinite(seconds)) {
-                        final Double ctSeconds = seconds;
-                        player.sendMessage(ChatColor.GRAY + "Teleportation request accepted, teleporting in " + ChatColor.RED + ctSeconds.intValue() + ChatColor.GRAY + " seconds.");
-                    } else {
-                        player.sendMessage(ChatColor.GRAY + "Teleportation request accepted, teleporting in " + ChatColor.RED + seconds + ChatColor.GRAY + " seconds.");
-                    }
+        Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), () -> {
+            if (Server.getInstance().getDelayedTeleports().containsKey(player.getUniqueId())) {
+                Server.getInstance().getDelayedTeleports().get(player.getUniqueId()).close();
+            }
+            Server.getInstance().getDelayedTeleports().put(player.getUniqueId(), instance);
+            if (!silent) {
+                if ((seconds == Math.floor(seconds)) && !Double.isInfinite(seconds)) {
+                    player.sendMessage(ChatColor.GRAY + "Teleportation request accepted, teleporting in " + ChatColor.RED + (int) seconds + ChatColor.GRAY + " seconds.");
                 } else {
-                    if (player.hasPotionEffect(PotionEffectType.CONFUSION))
-                        player.removePotionEffect(PotionEffectType.CONFUSION);
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, (20 * ((int) seconds * 2)), 1));
+                    player.sendMessage(ChatColor.GRAY + "Teleportation request accepted, teleporting in " + ChatColor.RED + seconds + ChatColor.GRAY + " seconds.");
                 }
+            } else {
+                if (player.hasPotionEffect(PotionEffectType.CONFUSION))
+                    player.removePotionEffect(PotionEffectType.CONFUSION);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, (20 * ((int) seconds * 2)), 1));
             }
         });
     }
@@ -103,19 +99,16 @@ public class DelayedTeleport extends BukkitRunnable {
                     if (!silent) {
                         player.sendMessage(ChatColor.GRAY + "Teleporting..");
                     }
-                    Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
-                        @Override
-                        public void run() {
-                            $.teleport(player, teleportLocation);
-                            if (!(finishTitleSubtitle == null))
-                                CraftGo.Player.sendTimedTitleAndSubtitle(player, finishTitleSubtitle);
-                            Server.getInstance().getDelayedTeleports().remove(player.getUniqueId());
-                            if (!(finishTask == null)) {
-                                try {
-                                    finishTask.call();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                    Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), () -> {
+                        $.teleport(player, teleportLocation);
+                        if (!(finishTitleSubtitle == null))
+                            CraftGo.Player.sendTimedTitleAndSubtitle(player, finishTitleSubtitle);
+                        Server.getInstance().getDelayedTeleports().remove(player.getUniqueId());
+                        if (!(finishTask == null)) {
+                            try {
+                                finishTask.call();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                     });
@@ -125,20 +118,16 @@ public class DelayedTeleport extends BukkitRunnable {
             }
             if (player.getWorld().getName().equals(originalPlayerLocation.getWorld().getName())) {
                 if (player.getLocation().distance(originalPlayerLocation) >= 0.1) {
-                    Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!silent) {
-                                player.sendMessage(ChatColor.GRAY + "Teleportation request aborted due to movement.");
-                            } else {
-                                if (player.hasPotionEffect(PotionEffectType.CONFUSION))
-                                    player.removePotionEffect(PotionEffectType.CONFUSION);
-                            }
-                            Server.getInstance().getDelayedTeleports().remove(player.getUniqueId());
+                    Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), () -> {
+                        if (!silent) {
+                            player.sendMessage(ChatColor.GRAY + "Teleportation request aborted due to movement.");
+                        } else {
+                            if (player.hasPotionEffect(PotionEffectType.CONFUSION))
+                                player.removePotionEffect(PotionEffectType.CONFUSION);
                         }
+                        Server.getInstance().getDelayedTeleports().remove(player.getUniqueId());
                     });
                     cancel();
-                    return;
                 }
             } else {
                 cancel();

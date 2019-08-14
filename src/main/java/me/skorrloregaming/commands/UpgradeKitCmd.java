@@ -47,7 +47,7 @@ public class UpgradeKitCmd implements CommandExecutor {
             weaponPreference = 1;
             altWeaponPreference = 0;
         }
-        List<String> preferredWeaponLore = new ArrayList<String>();
+        List<String> preferredWeaponLore = new ArrayList<>();
         if (CraftGo.Player.getProtocolVersion(player) > 314) {
             weapons[weaponPreference].addUnsafeEnchantment(Enchantment.BINDING_CURSE, 1);
         } else {
@@ -67,7 +67,7 @@ public class UpgradeKitCmd implements CommandExecutor {
             if (i == 18)
                 i += 1;
             passes++;
-            List<String> lore = new ArrayList<String>();
+            List<String> lore = new ArrayList<>();
             ItemStack item;
             if (upgradeCount >= passes - 1) {
                 item = Link$.createMaterial(Material.LEATHER_CHESTPLATE, prefix + "Select kit upgrade #" + passes);

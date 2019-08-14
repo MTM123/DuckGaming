@@ -27,7 +27,7 @@ public class SignEditCmd implements CommandExecutor {
         } else {
             StringBuilder sb = new StringBuilder();
             for (int i = 1; i < args.length; i++) {
-                sb.append(args[i] + " ");
+                sb.append(args[i]).append(" ");
             }
             String text = sb.toString().trim();
             if (Server.getInstance().getSignEditParam().containsKey(player)) {

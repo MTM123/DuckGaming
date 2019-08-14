@@ -57,9 +57,7 @@ public class KitCmd implements CommandExecutor {
                             if (!(checkPlayer == null)) {
                                 checkPlayer.sendMessage(tag + ChatColor.GRAY + "You can now use the kit " + ChatColor.RED + "Recruit");
                             }
-                            if (Server.getInstance().getRecruitKitCooldown(ServerMinigame.SURVIVAL).containsKey(fPlayer.getUniqueId())) {
-                                Server.getInstance().getRecruitKitCooldown(ServerMinigame.SURVIVAL).remove(fPlayer.getUniqueId());
-                            }
+                            Server.getInstance().getRecruitKitCooldown(ServerMinigame.SURVIVAL).remove(fPlayer.getUniqueId());
                             cancel();
                         }
                     }
@@ -103,9 +101,7 @@ public class KitCmd implements CommandExecutor {
                             if (!(checkPlayer == null)) {
                                 checkPlayer.sendMessage(tag + ChatColor.GRAY + "You can now use the kit " + ChatColor.RED + "Recruit");
                             }
-                            if (Server.getInstance().getRecruitKitCooldown(ServerMinigame.FACTIONS).containsKey(fPlayer.getUniqueId())) {
-                                Server.getInstance().getRecruitKitCooldown(ServerMinigame.FACTIONS).remove(fPlayer.getUniqueId());
-                            }
+                            Server.getInstance().getRecruitKitCooldown(ServerMinigame.FACTIONS).remove(fPlayer.getUniqueId());
                             cancel();
                         }
                     }
@@ -140,9 +136,7 @@ public class KitCmd implements CommandExecutor {
                             if (!(checkPlayer == null)) {
                                 checkPlayer.sendMessage(tag + ChatColor.GRAY + "You can now use the kit " + ChatColor.RED + "Donator");
                             }
-                            if (Server.getInstance().getDonatorKitCooldown().containsKey(fPlayer.getUniqueId())) {
-                                Server.getInstance().getDonatorKitCooldown().remove(fPlayer.getUniqueId());
-                            }
+                            Server.getInstance().getDonatorKitCooldown().remove(fPlayer.getUniqueId());
                             cancel();
                         }
                     }
@@ -177,9 +171,7 @@ public class KitCmd implements CommandExecutor {
                             if (!(checkPlayer == null)) {
                                 checkPlayer.sendMessage(tag + ChatColor.GRAY + "You can now use the kit " + ChatColor.RED + "Redstone");
                             }
-                            if (Server.getInstance().getRedstoneKitCooldown().containsKey(fPlayer.getUniqueId())) {
-                                Server.getInstance().getRedstoneKitCooldown().remove(fPlayer.getUniqueId());
-                            }
+                            Server.getInstance().getRedstoneKitCooldown().remove(fPlayer.getUniqueId());
                             cancel();
                         }
                     }
@@ -214,9 +206,7 @@ public class KitCmd implements CommandExecutor {
                             if (!(checkPlayer == null)) {
                                 checkPlayer.sendMessage(tag + ChatColor.GRAY + "You can now use the kit " + ChatColor.RED + "Obsidian");
                             }
-                            if (Server.getInstance().getObsidianKitCooldown().containsKey(fPlayer.getUniqueId())) {
-                                Server.getInstance().getObsidianKitCooldown().remove(fPlayer.getUniqueId());
-                            }
+                            Server.getInstance().getObsidianKitCooldown().remove(fPlayer.getUniqueId());
                             cancel();
                         }
                     }
@@ -251,9 +241,7 @@ public class KitCmd implements CommandExecutor {
                             if (!(checkPlayer == null)) {
                                 checkPlayer.sendMessage(tag + ChatColor.GRAY + "You can now use the kit " + ChatColor.RED + "Bedrock");
                             }
-                            if (Server.getInstance().getBedrockKitCooldown().containsKey(fPlayer.getUniqueId())) {
-                                Server.getInstance().getBedrockKitCooldown().remove(fPlayer.getUniqueId());
-                            }
+                            Server.getInstance().getBedrockKitCooldown().remove(fPlayer.getUniqueId());
                             cancel();
                         }
                     }
@@ -277,12 +265,7 @@ public class KitCmd implements CommandExecutor {
                 if (Server.getInstance().getStarterKitCooldown().containsKey(player.getUniqueId()) && upgradeCount > 0) {
                     if (!Server.getInstance().getDelayedTasks().contains(player.getUniqueId())) {
                         Server.getInstance().getDelayedTasks().add(player.getUniqueId());
-                        Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                            @Override
-                            public void run() {
-                                Server.getInstance().getDelayedTasks().remove(player.getUniqueId());
-                            }
-                        }, 20L));
+                        Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getDelayedTasks().remove(player.getUniqueId()), 20L));
                         player.sendMessage(tag + ChatColor.GRAY + "You must wait " + ChatColor.RED + Server.getInstance().getStarterKitCooldown().get(player.getUniqueId()) + ChatColor.GRAY + " seconds before using that kit again.");
                         player.sendMessage(tag + ChatColor.GRAY + "To use the default kit instead, use this kit again.");
                         return true;
@@ -297,10 +280,10 @@ public class KitCmd implements CommandExecutor {
                     final Player fPlayer = player;
                     final Plugin fPlugin = Server.getInstance().getPlugin();
                     if (!Server.getInstance().getStarterKitCooldown().containsKey(fPlayer.getUniqueId())) {
-                        Server.getInstance().getStarterKitCooldown().put(fPlayer.getUniqueId(), 60 * 1);
+                        Server.getInstance().getStarterKitCooldown().put(fPlayer.getUniqueId(), 60);
                     }
                     Server.getInstance().getBukkitTasks().add(new BukkitRunnable() {
-                        int time = 60 * 1;
+                        int time = 60;
 
                         public void run() {
                             time--;
@@ -310,9 +293,7 @@ public class KitCmd implements CommandExecutor {
                                 if (!(checkPlayer == null)) {
                                     checkPlayer.sendMessage(tag + ChatColor.GRAY + "You can now use the kit " + ChatColor.RED + "Starter");
                                 }
-                                if (Server.getInstance().getStarterKitCooldown().containsKey(fPlayer.getUniqueId())) {
-                                    Server.getInstance().getStarterKitCooldown().remove(fPlayer.getUniqueId());
-                                }
+                                Server.getInstance().getStarterKitCooldown().remove(fPlayer.getUniqueId());
                                 cancel();
                             }
                         }
@@ -344,9 +325,7 @@ public class KitCmd implements CommandExecutor {
                             if (!(checkPlayer == null)) {
                                 checkPlayer.sendMessage(tag + ChatColor.GRAY + "You can now use the kit " + ChatColor.RED + "Potions");
                             }
-                            if (Server.getInstance().getPotionsKitCooldown().containsKey(fPlayer.getUniqueId())) {
-                                Server.getInstance().getPotionsKitCooldown().remove(fPlayer.getUniqueId());
-                            }
+                            Server.getInstance().getPotionsKitCooldown().remove(fPlayer.getUniqueId());
                             cancel();
                         }
                     }

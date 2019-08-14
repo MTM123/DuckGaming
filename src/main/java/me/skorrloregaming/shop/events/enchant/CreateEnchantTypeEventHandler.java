@@ -8,8 +8,6 @@ import me.skorrloregaming.shop.LaShoppeFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class CreateEnchantTypeEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
     private LaShoppe shoppe;
@@ -21,7 +19,7 @@ public class CreateEnchantTypeEventHandler implements AnvilGUI.AnvilClickEventHa
     @Override
     public void onAnvilClick(AnvilGUI.AnvilClickEvent event) {
         String enchantmentName = event.getName().toUpperCase().replace(" ", "_");
-        Enchantment enchantment = null;
+        Enchantment enchantment;
         try {
             enchantment = Enchantment.getByName(Link$.unformatEnchantment(enchantmentName));
         } catch (Exception ex) {
@@ -29,22 +27,8 @@ public class CreateEnchantTypeEventHandler implements AnvilGUI.AnvilClickEventHa
             return;
         }
         final Enchantment fEnchantment = enchantment;
-        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ENCHANT), new CreateEnchantPriceEventHandler(shoppe, fEnchantment))
-                            .setInputName("Enter price")
-                            .open();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, 1L);
+        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ENCHANT), new CreateEnchantPriceEventHandler(shoppe, fEnchantment))
+                .setInputName("Enter price")
+                .open(), 1L);
     }
 }

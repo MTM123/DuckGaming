@@ -59,6 +59,5 @@ public class BuyItemAmountEventHandler implements AnvilGUI.AnvilClickEventHandle
             return;
         }
         player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money.");
-        return;
     }
 }

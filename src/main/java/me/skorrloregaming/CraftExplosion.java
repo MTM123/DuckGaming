@@ -169,9 +169,7 @@ public class CraftExplosion {
             return false;
         if (!strong && blockType == Material.END_STONE)
             return false;
-        if (!strong && blockType == Material.END_STONE_BRICKS)
-            return false;
-        return true;
+        return strong || blockType != Material.END_STONE_BRICKS;
     }
 
     private boolean isDropsDestructable(Block block) {
@@ -204,9 +202,7 @@ public class CraftExplosion {
             return true;
         if (blockType == Material.NETHER_PORTAL)
             return true;
-        if (blockType == Material.AIR)
-            return true;
-        return false;
+        return blockType == Material.AIR;
     }
 
     public boolean isStrong() {

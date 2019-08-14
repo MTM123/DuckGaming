@@ -21,17 +21,11 @@ public class MotdCmd implements CommandExecutor {
                     sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You must wait before using this command again.");
                 } else {
                     StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < args.length; i++) {
-                        sb.append(args[i] + " ");
+                    for (String arg : args) {
+                        sb.append(arg).append(" ");
                     }
                     Server.getInstance().setTempMotd(sb.toString());
-                    Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-
-                        @Override
-                        public void run() {
-                            Server.getInstance().setTempMotd("/unspecified");
-                        }
-                    }, 1200L));
+                    Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().setTempMotd("/unspecified"), 1200L));
                     sender.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "The motd has been temporarily changed.");
                 }
             }

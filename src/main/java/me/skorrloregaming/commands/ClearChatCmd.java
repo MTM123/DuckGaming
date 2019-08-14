@@ -30,7 +30,7 @@ public class ClearChatCmd implements CommandExecutor {
         if (sender.isOp() || sender instanceof Player) {
             if (sender instanceof Player) {
                 if (Link$.getRankId((Player) sender) == 3) {
-                    clearChat(((Player) sender).getName());
+                    clearChat(sender.getName());
                 } else {
                     Link$.playLackPermissionMessage(sender);
                 }

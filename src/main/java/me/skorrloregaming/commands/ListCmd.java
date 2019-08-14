@@ -25,25 +25,33 @@ public class ListCmd implements CommandExecutor {
         for (Player player : Bukkit.getOnlinePlayers()) {
             length++;
             String domain = $.getMinigameDomain(player);
-            if (domain.equals("kitpvp")) {
-                kitpvpArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
-            } else if (domain.equals("factions")) {
-                factionsArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
-            } else if (domain.equals("survival")) {
-                survivalArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
-            } else if (domain.equals("skyfight")) {
-                skyfightArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
-            } else if (domain.equals("creative")) {
-                creativeArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
-            } else if (domain.equals("skyblock")) {
-                skyblockArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
-            } else if (domain.equals("hub")) {
-                hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
+            switch (domain) {
+                case "kitpvp":
+                    kitpvpArray.append(ChatColor.RED).append(player.getName()).append(ChatColor.GRAY).append(", ").append(ChatColor.RED);
+                    break;
+                case "factions":
+                    factionsArray.append(ChatColor.RED).append(player.getName()).append(ChatColor.GRAY).append(", ").append(ChatColor.RED);
+                    break;
+                case "survival":
+                    survivalArray.append(ChatColor.RED).append(player.getName()).append(ChatColor.GRAY).append(", ").append(ChatColor.RED);
+                    break;
+                case "skyfight":
+                    skyfightArray.append(ChatColor.RED).append(player.getName()).append(ChatColor.GRAY).append(", ").append(ChatColor.RED);
+                    break;
+                case "creative":
+                    creativeArray.append(ChatColor.RED).append(player.getName()).append(ChatColor.GRAY).append(", ").append(ChatColor.RED);
+                    break;
+                case "skyblock":
+                    skyblockArray.append(ChatColor.RED).append(player.getName()).append(ChatColor.GRAY).append(", ").append(ChatColor.RED);
+                    break;
+                case "hub":
+                    hubArray.append(ChatColor.RED).append(player.getName()).append(ChatColor.GRAY).append(", ").append(ChatColor.RED);
+                    break;
             }
         }
         for (NpcPlayer player : Server.getInstance().getNpcPlayers()) {
             length++;
-            hubArray.append(ChatColor.RED + player.getName() + ChatColor.GRAY + ", " + ChatColor.RED);
+            hubArray.append(ChatColor.RED).append(player.getName()).append(ChatColor.GRAY).append(", ").append(ChatColor.RED);
         }
         String kitpvpMsg = kitpvpArray.toString();
         String factionsMsg = factionsArray.toString();

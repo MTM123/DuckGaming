@@ -57,7 +57,7 @@ public class Lockette {
     public final LocketteWorldListener worldListener = new LocketteWorldListener(this);
     public final LocketteInventoryListener inventoryListener = new LocketteInventoryListener(this);
     public final LocketteDoorCloser doorCloser = new LocketteDoorCloser(this);
-    public final HashMap<String, Block> playerList = new HashMap<String, Block>();
+    public final HashMap<String, Block> playerList = new HashMap<>();
 
     public Lockette() {
         plugin = this;
@@ -137,12 +137,9 @@ public class Lockette {
             } else if (text.equals("[more users]") || text.equalsIgnoreCase(altMoreUsers)) {
                 Block checkBlock = getSignAttachedBlock(block);
                 if (checkBlock != null)
-                    if (findBlockOwner(checkBlock) != null) {
-                        return (true);
-                    }
+                    return findBlockOwner(checkBlock) != null;
             }
-        } else if (Lockette.findBlockOwner(block) != null)
-            return (true);
+        } else return Lockette.findBlockOwner(block) != null;
         return (false);
     }
 
@@ -392,10 +389,7 @@ public class Lockette {
         if ($.isWallSign(checkBlock.getType())) {
             if (ignore == null)
                 doCheck = true;
-            else if (checkBlock.getLocation().equals(ignore))
-                doCheck = false;
-            else
-                doCheck = true;
+            else doCheck = !checkBlock.getLocation().equals(ignore);
             if (doCheck) {
                 Sign sign = (Sign) checkBlock.getState();
                 String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
@@ -412,10 +406,7 @@ public class Lockette {
         if ($.isWallSign(checkBlock.getType())) {
             if (ignore == null)
                 doCheck = true;
-            else if (checkBlock.getLocation().equals(ignore))
-                doCheck = false;
-            else
-                doCheck = true;
+            else doCheck = !checkBlock.getLocation().equals(ignore);
             if (doCheck) {
                 Sign sign = (Sign) checkBlock.getState();
                 String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
@@ -432,10 +423,7 @@ public class Lockette {
         if ($.isWallSign(checkBlock.getType())) {
             if (ignore == null)
                 doCheck = true;
-            else if (checkBlock.getLocation().equals(ignore))
-                doCheck = false;
-            else
-                doCheck = true;
+            else doCheck = !checkBlock.getLocation().equals(ignore);
             if (doCheck) {
                 Sign sign = (Sign) checkBlock.getState();
                 String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
@@ -452,10 +440,7 @@ public class Lockette {
         if ($.isWallSign(checkBlock.getType())) {
             if (ignore == null)
                 doCheck = true;
-            else if (checkBlock.getLocation().equals(ignore))
-                doCheck = false;
-            else
-                doCheck = true;
+            else doCheck = !checkBlock.getLocation().equals(ignore);
             if (doCheck) {
                 Sign sign = (Sign) checkBlock.getState();
                 String text = sign.getLine(0).replaceAll("(?i)\u00A7[0-F]", "").toLowerCase();
@@ -465,8 +450,7 @@ public class Lockette {
         } else if (iterate)
             if (checkBlock.getType() == block.getType()) {
                 checkBlock = findBlockOwnerBase(checkBlock, ignore, iterateFurther, iterateUp, iterateDown, includeEnds, false);
-                if (checkBlock != null)
-                    return (checkBlock);
+                return (checkBlock);
             }
         return (null);
     }
@@ -520,7 +504,7 @@ public class Lockette {
     public static List<Block> findBlockUsersBase(Block block, boolean iterate, boolean iterateUp, boolean iterateDown, boolean traps, int includeYPos) {
         Block checkBlock;
         Material type;
-        List<Block> list = new ArrayList<Block>();
+        List<Block> list = new ArrayList<>();
         if (iterateUp) {
             checkBlock = block.getRelative(BlockFace.UP);
             type = checkBlock.getType();
@@ -651,14 +635,12 @@ public class Lockette {
     }
 
     public static List<Block> toggleDoors(Block block, Block keyBlock, boolean wooden, boolean trap) {
-        List<Block> list = new ArrayList<Block>();
+        List<Block> list = new ArrayList<>();
         toggleDoorBase(block, keyBlock, !trap, wooden, list);
         try {
             if (!wooden)
                 block.getWorld().playEffect(block.getLocation(), Effect.DOOR_TOGGLE, 0);
-        } catch (NoSuchFieldError ex) {
-        } catch (NoSuchMethodError ex) {
-        } catch (NoClassDefFoundError ex) {
+        } catch (NoSuchFieldError | NoClassDefFoundError | NoSuchMethodError ex) {
         }
         return (list);
     }
@@ -679,9 +661,7 @@ public class Lockette {
             try {
                 if (effect)
                     block.getWorld().playEffect(block.getLocation(), Effect.DOOR_TOGGLE, 0);
-            } catch (NoSuchFieldError ex) {
-            } catch (NoSuchMethodError ex) {
-            } catch (NoClassDefFoundError ex) {
+            } catch (NoSuchFieldError | NoClassDefFoundError | NoSuchMethodError ex) {
             }
         }
     }
@@ -758,8 +738,7 @@ public class Lockette {
                                     }
                                 }
                                 try {
-                                    int value = Integer.parseInt(line.substring(index, end));
-                                    return (value);
+                                    return (Integer.parseInt(line.substring(index, end)));
                                 } catch (NumberFormatException ex) {
                                     return (defaultValue);
                                 }
@@ -773,15 +752,15 @@ public class Lockette {
     public static boolean isInList(Object target, List<?> list) {
         if (list == null)
             return (false);
-        for (int x = 0; x < list.size(); ++x)
-            if (list.get(x).equals(target))
+        for (Object o : list)
+            if (o.equals(target))
                 return (true);
         return (false);
     }
 
     public static boolean isHackFormat(String line) {
         String[] strs = line.split(":");
-        return (line.indexOf(":") > 1 && strs[1].length() == 36) ? true : false;
+        return line.indexOf(":") > 1 && strs[1].length() == 36;
     }
 
     public static String trim(String str) {
@@ -816,7 +795,7 @@ public class Lockette {
         }
         sign.setLine(index, cline);
         sign.update(true);
-        UUID[] uuids = null;
+        UUID[] uuids;
         if (!sign.hasMetadata(META_KEY) || sign.getMetadata(META_KEY).size() < 1) {
             uuids = new UUID[3];
             sign.setMetadata(META_KEY, new FixedMetadataValue(Server.getInstance().getPlugin(), uuids));
@@ -877,7 +856,7 @@ public class Lockette {
                 String against = checkline.split(":")[0].trim();
                 return oldFormatCheck(against, pname);
             }
-            UUID uuid = null;
+            UUID uuid;
             String name = getPlayerName(line);
             if (Lockette.DEBUG) {
                 Logger.debug("[" + Lockette.pluginName + "] Name on the sign is : " + name);
@@ -1033,16 +1012,14 @@ public class Lockette {
 
     public static List<String> getPreviousNames(UUID uuid) {
         String name = null;
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         try {
             if (name == null) {
                 HttpURLConnection connection = (HttpURLConnection) new URL(NAME_HISTORY_URL + uuid.toString().replace("-", "") + "/names").openConnection();
                 connection.setConnectTimeout(5000);
                 connection.setReadTimeout(5000);
                 JSONArray array = (JSONArray) jsonParser.parse(new InputStreamReader(connection.getInputStream()));
-                Iterator<JSONObject> iterator = array.iterator();
-                while (iterator.hasNext()) {
-                    JSONObject obj = iterator.next();
+                for (JSONObject obj : (Iterable<JSONObject>) array) {
                     list.add((String) obj.get("name"));
                 }
             }
@@ -1105,11 +1082,10 @@ public class Lockette {
     public boolean hasPermission(World world, Player player, String permissionNode) {
         if (player == null)
             return (false);
-        boolean result = false;
+        boolean result;
         if (player != null) {
             result = player.hasPermission(permissionNode);
-            if (result)
-                return (true);
+            return result;
         }
         return (false);
     }
@@ -1181,7 +1157,7 @@ public class Lockette {
         }
         List<String> strCustomBlockList = (List<String>) Server.getInstance().getLocketteConfig().getData().getList("custom-lockable-block-list");
         if (strCustomBlockList == null) {
-            strCustomBlockList = new ArrayList<String>();
+            strCustomBlockList = new ArrayList<>();
             strCustomBlockList.add(Material.ENCHANTING_TABLE.toString());
             strCustomBlockList.add(Material.JUKEBOX.toString());
             strCustomBlockList.add(Material.DIAMOND_BLOCK.toString());
@@ -1191,7 +1167,7 @@ public class Lockette {
         }
         if (strCustomBlockList != null) {
             if (customBlockList == null)
-                customBlockList = new ArrayList<Material>();
+                customBlockList = new ArrayList<>();
             customBlockList.clear();
             for (String str : strCustomBlockList) {
                 customBlockList.add(Material.valueOf(str));
@@ -1202,7 +1178,7 @@ public class Lockette {
         }
         disabledPluginList = (List<String>) Server.getInstance().getLocketteConfig().getData().getList("linked-plugin-ignore-list");
         if (disabledPluginList == null) {
-            disabledPluginList = new ArrayList<String>(1);
+            disabledPluginList = new ArrayList<>(1);
             disabledPluginList.add("mcMMO");
             Server.getInstance().getLocketteConfig().getData().set("linked-plugin-ignore-list", disabledPluginList);
         }
@@ -1595,8 +1571,7 @@ public class Lockette {
                     return (true);
                 local = getLocalizedOperators();
                 if (local != null)
-                    if (groupName.equalsIgnoreCase(local))
-                        return (true);
+                    return groupName.equalsIgnoreCase(local);
             }
         return (false);
     }

@@ -5,7 +5,6 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.events.PacketListener;
 import me.skorrloregaming.$;
 import me.skorrloregaming.impl.ServerMinigame;
 import org.bukkit.entity.Player;
@@ -19,7 +18,7 @@ public class ProtocolLib_Listener {
     }
 
     public void register() {
-        ProtocolLibrary.getProtocolManager().addPacketListener((PacketListener) new PacketAdapter(this.plugin, new PacketType[]{PacketType.Play.Server.UPDATE_TIME}) {
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(this.plugin, PacketType.Play.Server.UPDATE_TIME) {
 
             public void onPacketSending(PacketEvent event) {
                 Player player = event.getPlayer();

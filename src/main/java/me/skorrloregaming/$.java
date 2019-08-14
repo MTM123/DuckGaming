@@ -43,17 +43,17 @@ import java.util.zip.ZipEntry;
 public class $ {
     public static String consoleTag = ChatColor.RED + "[" + ChatColor.GRAY + "Console" + ChatColor.RED + "] " + ChatColor.RED;
     public static String pricePrefix = ChatColor.RESET + "Purchase Price: " + ChatColor.RED + "$";
-    public static List<String> validMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "skyfight", "creative", "skyblock", "prison", "dated"});
-    public static List<String> validStorageMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "survival", "creative", "skyblock"});
-    public static List<String> validEconomyMinigames = Arrays.asList(new String[]{"kitpvp", "factions", "skyblock", "survival"});
-    public static List<String> validLocketteMinigames = Arrays.asList(new String[]{"skyblock", "factions", "survival"});
-    public static List<String> validStairSeatMinigames = Arrays.asList(new String[]{"creative", "skyblock", "factions"});
-    public static List<String> validTransportMinigames = Arrays.asList(new String[]{"skyblock", "factions", "survival"});
-    public static List<String> scoreboardAutoUpdateMinigames = Arrays.asList(new String[]{"skyblock", "factions", "kitpvp"});
-    public static List<String> betaMinigames = Arrays.asList(new String[]{});
-    public static List<String> daylightMinigames = Arrays.asList(new String[]{"skyblock", "creative", "hub"});
-    public static List<String> nightlightMinigames = Arrays.asList(new String[]{"skyfight", "kitpvp"});
-    public static List<SwitchStringMinigame> playersNotAllowedToJoinSpecificMinigames = Arrays.asList(new SwitchStringMinigame[]{new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.KITPVP), new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.SKYFIGHT)});
+    public static List<String> validMinigames = Arrays.asList("kitpvp", "factions", "survival", "skyfight", "creative", "skyblock", "prison", "dated");
+    public static List<String> validStorageMinigames = Arrays.asList("kitpvp", "factions", "survival", "creative", "skyblock");
+    public static List<String> validEconomyMinigames = Arrays.asList("kitpvp", "factions", "skyblock", "survival");
+    public static List<String> validLocketteMinigames = Arrays.asList("skyblock", "factions", "survival");
+    public static List<String> validStairSeatMinigames = Arrays.asList("creative", "skyblock", "factions");
+    public static List<String> validTransportMinigames = Arrays.asList("skyblock", "factions", "survival");
+    public static List<String> scoreboardAutoUpdateMinigames = Arrays.asList("skyblock", "factions", "kitpvp");
+    public static List<String> betaMinigames = Collections.emptyList();
+    public static List<String> daylightMinigames = Arrays.asList("skyblock", "creative", "hub");
+    public static List<String> nightlightMinigames = Arrays.asList("skyfight", "kitpvp");
+    public static List<SwitchStringMinigame> playersNotAllowedToJoinSpecificMinigames = Arrays.asList(new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.KITPVP), new SwitchStringMinigame("LuckyPlayz01_", ServerMinigame.SKYFIGHT));
 
     public static void playForbiddenTeleportMessage(CommandSender player, ServerMinigame minigame) {
         player.sendMessage("Sorry, teleportation was cancelled, please contact an admin.");
@@ -65,7 +65,7 @@ public class $ {
             String username = pair.getArg0();
             ServerMinigame notAllowedToJoinMinigame = pair.getArg1();
             if (minigame.toString().equals(notAllowedToJoinMinigame.toString())) {
-                if (username.toString().equals(player.getName().toString()))
+                if (username.equals(player.getName()))
                     return true;
             }
         }
@@ -114,16 +114,16 @@ public class $ {
         if (centered[0]) {
             final int middle = strLineOneSpaces.length() / 2;
             String[] parts = {strLineOneSpaces.substring(0, middle), strLineOneSpaces.substring(middle)};
-            sb.append(parts[0] + parts[0]);
+            sb.append(parts[0]).append(parts[0]);
             sb.append(lineOne);
             sb.append('\n');
         } else {
-            sb.append(lineOne + strLineOneSpaces);
+            sb.append(lineOne).append(strLineOneSpaces);
         }
         if (centered[1]) {
             final int middle = strLineTwoSpaces.length() / 2;
             String[] parts = {strLineTwoSpaces.substring(0, middle), strLineTwoSpaces.substring(middle)};
-            sb.append(parts[0] + parts[0]);
+            sb.append(parts[0]).append(parts[0]);
             sb.append(lineTwo);
         } else {
             sb.append(lineTwo);
@@ -143,7 +143,7 @@ public class $ {
 
     public static String scanStringArrayAndSplitBy(String[] array, char[] split) {
         for (String string : array) {
-            if (!(string.indexOf(new String(split)) == -1)) {
+            if (string.contains(new String(split))) {
                 return string.split(new String(split))[1];
             }
         }
@@ -284,23 +284,28 @@ public class $ {
         }.getClass().getEnclosingClass();
         URL resource = currentClass.getResource(currentClass.getSimpleName() + ".class");
         if (resource != null) {
-            if (resource.getProtocol().equals("file")) {
-                try {
-                    d = new Date(new File(resource.toURI()).lastModified());
-                } catch (URISyntaxException ignored) {
+            switch (resource.getProtocol()) {
+                case "file":
+                    try {
+                        d = new Date(new File(resource.toURI()).lastModified());
+                    } catch (URISyntaxException ignored) {
+                    }
+                    break;
+                case "jar": {
+                    String path = resource.getPath();
+                    d = new Date(new File(path.substring(5, path.indexOf("!"))).lastModified());
+                    break;
                 }
-            } else if (resource.getProtocol().equals("jar")) {
-                String path = resource.getPath();
-                d = new Date(new File(path.substring(5, path.indexOf("!"))).lastModified());
-            } else if (resource.getProtocol().equals("zip")) {
-                String path = resource.getPath();
-                File jarFileOnDisk = new File(path.substring(0, path.indexOf("!")));
-                try (JarFile jf = new JarFile(jarFileOnDisk)) {
-                    ZipEntry ze = jf.getEntry(path.substring(path.indexOf("!") + 2));
-                    long zeTimeLong = ze.getTime();
-                    Date zeTimeDate = new Date(zeTimeLong);
-                    d = zeTimeDate;
-                } catch (IOException | RuntimeException ignored) {
+                case "zip": {
+                    String path = resource.getPath();
+                    File jarFileOnDisk = new File(path.substring(0, path.indexOf("!")));
+                    try (JarFile jf = new JarFile(jarFileOnDisk)) {
+                        ZipEntry ze = jf.getEntry(path.substring(path.indexOf("!") + 2));
+                        long zeTimeLong = ze.getTime();
+                        d = new Date(zeTimeLong);
+                    } catch (IOException | RuntimeException ignored) {
+                    }
+                    break;
                 }
             }
         }
@@ -358,7 +363,7 @@ public class $ {
 
     public static boolean isAuthenticated(Player player) {
         Object authObject = $.getAuthenticationSuite();
-        boolean isAuthenticated = false;
+        boolean isAuthenticated;
         if (authObject == null) {
             isAuthenticated = true;
         } else {
@@ -390,9 +395,7 @@ public class $ {
             return true;
         if (command.equalsIgnoreCase("/autologin"))
             return true;
-        if (command.equalsIgnoreCase("/autolog"))
-            return true;
-        return false;
+        return command.equalsIgnoreCase("/autolog");
     }
 
     public static boolean isBlockLog(Block block) {
@@ -402,16 +405,11 @@ public class $ {
     public static boolean isPostSign(Material material) {
         switch (material) {
             case OAK_SIGN:
-                return true;
-            case ACACIA_SIGN:
-                return true;
-            case BIRCH_SIGN:
-                return true;
-            case DARK_OAK_SIGN:
-                return true;
-            case JUNGLE_SIGN:
-                return true;
             case SPRUCE_SIGN:
+            case JUNGLE_SIGN:
+            case DARK_OAK_SIGN:
+            case BIRCH_SIGN:
+            case ACACIA_SIGN:
                 return true;
             default:
                 return false;
@@ -421,16 +419,11 @@ public class $ {
     public static boolean isWallSign(Material material) {
         switch (material) {
             case OAK_WALL_SIGN:
-                return true;
-            case ACACIA_WALL_SIGN:
-                return true;
-            case BIRCH_WALL_SIGN:
-                return true;
-            case DARK_OAK_WALL_SIGN:
-                return true;
-            case JUNGLE_WALL_SIGN:
-                return true;
             case SPRUCE_WALL_SIGN:
+            case JUNGLE_WALL_SIGN:
+            case DARK_OAK_WALL_SIGN:
+            case BIRCH_WALL_SIGN:
+            case ACACIA_WALL_SIGN:
                 return true;
             default:
                 return false;
@@ -440,28 +433,17 @@ public class $ {
     public static boolean isMaterialLog(Material material) {
         switch (material) {
             case ACACIA_LOG:
-                return true;
-            case BIRCH_LOG:
-                return true;
-            case DARK_OAK_LOG:
-                return true;
-            case JUNGLE_LOG:
-                return true;
-            case OAK_LOG:
-                return true;
-            case SPRUCE_LOG:
-                return true;
-            case STRIPPED_ACACIA_LOG:
-                return true;
-            case STRIPPED_BIRCH_LOG:
-                return true;
-            case STRIPPED_DARK_OAK_LOG:
-                return true;
-            case STRIPPED_JUNGLE_LOG:
-                return true;
-            case STRIPPED_OAK_LOG:
-                return true;
             case STRIPPED_SPRUCE_LOG:
+            case STRIPPED_OAK_LOG:
+            case STRIPPED_JUNGLE_LOG:
+            case STRIPPED_DARK_OAK_LOG:
+            case STRIPPED_BIRCH_LOG:
+            case STRIPPED_ACACIA_LOG:
+            case SPRUCE_LOG:
+            case OAK_LOG:
+            case JUNGLE_LOG:
+            case DARK_OAK_LOG:
+            case BIRCH_LOG:
                 return true;
             default:
                 return false;
@@ -479,16 +461,11 @@ public class $ {
     public static boolean isMaterialLeaves(Material material) {
         switch (material) {
             case ACACIA_LEAVES:
-                return true;
-            case BIRCH_LEAVES:
-                return true;
-            case DARK_OAK_LEAVES:
-                return true;
-            case JUNGLE_LEAVES:
-                return true;
-            case OAK_LEAVES:
-                return true;
             case SPRUCE_LEAVES:
+            case OAK_LEAVES:
+            case JUNGLE_LEAVES:
+            case DARK_OAK_LEAVES:
+            case BIRCH_LEAVES:
                 return true;
             default:
                 return false;
@@ -502,36 +479,21 @@ public class $ {
     public static boolean isMaterialStainedGlass(Material material) {
         switch (material) {
             case BLACK_STAINED_GLASS:
-                return true;
-            case BLUE_STAINED_GLASS:
-                return true;
-            case BROWN_STAINED_GLASS:
-                return true;
-            case CYAN_STAINED_GLASS:
-                return true;
-            case GRAY_STAINED_GLASS:
-                return true;
-            case GREEN_STAINED_GLASS:
-                return true;
-            case LIGHT_BLUE_STAINED_GLASS:
-                return true;
-            case LIGHT_GRAY_STAINED_GLASS:
-                return true;
-            case LIME_STAINED_GLASS:
-                return true;
-            case MAGENTA_STAINED_GLASS:
-                return true;
-            case ORANGE_STAINED_GLASS:
-                return true;
-            case PINK_STAINED_GLASS:
-                return true;
-            case PURPLE_STAINED_GLASS:
-                return true;
-            case RED_STAINED_GLASS:
-                return true;
-            case WHITE_STAINED_GLASS:
-                return true;
             case YELLOW_STAINED_GLASS:
+            case WHITE_STAINED_GLASS:
+            case RED_STAINED_GLASS:
+            case PURPLE_STAINED_GLASS:
+            case PINK_STAINED_GLASS:
+            case ORANGE_STAINED_GLASS:
+            case MAGENTA_STAINED_GLASS:
+            case LIME_STAINED_GLASS:
+            case LIGHT_GRAY_STAINED_GLASS:
+            case LIGHT_BLUE_STAINED_GLASS:
+            case GREEN_STAINED_GLASS:
+            case GRAY_STAINED_GLASS:
+            case CYAN_STAINED_GLASS:
+            case BROWN_STAINED_GLASS:
+            case BLUE_STAINED_GLASS:
                 return true;
             default:
                 return false;
@@ -545,36 +507,21 @@ public class $ {
     public static boolean isMaterialStainedGlassPane(Material material) {
         switch (material) {
             case BLACK_STAINED_GLASS:
-                return true;
-            case BLUE_STAINED_GLASS:
-                return true;
-            case BROWN_STAINED_GLASS:
-                return true;
-            case CYAN_STAINED_GLASS:
-                return true;
-            case GRAY_STAINED_GLASS:
-                return true;
-            case GREEN_STAINED_GLASS:
-                return true;
-            case LIGHT_BLUE_STAINED_GLASS:
-                return true;
-            case LIGHT_GRAY_STAINED_GLASS:
-                return true;
-            case LIME_STAINED_GLASS:
-                return true;
-            case MAGENTA_STAINED_GLASS:
-                return true;
-            case ORANGE_STAINED_GLASS:
-                return true;
-            case PINK_STAINED_GLASS:
-                return true;
-            case PURPLE_STAINED_GLASS:
-                return true;
-            case RED_STAINED_GLASS:
-                return true;
-            case WHITE_STAINED_GLASS:
-                return true;
             case YELLOW_STAINED_GLASS:
+            case WHITE_STAINED_GLASS:
+            case RED_STAINED_GLASS:
+            case PURPLE_STAINED_GLASS:
+            case PINK_STAINED_GLASS:
+            case ORANGE_STAINED_GLASS:
+            case MAGENTA_STAINED_GLASS:
+            case LIME_STAINED_GLASS:
+            case LIGHT_GRAY_STAINED_GLASS:
+            case LIGHT_BLUE_STAINED_GLASS:
+            case GREEN_STAINED_GLASS:
+            case GRAY_STAINED_GLASS:
+            case CYAN_STAINED_GLASS:
+            case BROWN_STAINED_GLASS:
+            case BLUE_STAINED_GLASS:
                 return true;
             default:
                 return false;
@@ -582,37 +529,28 @@ public class $ {
     }
 
     public static boolean isRawItemRepairable(ItemStack stack) {
-        if (Directory.repairableItems.contains(stack.getType()))
-            return true;
-        return false;
+        return Directory.repairableItems.contains(stack.getType());
     }
 
     public static boolean isRawArmorRepairable(ItemStack stack) {
-        if (Directory.repairableArmor.contains(stack.getType()))
-            return true;
-        return false;
+        return Directory.repairableArmor.contains(stack.getType());
     }
 
     public static boolean isRawRepairable(ItemStack stack) {
-        if (Directory.repairableArmor.contains(stack.getType()) || Directory.repairableItems.contains(stack.getType()))
-            return true;
-        return false;
+        return Directory.repairableArmor.contains(stack.getType()) || Directory.repairableItems.contains(stack.getType());
     }
 
     public static boolean isRepairable(ItemStack stack) {
         if (stack.getDurability() == (short) 0)
             return false;
-        if (Directory.repairableArmor.contains(stack.getType()) || Directory.repairableItems.contains(stack.getType()))
-            return true;
-        return false;
+        return Directory.repairableArmor.contains(stack.getType()) || Directory.repairableItems.contains(stack.getType());
     }
 
     public static ItemStack removeLore(ItemStack item) {
-        ItemStack cloneItem = item;
-        ItemMeta cloneItemMeta = cloneItem.getItemMeta();
-        cloneItemMeta.setLore(new ArrayList<String>());
-        cloneItem.setItemMeta(cloneItemMeta);
-        return cloneItem;
+        ItemMeta cloneItemMeta = item.getItemMeta();
+        cloneItemMeta.setLore(new ArrayList<>());
+        item.setItemMeta(cloneItemMeta);
+        return item;
     }
 
     public static void destroyTree(Block block) {
@@ -661,7 +599,7 @@ public class $ {
     public static void sendMessageToNearbyPlayers(Location centre, String message, int radius) {
         for (Entity entity : centre.getWorld().getNearbyEntities(centre, radius, radius, radius)) {
             if (entity instanceof Player) {
-                ((Player) entity).sendMessage(message);
+                entity.sendMessage(message);
             }
         }
     }
@@ -765,7 +703,7 @@ public class $ {
         if (domain.equals("kitpvp"))
             return Server.getInstance().getKitpvp();
         if (domain.equals("skyfight"))
-            return new ArrayList(Server.getInstance().getSkyfight().keySet());
+            return new ArrayList<>(Server.getInstance().getSkyfight().keySet());
         if (domain.equals("creative"))
             return Server.getInstance().getCreative();
         if (domain.equals("survival"))
@@ -820,55 +758,31 @@ public class $ {
     public static boolean isNoteSharp(byte magicValue) {
         switch (magicValue % 25) {
             case 0:
-                return true;
-            case 1:
-                return false;
+            case 24:
+            case 21:
+            case 19:
+            case 16:
+            case 14:
+            case 12:
+            case 9:
+            case 7:
+            case 4:
             case 2:
                 return true;
-            case 3:
-                return false;
-            case 4:
-                return true;
-            case 5:
-                return false;
-            case 6:
-                return false;
-            case 7:
-                return true;
-            case 8:
-                return false;
-            case 9:
-                return true;
-            case 10:
-                return false;
-            case 11:
-                return false;
-            case 12:
-                return true;
-            case 13:
-                return false;
-            case 14:
-                return true;
-            case 15:
-                return false;
-            case 16:
-                return true;
-            case 17:
-                return false;
-            case 18:
-                return false;
-            case 19:
-                return true;
-            case 20:
-                return false;
-            case 21:
-                return true;
-            case 22:
-                return false;
             case 23:
-                return false;
-            case 24:
-                return true;
+            case 22:
+            case 20:
+            case 18:
+            case 17:
+            case 15:
+            case 13:
+            case 11:
+            case 10:
+            case 8:
+            case 6:
+            case 5:
+            case 3:
+            case 1:
             default:
                 return false;
         }
@@ -893,11 +807,7 @@ public class $ {
         }
         if (size == 0) {
             Faction faction = Board.getInstance().getFactionAt(new FLocation(location));
-            if (faction.isWarZone() || faction.isSafeZone()) {
-                return true;
-            } else {
-                return false;
-            }
+            return faction.isWarZone() || faction.isSafeZone();
         }
         return true;
     }
@@ -921,8 +831,7 @@ public class $ {
             if (faction.isWilderness()) {
                 return true;
             } else if (!(player == null)) {
-                if (FPlayers.getInstance().getByPlayer(player).isInOwnTerritory())
-                    return true;
+                return FPlayers.getInstance().getByPlayer(player).isInOwnTerritory();
             }
         }
         return false;
@@ -1006,7 +915,7 @@ public class $ {
             String path = "config." + player.getUniqueId().toString();
             if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".marry.marriedPvp")) {
                 String value = String.valueOf(Server.getInstance().getPlugin().getConfig().getString(path + ".marry.marriedPvp")).toLowerCase();
-                return Boolean.valueOf(value);
+                return Boolean.parseBoolean(value);
             }
             return true;
         }
@@ -1020,7 +929,7 @@ public class $ {
             String path = "config." + player.getUniqueId().toString();
             if (Server.getInstance().getPlugin().getConfig().contains(path) && Server.getInstance().getPlugin().getConfig().contains(path + ".marry.swearFilter")) {
                 String value = String.valueOf(Server.getInstance().getPlugin().getConfig().getString(path + ".marry.swearFilter")).toLowerCase();
-                return Boolean.valueOf(value);
+                return Boolean.parseBoolean(value);
             }
             return true;
         }
@@ -1044,20 +953,19 @@ public class $ {
                     best = score;
             }
             list.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Leaderboard", (int) ((Math.floor(best / 5) + 1) * 5));
-            for (int i = 0; i < skyfightPlayers.length; i++) {
-                UUID id = skyfightPlayers[i];
+            for (UUID id : skyfightPlayers) {
                 org.bukkit.entity.Player otherPlayer = Bukkit.getPlayer(id);
-                Skyfight.Player osfPlayer = Server.getInstance().getSkyfight().get(otherPlayer.getUniqueId());
+                Player osfPlayer = Server.getInstance().getSkyfight().get(otherPlayer.getUniqueId());
                 ChatColor prefix = ChatColor.RESET;
-                if (osfPlayer.getTeamValue() == Skyfight.Team.BLUE) {
+                if (osfPlayer.getTeamValue() == Team.BLUE) {
                     prefix = ChatColor.BLUE;
-                } else if (osfPlayer.getTeamValue() == Skyfight.Team.RED) {
+                } else if (osfPlayer.getTeamValue() == Team.RED) {
                     prefix = ChatColor.RED;
-                } else if (osfPlayer.getTeamValue() == Skyfight.Team.GREEN) {
+                } else if (osfPlayer.getTeamValue() == Team.GREEN) {
                     prefix = ChatColor.GREEN;
-                } else if (osfPlayer.getTeamValue() == Skyfight.Team.YELLOW) {
+                } else if (osfPlayer.getTeamValue() == Team.YELLOW) {
                     prefix = ChatColor.YELLOW;
-                } else if (osfPlayer.getTeamValue() == Skyfight.Team.PINK) {
+                } else if (osfPlayer.getTeamValue() == Team.PINK) {
                     prefix = ChatColor.LIGHT_PURPLE;
                 }
                 list.put(ChatColor.GOLD + "│ " + prefix + otherPlayer.getName(), Server.getInstance().getSkyfight().get(otherPlayer.getUniqueId()).getScore());
@@ -1174,12 +1082,9 @@ public class $ {
                 if (!(damagee == null)) {
                     final org.bukkit.entity.Player taggedDamagee = damagee;
                     final int taggedDamageeHash = damageeHash;
-                    Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!(damagee == null) && damagee.getName().equals(taggedDamagee.getName()) && damageeHash == taggedDamageeHash)
-                                setDamagee(null);
-                        }
+                    Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
+                        if (!(damagee == null) && damagee.getName().equals(taggedDamagee.getName()) && damageeHash == taggedDamageeHash)
+                            setDamagee(null);
                     }, 20L * 6L));
                 }
             }
@@ -1241,7 +1146,7 @@ public class $ {
                 }
             }
             DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-            Hashtable<String, Integer> list = new Hashtable<String, Integer>();
+            Hashtable<String, Integer> list = new Hashtable<>();
             int currentPlayerKills = $.Factions.getPlayerKills(player);
             int currentPlayerDeaths = $.Factions.getPlayerDeaths(player);
             double currentPlayerCash = EconManager.retrieveCash(player, "factions");
@@ -1444,7 +1349,7 @@ public class $ {
 
         public static void refreshScoreboard(Player player, boolean clearValues) {
             DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-            Hashtable<String, Integer> list = new Hashtable<String, Integer>();
+            Hashtable<String, Integer> list = new Hashtable<>();
             int currentPlayerKills = $.Kitpvp.getPlayerKills(player);
             int currentPlayerDeaths = $.Kitpvp.getPlayerDeaths(player);
             int currentPlayerDPK = currentPlayerKills / 50;
@@ -1516,7 +1421,7 @@ public class $ {
             int brokenBlocks = $.Skyblock.getPlayerBrokenBlocks(player);
             double currentPlayerCash = EconManager.retrieveCash(player, "skyblock");
             DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-            Hashtable<String, Integer> list = new Hashtable<String, Integer>();
+            Hashtable<String, Integer> list = new Hashtable<>();
             if (maxmembers > 0) {
                 list.put(ChatColor.GOLD + "■" + ChatColor.YELLOW + " Island", 8);
                 list.put(ChatColor.GOLD + "│" + ChatColor.GRAY + " Level: " + ChatColor.RESET + level, 7);
@@ -1625,7 +1530,7 @@ public class $ {
                     objEntry.setScore(score.getValue());
                     changed++;
                 } else {
-                    changed += replaceScore(objective, score.getValue().intValue(), score.getKey());
+                    changed += replaceScore(objective, score.getValue(), score.getKey());
                 }
             }
             if (changed > 0) {

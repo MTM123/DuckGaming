@@ -44,7 +44,7 @@ public class TpacceptCmd implements CommandExecutor {
                             Location zoneLocation = player.getLocation();
                             ServerMinigame ma = $.getMinigameFromWorld(zoneLocation.getWorld());
                             ServerMinigame mb = $.getMinigameFromWorld(player.getWorld());
-                            DelayedTeleport dt = null;
+                            DelayedTeleport dt;
                             if (ma.toString().equals(mb.toString()) && ma.toString().equals(ServerMinigame.CREATIVE.toString())) {
                                 dt = new DelayedTeleport(targetPlayer, 0.0, zoneLocation, false);
                                 dt.runTask(Server.getInstance().getPlugin());

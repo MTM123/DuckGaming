@@ -13,21 +13,21 @@ public class ServersCmd implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        String s1 = "";
+        StringBuilder s1 = new StringBuilder();
         for (String str : $.validMinigames) {
             if (!$.betaMinigames.contains(str) && $.isMinigameEnabled(ServerMinigame.valueOf(str.toUpperCase()))) {
-                s1 += ChatColor.ITALIC + WordUtils.capitalize(str) + ChatColor.RESET + ", ";
+                s1.append(ChatColor.ITALIC).append(WordUtils.capitalize(str)).append(ChatColor.RESET).append(", ");
             }
         }
         if (s1.length() > 0)
-            s1 = s1.substring(0, s1.lastIndexOf(", "));
-        String s2 = "";
+            s1 = new StringBuilder(s1.substring(0, s1.lastIndexOf(", ")));
+        StringBuilder s2 = new StringBuilder();
         for (String str : $.betaMinigames) {
             if ($.isMinigameEnabled(ServerMinigame.valueOf(str.toUpperCase())))
-                s2 += ChatColor.ITALIC + WordUtils.capitalize(str) + ChatColor.RESET + ", ";
+                s2.append(ChatColor.ITALIC).append(WordUtils.capitalize(str)).append(ChatColor.RESET).append(", ");
         }
         if (s2.length() > 0)
-            s2 = s2.substring(0, s2.lastIndexOf(", "));
+            s2 = new StringBuilder(s2.substring(0, s2.lastIndexOf(", ")));
         sender.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + "You are currently connected to " + Server.getInstance().getPluginName().toLowerCase() + ".");
         sender.sendMessage(ChatColor.GOLD + "[Bungee] " + ChatColor.RESET + "Servers: " + ChatColor.RESET + s1);
         if (s2.length() > 0)

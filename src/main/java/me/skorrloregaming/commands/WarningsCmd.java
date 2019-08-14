@@ -57,7 +57,7 @@ public class WarningsCmd implements CommandExecutor {
                         String[] message = Server.getInstance().getPlugin().getConfig().getString("warning." + ipAddress + "." + key).split("[\\r?\\n]+");
                         for (int i = 0; i < message.length; i++)
                             message[i] = ChatColor.RESET + message[i];
-                        inv.setItem(Integer.valueOf(key) + 1 + add, Link$.createMaterial(Material.ZOMBIE_HEAD, 1, ChatColor.RESET + "" + ChatColor.UNDERLINE + op.getName() + "'s warning #" + key, (short) 0, message));
+                        inv.setItem(Integer.parseInt(key) + 1 + add, Link$.createMaterial(Material.ZOMBIE_HEAD, 1, ChatColor.RESET + "" + ChatColor.UNDERLINE + op.getName() + "'s warning #" + key, (short) 0, message));
                     }
                     ((Player) sender).openInventory(inv);
                 }

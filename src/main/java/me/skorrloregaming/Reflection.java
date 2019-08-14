@@ -64,7 +64,7 @@ public class Reflection {
     }
 
     public static Field getField(Class<?> clazz, String fname) throws Exception {
-        Field f = null;
+        Field f;
         try {
             f = clazz.getDeclaredField(fname);
         } catch (Exception e) {
@@ -91,7 +91,7 @@ public class Reflection {
         return f.get(instance);
     }
 
-    public static Method getMethod(Class<?> clazz, String mname) throws Exception {
+    public static Method getMethod(Class<?> clazz, String mname) {
         Method m = null;
         try {
             m = clazz.getDeclaredMethod(mname);
@@ -118,7 +118,7 @@ public class Reflection {
         throw new IllegalArgumentException("Cannot find field with type " + fieldType);
     }
 
-    public static Method getMethod(Class<?> clazz, String mname, Class<?>... args) throws Exception {
+    public static Method getMethod(Class<?> clazz, String mname, Class<?>... args) {
         Method m = null;
         try {
             m = clazz.getDeclaredMethod(mname, args);
@@ -150,7 +150,7 @@ public class Reflection {
     }
 
     public static Object invokeMethod(Class<?> clazz, Object obj, String method) throws Exception {
-        return getMethod(clazz, method).invoke(obj, new Object[]{});
+        return getMethod(clazz, method).invoke(obj);
     }
 
     public static Object invokeMethod(Class<?> clazz, Object obj, String method, Class<?>[] args, Object... initargs) throws Exception {
@@ -162,7 +162,7 @@ public class Reflection {
     }
 
     public static Object invokeMethod(Object obj, String method) throws Exception {
-        return getMethod(obj.getClass(), method).invoke(obj, new Object[]{});
+        return getMethod(obj.getClass(), method).invoke(obj);
     }
 
     public static Object invokeMethod(Object obj, String method, Object[] initargs) throws Exception {

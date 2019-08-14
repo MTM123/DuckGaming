@@ -58,12 +58,9 @@ public class SkinApplier implements Runnable {
         if (!CraftGo.Player.isPocketPlayer(receiver)) {
             WrappedGameProfile gameProfile = WrappedGameProfile.fromPlayer(receiver);
             applyProperties(gameProfile, targetSkin);
-            Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    sendUpdateSelf(WrappedGameProfile.fromPlayer(receiver));
-                    sendUpdateOthers();
-                }
+            Bukkit.getScheduler().runTask(Server.getInstance().getPlugin(), () -> {
+                sendUpdateSelf(WrappedGameProfile.fromPlayer(receiver));
+                sendUpdateOthers();
             });
         }
     }
@@ -116,21 +113,16 @@ public class SkinApplier implements Runnable {
         PacketContainer addInfo;
         PacketContainer respawn;
         PacketContainer teleport;
-        try {
-            EnumWrappers.NativeGameMode gamemode = EnumWrappers.NativeGameMode.fromBukkit(receiver.getGameMode());
-            WrappedChatComponent displayName = WrappedChatComponent.fromText(receiver.getPlayerListName());
-            PlayerInfoData playerInfoData = new PlayerInfoData(gameProfile, 0, gamemode, displayName);
-            removeInfo = new PacketContainer(PLAYER_INFO);
-            removeInfo.getPlayerInfoAction().write(0, EnumWrappers.PlayerInfoAction.REMOVE_PLAYER);
-            removeInfo.getPlayerInfoDataLists().write(0, Collections.singletonList(playerInfoData));
-            addInfo = removeInfo.deepClone();
-            addInfo.getPlayerInfoAction().write(0, EnumWrappers.PlayerInfoAction.ADD_PLAYER);
-            respawn = createRespawnPacket(gamemode);
-            teleport = createTeleportPacket(receiver.getLocation().clone());
-        } catch (ReflectiveOperationException reflectiveEx) {
-            reflectiveEx.printStackTrace();
-            return;
-        }
+        EnumWrappers.NativeGameMode gamemode = EnumWrappers.NativeGameMode.fromBukkit(receiver.getGameMode());
+        WrappedChatComponent displayName = WrappedChatComponent.fromText(receiver.getPlayerListName());
+        PlayerInfoData playerInfoData = new PlayerInfoData(gameProfile, 0, gamemode, displayName);
+        removeInfo = new PacketContainer(PLAYER_INFO);
+        removeInfo.getPlayerInfoAction().write(0, EnumWrappers.PlayerInfoAction.REMOVE_PLAYER);
+        removeInfo.getPlayerInfoDataLists().write(0, Collections.singletonList(playerInfoData));
+        addInfo = removeInfo.deepClone();
+        addInfo.getPlayerInfoAction().write(0, EnumWrappers.PlayerInfoAction.ADD_PLAYER);
+        respawn = createRespawnPacket(gamemode);
+        teleport = createTeleportPacket(receiver.getLocation().clone());
 
         sendPackets(removeInfo, addInfo, respawn, teleport);
     }
@@ -151,7 +143,7 @@ public class SkinApplier implements Runnable {
         }
     }
 
-    public PacketContainer createRespawnPacket(EnumWrappers.NativeGameMode gamemode) throws ReflectiveOperationException {
+    public PacketContainer createRespawnPacket(EnumWrappers.NativeGameMode gamemode) {
         PacketContainer respawn = new PacketContainer(RESPAWN);
 
         EnumWrappers.Difficulty difficulty = EnumWrappers.getDifficultyConverter().getSpecific(receiver.getWorld().getDifficulty());

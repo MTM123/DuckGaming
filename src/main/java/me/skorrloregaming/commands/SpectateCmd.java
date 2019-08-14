@@ -38,21 +38,15 @@ public class SpectateCmd implements CommandExecutor {
                 String pDomain = $.getMinigameDomain(player);
                 if (!tpDomain.equals(pDomain))
                     player.performCommand("server " + tpDomain);
-                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        if (Server.getInstance().getVanishedPlayers().containsKey(player.getUniqueId())) {
-                            player.performCommand("vanish");
-                        }
-                        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                            @Override
-                            public void run() {
-                                player.performCommand("vanish");
-                                player.teleport(targetPlayer);
-                                Server.getInstance().getSpectatingPlayers().remove(player.getUniqueId());
-                            }
-                        }, 10L);
+                Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
+                    if (Server.getInstance().getVanishedPlayers().containsKey(player.getUniqueId())) {
+                        player.performCommand("vanish");
                     }
+                    Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> {
+                        player.performCommand("vanish");
+                        player.teleport(targetPlayer);
+                        Server.getInstance().getSpectatingPlayers().remove(player.getUniqueId());
+                    }, 10L);
                 }, 20L);
             }
         }

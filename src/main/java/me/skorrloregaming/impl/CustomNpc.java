@@ -36,7 +36,7 @@ public class CustomNpc {
         String value = Server.getInstance().getNpcConfig().getData().getString("npc." + entity.getUniqueId().toString());
         if (value.equals("unspecified"))
             return null;
-        return String.valueOf(value);
+        return value;
     }
 
     public boolean register(String npcData) {

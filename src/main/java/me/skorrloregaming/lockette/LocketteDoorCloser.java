@@ -11,7 +11,7 @@ import java.util.PriorityQueue;
 
 public class LocketteDoorCloser implements Runnable {
     private static int doorTask = -1;
-    private final PriorityQueue<closeTask> closeTaskList = new PriorityQueue<closeTask>();
+    private final PriorityQueue<closeTask> closeTaskList = new PriorityQueue<>();
 
     public LocketteDoorCloser(Lockette instance) {
     }
@@ -20,9 +20,7 @@ public class LocketteDoorCloser implements Runnable {
         if (doorTask != -1)
             return (false);
         doorTask = Server.getInstance().getPlugin().getServer().getScheduler().scheduleSyncRepeatingTask(Server.getInstance().getPlugin(), this, 100, 10);
-        if (doorTask == -1)
-            return (true);
-        return (false);
+        return doorTask == -1;
     }
 
     protected boolean stop() {

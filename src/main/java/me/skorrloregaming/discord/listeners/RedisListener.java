@@ -58,18 +58,12 @@ public class RedisListener extends JedisPubSub implements Listener {
     public void register() {
         connectToRedis();
         Server.getInstance().getPlugin().getLogger().info("Connected to Redis!");
-        Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), new Runnable() {
-
-            @Override
-            public void run() {
-                getPool().ifPresent((pool) -> {
-                    try (Jedis jedis = pool.getResource()) {
-                        jedis.subscribe(getInstance(), "slgn:discord");
-                    } catch (Exception ex) {
-                    }
-                });
+        Bukkit.getScheduler().runTaskAsynchronously(Server.getInstance().getPlugin(), () -> getPool().ifPresent((pool) -> {
+            try (Jedis jedis = pool.getResource()) {
+                jedis.subscribe(getInstance(), "slgn:discord");
+            } catch (Exception ex) {
             }
-        });
+        }));
     }
 
     public void unregister() {

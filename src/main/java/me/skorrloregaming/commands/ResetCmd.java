@@ -18,15 +18,15 @@ public class ResetCmd implements CommandExecutor {
         File dataFolder = new File(playerDataFolder, subFolder);
         File[] listOfFiles = dataFolder.listFiles();
         int deleted = 0;
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isFile()) {
-                if (listOfFiles[i].getName().contains(minigame.toString().toLowerCase())) {
+        for (File listOfFile : listOfFiles) {
+            if (listOfFile.isFile()) {
+                if (listOfFile.getName().contains(minigame.toString().toLowerCase())) {
                     File backupFolder = new File(altPlayerDataFolder, subFolder);
-                    File backup = new File(altPlayerDataFolder, listOfFiles[i].getName());
+                    File backup = new File(altPlayerDataFolder, listOfFile.getName());
                     backup.getParentFile().mkdirs();
                     if (backup.exists())
                         backup.delete();
-                    listOfFiles[i].renameTo(backup);
+                    listOfFile.renameTo(backup);
                     deleted++;
                 }
             }
@@ -39,10 +39,8 @@ public class ResetCmd implements CommandExecutor {
         for (String uuid : Server.getInstance().getPlugin().getConfig().getConfigurationSection("config").getKeys(false)) {
             String path = "config." + uuid;
             int balance = 0;
-            switch (minigame) {
-                case FACTIONS:
-                    balance = 250;
-                    break;
+            if (minigame == ServerMinigame.FACTIONS) {
+                balance = 250;
             }
             String game = minigame.toString().toLowerCase();
             if (Server.getInstance().getPlugin().getConfig().contains(path + ".balance." + game))

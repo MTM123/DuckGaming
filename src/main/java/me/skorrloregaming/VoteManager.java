@@ -165,8 +165,7 @@ public class VoteManager {
             Date currentDate = new Date();
             if (date.getYear() == currentDate.getYear())
                 if (date.getMonth() == currentDate.getMonth())
-                    if (date.getDay() == currentDate.getDay())
-                        return true;
+                    return date.getDay() == currentDate.getDay();
         }
         return false;
     }
@@ -182,7 +181,7 @@ public class VoteManager {
         ServerMinigame minigame = null;
         if (vote.getServiceName().startsWith("Spoofed:")) {
             spoofed = true;
-            minigame = ServerMinigame.valueOf(vote.getServiceName().split("Spoofed:")[1].toString().toUpperCase());
+            minigame = ServerMinigame.valueOf(vote.getServiceName().split("Spoofed:")[1].toUpperCase());
         }
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());

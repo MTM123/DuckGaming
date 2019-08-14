@@ -23,8 +23,8 @@ public class RenameCmd implements CommandExecutor {
                 return true;
             } else {
                 StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < args.length; i++) {
-                    sb.append(args[i] + " ");
+                for (String arg : args) {
+                    sb.append(arg).append(" ");
                 }
                 String message = sb.toString();
                 ItemStack itm = player.getInventory().getItemInMainHand();

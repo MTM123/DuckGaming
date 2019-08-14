@@ -22,7 +22,7 @@ public class SignShop {
         if (player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR) {
             if (player.isSneaking()) {
                 Location blockLoc = block.getLocation();
-                String code = String.valueOf(blockLoc.getBlockX()) + "," + String.valueOf(blockLoc.getBlockY()) + "," + String.valueOf(blockLoc.getBlockZ());
+                String code = blockLoc.getBlockX() + "," + blockLoc.getBlockY() + "," + blockLoc.getBlockZ();
                 TitleSubtitle title = new TitleSubtitle(null, "The code for this shop is " + code + ".", true);
                 CraftGo.Player.sendTimedTitleAndSubtitle(player, title);
                 player.sendMessage("Refer to the page provided in /mods for more info.");
@@ -33,7 +33,7 @@ public class SignShop {
     public static boolean handle(Sign sign, Player player, String subDomain) {
         DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
         Location blockLoc = sign.getLocation();
-        String code = blockLoc.getWorld().getName() + String.valueOf(blockLoc.getBlockX()) + String.valueOf(blockLoc.getBlockY()) + String.valueOf(blockLoc.getBlockZ());
+        String code = blockLoc.getWorld().getName() + blockLoc.getBlockX() + blockLoc.getBlockY() + blockLoc.getBlockZ();
         if (!Server.getInstance().getSignConfig().getData().contains("signs." + code)) {
             return false;
         } else {
@@ -45,29 +45,26 @@ public class SignShop {
         for (int i = 0; i < lines.length; i++) {
             lines[i] = ChatColor.stripColor(lines[i]);
         }
-        if (subDomain.equals("kitpvp")) {
-            if (lines[1].equals("Kit")) {
-                if (lines[2].equals("Starter")) {
-                    player.performCommand("kit starter");
-                } else if (lines[2].equals("Potions")) {
-                    player.performCommand("kit potions");
-                    return true;
+        switch (subDomain) {
+            case "kitpvp":
+                if (lines[1].equals("Kit")) {
+                    if (lines[2].equals("Starter")) {
+                        player.performCommand("kit starter");
+                    } else if (lines[2].equals("Potions")) {
+                        player.performCommand("kit potions");
+                        return true;
+                    }
                 }
-            }
-        } else if (subDomain.equals("factions")) {
-            if (lines[1].equals("Kit")) {
-                if (lines[2].equals("Recruit")) {
-                    player.performCommand("kit recruit");
-                    return true;
+                break;
+            case "factions":
+            case "survival":
+                if (lines[1].equals("Kit")) {
+                    if (lines[2].equals("Recruit")) {
+                        player.performCommand("kit recruit");
+                        return true;
+                    }
                 }
-            }
-        } else if (subDomain.equals("survival")) {
-            if (lines[1].equals("Kit")) {
-                if (lines[2].equals("Recruit")) {
-                    player.performCommand("kit recruit");
-                    return true;
-                }
-            }
+                break;
         }
         if (lines[0].equals("Repair")) {
             int price = Integer.parseInt(String.valueOf(lines[2]).replace("$", "").replace(",", ""));
@@ -86,12 +83,7 @@ public class SignShop {
                                 player.sendMessage(tag + ChatColor.GRAY + "The item you are holding seems to be durable still.");
                                 player.sendMessage(tag + ChatColor.GRAY + "Use this shop again to confirm your transaction.");
                                 Server.getInstance().getConfirmRepairShop().add(player.getUniqueId());
-                                Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Server.getInstance().getConfirmRepairShop().remove(player.getUniqueId());
-                                    }
-                                }, 45L));
+                                Server.getInstance().getBukkitTasks().add(Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> Server.getInstance().getConfirmRepairShop().remove(player.getUniqueId()), 45L));
                                 return false;
                             }
                         }
@@ -114,132 +106,133 @@ public class SignShop {
                 return false;
             }
         }
-        if (lines[0].equals("Buy")) {
-            try {
-                Material material = Material.getMaterial(String.valueOf(lines[1]).replace(" ", "_").toUpperCase().split(":")[0]);
-                int amount = Integer.parseInt(String.valueOf(lines[3]));
-                int price = Integer.parseInt(String.valueOf(lines[2]).replace("$", "").replace(",", ""));
-                int data = 0;
-                String materialName = Link$.formatMaterial(material);
+        switch (lines[0]) {
+            case "Buy":
                 try {
-                    data = Integer.parseInt(String.valueOf(lines[1]).split(":")[1]);
-                } catch (Exception ig) {
-                }
-                if (cash >= price * 2 && player.isSneaking()) {
-                    amount = amount * 2;
-                    price = price * 2;
-                }
-                ItemStack purchaseItem = new ItemStack(material, amount, (short) data);
-                if (material == Material.SPAWNER)
-                    purchaseItem = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), amount);
-                if (cash >= price) {
-                    if (player.getInventory().firstEmpty() == -1) {
-                        player.sendMessage(tag + ChatColor.RED + "Inventory full. " + ChatColor.GRAY + "Empty some slots then try again.");
-                        return false;
-                    }
-                    EconManager.withdrawCash(player, price, subDomain);
-                    player.getInventory().addItem(purchaseItem);
-                    player.updateInventory();
-                    player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + materialName + " x" + amount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
-                    return true;
-                }
-                player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money.");
-                return false;
-            } catch (Exception ex) {
-                player.sendMessage("An internal error has occured whilist processing this shop information.");
-                ex.printStackTrace();
-                return false;
-            }
-        } else if (lines[0].equals("Sell")) {
-            try {
-                Material material = Material.getMaterial(String.valueOf(lines[1]).replace(" ", "_").toUpperCase().split(":")[0]);
-                int amount = Integer.parseInt(String.valueOf(lines[3]));
-                int price = Integer.parseInt(String.valueOf(lines[2]).replace("$", "").replace(",", ""));
-                int data = 0;
-                String materialName = Link$.formatMaterial(material);
-                try {
-                    data = Integer.parseInt(String.valueOf(lines[1]).split(":")[1]);
-                } catch (Exception ig) {
-                }
-                boolean found = false;
-                ItemStack itm = player.getInventory().getItemInMainHand();
-                if (itm.getType() == Material.AIR || itm == null) {
-                    player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Please hold the item you want to sell.");
-                    return false;
-                }
-                short dur = itm.getDurability();
-                if (material == Material.SPAWNER)
-                    dur = (short) CraftGo.MobSpawner.convertEntityTypeToEntityId(CraftGo.MobSpawner.getStoredSpawnerItemEntityType(itm));
-                if (dur == (short) data) {
-                    if (itm != null && itm.getType().equals(material)) {
-                        if (itm.getAmount() >= (amount * 2) && player.isSneaking()) {
-                            amount = amount * 2;
-                            price = price * 2;
-                        }
-                        if (itm.getAmount() >= amount) {
-                            found = true;
-                            int amt = itm.getAmount() - amount;
-                            if (amt <= 0) {
-                                player.getInventory().setItemInMainHand(null);
-                            } else {
-                                itm.setAmount(amt);
-                                player.getInventory().setItemInMainHand(itm);
-                            }
-                            player.updateInventory();
-                            EconManager.depositCash(player, price, subDomain);
-                            player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Sold " + ChatColor.RED + materialName + " x" + amount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
-                        }
-                    }
-                }
-                if (!found) {
-                    player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Please hold the item you want to sell.");
-                    return false;
-                }
-                return true;
-            } catch (Exception ex) {
-                player.sendMessage("An internal error has occured whilist processing this shop information.");
-                ex.printStackTrace();
-                return false;
-            }
-        } else if (lines[0].equals("Enchant")) {
-            try {
-                ItemStack currentItem = player.getInventory().getItemInMainHand();
-                Enchantment enchant = Enchantment.getByName(Link$.unformatEnchantment(String.valueOf(lines[1]).trim()));
-                int amount = Integer.parseInt(String.valueOf(lines[3]));
-                int price = Integer.parseInt(String.valueOf(lines[2]).replace("$", "").replace(",", ""));
-                price *= currentItem.getAmount();
-                String enchantName = Link$.formatEnchantment(String.valueOf(enchant.getKey().getKey().trim()), amount);
-                if (cash >= price) {
-                    if (currentItem.getType() == Material.AIR || currentItem == null || currentItem.getType() == null) {
-                        player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
-                        return false;
-                    }
-                    if (currentItem.getEnchantments().containsKey(enchant) && currentItem.getEnchantments().get(enchant) == amount) {
-                        player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
-                        return false;
-                    }
-                    if (currentItem.getType() == Material.BOOK)
-                        currentItem.setType(Material.ENCHANTED_BOOK);
+                    Material material = Material.getMaterial(String.valueOf(lines[1]).replace(" ", "_").toUpperCase().split(":")[0]);
+                    int amount = Integer.parseInt(String.valueOf(lines[3]));
+                    int price = Integer.parseInt(String.valueOf(lines[2]).replace("$", "").replace(",", ""));
+                    int data = 0;
+                    String materialName = Link$.formatMaterial(material);
                     try {
-                        currentItem.addUnsafeEnchantment(enchant, amount);
-                    } catch (Exception ex) {
-                        player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
-                        return false;
+                        data = Integer.parseInt(String.valueOf(lines[1]).split(":")[1]);
+                    } catch (Exception ig) {
                     }
-                    EconManager.withdrawCash(player, price, subDomain);
-                    player.getInventory().setItemInMainHand(currentItem);
-                    player.updateInventory();
-                    player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + enchantName + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
-                    return true;
-                } else {
+                    if (cash >= price * 2 && player.isSneaking()) {
+                        amount = amount * 2;
+                        price = price * 2;
+                    }
+                    ItemStack purchaseItem = new ItemStack(material, amount, (short) data);
+                    if (material == Material.SPAWNER)
+                        purchaseItem = CraftGo.MobSpawner.newSpawnerItem(CraftGo.MobSpawner.convertEntityIdToEntityType(data), amount);
+                    if (cash >= price) {
+                        if (player.getInventory().firstEmpty() == -1) {
+                            player.sendMessage(tag + ChatColor.RED + "Inventory full. " + ChatColor.GRAY + "Empty some slots then try again.");
+                            return false;
+                        }
+                        EconManager.withdrawCash(player, price, subDomain);
+                        player.getInventory().addItem(purchaseItem);
+                        player.updateInventory();
+                        player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + materialName + " x" + amount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
+                        return true;
+                    }
                     player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money.");
                     return false;
+                } catch (Exception ex) {
+                    player.sendMessage("An internal error has occured whilist processing this shop information.");
+                    ex.printStackTrace();
+                    return false;
                 }
-            } catch (Exception ex) {
-                player.sendMessage("An internal error has occured whilist processing this shop information.");
-                ex.printStackTrace();
-                return false;
-            }
+            case "Sell":
+                try {
+                    Material material = Material.getMaterial(String.valueOf(lines[1]).replace(" ", "_").toUpperCase().split(":")[0]);
+                    int amount = Integer.parseInt(String.valueOf(lines[3]));
+                    int price = Integer.parseInt(String.valueOf(lines[2]).replace("$", "").replace(",", ""));
+                    int data = 0;
+                    String materialName = Link$.formatMaterial(material);
+                    try {
+                        data = Integer.parseInt(String.valueOf(lines[1]).split(":")[1]);
+                    } catch (Exception ig) {
+                    }
+                    boolean found = false;
+                    ItemStack itm = player.getInventory().getItemInMainHand();
+                    if (itm.getType() == Material.AIR || itm == null) {
+                        player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Please hold the item you want to sell.");
+                        return false;
+                    }
+                    short dur = itm.getDurability();
+                    if (material == Material.SPAWNER)
+                        dur = (short) CraftGo.MobSpawner.convertEntityTypeToEntityId(CraftGo.MobSpawner.getStoredSpawnerItemEntityType(itm));
+                    if (dur == (short) data) {
+                        if (itm != null && itm.getType().equals(material)) {
+                            if (itm.getAmount() >= (amount * 2) && player.isSneaking()) {
+                                amount = amount * 2;
+                                price = price * 2;
+                            }
+                            if (itm.getAmount() >= amount) {
+                                found = true;
+                                int amt = itm.getAmount() - amount;
+                                if (amt <= 0) {
+                                    player.getInventory().setItemInMainHand(null);
+                                } else {
+                                    itm.setAmount(amt);
+                                    player.getInventory().setItemInMainHand(itm);
+                                }
+                                player.updateInventory();
+                                EconManager.depositCash(player, price, subDomain);
+                                player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Sold " + ChatColor.RED + materialName + " x" + amount + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
+                            }
+                        }
+                    }
+                    if (!found) {
+                        player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "Please hold the item you want to sell.");
+                        return false;
+                    }
+                    return true;
+                } catch (Exception ex) {
+                    player.sendMessage("An internal error has occured whilist processing this shop information.");
+                    ex.printStackTrace();
+                    return false;
+                }
+            case "Enchant":
+                try {
+                    ItemStack currentItem = player.getInventory().getItemInMainHand();
+                    Enchantment enchant = Enchantment.getByName(Link$.unformatEnchantment(String.valueOf(lines[1]).trim()));
+                    int amount = Integer.parseInt(String.valueOf(lines[3]));
+                    int price = Integer.parseInt(String.valueOf(lines[2]).replace("$", "").replace(",", ""));
+                    price *= currentItem.getAmount();
+                    String enchantName = Link$.formatEnchantment(enchant.getKey().getKey().trim(), amount);
+                    if (cash >= price) {
+                        if (currentItem.getType() == Material.AIR || currentItem == null || currentItem.getType() == null) {
+                            player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
+                            return false;
+                        }
+                        if (currentItem.getEnchantments().containsKey(enchant) && currentItem.getEnchantments().get(enchant) == amount) {
+                            player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
+                            return false;
+                        }
+                        if (currentItem.getType() == Material.BOOK)
+                            currentItem.setType(Material.ENCHANTED_BOOK);
+                        try {
+                            currentItem.addUnsafeEnchantment(enchant, amount);
+                        } catch (Exception ex) {
+                            player.sendMessage(tag + ChatColor.RED + "Failed. " + enchantName + ChatColor.GRAY + " cannot be applied to this item.");
+                            return false;
+                        }
+                        EconManager.withdrawCash(player, price, subDomain);
+                        player.getInventory().setItemInMainHand(currentItem);
+                        player.updateInventory();
+                        player.sendMessage(tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Purchased " + ChatColor.RED + enchantName + ChatColor.GRAY + " for " + ChatColor.RED + "$" + formatter.format(price));
+                        return true;
+                    } else {
+                        player.sendMessage(tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You do not have enough money.");
+                        return false;
+                    }
+                } catch (Exception ex) {
+                    player.sendMessage("An internal error has occured whilist processing this shop information.");
+                    ex.printStackTrace();
+                    return false;
+                }
         }
         return false;
     }

@@ -40,8 +40,8 @@ public class BlockEventHandler implements Listener {
                 s[i] = ChatColor.stripColor(s[i]);
             }
             if (s[0].equals("[Shop]")) {
-                String code = null;
-                int x = 0, y = 0, z = 0;
+                String code;
+                int x, y, z;
                 try {
                     String[] split = s[1].split(",");
                     x = Integer.parseInt(split[0]);
@@ -97,7 +97,7 @@ public class BlockEventHandler implements Listener {
                     return;
                 }
                 DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
-                String code = blockLoc.getWorld().getName() + String.valueOf(blockLoc.getBlockX()) + String.valueOf(blockLoc.getBlockY()) + String.valueOf(blockLoc.getBlockZ());
+                String code = blockLoc.getWorld().getName() + blockLoc.getBlockX() + blockLoc.getBlockY() + blockLoc.getBlockZ();
                 Server.getInstance().getSignConfig().getData().set("signs." + code, 1);
                 Server.getInstance().getSignConfig().saveData();
                 player.sendMessage(Link$.Legacy.tag + ChatColor.GRAY + "Successfully processed shop " + ChatColor.RED + code + ChatColor.GRAY + ".");
@@ -149,13 +149,13 @@ public class BlockEventHandler implements Listener {
         String upgradeStr = $.scanStringArrayAndSplitBy(lore, "Upgrade: ".toCharArray());
         int upgradeInt = 0;
         if (!(upgradeStr == null))
-            upgradeInt = Integer.parseInt(String.valueOf(upgradeStr));
+            upgradeInt = Integer.parseInt(upgradeStr);
         String selectedUpgradeStr = $.scanStringArrayAndSplitBy(lore, "Selected Upgrade: ".toCharArray());
         int selectedUpgradeInt = 0;
         if (!(selectedUpgradeStr == null))
-            selectedUpgradeInt = Integer.parseInt(String.valueOf(selectedUpgradeStr));
+            selectedUpgradeInt = Integer.parseInt(selectedUpgradeStr);
         Location loc = event.getBlock().getLocation();
-        String code = loc.getWorld().getName() + String.valueOf(loc.getBlockX()) + String.valueOf(loc.getBlockY()) + String.valueOf(loc.getBlockZ());
+        String code = loc.getWorld().getName() + loc.getBlockX() + loc.getBlockY() + loc.getBlockZ();
         Server.getInstance().getSpawnerConfig().getData().set(code + ".upgrade", upgradeInt + "");
         Server.getInstance().getSpawnerConfig().getData().set(code + ".selectedUpgrade", selectedUpgradeInt + "");
         Server.getInstance().getSpawnerConfig().saveData();
@@ -248,7 +248,7 @@ public class BlockEventHandler implements Listener {
                                 EntityType entityType = CraftGo.MobSpawner.getSpawnerEntityType(block);
                                 ItemStack stack = CraftGo.MobSpawner.newSpawnerItem(entityType, 1);
                                 Location loc = block.getLocation();
-                                String code = loc.getWorld().getName() + String.valueOf(loc.getBlockX()) + String.valueOf(loc.getBlockY()) + String.valueOf(loc.getBlockZ());
+                                String code = loc.getWorld().getName() + loc.getBlockX() + loc.getBlockY() + loc.getBlockZ();
                                 int upgrade = 0;
                                 if (Server.getInstance().getSpawnerConfig().getData().contains(code + ".upgrade"))
                                     upgrade = Integer.parseInt(Server.getInstance().getSpawnerConfig().getData().getString(code + ".upgrade"));
@@ -261,11 +261,10 @@ public class BlockEventHandler implements Listener {
                                 event.setCancelled(true);
                                 block.setType(Material.AIR);
                                 block.getState().update();
-                                Location exactLoc = blockLoc;
-                                exactLoc.setX(exactLoc.getBlockX() + 0.5);
-                                exactLoc.setY(exactLoc.getBlockY() + 0.5);
-                                exactLoc.setZ(exactLoc.getBlockZ() + 0.5);
-                                player.getWorld().dropItem(exactLoc, stack);
+                                blockLoc.setX(blockLoc.getBlockX() + 0.5);
+                                blockLoc.setY(blockLoc.getBlockY() + 0.5);
+                                blockLoc.setZ(blockLoc.getBlockZ() + 0.5);
+                                player.getWorld().dropItem(blockLoc, stack);
                             }
                         }
                     }
@@ -319,11 +318,10 @@ public class BlockEventHandler implements Listener {
                                     event.setCancelled(true);
                                     block.setType(Material.AIR);
                                     block.getState().update();
-                                    Location exactLoc = blockLoc;
-                                    exactLoc.setX(exactLoc.getBlockX() + 0.5);
-                                    exactLoc.setY(exactLoc.getBlockY() + 0.5);
-                                    exactLoc.setZ(exactLoc.getBlockZ() + 0.5);
-                                    player.getWorld().dropItem(exactLoc, dropItem);
+                                    blockLoc.setX(blockLoc.getBlockX() + 0.5);
+                                    blockLoc.setY(blockLoc.getBlockY() + 0.5);
+                                    blockLoc.setZ(blockLoc.getBlockZ() + 0.5);
+                                    player.getWorld().dropItem(blockLoc, dropItem);
                                 }
                             }
                         }
@@ -338,7 +336,7 @@ public class BlockEventHandler implements Listener {
                 s[i] = ChatColor.stripColor(s[i]);
             }
             if (s[0].equals("Buy") || s[0].equals("Sell") || s[0].equals("Enchant") || s[0].equals("Repair") || s[1].equals("Kit")) {
-                String code = blockLoc.getWorld().getName() + String.valueOf(blockLoc.getBlockX()) + String.valueOf(blockLoc.getBlockY()) + String.valueOf(blockLoc.getBlockZ());
+                String code = blockLoc.getWorld().getName() + blockLoc.getBlockX() + blockLoc.getBlockY() + blockLoc.getBlockZ();
                 if (Server.getInstance().getSignConfig().getData().contains("signs." + code)) {
                     if (!event.getPlayer().isOp()) {
                         player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "You do not have permission to deactivate this shop.");

@@ -16,7 +16,7 @@ public class PlayertimeCmd implements CommandExecutor {
         if (!(sender instanceof Player))
             return true;
         Player player = ((Player) sender);
-        if (args.length == 0 || args[0].toString().equalsIgnoreCase("reset") || args[0].toString().equalsIgnoreCase("off") || args[0].toString().equalsIgnoreCase("disable")) {
+        if (args.length == 0 || args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("disable")) {
             player.resetPlayerTime();
             player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "If player time was set, it is now disabled.");
         }
@@ -34,19 +34,14 @@ public class PlayertimeCmd implements CommandExecutor {
                 time = 18000L;
             } else {
                 try {
-                    time = (long) Integer.parseInt(args[0]);
+                    time = Integer.parseInt(args[0]);
                 } catch (Exception ex) {
                     player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Failed. " + ChatColor.GRAY + "You must specify the time in numeric format.");
                     return true;
                 }
             }
             player.resetPlayerTime();
-            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    player.setPlayerTime(time, false);
-                }
-            }, 2L);
+            Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> player.setPlayerTime(time, false), 2L);
             player.sendMessage(Link$.Legacy.tag + ChatColor.RED + "Success. " + ChatColor.GRAY + "Your player time has been modified.");
         }
         return true;

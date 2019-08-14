@@ -7,8 +7,6 @@ import me.skorrloregaming.shop.LaShoppeFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class CreateEnchantPriceEventHandler implements AnvilGUI.AnvilClickEventHandler {
 
     private LaShoppe shoppe;
@@ -30,22 +28,8 @@ public class CreateEnchantPriceEventHandler implements AnvilGUI.AnvilClickEventH
             event.getPlayer().sendMessage("Sorry, that's not a valid enchant price.");
             return;
         }
-        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ENCHANT), new CreateEnchantTierEventHandler(shoppe, enchantment, price))
-                            .setInputName("Enter tier")
-                            .open();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, 1L);
+        Bukkit.getScheduler().runTaskLater(Server.getInstance().getPlugin(), () -> new AnvilGUI(event.getPlayer(), Server.getInstance().getShoppe().getInventoryName(LaShoppeFrame.CREATE_ENCHANT), new CreateEnchantTierEventHandler(shoppe, enchantment, price))
+                .setInputName("Enter tier")
+                .open(), 1L);
     }
 }

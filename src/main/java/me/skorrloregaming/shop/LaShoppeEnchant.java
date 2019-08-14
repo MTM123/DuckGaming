@@ -44,7 +44,7 @@ public class LaShoppeEnchant {
 
     public ItemStack toItemStack() {
         ItemStack itemStack = Link$.createMaterial(Material.ENCHANTED_BOOK, Link$.formatEnchantment(enchantment.getName(), tier));
-        List<String> lore = new ArrayList<String>();
+        List<String> lore = new ArrayList<>();
         lore.add(ChatColor.RESET + "Index: " + index);
         lore.add(ChatColor.RESET + "Price: $" + price);
         lore.add(ChatColor.RESET + "Tier: " + tier);

@@ -15,7 +15,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
@@ -31,7 +30,7 @@ public class AnvilGUI {
     private static Method at;
     private Player player;
     private AnvilClickEventHandler handler;
-    private HashMap<AnvilSlot, ItemStack> items = new HashMap<AnvilSlot, ItemStack>();
+    private HashMap<AnvilSlot, ItemStack> items = new HashMap<>();
     private Inventory inv;
     private Listener listener;
 
@@ -119,7 +118,7 @@ public class AnvilGUI {
         return this;
     }
 
-    public void open() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    public void open() {
         player.setLevel(player.getLevel() + 1);
         try {
             Object p = CraftGo.Reflection.getHandle(player);
@@ -166,7 +165,7 @@ public class AnvilGUI {
         OUTPUT(2);
         private int slot;
 
-        private AnvilSlot(int slot) {
+        AnvilSlot(int slot) {
             this.slot = slot;
         }
 

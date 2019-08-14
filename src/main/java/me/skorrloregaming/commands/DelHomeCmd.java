@@ -51,9 +51,9 @@ public class DelHomeCmd implements CommandExecutor {
         if (args.length == 0) {
             Set<String> values = config.getData().getConfigurationSection("home." + player.getUniqueId().toString()).getKeys(false);
             StringBuilder homes = new StringBuilder();
-            String homesString = null;
+            String homesString;
             for (String home : values) {
-                homes.append(ChatColor.RED + home + ChatColor.GRAY + ", ");
+                homes.append(ChatColor.RED).append(home).append(ChatColor.GRAY).append(", ");
             }
             if (homes.length() > 0) {
                 homesString = homes.toString().substring(0, homes.toString().length() - 2);

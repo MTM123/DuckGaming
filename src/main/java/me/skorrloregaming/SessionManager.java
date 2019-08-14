@@ -31,11 +31,7 @@ public class SessionManager {
         if (sessionConfig.getData().contains(player.getUniqueId().toString() + "." + key + ".lastAccessed")) {
             long lastAccessed = sessionConfig.getData().getLong(player.getUniqueId().toString() + "." + key + ".lastAccessed");
             Session session = new Session(key.toCharArray(), player, lastAccessed);
-            if (session.isExpired()) {
-                return false;
-            } else {
-                return true;
-            }
+            return !session.isExpired();
         } else {
             return false;
         }
@@ -63,7 +59,7 @@ public class SessionManager {
     }
 
     public Session[] getAllStoredSessions(OfflinePlayer player) {
-        ArrayList<Session> sessions = new ArrayList<Session>();
+        ArrayList<Session> sessions = new ArrayList<>();
         for (String key : sessionConfig.getData().getConfigurationSection(player.getUniqueId().toString()).getKeys(false)) {
             sessions.add(new Session(key.toCharArray(), player, sessionConfig.getData().getLong(player.getUniqueId().toString() + "." + key + ".lastAccessed")));
         }
@@ -81,7 +77,7 @@ public class SessionManager {
 
     public void openComplexInventory(Player player, OfflinePlayer tp) {
         Session[] sessions = getAllStoredSessions(tp);
-        int invSize = (1 + ((int) (sessions.length / 9))) * 9;
+        int invSize = (1 + sessions.length / 9) * 9;
         if (CraftGo.Player.isPocketPlayer(player))
             invSize = 27;
         Inventory inventory = Bukkit.createInventory(new InventoryMenu(player, InventoryType.SESSIONS, tp.getName()), invSize, ChatColor.RESET + tp.getName() + "'s auth-sessions");
@@ -94,7 +90,7 @@ public class SessionManager {
             Calendar calendarLastAcc = Calendar.getInstance();
             calendarLastAcc.setTimeInMillis(session.getLastAccessed());
             byte[] decoded = LinkSessionManager.decodeHex(session.key);
-            List<String> lore = new ArrayList<String>();
+            List<String> lore = new ArrayList<>();
             lore.add(ChatColor.RESET + "Session created : " + calendarFirstAcc.getTime().toString());
             lore.add(ChatColor.RESET + "Last accessed : " + calendarLastAcc.getTime().toString());
             String remoteAddr = new String(decoded);
@@ -154,9 +150,7 @@ public class SessionManager {
         }
 
         public boolean isExpired() {
-            if ((System.currentTimeMillis() - this.getLastAccessed()) / 1000 > 86400 * DAYS_TILL_SESSION_EXPIRATION)
-                return true;
-            return false;
+            return (System.currentTimeMillis() - this.getLastAccessed()) / 1000 > 86400 * DAYS_TILL_SESSION_EXPIRATION;
         }
 
         public long getFirstAccessedFromConfig() {

@@ -20,9 +20,9 @@ public class KickCmd implements CommandExecutor {
             }
             StringBuilder sb = new StringBuilder(Link$.italicGray + "Server: Kicked " + args[0] + " '");
             for (int i = 1; i < args.length; i++) {
-                sb.append(args[i] + " ");
+                sb.append(args[i]).append(" ");
             }
-            sb.append(ChatColor.RESET + Link$.italicGray + "'");
+            sb.append(ChatColor.RESET).append(Link$.italicGray).append("'");
             String msg = ChatColor.translateAlternateColorCodes('&', sb.toString().trim());
             Player player = Bukkit.getPlayerExact(args[0]);
             if (player == null) {
